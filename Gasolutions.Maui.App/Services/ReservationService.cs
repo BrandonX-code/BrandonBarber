@@ -31,5 +31,6 @@ namespace Gasolutions.Maui.App.Services
         public string Nombre { get; set; }
         public string Telefono { get; set; }
         public DateTime Fecha { get; set; }
+        public string FechaConFormato => Fecha.ToString("MM/dd/yyyy hh:mm tt");
     }
 }

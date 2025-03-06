@@ -16,18 +16,15 @@
 
                 <Label Text="Nombre:" />
                 <Entry x:Name="NombreEntry" Placeholder="Ingrese su Nombre" BackgroundColor="White" TextColor="Black"/>
-                
+
                 <Label Text="Teléfono:" />
                 <Entry x:Name="TelefonoEntry" Placeholder="Ingrese su Teléfono" Keyboard="Telephone" BackgroundColor="White" TextColor="Black"/>
 
-                <!--<StackLayout HorizontalOptions="Center">-->
-                    <Label Text="Fecha de Cita:" />
-                    <DatePicker x:Name="FechaPicker" BackgroundColor="White" TextColor="Black" HorizontalOptions="Center"/>
+                <Label Text="Fecha de Cita:" />
+                <DatePicker x:Name="FechaPicker" BackgroundColor="White" TextColor="Black" HorizontalOptions="Center"/>
 
-                    <Label Text="Hora de Cita:" />
+                <Label Text="Hora de Cita:" />
                 <TimePicker x:Name="HoraPicker" BackgroundColor="White" TextColor="Black" HorizontalOptions="Center"/>
-                <!--</StackLayout>-->
-
 
                 <HorizontalStackLayout Padding="20" Spacing="15" HorizontalOptions="Center">
                     <Button Text="Cancelar " Clicked="OnCancelarClicked"  WidthRequest="120" BackgroundColor="#b2babb"/>

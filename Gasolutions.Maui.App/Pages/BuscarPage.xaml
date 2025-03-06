@@ -24,7 +24,7 @@
                         <Border StrokeShape="RoundRectangle 10" StrokeThickness="2" Stroke="Black" BackgroundColor="White" Padding="10">
                             <VerticalStackLayout>
                                 <Label Text="{Binding Nombre}" FontSize="Medium" TextColor="Black"/>
-                                <Label Text="{Binding Fecha}" FontSize="Small" TextColor="Gray"/>
+                                <Label Text="{Binding FechaConFormato}" FontSize="Small" TextColor="Gray"/>
                             </VerticalStackLayout>
                         </Border>
                     </DataTemplate>
