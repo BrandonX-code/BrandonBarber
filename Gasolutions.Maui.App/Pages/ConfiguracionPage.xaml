@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gasolutions.Maui.App.Pages.ConfiguracionPage">
+    
+    <ScrollView BackgroundColor="#566573">
+		<VerticalStackLayout Padding="20" Spacing="20">
+			<Label Text="Configuraciones⚙️" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center"/>
+
+			<Border Stroke="Gray" StrokeThickness="1" BackgroundColor="#F28F18" Padding="10" StrokeShape="RoundRectangle 10">
+				<HorizontalStackLayout Spacing="10">
+					<Label Text="Modo Oscuro" VerticalOptions="Center"/>
+					<Switch x:Name="ThemeSwitch" Toggled="ThemeSwitchToggled"/>
+				</HorizontalStackLayout>
+			</Border>
+
+			<Border Stroke="Gray" StrokeThickness="1" BackgroundColor="#F28F18" Padding="10" StrokeShape="RoundRectangle 10">
+				<VerticalStackLayout Spacing="10">
+					<Label Text="Seleccion de Idioma" FontSize="Medium" FontAttributes="Bold"/>
+                    <Picker x:Name="IdiomasPicker"  BackgroundColor="White" Title="Seleccionar Idioma" SelectedIndexChanged="IdiomasPickerSelectedIndexChanged">
+						<Picker.Items>
+							<x:String>Español</x:String>
+							<x:String>Ingles</x:String>
+							<x:String>Portugues</x:String>
+						</Picker.Items>
+					</Picker>
+				</VerticalStackLayout>
+			</Border>
+
+			<Border Stroke="Gray" StrokeThickness="1" BackgroundColor="#F28F18" Padding="10" StrokeShape="RoundRectangle 10">
+				<VerticalStackLayout Spacing="10">
+					<Label Text="Tamaño de Fuente" FontSize="Medium" FontAttributes="Bold"/>
+					<Slider x:Name="FontSizeSlider" Minimum="12" Maximum="24" ValueChanged="FontSizeSliderValueChanged"/>
+					<Label x:Name="PreviewText" Text="Vista previa del texto" FontSize="14"/>
+				</VerticalStackLayout>
+			</Border>
+
+			<Border Stroke="Gray" StrokeThickness="1" BackgroundColor="#F28F18" Padding="10" StrokeShape="RoundRectangle 10">
+				<HorizontalStackLayout Spacing="10">
+					<Label Text="Sonido de Notificaciones" VerticalOptions="Center"/>
+					<Switch x:Name="SonidoSwitch" Toggled="SonidoSwitchToggled"/>
+				</HorizontalStackLayout>
+			</Border>
+
+			<HorizontalStackLayout HorizontalOptions="Center">
+				<Button Text="Guardar Configuracion" Clicked="GuardarConfiguracionClicked"/>
+			</HorizontalStackLayout>
+		</VerticalStackLayout>
+	</ScrollView>
+</ContentPage>

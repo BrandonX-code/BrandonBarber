@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gasolutions.Maui.App.Pages.BuscarPage">
+    <Grid Padding="20" BackgroundColor="#566573">
+        <VerticalStackLayout Spacing="15">
+            <Label Text="Búsqueda de Citas💈" FontSize="Large" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+
+            <Border StrokeShape="RoundRectangle 10" StrokeThickness="2" Stroke="Black" BackgroundColor="White">
+                <Entry x:Name="SearchEntry" Placeholder="Ingrese nombre o ID" BackgroundColor="White" TextColor="Black"/>
+            </Border>
+
+            <DatePicker x:Name="FechaPicker" BackgroundColor="White" TextColor="Black" HorizontalOptions="Center"/>
+
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                <Button Text="Buscar" BackgroundColor="#F28F18" TextColor="Black" Clicked="OnSearchClicked" />
+                <Button Text="Limpiar" BackgroundColor="#b2babb" TextColor="Black" Clicked="OnClearClicked"/>
+            </HorizontalStackLayout>
+
+            <CollectionView x:Name="ResultadosCollection" HeightRequest="300">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border StrokeShape="RoundRectangle 10" StrokeThickness="2" Stroke="Black" BackgroundColor="White" Padding="10">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Nombre}" FontSize="Medium" TextColor="Black"/>
+                                <Label Text="{Binding Fecha}" FontSize="Small" TextColor="Gray"/>
+                            </VerticalStackLayout>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

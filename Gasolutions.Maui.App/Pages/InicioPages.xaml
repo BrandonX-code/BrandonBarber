@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gasolutions.Maui.App.InicioPages" >
+    <Grid BackgroundColor="#566573">
+        <Image Source="barber.jpg" Aspect="AspectFill" Opacity="0.5"></Image>
+        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20" ZIndex="1">
+            <Label Text="💈" FontSize="Large" FontAttributes="Bold" TextColor="black" HorizontalOptions="Center"/>
+            <Label Text="Bienvenido" FontSize="Medium" TextColor="White" HorizontalOptions="Center"/>
+            <Button Text="Turno" HorizontalOptions="Center" Clicked="MainPage" BackgroundColor="Orange" TextColor="Black" WidthRequest="200"/>
+		</VerticalStackLayout>
+	</Grid>
+</ContentPage>
