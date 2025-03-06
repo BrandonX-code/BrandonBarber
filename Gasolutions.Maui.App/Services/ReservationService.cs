@@ -6,7 +6,7 @@ namespace Gasolutions.Maui.App.Services
 {
     public class ReservationService
     {
-        private static List<Cita> _reservations = new List<Cita>();
+        private static List<Cita> _reservations = new();
 
         public static void AddReservation(Cita cita)
         {

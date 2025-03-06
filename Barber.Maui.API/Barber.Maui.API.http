@@ -1,0 +1,6 @@
+@Barber.Maui.API_HostAddress = http://localhost:5286
+
+GET {{Barber.Maui.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

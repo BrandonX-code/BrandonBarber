@@ -5,6 +5,8 @@ VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrandonBarber", "Gasolutions.Maui.App\BrandonBarber.csproj", "{73AD875B-B8CD-421F-843E-D407F3FA8E60}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barber.Maui.API", "Barber.Maui.API\Barber.Maui.API.csproj", "{A842DD1A-54CE-4206-BB8A-239D9F6A170A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -16,6 +18,10 @@ Global
 		{73AD875B-B8CD-421F-843E-D407F3FA8E60}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{73AD875B-B8CD-421F-843E-D407F3FA8E60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73AD875B-B8CD-421F-843E-D407F3FA8E60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A842DD1A-54CE-4206-BB8A-239D9F6A170A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A842DD1A-54CE-4206-BB8A-239D9F6A170A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A842DD1A-54CE-4206-BB8A-239D9F6A170A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A842DD1A-54CE-4206-BB8A-239D9F6A170A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
