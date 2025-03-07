@@ -3,36 +3,54 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections.ObjectModel;
 using Gasolutions.Maui.App.Services;
+using Gasolutions.Maui.App.Models;
 
 namespace Gasolutions.Maui.App.Pages
 {
     public partial class BuscarPage : ContentPage
     {
-        public ObservableCollection<Cita> CitasFiltradas { get; set; } = new();
-
-        public BuscarPage()
+        public ObservableCollection<CitaModel> CitasFiltradas { get; set; } = new();
+        private readonly ReservationService _reservationService;
+        public BuscarPage(ReservationService reservationService)
         {
             InitializeComponent();
+            BindingContext = this;
             ResultadosCollection.ItemsSource = CitasFiltradas;
+            _reservationService = reservationService;
         }
 
-        private void OnSearchClicked(object sender, EventArgs e)
+
+        protected override void OnAppearing()
         {
-            string? searchText = SearchEntry.Text?.ToLower();
-            DateTime? fechaSeleccionada = FechaPicker.Date;
-            var citas = ObtenerCitas();
-            var resultados = citas.Where(c =>
-                (string.IsNullOrEmpty(searchText) ||
-                 c.Nombre.ToLower().Contains(searchText) ||
-                 c.Id.ToString().Contains(searchText)) &&
-                (fechaSeleccionada == null || c.Fecha.Date == fechaSeleccionada.Value.Date))
-                .ToList();
-            CitasFiltradas.Clear();
-            foreach (var cita in resultados)
-            {
-                CitasFiltradas.Add(cita);
-            }
+            base.OnAppearing();
         }
+
+        private async void OnSearchClicked(object sender, EventArgs e)
+        {
+            await ActualizarLista();
+        }
+
+        private async Task ActualizarLista()
+        {
+            CitasFiltradas.Clear();
+
+            if (string.IsNullOrWhiteSpace(SearchEntry.Text) || !long.TryParse(SearchEntry.Text, out long id))
+            {
+                await DisplayAlert("Error", "Ingrese un ID válido.", "Aceptar");
+                return;
+            }
+
+            var cita = await _reservationService.GetReservationsById(id);
+
+            if (cita == null)
+            {
+                await DisplayAlert("Error", "No se encontró ninguna cita con ese ID.", "Aceptar");
+                return;
+            }
+
+            CitasFiltradas.Add(cita);
+        }
+
 
         private void OnClearClicked(object sender, EventArgs e)
         {
@@ -40,13 +58,9 @@ namespace Gasolutions.Maui.App.Pages
             FechaPicker.Date = DateTime.Today;
             CitasFiltradas.Clear();
         }
-
-        private List<Cita> ObtenerCitas()
-        {
-            // Now retrieves reservations from the ReservationService
-            return ReservationService.GetReservations();
-        }
     }
 
-    
 }
+
+    
+

@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Gasolutions.Maui.App.Pages;
+using Gasolutions.Maui.App.Services;
+using Microsoft.Extensions.Logging;
 
 namespace Gasolutions.Maui.App
 {
@@ -14,6 +16,34 @@ namespace Gasolutions.Maui.App
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
+
+            string apiBaseUrl;
+
+            if (DeviceInfo.Platform == DevicePlatform.Android)
+            {
+                apiBaseUrl = "https://192.168.0.113:7283/api/citas";
+            }
+            else
+            {
+                apiBaseUrl = "https://localhost:7283/api/citas";
+            }
+
+            builder.Services.AddSingleton<HttpClient>(sp =>
+            {
+                var httpClientHandler = new HttpClientHandler();
+
+                if (DeviceInfo.Platform == DevicePlatform.Android)
+                {
+                    httpClientHandler.ServerCertificateCustomValidationCallback =
+                        (message, cert, chain, errors) => true;
+                }
+
+                return new HttpClient(httpClientHandler) { BaseAddress = new Uri(apiBaseUrl) };
+            });
+
+            builder.Services.AddSingleton<ReservationService>();
+            builder.Services.AddSingleton<BuscarPage>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

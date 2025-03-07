@@ -58,15 +58,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <AndroidResource Remove="Models\**" />
-	  <Compile Remove="Models\**" />
-	  <EmbeddedResource Remove="Models\**" />
-	  <MauiCss Remove="Models\**" />
-	  <MauiXaml Remove="Models\**" />
-	  <None Remove="Models\**" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <None Remove="Resources\AppIcon\segundo.png" />
 	</ItemGroup>
 

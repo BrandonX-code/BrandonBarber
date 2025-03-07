@@ -1,4 +1,5 @@
-﻿using Microsoft.Maui.Controls;
+﻿using Gasolutions.Maui.App.Services;
+using Microsoft.Maui.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,8 @@ namespace Gasolutions.Maui.App
         }
         private async void MainPage(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new MainPage());
+            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            await Navigation.PushAsync(new MainPage(reservationService));
         }
     }
 }
