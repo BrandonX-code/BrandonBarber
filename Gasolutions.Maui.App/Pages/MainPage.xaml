@@ -28,16 +28,16 @@
 
                 <HorizontalStackLayout Padding="20" Spacing="15" HorizontalOptions="Center">
                     <Button Text="Cancelar " Clicked="OnCancelarClicked"  WidthRequest="120" BackgroundColor="#b2babb"/>
-                    <Button Text="Reservar" Clicked="OnGuardarClicked"  WidthRequest="120" BackgroundColor="#F28F18"/>
+                    <Button Text="Reservar" Clicked="OnGuardarClicked"  WidthRequest="120"  />
                 </HorizontalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
 
         <Grid BackgroundColor="#1F3A93" HeightRequest="60" HorizontalOptions="FillAndExpand" Grid.Row="2">
             <HorizontalStackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Spacing="10">
-                <Button Text="Inicio" Clicked="OnInicioClicked" BackgroundColor="#F28F18" TextColor="White"/>
-                <Button Text="Buscar" Clicked="OnBuscarClicked" BackgroundColor="#F28F18" TextColor="White"/>
-                <!--<Button Text="ListaCitas" Clicked="OnConfiguracionClicked" BackgroundColor="#F28F18" TextColor="White"/>-->
+                <Button Text="Inicio" Clicked="OnInicioClicked" TextColor="White"/>
+                <Button Text="Buscar" Clicked="OnBuscarClicked" TextColor="White"/>
+                <Button Text="ListaCitas" Clicked="OnConfiguracionClicked"   TextColor="White"/>
             </HorizontalStackLayout>
         </Grid>
     </Grid>

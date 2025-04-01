@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gasolutions.Maui.App.Pages.ListaCitas">
+
+    <Grid RowDefinitions="Auto, Auto, *" Padding="20" BackgroundColor="#2C2C2C">
+
+        <DatePicker x:Name="datePicker" Date="{Binding FechaSeleccionada, Mode=TwoWay}" Format="dd/MM/yyyy" 
+                    BackgroundColor="White" TextColor="Black" HorizontalOptions="Center" Grid.Row="0"/>
+
+        <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="10">
+            <Button Text="Buscar Reservas" Clicked="RecuperarCitasPorFecha" Margin="0,10,0,10"/>
+            <Button Text="Eliminar Seleccionados" Clicked="EliminarCitasSeleccionadas" TextColor="White" Margin="0,10,0,10"/>
+        </HorizontalStackLayout>
+
+        <ScrollView Grid.Row="2">
+            <CollectionView ItemsSource="{Binding CitasFiltradas}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="5" BorderColor="Gray">
+                            <HorizontalStackLayout Spacing="10">
+                                <CheckBox IsChecked="{Binding Seleccionado, Mode=TwoWay}"/>
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold"/>
+                                    <Label Text="{Binding FechaConFormato, StringFormat='{0:hh:mm tt}'}" FontSize="16"/>
+                                    <Label Text="{Binding Telefono}" FontSize="14" TextColor="Gray"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+
+    </Grid>
+</ContentPage>

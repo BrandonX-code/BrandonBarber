@@ -26,10 +26,11 @@ namespace Gasolutions.Maui.App
         }
 
 
-        //private async void OnConfiguracionClicked(object sender, EventArgs e)
-        //{
-        //    await Navigation.PushAsync(new TablaCitasPage());
-        //}
+        private async void OnConfiguracionClicked(object sender, EventArgs e)
+        {
+            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            await Navigation.PushAsync(new ListaCitas(reservationService));
+        }
 
         private async void OnGuardarClicked(object sender, EventArgs e)
         {

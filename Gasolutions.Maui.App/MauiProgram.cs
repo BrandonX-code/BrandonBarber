@@ -43,6 +43,8 @@ namespace Gasolutions.Maui.App
 
             builder.Services.AddSingleton<ReservationService>();
             builder.Services.AddSingleton<BuscarPage>();
+            builder.Services.AddSingleton<ListaCitas>();
+
 
 #if DEBUG
             builder.Logging.AddDebug();

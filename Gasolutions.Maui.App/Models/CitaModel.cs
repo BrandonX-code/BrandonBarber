@@ -13,6 +13,7 @@ namespace Gasolutions.Maui.App.Models
         public string Telefono { get; set; }
         public DateTime Fecha { get; set; }
         public string FechaConFormato => Fecha.ToString("dd/MM/yyyy hh:mm tt");
+        public bool Seleccionado { get; set; }
     }
 
 }

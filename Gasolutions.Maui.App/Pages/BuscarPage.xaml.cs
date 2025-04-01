@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Collections.ObjectModel;
+﻿using Gasolutions.Maui.App.Models;
 using Gasolutions.Maui.App.Services;
-using Gasolutions.Maui.App.Models;
+using System.Collections.ObjectModel;
 
 namespace Gasolutions.Maui.App.Pages
 {
@@ -61,5 +58,5 @@ namespace Gasolutions.Maui.App.Pages
 
 }
 
-    
+
 

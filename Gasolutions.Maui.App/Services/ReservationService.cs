@@ -52,7 +52,7 @@ namespace Gasolutions.Maui.App.Services
 
         public async Task<List<CitaModel>> GetReservations(DateTime fecha)
         {
-            string url = $"api/citas/by-date/{fecha:yyyy-MM-dd}";
+            string url = $"{_httpClient.BaseAddress}/by-date/{fecha:yyyy-MM-dd}";
 
             try
             {
