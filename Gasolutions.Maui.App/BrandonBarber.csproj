@@ -80,9 +80,6 @@
 	  <MauiXaml Update="Pages\BuscarPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\ConfiguracionPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Pages\InicioPages.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

@@ -11,7 +11,7 @@
                 <Entry x:Name="SearchEntry" Placeholder="Ingrese nombre o ID" BackgroundColor="White" TextColor="Black"/>
             </Border>
 
-            <DatePicker x:Name="FechaPicker" BackgroundColor="White" TextColor="Black" HorizontalOptions="Center"/>
+            <!--<DatePicker x:Name="FechaPicker" BackgroundColor="White" TextColor="Black" HorizontalOptions="Center"/>-->
 
             <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
                 <Button Text="Buscar" BackgroundColor="#F28F18" TextColor="Black" Clicked="OnSearchClicked" />
@@ -24,7 +24,7 @@
                         <Border StrokeShape="RoundRectangle 10" StrokeThickness="2" Stroke="Black" BackgroundColor="White" Padding="10">
                             <VerticalStackLayout>
                                 <Label Text="{Binding Nombre}" FontSize="Medium" TextColor="Black"/>
-                                <Label Text="{Binding FechaConFormato}" FontSize="Small" TextColor="Gray"/>
+                                <Label Text="{Binding FechaConFormato,StringFormat='{0:hh:mm tt}'}" FontSize="Small" TextColor="Gray"/>
                             </VerticalStackLayout>
                         </Border>
                     </DataTemplate>

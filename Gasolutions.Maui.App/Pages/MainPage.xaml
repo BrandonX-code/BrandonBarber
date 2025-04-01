@@ -4,26 +4,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Gasolutions.Maui.App.MainPage">
 
-    <Grid RowDefinitions="Auto, *, Auto" BackgroundColor="#566573">
-        <Grid BackgroundColor="#F28F18" HeightRequest="80" HorizontalOptions="FillAndExpand" VerticalOptions="Start" Grid.Row="0">
-            <Label Text="Reservar Turno 💈" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Black" FontAttributes="Bold" FontSize="Medium"/>
+    <Grid RowDefinitions="Auto, *, Auto" BackgroundColor="#2C2C2C">
+        <Grid BackgroundColor="#1F3A93" HeightRequest="80" HorizontalOptions="FillAndExpand" VerticalOptions="Start" Grid.Row="0">
+            <Label Text="Reservar Turno 💈" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold" FontSize="Medium"/>
         </Grid>
 
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Padding="20" Spacing="15">
-                <Label Text="Id:" />
+                <Label Text="Id:" TextColor="White"/>
                 <Entry x:Name="IdEntry" Placeholder="Ingrese el ID" BackgroundColor="White" TextColor="Black"/>
 
-                <Label Text="Nombre:" />
+                <Label Text="Nombre:" TextColor="White"/>
                 <Entry x:Name="NombreEntry" Placeholder="Ingrese su Nombre" BackgroundColor="White" TextColor="Black"/>
 
-                <Label Text="Teléfono:" />
+                <Label Text="Teléfono:" TextColor="White"/>
                 <Entry x:Name="TelefonoEntry" Placeholder="Ingrese su Teléfono" Keyboard="Telephone" BackgroundColor="White" TextColor="Black"/>
 
-                <Label Text="Fecha de Cita:" />
+                <Label Text="Fecha de Cita:" TextColor="White"/>
                 <DatePicker x:Name="FechaPicker" BackgroundColor="White" TextColor="Black" HorizontalOptions="Center"/>
 
-                <Label Text="Hora de Cita:" />
+                <Label Text="Hora de Cita:" TextColor="White"/>
                 <TimePicker x:Name="HoraPicker" BackgroundColor="White" TextColor="Black" HorizontalOptions="Center"/>
 
                 <HorizontalStackLayout Padding="20" Spacing="15" HorizontalOptions="Center">
@@ -33,11 +33,11 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <Grid BackgroundColor="#F28F18" HeightRequest="60" HorizontalOptions="FillAndExpand" Grid.Row="2">
+        <Grid BackgroundColor="#1F3A93" HeightRequest="60" HorizontalOptions="FillAndExpand" Grid.Row="2">
             <HorizontalStackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Spacing="10">
-                <Button Text="Inicio" Clicked="OnInicioClicked" BackgroundColor="Orange" TextColor="Black"/>
-                <Button Text="Buscar" Clicked="OnBuscarClicked" BackgroundColor="Orange" TextColor="Black"/>
-                <Button Text="Configuración" Clicked="OnConfiguracionClicked" BackgroundColor="Orange" TextColor="Black"/>
+                <Button Text="Inicio" Clicked="OnInicioClicked" BackgroundColor="#F28F18" TextColor="White"/>
+                <Button Text="Buscar" Clicked="OnBuscarClicked" BackgroundColor="#F28F18" TextColor="White"/>
+                <!--<Button Text="ListaCitas" Clicked="OnConfiguracionClicked" BackgroundColor="#F28F18" TextColor="White"/>-->
             </HorizontalStackLayout>
         </Grid>
     </Grid>

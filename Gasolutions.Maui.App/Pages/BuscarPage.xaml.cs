@@ -55,7 +55,6 @@ namespace Gasolutions.Maui.App.Pages
         private void OnClearClicked(object sender, EventArgs e)
         {
             SearchEntry.Text = string.Empty;
-            FechaPicker.Date = DateTime.Today;
             CitasFiltradas.Clear();
         }
     }

@@ -26,10 +26,10 @@ namespace Gasolutions.Maui.App
         }
 
 
-        private async void OnConfiguracionClicked(object sender, EventArgs e)
-        {
-            await Navigation.PushAsync(new ConfiguracionPage());
-        }
+        //private async void OnConfiguracionClicked(object sender, EventArgs e)
+        //{
+        //    await Navigation.PushAsync(new TablaCitasPage());
+        //}
 
         private async void OnGuardarClicked(object sender, EventArgs e)
         {
