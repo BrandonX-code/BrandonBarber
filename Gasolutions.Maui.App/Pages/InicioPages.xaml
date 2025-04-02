@@ -8,7 +8,7 @@
         <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20" ZIndex="1">
             <Label Text="💈" FontSize="Large" FontAttributes="Bold" TextColor="black" HorizontalOptions="Center"/>
             <Label Text="Bienvenido" FontSize="Medium" TextColor="White" HorizontalOptions="Center"/>
-            <Button Text="Turno" HorizontalOptions="Center" Clicked="MainPage" BackgroundColor="Orange" TextColor="Black" WidthRequest="200"/>
+            <Button Text="Turno" HorizontalOptions="Center" Clicked="MainPage" TextColor="White" WidthRequest="200"/>
 		</VerticalStackLayout>
 	</Grid>
 </ContentPage>

@@ -2,7 +2,8 @@ using Barber.Maui.API.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.WebHost.UseUrls("https://0.0.0.0:7283");
+builder.WebHost.UseUrls("http://0.0.0.0:5286", "https://0.0.0.0:7283");
+
 
 // Add services to the container.
 

@@ -21,7 +21,7 @@ namespace Gasolutions.Maui.App
 
             if (DeviceInfo.Platform == DevicePlatform.Android)
             {
-                apiBaseUrl = "https://192.168.0.113:7283/api/citas";
+                apiBaseUrl = "https://192.168.0.155:7283/api/citas";
             }
             else
             {
