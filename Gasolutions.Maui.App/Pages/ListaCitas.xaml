@@ -3,34 +3,83 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Gasolutions.Maui.App.Pages.ListaCitas">
 
-    <Grid RowDefinitions="Auto, Auto, *" Padding="20" BackgroundColor="#2C2C2C">
+    <AbsoluteLayout>
 
-        <DatePicker x:Name="datePicker" Date="{Binding FechaSeleccionada, Mode=TwoWay}" Format="dd/MM/yyyy" 
-                    BackgroundColor="White" TextColor="Black" HorizontalOptions="Center" Grid.Row="0"/>
+        <Image Source="img.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />
 
-        <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="10">
-            <Button Text="Buscar Reservas" Clicked="RecuperarCitasPorFecha" TextColor="White" Margin="0,10,0,10"/>
-            <Button Text="Eliminar Seleccionados" Clicked="EliminarCitasSeleccionadas" TextColor="White" Margin="0,10,0,10"/>
-        </HorizontalStackLayout>
+        <Grid RowDefinitions="Auto, Auto, *" Padding="20" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+            <VerticalStackLayout Spacing="15">
+                <Label Text="Citas Agendadas 🗓️" TextColor="Gold" FontSize="Large" FontAttributes="Bold"  HorizontalOptions="Center" />
+                <Frame CornerRadius="12"
+       Padding="0"
+       HasShadow="True"
+       BackgroundColor="#333"
+       BorderColor="Gold"
+       WidthRequest="260"
+       HorizontalOptions="Center">
+                    <DatePicker x:Name="datePicker"
+                Date="{Binding FechaSeleccionada, Mode=TwoWay}"
+                Format="dd/MM/yyyy"
+                BackgroundColor="Transparent"
+                TextColor="White"
+                FontSize="16"
+                FontAttributes="Bold"
+                HeightRequest="45"
+                Margin="10,0"/>
+                </Frame>
 
-        <ScrollView Grid.Row="2">
-            <CollectionView ItemsSource="{Binding CitasFiltradas}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Frame Padding="10" Margin="5" BorderColor="Gray">
-                            <HorizontalStackLayout Spacing="10">
-                                <CheckBox IsChecked="{Binding Seleccionado, Mode=TwoWay}"/>
-                                <VerticalStackLayout>
-                                    <Label Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold"/>
-                                    <Label Text="{Binding FechaConFormato, StringFormat='{0:hh:mm tt}'}" FontSize="16"/>
-                                    <Label Text="{Binding Telefono}" FontSize="14" TextColor="Gray"/>
-                                </VerticalStackLayout>
-                            </HorizontalStackLayout>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </ScrollView>
 
-    </Grid>
+                <HorizontalStackLayout Grid.Row="1"
+                        HorizontalOptions="Center"
+                        Spacing="10"
+                        Margin="0,10">
+                    <Button Text="Buscar Reservas"
+             Clicked="RecuperarCitasPorFecha"
+             BackgroundColor="Gold"
+             TextColor="White"
+             CornerRadius="10"/>
+                    <Button Text="Eliminar Seleccionados"
+             Clicked="EliminarCitasSeleccionadas"
+             BackgroundColor="Gray"
+             TextColor="White"
+             CornerRadius="10"/>
+                </HorizontalStackLayout>
+
+                <CollectionView ItemsSource="{Binding CitasFiltradas}"
+                Grid.Row="2"
+                HeightRequest="445">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Padding="10"
+                   Margin="5"
+                   BorderColor="#444"
+                   BackgroundColor="#1F1F1F"
+                   CornerRadius="12"
+                   HasShadow="True">
+                                <HorizontalStackLayout Spacing="10">
+                                    <CheckBox IsChecked="{Binding Seleccionado, Mode=TwoWay}" Color="Gold"/>
+                                    <VerticalStackLayout>
+                                        <Label Text="{Binding Nombre}"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               TextColor="White"/>
+                                        <Label Text="{Binding FechaConFormato, StringFormat='{0:hh:mm tt}'}"
+                               FontSize="16"
+                               TextColor="LightGray"/>
+                                        <Label Text="{Binding Telefono}"
+                               FontSize="14"
+                               TextColor="Gray"/>
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+
+            </VerticalStackLayout>
+
+        </Grid>
+
+    </AbsoluteLayout>
 </ContentPage>

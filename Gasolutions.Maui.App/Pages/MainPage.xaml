@@ -1,45 +1,115 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Gasolutions.Maui.App.MainPage">
 
-    <Grid RowDefinitions="Auto, *, Auto" BackgroundColor="#2C2C2C">
-        <Grid BackgroundColor="#1F3A93" HeightRequest="80" HorizontalOptions="FillAndExpand" VerticalOptions="Start" Grid.Row="0">
-            <Label Text="Reservar Turno 💈" HorizontalOptions="Center" VerticalOptions="Center" TextColor="White" FontAttributes="Bold" FontSize="Medium"/>
-        </Grid>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="EntryStyle" TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="#222222" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Focused">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1.02" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
 
-        <ScrollView Grid.Row="1">
-            <VerticalStackLayout Padding="20" Spacing="15">
-                <Label Text="Id:" TextColor="White"/>
-                <Entry x:Name="IdEntry" Placeholder="Ingrese el ID" BackgroundColor="White" TextColor="Black"/>
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="Gold" />
+                <Setter Property="BorderColor" Value="Gold" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="15,8" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-                <Label Text="Nombre:" TextColor="White"/>
-                <Entry x:Name="NombreEntry" Placeholder="Ingrese su Nombre" BackgroundColor="White" TextColor="Black"/>
+    <AbsoluteLayout>
+        <Image Source="img.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All"/>
 
-                <Label Text="Teléfono:" TextColor="White"/>
-                <Entry x:Name="TelefonoEntry" Placeholder="Ingrese su Teléfono" Keyboard="Telephone" BackgroundColor="White" TextColor="Black"/>
+        <Grid x:Name="mainContent" Opacity="0" RowDefinitions="Auto, *, Auto" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
 
-                <Label Text="Fecha de Cita:" TextColor="White"/>
-                <DatePicker x:Name="FechaPicker" BackgroundColor="White" TextColor="Black" HorizontalOptions="Center"/>
+            <Grid x:Name="headerGrid" BackgroundColor="Black" Opacity="0.85" HeightRequest="80" Grid.Row="0" TranslationY="-80">
+                <Label Text="Reservar Turno 💈" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Gold" FontAttributes="Bold" FontSize="22"/>
+            </Grid>
 
-                <Label Text="Hora de Cita:" TextColor="White"/>
-                <TimePicker x:Name="HoraPicker" BackgroundColor="White" TextColor="Black" HorizontalOptions="Center"/>
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout x:Name="formLayout" Padding="20" Spacing="18" BackgroundColor="Transparent" TranslationY="50" Opacity="0">
 
-                <HorizontalStackLayout Padding="20" Spacing="15" HorizontalOptions="Center">
-                    <Button Text="Cancelar " Clicked="OnCancelarClicked"  WidthRequest="120" BackgroundColor="#b2babb"/>
-                    <Button Text="Reservar" Clicked="OnGuardarClicked"  WidthRequest="120"  />
+                    <Border x:Name="idBorder" Stroke="Gold" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#80000000" Padding="15,12" Margin="0,0,0,10">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Id:" TextColor="White" FontSize="16"/>
+                            <Entry x:Name="IdEntry" Placeholder="Ingrese el ID" Keyboard="Numeric" Style="{StaticResource EntryStyle}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border x:Name="nombreBorder" Stroke="Gold" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#80000000" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Nombre:" TextColor="White" FontSize="16"/>
+                            <Entry x:Name="NombreEntry" Placeholder="Ingrese su Nombre" Style="{StaticResource EntryStyle}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border x:Name="telefonoBorder" Stroke="Gold" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#80000000" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Teléfono:" TextColor="White" FontSize="16"/>
+                            <Entry x:Name="TelefonoEntry" Placeholder="Ingrese su Teléfono" Keyboard="Telephone" Style="{StaticResource EntryStyle}" />
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border x:Name="fechaBorder" Stroke="Gold" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#80000000" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Label Text="Fecha de Cita:" TextColor="White" FontSize="16"/>
+                            <DatePicker x:Name="FechaPicker" BackgroundColor="#333333" TextColor="White" HorizontalOptions="FillAndExpand"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border x:Name="horaBorder" Stroke="Gold" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#80000000" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                        <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Label Text="Hora de Cita:" TextColor="White" FontSize="16"/>
+                            <TimePicker x:Name="HoraPicker" BackgroundColor="#333333" TextColor="White" HorizontalOptions="FillAndExpand"/>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <HorizontalStackLayout x:Name="buttonsLayout" Padding="20,10" Spacing="20" HorizontalOptions="Center" Opacity="0">
+                        <Button Text="Cancelar" Clicked="OnCancelarClicked" WidthRequest="130" BackgroundColor="#555" TextColor="White" 
+                                CornerRadius="10" FontAttributes="Bold">
+                            <Button.Shadow>
+                                <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.6" />
+                            </Button.Shadow>
+                        </Button>
+
+                        <Button Text="Reservar" Clicked="OnGuardarClicked" WidthRequest="130" BackgroundColor="Gold" TextColor="White" 
+                                CornerRadius="10" FontAttributes="Bold">
+                            <Button.Shadow>
+                                <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.6" />
+                            </Button.Shadow>
+                        </Button>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
+
+            <Grid x:Name="footerGrid" BackgroundColor="Black" Opacity="0.85" HeightRequest="65" Grid.Row="2" TranslationY="65">
+                <HorizontalStackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Spacing="15">
+                    <Button Text="Inicio" Clicked="OnInicioClicked" Style="{StaticResource ButtonStyle}"/>
+                    <Button Text="Buscar" Clicked="OnBuscarClicked" Style="{StaticResource ButtonStyle}"/>
+                    <Button Text="Lista Citas" Clicked="OnConfiguracionClicked" Style="{StaticResource ButtonStyle}"/>
                 </HorizontalStackLayout>
-            </VerticalStackLayout>
-        </ScrollView>
-
-        <Grid BackgroundColor="#1F3A93" HeightRequest="60" HorizontalOptions="FillAndExpand" Grid.Row="2">
-            <HorizontalStackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Spacing="10">
-                <Button Text="Inicio" Clicked="OnInicioClicked" TextColor="White"/>
-                <Button Text="Buscar" Clicked="OnBuscarClicked" TextColor="White"/>
-                <Button Text="ListaCitas" Clicked="OnConfiguracionClicked"   TextColor="White"/>
-            </HorizontalStackLayout>
+            </Grid>
         </Grid>
-    </Grid>
+    </AbsoluteLayout>
 </ContentPage>
-

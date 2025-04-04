@@ -1,33 +1,89 @@
 <?xml version="1.0" encoding="utf-8" ?>
-
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Gasolutions.Maui.App.Pages.BuscarPage">
-    <Grid Padding="20" BackgroundColor="#2C2C2C">
-        <VerticalStackLayout Spacing="15">
-            <Label Text="Búsqueda de Citas💈" FontSize="Large" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="EntryStyle" TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="#222222" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Focused">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1.02" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
 
-            <Border StrokeShape="RoundRectangle 10" StrokeThickness="2" Stroke="Black" BackgroundColor="White">
-                <Entry x:Name="SearchEntry" Keyboard="Numeric" Placeholder="Ingrese nombre o ID" BackgroundColor="White" TextColor="Black"/>
-            </Border>
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="Gold" />
+                <Setter Property="BorderColor" Value="Gold" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="15,8" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <AbsoluteLayout>
+        <Image Source="img.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />
+        <Grid Padding="20" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+            <VerticalStackLayout Spacing="15">
+                <Label Text="Búsqueda de Citas🔎" FontSize="Large" FontAttributes="Bold" TextColor="Gold" HorizontalOptions="Center" />
 
-            <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
-                <Button Text="Buscar"  TextColor="Black" Clicked="OnSearchClicked" />
-                <Button Text="Limpiar" BackgroundColor="#b2babb" TextColor="Black" Clicked="OnClearClicked"/>
-            </HorizontalStackLayout>
+                <Border Stroke="Gold" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#80000000" Padding="15,12" Margin="0,0,0,10">
+                    <Entry x:Name="SearchEntry"
+                           Keyboard="Numeric"
+                           Placeholder="Ingrese nombre o ID" Style="{StaticResource EntryStyle}" />
+                </Border>
 
-            <CollectionView x:Name="ResultadosCollection" HeightRequest="300">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Border StrokeShape="RoundRectangle 10" StrokeThickness="2" Stroke="Black" BackgroundColor="White" Padding="10">
-                            <VerticalStackLayout>
-                                <Label Text="{Binding Nombre}" FontSize="Medium" TextColor="Black"/>
-                                <Label Text="{Binding FechaConFormato,StringFormat='{0:hh:mm tt}'}" FontSize="Small" TextColor="Gray"/>
-                            </VerticalStackLayout>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </VerticalStackLayout>
-    </Grid>
+                <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+                    <Button Text="Buscar"
+                            TextColor="Black"
+                            Clicked="OnSearchClicked"
+                            BackgroundColor="Gold"/>
+                    <Button Text="Limpiar"
+                            BackgroundColor="#b2babb"
+                            TextColor="Black"
+                            Clicked="OnClearClicked"/>
+                </HorizontalStackLayout>
+
+                <CollectionView x:Name="ResultadosCollection"
+                                HeightRequest="300">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border StrokeShape="RoundRectangle 10"
+                                    StrokeThickness="2"
+                                    Stroke="Black"
+                                    BackgroundColor="White"
+                                    Padding="10">
+                                <VerticalStackLayout>
+                                    <Label Text="{Binding Nombre}"
+                                           FontSize="Medium"
+                                           TextColor="Black"/>
+                                    <Label Text="{Binding FechaConFormato, StringFormat='{0:hh:mm tt}'}"
+                                           FontSize="Small"
+                                           TextColor="Gray"/>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+
+        </Grid>
+
+    </AbsoluteLayout>
 </ContentPage>

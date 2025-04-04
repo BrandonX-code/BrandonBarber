@@ -1,33 +1,71 @@
 ﻿using Gasolutions.Maui.App.Models;
 using Gasolutions.Maui.App.Pages;
 using Gasolutions.Maui.App.Services;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Gasolutions.Maui.App
 {
     public partial class MainPage : ContentPage
     {
         private readonly ReservationService _reservationServices;
+
         public MainPage(ReservationService reservationService)
         {
             InitializeComponent();
             _reservationServices = reservationService;
         }
 
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+
+            await StartEntryAnimations();
+        }
+
+        private async Task StartEntryAnimations()
+        {
+            // Animar el contenido principal primero
+            await mainContent.FadeTo(1, 500, Easing.CubicInOut);
+
+            // Animar el header y footer simultáneamente
+            var headerAnimation = headerGrid.TranslateTo(0, 0, 500, Easing.SpringOut);
+            var footerAnimation = footerGrid.TranslateTo(0, 0, 500, Easing.SpringOut);
+            await Task.WhenAll(headerAnimation, footerAnimation);
+
+            // Animar el formulario
+            await formLayout.FadeTo(1, 300);
+            await formLayout.TranslateTo(0, 0, 400, Easing.CubicOut);
+
+            // Animar campos del formulario secuencialmente
+            uint delay = 100;
+            await idBorder.FadeTo(1, 300);
+            await Task.Delay((int)delay);
+            await nombreBorder.FadeTo(1, 300);
+            await Task.Delay((int)delay);
+            await telefonoBorder.FadeTo(1, 300);
+            await Task.Delay((int)delay);
+            await fechaBorder.FadeTo(1, 300);
+            await Task.Delay((int)delay);
+            await horaBorder.FadeTo(1, 300);
+            await Task.Delay((int)delay);
+            await buttonsLayout.FadeTo(1, 300);
+        }
+
         private async void OnInicioClicked(object sender, EventArgs e)
         {
+            await AnimateButtonClick(sender as Button);
             await Navigation.PushAsync(new InicioPages());
         }
 
         private async void OnBuscarClicked(object sender, EventArgs e)
         {
+            await AnimateButtonClick(sender as Button);
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new BuscarPage(reservationService));
         }
 
-
         private async void OnConfiguracionClicked(object sender, EventArgs e)
         {
+            await AnimateButtonClick(sender as Button);
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new ListaCitas(reservationService));
         }
@@ -101,20 +139,21 @@ namespace Gasolutions.Maui.App
             }
         }
 
+
         private async void OnCancelarClicked(object sender, EventArgs e)
         {
+            await AnimateButtonClick(sender as Button);
+
             bool confirm = await DisplayAlert("Confirmación", "¿Está seguro que desea cancelar la reserva?", "Sí", "No");
 
             if (confirm)
             {
-                IdEntry.Text = string.Empty;
-                NombreEntry.Text = string.Empty;
-                TelefonoEntry.Text = string.Empty;
-                FechaPicker.Date = DateTime.Today;
-
+                await AnimarSalida();
+                Limpiarcampos();
                 await Navigation.PopToRootAsync();
             }
         }
+
         private void Limpiarcampos()
         {
             IdEntry.Text = string.Empty;
@@ -124,5 +163,117 @@ namespace Gasolutions.Maui.App
             HoraPicker.Time = TimeSpan.Zero;
         }
 
+        // Métodos de animación simplificados
+        private async Task AnimateButtonClick(Button button)
+        {
+            if (button == null) return;
+
+            await button.ScaleTo(0.9, 100);
+            await button.ScaleTo(1, 100);
+        }
+
+        private async Task ShakeControl(VisualElement control)
+        {
+            uint timeout = 50;
+            double shakeDistance = 10;
+
+            await control.TranslateTo(-shakeDistance, 0, timeout);
+            await control.TranslateTo(shakeDistance, 0, timeout);
+            await control.TranslateTo(-shakeDistance, 0, timeout);
+            await control.TranslateTo(shakeDistance, 0, timeout);
+            await control.TranslateTo(0, 0, timeout);
+        }
+
+        private async Task MostrarMensajeAnimado(string mensaje)
+        {
+            // Crear label de mensaje
+            Label mensajeLabel = new Label
+            {
+                Text = mensaje,
+                TextColor = Colors.White,
+                BackgroundColor = Color.FromArgb("#CC770000"),
+                HorizontalTextAlignment = TextAlignment.Center,
+                VerticalTextAlignment = TextAlignment.Center,
+                FontAttributes = FontAttributes.Bold,
+                Padding = new Thickness(15),
+                Opacity = 0
+            };
+
+            Frame frameAlerta = new Frame
+            {
+                BorderColor = Colors.Red,
+                BackgroundColor = Colors.Transparent,
+                CornerRadius = 10,
+                HasShadow = true,
+                Content = mensajeLabel,
+                HorizontalOptions = LayoutOptions.Fill,
+                Margin = new Thickness(20, 5),
+                Opacity = 0
+            };
+
+            // Añadir al layout y animar
+            formLayout.Children.Add(frameAlerta);
+
+            await frameAlerta.FadeTo(1, 300);
+            await frameAlerta.ScaleTo(1.05, 150);
+            await frameAlerta.ScaleTo(1, 150);
+
+            // Mantener visible por un momento
+            await Task.Delay(2500);
+
+            // Hacer fade out y remover
+            await frameAlerta.FadeTo(0, 300);
+            formLayout.Children.Remove(frameAlerta);
+        }
+
+        private async Task MostrarConfirmacionAnimada()
+        {
+            // Crear Frame de confirmación
+            Label mensajeLabel = new Label
+            {
+                Text = "¡Reserva guardada exitosamente! 👍",
+                TextColor = Colors.White,
+                BackgroundColor = Color.FromArgb("#CC006600"),
+                HorizontalTextAlignment = TextAlignment.Center,
+                VerticalTextAlignment = TextAlignment.Center,
+                FontAttributes = FontAttributes.Bold,
+                FontSize = 18,
+                Padding = new Thickness(15),
+                Opacity = 0
+            };
+
+            Frame frameConfirmacion = new()
+            {
+                BorderColor = Colors.Green,
+                BackgroundColor = Colors.Transparent,
+                CornerRadius = 10,
+                HasShadow = true,
+                Content = mensajeLabel,
+                HorizontalOptions = LayoutOptions.Fill,
+                Margin = new Thickness(20, 5),
+                Opacity = 0
+            };
+
+            // Añadir al layout y animar
+            formLayout.Children.Add(frameConfirmacion);
+
+            await frameConfirmacion.FadeTo(1, 300);
+            await frameConfirmacion.ScaleTo(1.1, 200);
+            await frameConfirmacion.ScaleTo(1, 200);
+
+            // Mantener visible por un momento
+            await Task.Delay(2000);
+
+            // Hacer fade out y remover
+            await frameConfirmacion.FadeTo(0, 300);
+            formLayout.Children.Remove(frameConfirmacion);
+        }
+
+        private async Task AnimarSalida()
+        {
+            await formLayout.FadeTo(0, 300);
+            await formLayout.TranslateTo(0, 50, 300);
+            await Task.Delay(200);
+        }
     }
 }

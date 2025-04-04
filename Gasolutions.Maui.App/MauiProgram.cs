@@ -1,4 +1,5 @@
-﻿using Gasolutions.Maui.App.Pages;
+﻿using CommunityToolkit.Maui;
+using Gasolutions.Maui.App.Pages;
 using Gasolutions.Maui.App.Services;
 using Microsoft.Extensions.Logging;
 
@@ -11,6 +12,7 @@ namespace Gasolutions.Maui.App
             var builder = MauiApp.CreateBuilder();
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -44,6 +46,7 @@ namespace Gasolutions.Maui.App
             builder.Services.AddSingleton<ReservationService>();
             builder.Services.AddSingleton<BuscarPage>();
             builder.Services.AddSingleton<ListaCitas>();
+            builder.UseMauiApp<App>().UseMauiCommunityToolkit();
 
 
 #if DEBUG
