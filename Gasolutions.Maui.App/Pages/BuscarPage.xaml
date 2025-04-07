@@ -63,20 +63,12 @@
                                 HeightRequest="300">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Border StrokeShape="RoundRectangle 10"
-                                    StrokeThickness="2"
-                                    Stroke="Black"
-                                    BackgroundColor="White"
-                                    Padding="10">
+                            <Frame Padding="10" Margin="5" BorderColor="#444" BackgroundColor="#1F1F1F" CornerRadius="12" HasShadow="True">
                                 <VerticalStackLayout>
-                                    <Label Text="{Binding Nombre}"
-                                           FontSize="Medium"
-                                           TextColor="Black"/>
-                                    <Label Text="{Binding FechaConFormato, StringFormat='{0:hh:mm tt}'}"
-                                           FontSize="Small"
-                                           TextColor="Gray"/>
+                                    <Label Text="{Binding Nombre}" FontSize="Medium" TextColor="White"/>
+                                    <Label Text="{Binding FechaConFormato, StringFormat='{0:hh:mm tt}'}" FontSize="Small" TextColor="Gray"/>
                                 </VerticalStackLayout>
-                            </Border>
+                            </Frame>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
@@ -84,6 +76,8 @@
             </VerticalStackLayout>
 
         </Grid>
-
+        <Grid x:Name="LoaderOverlay" BackgroundColor="#80000000" IsVisible="False" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ZIndex="10">
+            <ActivityIndicator IsRunning="True" Color="Gold" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="50" HeightRequest="50"/>
+        </Grid>
     </AbsoluteLayout>
 </ContentPage>

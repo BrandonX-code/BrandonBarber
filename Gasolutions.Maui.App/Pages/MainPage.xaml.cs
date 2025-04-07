@@ -1,6 +1,9 @@
 ﻿using Gasolutions.Maui.App.Models;
 using Gasolutions.Maui.App.Pages;
 using Gasolutions.Maui.App.Services;
+using Font = Microsoft.Maui.Font;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 
 namespace Gasolutions.Maui.App
 {
@@ -23,19 +26,15 @@ namespace Gasolutions.Maui.App
 
         private async Task StartEntryAnimations()
         {
-            // Animar el contenido principal primero
             await mainContent.FadeTo(1, 500, Easing.CubicInOut);
 
-            // Animar el header y footer simultáneamente
             var headerAnimation = headerGrid.TranslateTo(0, 0, 500, Easing.SpringOut);
             var footerAnimation = footerGrid.TranslateTo(0, 0, 500, Easing.SpringOut);
             await Task.WhenAll(headerAnimation, footerAnimation);
 
-            // Animar el formulario
             await formLayout.FadeTo(1, 300);
             await formLayout.TranslateTo(0, 0, 400, Easing.CubicOut);
 
-            // Animar campos del formulario secuencialmente
             uint delay = 100;
             await idBorder.FadeTo(1, 300);
             await Task.Delay((int)delay);
@@ -72,74 +71,133 @@ namespace Gasolutions.Maui.App
 
         private async void OnGuardarClicked(object sender, EventArgs e)
         {
-            if (_reservationServices == null)
+            MostrarLoader(true);
+
+            try
             {
-                await DisplayAlert("Error", "No se pudo conectar con el servicio.", "Aceptar");
-                return;
+                if (_reservationServices == null)
+                {
+                    MostrarLoader(false);
+                    await MostrarSnackbar("No se pudo conectar con el servicio.", Colors.Red, Colors.White);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(IdEntry.Text) || !int.TryParse(IdEntry.Text, out int id))
+                {
+                    MostrarLoader(false);
+                    await MostrarSnackbar("Por favor, ingrese un ID válido.", Colors.Orange, Colors.White);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(NombreEntry.Text) || NombreEntry.Text.Length < 2 || NombreEntry.Text.Length > 50)
+                {
+                    MostrarLoader(false);
+                    await MostrarSnackbar("El Nombre debe tener entre 2 y 50 caracteres.", Colors.Orange, Colors.White);
+                    return;
+                }
+
+                if (string.IsNullOrWhiteSpace(TelefonoEntry.Text) || !TelefonoEntry.Text.All(char.IsDigit) || TelefonoEntry.Text.Length != 10)
+                {
+                    MostrarLoader(false);
+                    await MostrarSnackbar("El Teléfono debe contener 10 dígitos numéricos.", Colors.Orange, Colors.White);
+                    return;
+                }
+
+                if (FechaPicker.Date < DateTime.Today)
+                {
+                    MostrarLoader(false);
+                    await MostrarSnackbar("La fecha de la cita debe ser futura.", Colors.Orange, Colors.White);
+                    return;
+                }
+
+
+                DateTime fechaSeleccionada = FechaPicker.Date.Add(HoraPicker.Time);
+                Console.WriteLine($"Fecha y hora seleccionada: {fechaSeleccionada:yyyy-MM-dd HH:mm:ss}");
+
+                var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date);
+                Console.WriteLine($"Citas encontradas para el día {FechaPicker.Date:yyyy-MM-dd}: {citasDelDia?.Count ?? 0}");
+
+                var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? new List<CitaModel>();
+
+                Console.WriteLine($"Citas filtradas solo para fecha actual: {citasActuales.Count}");
+
+                foreach (var cita in citasActuales)
+                {
+                    Console.WriteLine($"Cita existente: ID={cita.Id}, Fecha={cita.Fecha:yyyy-MM-dd HH:mm:ss}");
+                }
+
+                bool conflictoHora = false;
+                CitaModel citaConflicto = null;
+
+                foreach (var cita in citasActuales)
+                {
+                    if (cita.Fecha.Hour == fechaSeleccionada.Hour && cita.Fecha.Minute == fechaSeleccionada.Minute)
+                    {
+                        conflictoHora = true;
+                        citaConflicto = cita;
+                        Console.WriteLine($"¡CONFLICTO! Hora existente: {cita.Fecha.Hour}:{cita.Fecha.Minute:D2}");
+                        break;
+                    }
+                }
+
+                if (conflictoHora)
+                {
+                    MostrarLoader(false);
+                    Console.WriteLine($"Mostrando alerta de conflicto para hora {fechaSeleccionada.Hour}:{fechaSeleccionada.Minute:D2}");
+                    await MostrarSnackbar("Ya existe una cita en esta fecha y hora. Elija otro horario.", Colors.DarkRed, Colors.White);
+                    return;
+                }
+
+                CitaModel nuevaReserva = new CitaModel
+                {
+                    Id = id,
+                    Nombre = NombreEntry.Text,
+                    Telefono = TelefonoEntry.Text,
+                    Fecha = fechaSeleccionada
+                };
+
+                Console.WriteLine($"Intentando guardar cita: ID={nuevaReserva.Id}, Fecha={nuevaReserva.Fecha:yyyy-MM-dd HH:mm:ss}");
+
+                bool guardadoExitoso = await _reservationServices.AddReservation(nuevaReserva);
+                Console.WriteLine($"Resultado del guardado: {(guardadoExitoso ? "Éxito" : "Fallo")}");
+
+                MostrarLoader(false);
+
+                if (guardadoExitoso)
+                {
+                    await MostrarSnackbar("La reserva se guardó correctamente.", Colors.Green, Colors.White);
+                    Limpiarcampos();
+                }
+                else
+                {
+                    var citasActualizadas = await _reservationServices.GetReservations(FechaPicker.Date);
+
+                    var citasFiltradas = citasActualizadas?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? new List<CitaModel>();
+
+                    bool ahoraHayConflicto = citasFiltradas.Any(c =>
+                        c.Fecha.Hour == fechaSeleccionada.Hour &&
+                        c.Fecha.Minute == fechaSeleccionada.Minute);
+
+                    if (ahoraHayConflicto)
+                    {
+                        Console.WriteLine("Se detectó conflicto al verificar después del fallo");
+                        await MostrarSnackbar("Ya existe una cita en esta fecha y hora. Elija otro horario.", Colors.DarkRed, Colors.White);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Fallo al guardar sin detectar conflicto");
+                        await MostrarSnackbar("Hubo un problema al guardar la reserva.", Colors.DarkRed, Colors.White);
+                    }
+                }
             }
-
-            if (string.IsNullOrWhiteSpace(IdEntry.Text) || !int.TryParse(IdEntry.Text, out int id))
+            catch (Exception ex)
             {
-                await DisplayAlert("Validación", "Por favor, ingrese un ID válido.", "Aceptar");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(NombreEntry.Text) || NombreEntry.Text.Length < 2 || NombreEntry.Text.Length > 50)
-            {
-                await DisplayAlert("Validación", "El Nombre debe tener entre 2 y 50 caracteres.", "Aceptar");
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(TelefonoEntry.Text) || !TelefonoEntry.Text.All(char.IsDigit) || TelefonoEntry.Text.Length != 10)
-            {
-                await DisplayAlert("Validación", "El Teléfono debe contener 10 dígitos numéricos.", "Aceptar");
-                return;
-            }
-
-            if (FechaPicker.Date < DateTime.Today)
-            {
-                await DisplayAlert("Validación", "La fecha de la cita debe ser futura.", "Aceptar");
-                return;
-            }
-
-            DateTime fechaSeleccionada = FechaPicker.Date.Add(HoraPicker.Time);
-
-            var citasExistentes = await _reservationServices.GetReservations(FechaPicker.Date);
-
-            Console.WriteLine($"🔹 Citas encontradas para {FechaPicker.Date}: {citasExistentes.Count}");
-            foreach (var cita in citasExistentes)
-            {
-                Console.WriteLine($"🔹 Cita existente - Fecha: {cita.Fecha}");
-            }
-
-            if (citasExistentes.Any(c => c.Fecha.Date == fechaSeleccionada.Date && c.Fecha.TimeOfDay == fechaSeleccionada.TimeOfDay))
-            {
-                await DisplayAlert("Error", "Ya existe una cita en esta fecha y hora. Elija otro horario.", "Aceptar");
-                return;
-            }
-
-            CitaModel nuevaReserva = new CitaModel
-            {
-                Id = id,
-                Nombre = NombreEntry.Text,
-                Telefono = TelefonoEntry.Text,
-                Fecha = fechaSeleccionada
-            };
-
-            bool guardadoExitoso = await _reservationServices.AddReservation(nuevaReserva);
-
-            if (guardadoExitoso)
-            {
-                await DisplayAlert("Éxito", "La reserva se guardó correctamente.", "Aceptar");
-                Limpiarcampos();
-            }
-            else
-            {
-                await DisplayAlert("Error", "Hubo un problema al guardar la reserva.", "Aceptar");
+                Console.WriteLine($"ERROR: {ex.Message}");
+                Console.WriteLine($"STACK TRACE: {ex.StackTrace}");
+                MostrarLoader(false);
+                await MostrarSnackbar("Ocurrió un error al procesar la solicitud.", Colors.DarkRed, Colors.White);
             }
         }
-
-
         private async void OnCancelarClicked(object sender, EventArgs e)
         {
             await AnimateButtonClick(sender as Button);
@@ -163,7 +221,6 @@ namespace Gasolutions.Maui.App
             HoraPicker.Time = TimeSpan.Zero;
         }
 
-        // Métodos de animación simplificados
         private async Task AnimateButtonClick(Button button)
         {
             if (button == null) return;
@@ -184,96 +241,29 @@ namespace Gasolutions.Maui.App
             await control.TranslateTo(0, 0, timeout);
         }
 
-        private async Task MostrarMensajeAnimado(string mensaje)
-        {
-            // Crear label de mensaje
-            Label mensajeLabel = new Label
-            {
-                Text = mensaje,
-                TextColor = Colors.White,
-                BackgroundColor = Color.FromArgb("#CC770000"),
-                HorizontalTextAlignment = TextAlignment.Center,
-                VerticalTextAlignment = TextAlignment.Center,
-                FontAttributes = FontAttributes.Bold,
-                Padding = new Thickness(15),
-                Opacity = 0
-            };
-
-            Frame frameAlerta = new Frame
-            {
-                BorderColor = Colors.Red,
-                BackgroundColor = Colors.Transparent,
-                CornerRadius = 10,
-                HasShadow = true,
-                Content = mensajeLabel,
-                HorizontalOptions = LayoutOptions.Fill,
-                Margin = new Thickness(20, 5),
-                Opacity = 0
-            };
-
-            // Añadir al layout y animar
-            formLayout.Children.Add(frameAlerta);
-
-            await frameAlerta.FadeTo(1, 300);
-            await frameAlerta.ScaleTo(1.05, 150);
-            await frameAlerta.ScaleTo(1, 150);
-
-            // Mantener visible por un momento
-            await Task.Delay(2500);
-
-            // Hacer fade out y remover
-            await frameAlerta.FadeTo(0, 300);
-            formLayout.Children.Remove(frameAlerta);
-        }
-
-        private async Task MostrarConfirmacionAnimada()
-        {
-            // Crear Frame de confirmación
-            Label mensajeLabel = new Label
-            {
-                Text = "¡Reserva guardada exitosamente! 👍",
-                TextColor = Colors.White,
-                BackgroundColor = Color.FromArgb("#CC006600"),
-                HorizontalTextAlignment = TextAlignment.Center,
-                VerticalTextAlignment = TextAlignment.Center,
-                FontAttributes = FontAttributes.Bold,
-                FontSize = 18,
-                Padding = new Thickness(15),
-                Opacity = 0
-            };
-
-            Frame frameConfirmacion = new()
-            {
-                BorderColor = Colors.Green,
-                BackgroundColor = Colors.Transparent,
-                CornerRadius = 10,
-                HasShadow = true,
-                Content = mensajeLabel,
-                HorizontalOptions = LayoutOptions.Fill,
-                Margin = new Thickness(20, 5),
-                Opacity = 0
-            };
-
-            // Añadir al layout y animar
-            formLayout.Children.Add(frameConfirmacion);
-
-            await frameConfirmacion.FadeTo(1, 300);
-            await frameConfirmacion.ScaleTo(1.1, 200);
-            await frameConfirmacion.ScaleTo(1, 200);
-
-            // Mantener visible por un momento
-            await Task.Delay(2000);
-
-            // Hacer fade out y remover
-            await frameConfirmacion.FadeTo(0, 300);
-            formLayout.Children.Remove(frameConfirmacion);
-        }
-
         private async Task AnimarSalida()
         {
             await formLayout.FadeTo(0, 300);
             await formLayout.TranslateTo(0, 50, 300);
             await Task.Delay(200);
+        }
+        private void MostrarLoader(bool mostrar)
+        {
+            LoaderOverlay.IsVisible = mostrar;
+        }
+        private async Task MostrarSnackbar(string mensaje, Color background, Color textColor)
+        {
+            var snackbarOptions = new SnackbarOptions
+            {
+                BackgroundColor = background,
+                TextColor = textColor,
+                CornerRadius = new CornerRadius(30),
+                Font = Font.OfSize("Arial", 16),
+                CharacterSpacing = 0
+            };
+
+            var snackbar = Snackbar.Make(mensaje, duration: TimeSpan.FromSeconds(3), visualOptions: snackbarOptions);
+            await snackbar.Show();
         }
     }
 }

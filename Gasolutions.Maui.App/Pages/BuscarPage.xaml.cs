@@ -1,6 +1,10 @@
-﻿using Gasolutions.Maui.App.Models;
+﻿using CommunityToolkit.Maui.Core;
+using Gasolutions.Maui.App.Models;
 using Gasolutions.Maui.App.Services;
 using System.Collections.ObjectModel;
+using Font = Microsoft.Maui.Font;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 
 namespace Gasolutions.Maui.App.Pages
 {
@@ -29,30 +33,60 @@ namespace Gasolutions.Maui.App.Pages
 
         private async Task ActualizarLista()
         {
-            CitasFiltradas.Clear();
-
-            if (string.IsNullOrWhiteSpace(SearchEntry.Text) || !long.TryParse(SearchEntry.Text, out long id))
+            try
             {
-                await DisplayAlert("Error", "Ingrese un ID válido.", "Aceptar");
-                return;
+                MostrarLoader(true);
+
+                CitasFiltradas.Clear();
+
+                if (string.IsNullOrWhiteSpace(SearchEntry.Text) || !long.TryParse(SearchEntry.Text, out long id))
+                {
+                    await MostrarSnackbar("Ingrese un ID válido.", Colors.Orange, Colors.White);
+                    return;
+                }
+
+                var cita = await _reservationService.GetReservationsById(id);
+
+                if (cita == null)
+                {
+                    await MostrarSnackbar("No se encontró ninguna cita con ese ID.",Colors.Red, Colors.White);
+                    return;
+                }
+
+                CitasFiltradas.Add(cita);
             }
-
-            var cita = await _reservationService.GetReservationsById(id);
-
-            if (cita == null)
+            catch (Exception ex)
             {
-                await DisplayAlert("Error", "No se encontró ninguna cita con ese ID.", "Aceptar");
-                return;
+                await MostrarSnackbar($"Ocurrió un error: {ex.Message}", Colors.DarkRed, Colors.White);
             }
-
-            CitasFiltradas.Add(cita);
+            finally
+            {
+                MostrarLoader(false);
+            }
         }
-
 
         private void OnClearClicked(object sender, EventArgs e)
         {
             SearchEntry.Text = string.Empty;
             CitasFiltradas.Clear();
+        }
+        private void MostrarLoader(bool mostrar)
+        {
+            LoaderOverlay.IsVisible = mostrar;
+        }
+        private async Task MostrarSnackbar(string mensaje, Color background, Color textColor)
+        {
+            var snackbarOptions = new SnackbarOptions
+            {
+                BackgroundColor = background,
+                TextColor = textColor,
+                CornerRadius = new CornerRadius(30),
+                Font = Font.OfSize("Arial", 16),
+                CharacterSpacing = 0
+            };
+
+            var snackbar = Snackbar.Make(mensaje, duration: TimeSpan.FromSeconds(3), visualOptions: snackbarOptions);
+            await snackbar.Show();
         }
     }
 

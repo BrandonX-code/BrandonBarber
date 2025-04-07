@@ -11,7 +11,12 @@ namespace Gasolutions.Maui.App
         {
             var builder = MauiApp.CreateBuilder();
             builder
-                .UseMauiApp<App>()
+                .UseMauiApp<App>();
+                 builder
+                .UseMauiCommunityToolkit(options =>
+                {
+                    options.SetShouldEnableSnackbarOnWindows(true); // 👈 Habilita Snackbar en Windows
+                })
                 .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
@@ -47,10 +52,12 @@ namespace Gasolutions.Maui.App
             builder.Services.AddSingleton<BuscarPage>();
             builder.Services.AddSingleton<ListaCitas>();
             builder.UseMauiApp<App>().UseMauiCommunityToolkit();
+           
 
 
 #if DEBUG
             builder.Logging.AddDebug();
+
 #endif
 
             return builder.Build();

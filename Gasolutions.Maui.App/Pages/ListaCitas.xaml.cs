@@ -1,6 +1,9 @@
 ﻿using Gasolutions.Maui.App.Models;
 using Gasolutions.Maui.App.Services;
 using System.Collections.ObjectModel;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using Font = Microsoft.Maui.Font;
 
 namespace Gasolutions.Maui.App.Pages
 {
@@ -21,16 +24,15 @@ namespace Gasolutions.Maui.App.Pages
         {
             try
             {
+                MostrarLoader(true);
+
                 var listaReservas = await _reservationService.GetReservations(datePicker.Date);
 
                 CitasFiltradas.Clear();
 
                 if (listaReservas == null || !listaReservas.Any())
                 {
-                    await MainThread.InvokeOnMainThreadAsync(async () =>
-                    {
-                        await DisplayAlert("Sin Reservas", "No hay reservas para esta fecha.", "OK");
-                    });
+                    await MostrarSnackbar("No hay reservas para esta fecha.", Colors.DarkRed, Colors.White);
                 }
                 else
                 {
@@ -42,13 +44,14 @@ namespace Gasolutions.Maui.App.Pages
             }
             catch (Exception)
             {
-                await MainThread.InvokeOnMainThreadAsync(async () =>
-                {
-                    await DisplayAlert("Error", "Hubo un problema al recuperar las reservas. Intenta de nuevo.", "OK");
-                });
+                await MostrarSnackbar("Hubo un problema al recuperar las reservas.", Colors.Red, Colors.White);
+            }
+            finally 
+            {
+                MostrarLoader(false);
+
             }
         }
-
 
         private async void EliminarCitasSeleccionadas(object sender, EventArgs e)
         {
@@ -56,10 +59,7 @@ namespace Gasolutions.Maui.App.Pages
 
             if (!citasAEliminar.Any())
             {
-                await MainThread.InvokeOnMainThreadAsync(async () =>
-                {
-                    await DisplayAlert("Selección Vacía", "Debes seleccionar al menos una cita para eliminar.", "OK");
-                });
+                await MostrarSnackbar("Debes seleccionar al menos una cita para eliminar.", Colors.Orange, Colors.White);
             }
             else
             {
@@ -68,11 +68,27 @@ namespace Gasolutions.Maui.App.Pages
                     CitasFiltradas.Remove(cita);
                 }
 
-                await MainThread.InvokeOnMainThreadAsync(async () =>
-                {
-                    await DisplayAlert("Éxito", "Citas seleccionadas eliminadas.", "OK");
-                });
+                await MostrarSnackbar("Citas seleccionadas eliminadas.", Colors.Green, Colors.White);
             }
+        }
+
+        private async Task MostrarSnackbar(string mensaje, Color background, Color textColor)
+        {
+            var snackbarOptions = new SnackbarOptions
+            {
+                BackgroundColor = background,
+                TextColor = textColor,
+                CornerRadius = new CornerRadius(30),
+                Font = Font.OfSize("Arial", 16),
+                CharacterSpacing = 0
+            };
+
+            var snackbar = Snackbar.Make(mensaje, duration: TimeSpan.FromSeconds(3), visualOptions: snackbarOptions);
+            await snackbar.Show();
+        }
+        private void MostrarLoader(bool mostrar)
+        {
+            LoaderOverlay.IsVisible = mostrar;
         }
 
 
