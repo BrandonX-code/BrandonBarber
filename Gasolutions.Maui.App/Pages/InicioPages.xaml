@@ -6,19 +6,11 @@
             <Image Source="barber.jpg" Aspect="AspectFill" Opacity="0.8"/>
             <VerticalStackLayout Padding="20" Spacing="70" ZIndex="1">
 
-                <HorizontalStackLayout Spacing="245" VerticalOptions="Center">
-                    <Label Text="Inicio"
-           FontSize="32"
-           FontAttributes="Bold"
-           TextColor="#c0aa4f"
-           VerticalOptions="Center"
-           HorizontalOptions="Start" />
+                <Grid ColumnDefinitions="*,Auto">
+                    <Label Text="Inicio" FontSize="32" FontAttributes="Bold" TextColor="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Start" />
 
-                    <ImageButton Source="user.png"
-                 BackgroundColor="Transparent"
-                 HeightRequest="32"
-                 WidthRequest="32" />
-                </HorizontalStackLayout>
+                    <ImageButton Source="user.png" BackgroundColor="Transparent" HeightRequest="32" WidthRequest="32"  VerticalOptions="Center" HorizontalOptions="End" Clicked="OnIconClicked" />
+                </Grid>
 
 
                 <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">

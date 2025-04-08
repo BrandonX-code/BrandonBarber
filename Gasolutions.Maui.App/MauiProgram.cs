@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Gasolutions.Maui.App.Pages;
 using Gasolutions.Maui.App.Services;
+using Microcharts.Maui;
 using Microsoft.Extensions.Logging;
 
 namespace Gasolutions.Maui.App
@@ -18,6 +19,7 @@ namespace Gasolutions.Maui.App
                     options.SetShouldEnableSnackbarOnWindows(true); // 👈 Habilita Snackbar en Windows
                 })
                 .UseMauiCommunityToolkit()
+                .UseMicrocharts()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

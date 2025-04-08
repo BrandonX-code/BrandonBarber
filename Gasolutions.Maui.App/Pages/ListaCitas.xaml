@@ -5,7 +5,7 @@
 
     <AbsoluteLayout>
 
-        <Image Source="barber.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />
+        <Image Source="barber.jpg" Opacity="0.90" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />
 
         <Grid RowDefinitions="Auto, Auto, *" Padding="20" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <VerticalStackLayout Spacing="15">
