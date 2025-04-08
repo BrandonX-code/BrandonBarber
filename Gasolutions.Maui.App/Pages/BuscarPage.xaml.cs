@@ -36,24 +36,26 @@ namespace Gasolutions.Maui.App.Pages
             try
             {
                 MostrarLoader(true);
-
                 CitasFiltradas.Clear();
 
-                if (string.IsNullOrWhiteSpace(SearchEntry.Text) || !long.TryParse(SearchEntry.Text, out long id))
+                if (string.IsNullOrWhiteSpace(SearchEntry.Text) || !long.TryParse(SearchEntry.Text, out long cedula))
                 {
-                    await MostrarSnackbar("Ingrese un ID válido.", Colors.Orange, Colors.White);
+                    await MostrarSnackbar("Ingrese una Cédula válida.", Colors.Orange, Colors.White);
                     return;
                 }
 
-                var cita = await _reservationService.GetReservationsById(id);
+                var citas = await _reservationService.GetReservationsById(cedula);
 
-                if (cita == null)
+                if (citas == null || !citas.Any())
                 {
-                    await MostrarSnackbar("No se encontró ninguna cita con ese ID.",Colors.Red, Colors.White);
+                    await MostrarSnackbar("No se encontró ninguna cita con esa Cédula.", Colors.Red, Colors.White);
                     return;
                 }
 
-                CitasFiltradas.Add(cita);
+                foreach (var cita in citas)
+                {
+                    CitasFiltradas.Add(cita);
+                }
             }
             catch (Exception ex)
             {
@@ -64,6 +66,7 @@ namespace Gasolutions.Maui.App.Pages
                 MostrarLoader(false);
             }
         }
+
 
         private void OnClearClicked(object sender, EventArgs e)
         {

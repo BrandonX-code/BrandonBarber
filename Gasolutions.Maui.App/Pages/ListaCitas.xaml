@@ -9,7 +9,7 @@
 
         <Grid RowDefinitions="Auto, Auto, *" Padding="20" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <VerticalStackLayout Spacing="15">
-                <Label Text="Citas Agendadas 🗓️" TextColor="#c0aa4f" FontSize="Large" FontAttributes="Bold"  HorizontalOptions="Center" />
+                <Label Text="Citas Agendadas 🗓️" TextColor="#c0aa4f" FontSize="Large" FontAttributes="Bold"  HorizontalOptions="Start" />
                 <Frame CornerRadius="12" Padding="0" HasShadow="True" BackgroundColor="#333" BorderColor="#c0aa4f" WidthRequest="260" HorizontalOptions="Center">
                     <DatePicker x:Name="datePicker" Date="{Binding FechaSeleccionada, Mode=TwoWay}" Format="dd/MM/yyyy" BackgroundColor="#333333" TextColor="White" WidthRequest="250" FontSize="20" FontAttributes="Bold"  HeightRequest="65"/>
                 </Frame>
@@ -35,7 +35,12 @@
                 </CollectionView>
             </VerticalStackLayout>
         </Grid>
-        <Grid x:Name="LoaderOverlay" BackgroundColor="#80000000" IsVisible="False" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ZIndex="10">
+        <Grid x:Name="LoaderOverlay" BackgroundColor="#80000000" IsVisible="False" InputTransparent="False" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ZIndex="10">
+            <BoxView BackgroundColor="Transparent">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer />
+                </BoxView.GestureRecognizers>
+            </BoxView>
             <ActivityIndicator IsRunning="True" Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="50" HeightRequest="50"/>
         </Grid>
     </AbsoluteLayout>

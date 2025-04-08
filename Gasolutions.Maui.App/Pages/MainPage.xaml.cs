@@ -27,14 +27,8 @@ namespace Gasolutions.Maui.App
         private async Task StartEntryAnimations()
         {
             await mainContent.FadeTo(1, 500, Easing.CubicInOut);
-
-            var headerAnimation = headerGrid.TranslateTo(0, 0, 500, Easing.SpringOut);
-            //var footerAnimation = footerGrid.TranslateTo(0, 0, 500, Easing.SpringOut);
-            await Task.WhenAll(headerAnimation);
-
             await formLayout.FadeTo(1, 300);
             await formLayout.TranslateTo(0, 0, 400, Easing.CubicOut);
-
             uint delay = 100;
             await idBorder.FadeTo(1, 300);
             await Task.Delay((int)delay);
@@ -82,12 +76,13 @@ namespace Gasolutions.Maui.App
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(IdEntry.Text) || !int.TryParse(IdEntry.Text, out int id))
+                if (string.IsNullOrWhiteSpace(CedulaEntry.Text) || !long.TryParse(CedulaEntry.Text, out long cedula) || CedulaEntry.Text.Length < 6 || CedulaEntry.Text.Length > 10)
                 {
                     MostrarLoader(false);
-                    await MostrarSnackbar("Por favor, ingrese un ID válido.", Colors.Orange, Colors.White);
+                    await MostrarSnackbar("Por favor, ingrese una cédula válida (entre 6 y 10 dígitos).", Colors.Orange, Colors.White);
                     return;
                 }
+
 
                 if (string.IsNullOrWhiteSpace(NombreEntry.Text) || NombreEntry.Text.Length < 2 || NombreEntry.Text.Length > 50)
                 {
@@ -110,7 +105,6 @@ namespace Gasolutions.Maui.App
                     return;
                 }
 
-
                 DateTime fechaSeleccionada = FechaPicker.Date.Add(HoraPicker.Time);
                 Console.WriteLine($"Fecha y hora seleccionada: {fechaSeleccionada:yyyy-MM-dd HH:mm:ss}");
 
@@ -120,11 +114,6 @@ namespace Gasolutions.Maui.App
                 var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? new List<CitaModel>();
 
                 Console.WriteLine($"Citas filtradas solo para fecha actual: {citasActuales.Count}");
-
-                foreach (var cita in citasActuales)
-                {
-                    Console.WriteLine($"Cita existente: ID={cita.Id}, Fecha={cita.Fecha:yyyy-MM-dd HH:mm:ss}");
-                }
 
                 bool conflictoHora = false;
                 CitaModel citaConflicto = null;
@@ -147,16 +136,23 @@ namespace Gasolutions.Maui.App
                     await MostrarSnackbar("Ya existe una cita en esta fecha y hora. Elija otro horario.", Colors.DarkRed, Colors.White);
                     return;
                 }
+                bool cedulaYaRegistrada = citasActuales.Any(c => c.Cedula == cedula);
+                if (cedulaYaRegistrada)
+                {
+                    MostrarLoader(false);
+                    await MostrarSnackbar("Ya existe una cita registrada con esta cédula para el día seleccionado.", Colors.OrangeRed, Colors.White);
+                    return;
+                }
 
                 CitaModel nuevaReserva = new CitaModel
                 {
-                    Id = id,
+                    Cedula = cedula,
                     Nombre = NombreEntry.Text,
                     Telefono = TelefonoEntry.Text,
                     Fecha = fechaSeleccionada
                 };
 
-                Console.WriteLine($"Intentando guardar cita: ID={nuevaReserva.Id}, Fecha={nuevaReserva.Fecha:yyyy-MM-dd HH:mm:ss}");
+                Console.WriteLine($"Intentando guardar cita: Cedula={nuevaReserva.Cedula}, Fecha={nuevaReserva.Fecha:yyyy-MM-dd HH:mm:ss}");
 
                 bool guardadoExitoso = await _reservationServices.AddReservation(nuevaReserva);
                 Console.WriteLine($"Resultado del guardado: {(guardadoExitoso ? "Éxito" : "Fallo")}");
@@ -171,7 +167,6 @@ namespace Gasolutions.Maui.App
                 else
                 {
                     var citasActualizadas = await _reservationServices.GetReservations(FechaPicker.Date);
-
                     var citasFiltradas = citasActualizadas?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? new List<CitaModel>();
 
                     bool ahoraHayConflicto = citasFiltradas.Any(c =>
@@ -198,6 +193,7 @@ namespace Gasolutions.Maui.App
                 await MostrarSnackbar("Ocurrió un error al procesar la solicitud.", Colors.DarkRed, Colors.White);
             }
         }
+
         private async void OnCancelarClicked(object sender, EventArgs e)
         {
             await AnimateButtonClick(sender as Button);
@@ -214,7 +210,7 @@ namespace Gasolutions.Maui.App
 
         private void Limpiarcampos()
         {
-            IdEntry.Text = string.Empty;
+            CedulaEntry.Text = string.Empty;
             NombreEntry.Text = string.Empty;
             TelefonoEntry.Text = string.Empty;
             FechaPicker.Date = DateTime.Today;

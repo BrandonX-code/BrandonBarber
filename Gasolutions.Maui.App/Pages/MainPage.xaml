@@ -42,18 +42,16 @@
         <Image Source="barber.jpg" Aspect="AspectFill" Opacity="0.90" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All"/>
 
         <Grid x:Name="mainContent" Opacity="0" RowDefinitions="Auto, *, Auto" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
-
-            <Grid x:Name="headerGrid" BackgroundColor="Black" Opacity="0.85" HeightRequest="80" Grid.Row="0" TranslationY="-80">
-                <Label Text="Reservar Turno 💈" HorizontalOptions="Center" VerticalOptions="Center" TextColor="#c0aa4f" FontAttributes="Bold" FontSize="Large"/>
-            </Grid>
-
+            
+            <Label Text="Reservar Turno 💈" FontSize="32" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Start" />
+            
             <ScrollView Grid.Row="1">
                 <VerticalStackLayout x:Name="formLayout" Padding="20" Spacing="18" BackgroundColor="Transparent" TranslationY="50" Opacity="0">
 
                     <Border x:Name="idBorder" Stroke="#c0aa4f" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#2b2b2b" Padding="15,12" Margin="0,0,0,10">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Id:" TextColor="White" FontSize="16"/>
-                            <Entry x:Name="IdEntry" Placeholder="Ingrese el ID" Keyboard="Numeric" Style="{StaticResource EntryStyle}" />
+                            <Entry x:Name="CedulaEntry" Placeholder="Ingrese el ID" Keyboard="Numeric" Style="{StaticResource EntryStyle}" />
                         </VerticalStackLayout>
                     </Border>
 
@@ -104,6 +102,11 @@
             </ScrollView>
         </Grid>
         <Grid x:Name="LoaderOverlay" BackgroundColor="#80000000" IsVisible="False" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ZIndex="10">
+            <BoxView BackgroundColor="Transparent">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer />
+                </BoxView.GestureRecognizers>
+            </BoxView>
             <ActivityIndicator IsRunning="True" Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="50" HeightRequest="50"/>
         </Grid>
     </AbsoluteLayout>

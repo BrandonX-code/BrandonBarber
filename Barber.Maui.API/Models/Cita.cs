@@ -2,7 +2,8 @@
 {
     public class Cita
     {
-        public long Id { get; set; }
+        public int Id { get; set; }
+        public long Cedula { get; set; }
         public string Nombre { get; set; }
         public string Telefono { get; set; }
         public DateTime Fecha { get; set; } = DateTime.Now;

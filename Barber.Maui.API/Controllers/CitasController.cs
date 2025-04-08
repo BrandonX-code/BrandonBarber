@@ -21,18 +21,22 @@ public class CitasController : ControllerBase
     }
 
 
-    [HttpGet("{id}")]
-    public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorId(long id)
+    [HttpGet("{cedula}")]
+    public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorCedula(long cedula)
     {
-        var cita = await _context.Citas.FindAsync(id);
+        var citas = await _context.Citas
+            .Where(c => c.Cedula == cedula)
+            .ToListAsync();
 
-        if (cita == null)
+        if (citas == null || citas.Count == 0)
         {
             return NotFound();
         }
 
-        return Ok(cita);
+        return Ok(citas);
     }
+
+
     [HttpGet("by-date/{fecha}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorFecha(DateTime fecha)
     {
@@ -62,7 +66,7 @@ public class CitasController : ControllerBase
         {
             _context.Citas.Add(nuevaCita);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetCitasPorId), new { id = nuevaCita.Id }, nuevaCita);
+            return CreatedAtAction(nameof(GetCitasPorCedula), new { id = nuevaCita.Id }, nuevaCita);
         }
         catch (Exception ex)
         {

@@ -75,24 +75,24 @@ namespace Gasolutions.Maui.App.Services
                 return new List<CitaModel>();
             }
         }
-        
-        public async Task<CitaModel> GetReservationsById(long id)
+
+        public async Task<List<CitaModel>> GetReservationsById(long cedula)
         {
-            var response = await _httpClient.GetAsync(_httpClient.BaseAddress + $"/{id}");
+            var response = await _httpClient.GetAsync(_httpClient.BaseAddress + $"/{cedula}");
 
             if (!response.IsSuccessStatusCode)
-                return new CitaModel();
+                return new List<CitaModel>();
 
             var json = await response.Content.ReadAsStringAsync();
 
-            var Cita = JsonSerializer.Deserialize<CitaModel>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            var citas = JsonSerializer.Deserialize<List<CitaModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-            return Cita;
+            return citas ?? new List<CitaModel>();
         }
 
-        public static bool ExistsReservation(int id)
+        public static bool ExistsReservation(int cedula)
         {
-            return _reservations.Any(c => c.Id == id);
+            return _reservations.Any(c => c.Cedula == cedula);
         }
 
 
