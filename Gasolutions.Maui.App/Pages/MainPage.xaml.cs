@@ -29,8 +29,8 @@ namespace Gasolutions.Maui.App
             await mainContent.FadeTo(1, 500, Easing.CubicInOut);
 
             var headerAnimation = headerGrid.TranslateTo(0, 0, 500, Easing.SpringOut);
-            var footerAnimation = footerGrid.TranslateTo(0, 0, 500, Easing.SpringOut);
-            await Task.WhenAll(headerAnimation, footerAnimation);
+            //var footerAnimation = footerGrid.TranslateTo(0, 0, 500, Easing.SpringOut);
+            await Task.WhenAll(headerAnimation);
 
             await formLayout.FadeTo(1, 300);
             await formLayout.TranslateTo(0, 0, 400, Easing.CubicOut);
@@ -227,18 +227,6 @@ namespace Gasolutions.Maui.App
 
             await button.ScaleTo(0.9, 100);
             await button.ScaleTo(1, 100);
-        }
-
-        private async Task ShakeControl(VisualElement control)
-        {
-            uint timeout = 50;
-            double shakeDistance = 10;
-
-            await control.TranslateTo(-shakeDistance, 0, timeout);
-            await control.TranslateTo(shakeDistance, 0, timeout);
-            await control.TranslateTo(-shakeDistance, 0, timeout);
-            await control.TranslateTo(shakeDistance, 0, timeout);
-            await control.TranslateTo(0, 0, timeout);
         }
 
         private async Task AnimarSalida()

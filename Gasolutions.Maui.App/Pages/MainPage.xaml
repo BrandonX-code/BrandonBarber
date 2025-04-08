@@ -39,46 +39,46 @@
     </ContentPage.Resources>
 
     <AbsoluteLayout>
-        <Image Source="img.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All"/>
+        <Image Source="barber.jpg" Aspect="AspectFill" Opacity="0.90" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All"/>
 
         <Grid x:Name="mainContent" Opacity="0" RowDefinitions="Auto, *, Auto" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
 
             <Grid x:Name="headerGrid" BackgroundColor="Black" Opacity="0.85" HeightRequest="80" Grid.Row="0" TranslationY="-80">
-                <Label Text="Reservar Turno 💈" HorizontalOptions="Center" VerticalOptions="Center" TextColor="Gold" FontAttributes="Bold" FontSize="22"/>
+                <Label Text="Reservar Turno 💈" HorizontalOptions="Center" VerticalOptions="Center" TextColor="#c0aa4f" FontAttributes="Bold" FontSize="Large"/>
             </Grid>
 
             <ScrollView Grid.Row="1">
                 <VerticalStackLayout x:Name="formLayout" Padding="20" Spacing="18" BackgroundColor="Transparent" TranslationY="50" Opacity="0">
 
-                    <Border x:Name="idBorder" Stroke="Gold" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#80000000" Padding="15,12" Margin="0,0,0,10">
+                    <Border x:Name="idBorder" Stroke="#c0aa4f" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#2b2b2b" Padding="15,12" Margin="0,0,0,10">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Id:" TextColor="White" FontSize="16"/>
                             <Entry x:Name="IdEntry" Placeholder="Ingrese el ID" Keyboard="Numeric" Style="{StaticResource EntryStyle}" />
                         </VerticalStackLayout>
                     </Border>
 
-                    <Border x:Name="nombreBorder" Stroke="Gold" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#80000000" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                    <Border x:Name="nombreBorder" Stroke="#c0aa4f" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#2b2b2b" Padding="15,12" Margin="0,0,0,10" Opacity="0">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Nombre:" TextColor="White" FontSize="16"/>
                             <Entry x:Name="NombreEntry" Placeholder="Ingrese su Nombre" Style="{StaticResource EntryStyle}" />
                         </VerticalStackLayout>
                     </Border>
 
-                    <Border x:Name="telefonoBorder" Stroke="Gold" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#80000000" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                    <Border x:Name="telefonoBorder" Stroke="#c0aa4f" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#2b2b2b" Padding="15,12" Margin="0,0,0,10" Opacity="0">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Teléfono:" TextColor="White" FontSize="16"/>
                             <Entry x:Name="TelefonoEntry" Placeholder="Ingrese su Teléfono" Keyboard="Telephone" Style="{StaticResource EntryStyle}" />
                         </VerticalStackLayout>
                     </Border>
 
-                    <Border x:Name="fechaBorder" Stroke="Gold" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#80000000" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                    <Border x:Name="fechaBorder" Stroke="#c0aa4f" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#2b2b2b" Padding="15,12" Margin="0,0,0,10" Opacity="0">
                         <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
                             <Label Text="Fecha de Cita:" TextColor="White" FontSize="16"/>
                             <DatePicker x:Name="FechaPicker" BackgroundColor="#333333" TextColor="White" HorizontalOptions="FillAndExpand"/>
                         </VerticalStackLayout>
                     </Border>
 
-                    <Border x:Name="horaBorder" Stroke="Gold" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#80000000" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                    <Border x:Name="horaBorder" Stroke="#c0aa4f" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#2b2b2b" Padding="15,12" Margin="0,0,0,10" Opacity="0">
                         <VerticalStackLayout Spacing="10" HorizontalOptions="Center">
                             <Label Text="Hora de Cita:" TextColor="White" FontSize="16"/>
                             <TimePicker x:Name="HoraPicker" BackgroundColor="#333333" TextColor="White" HorizontalOptions="FillAndExpand"/>
@@ -93,7 +93,7 @@
                             </Button.Shadow>
                         </Button>
 
-                        <Button Text="Reservar" Clicked="OnGuardarClicked" WidthRequest="130" BackgroundColor="Gold" TextColor="White" 
+                        <Button Text="Reservar" Clicked="OnGuardarClicked" WidthRequest="130" BackgroundColor="#c0aa4f" TextColor="White" 
                                 CornerRadius="10" FontAttributes="Bold">
                             <Button.Shadow>
                                 <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.6" />
@@ -102,17 +102,9 @@
                     </HorizontalStackLayout>
                 </VerticalStackLayout>
             </ScrollView>
-
-            <Grid x:Name="footerGrid" BackgroundColor="Black" Opacity="0.85" HeightRequest="65" Grid.Row="2" TranslationY="65">
-                <HorizontalStackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Spacing="15">
-                    <Button Text="Inicio" Clicked="OnInicioClicked" Style="{StaticResource ButtonStyle}"/>
-                    <Button Text="Buscar" Clicked="OnBuscarClicked" Style="{StaticResource ButtonStyle}"/>
-                    <Button Text="Lista Citas" Clicked="OnConfiguracionClicked" Style="{StaticResource ButtonStyle}"/>
-                </HorizontalStackLayout>
-            </Grid>
         </Grid>
         <Grid x:Name="LoaderOverlay" BackgroundColor="#80000000" IsVisible="False" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ZIndex="10">
-            <ActivityIndicator IsRunning="True" Color="Gold" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="50" HeightRequest="50"/>
+            <ActivityIndicator IsRunning="True" Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="50" HeightRequest="50"/>
         </Grid>
     </AbsoluteLayout>
 </ContentPage>

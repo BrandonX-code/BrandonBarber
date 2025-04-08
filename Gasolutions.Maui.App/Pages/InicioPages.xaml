@@ -1,14 +1,60 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Gasolutions.Maui.App.InicioPages" >
-    <Grid BackgroundColor="#566573">
-        <Image Source="barber.jpg" Aspect="AspectFill" Opacity="0.5"></Image>
-        <VerticalStackLayout VerticalOptions="Center" HorizontalOptions="Center" Spacing="20" ZIndex="1">
-            <Label Text="💈" FontSize="Large" FontAttributes="Bold" TextColor="black" HorizontalOptions="Center"/>
-            <Label Text="Bienvenido" FontSize="Medium" TextColor="White" HorizontalOptions="Center"/>
-            <Button Text="Turno" HorizontalOptions="Center" Clicked="MainPage" TextColor="White" WidthRequest="200"/>
-		</VerticalStackLayout>
-	</Grid>
+             x:Class="Gasolutions.Maui.App.InicioPages">
+    <Grid BackgroundColor="#566573" RowDefinitions="*,Auto">
+        <Grid>
+            <Image Source="barber.jpg" Aspect="AspectFill" Opacity="0.8"/>
+            <VerticalStackLayout Padding="20" Spacing="35" ZIndex="1">
+
+                <Label Text="Inicio" FontSize="32" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Start" />
+
+                <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="MainPage" />
+                    </Frame.GestureRecognizers>
+                    <HorizontalStackLayout Spacing="5" HeightRequest="60">
+                        <Image Source="calendar.png" WidthRequest="24" HeightRequest="24" />
+                        <Label Text="Citas" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Frame>
+
+                <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="CitasList" />
+                    </Frame.GestureRecognizers>
+                    <HorizontalStackLayout Spacing="5" HeightRequest="60">
+                        <Image Source="history.png" WidthRequest="24" HeightRequest="24" />
+                        <Label Text="Historial de Citas" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Frame>
+
+                <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="BuscarCitas" />
+                    </Frame.GestureRecognizers>
+                    <HorizontalStackLayout Spacing="5" HeightRequest="60">
+                        <Image Source="busquedacitas.png" WidthRequest="24" HeightRequest="24" />
+                        <Label Text="Buscar Tus Citas" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Frame>
+
+                <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                    <HorizontalStackLayout Spacing="5" HeightRequest="60">
+                        <Image Source="rise.png" WidthRequest="24" HeightRequest="24" />
+                        <Label Text="Estadísticas" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Frame>
+
+            </VerticalStackLayout>
+        </Grid>
+
+        <!--<Grid x:Name="footerGrid" BackgroundColor="Black" Opacity="0.85" HeightRequest="65" Grid.Row="1">
+            <HorizontalStackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Spacing="15">
+                <Button Text="Inicio" Clicked="OnInicioClicked" Style="{StaticResource ButtonStyle}"/>
+                <Button Text="Buscar" Clicked="OnBuscarClicked" Style="{StaticResource ButtonStyle}"/>
+                <Button Text="Lista Citas" Clicked="OnConfiguracionClicked" Style="{StaticResource ButtonStyle}"/>
+            </HorizontalStackLayout>
+        </Grid>-->
+
+    </Grid>
 </ContentPage>

@@ -5,7 +5,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style x:Key="EntryStyle" TargetType="Entry">
-                <Setter Property="BackgroundColor" Value="#222222" />
+                <Setter Property="BackgroundColor" Value="#2b2b2b" />
                 <Setter Property="TextColor" Value="White" />
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="VisualStateManager.VisualStateGroups">
@@ -28,8 +28,8 @@
 
             <Style x:Key="ButtonStyle" TargetType="Button">
                 <Setter Property="BackgroundColor" Value="Transparent" />
-                <Setter Property="TextColor" Value="Gold" />
-                <Setter Property="BorderColor" Value="Gold" />
+                <Setter Property="TextColor" Value="#c0aa4f" />
+                <Setter Property="BorderColor" Value="#c0aa4f" />
                 <Setter Property="BorderWidth" Value="1" />
                 <Setter Property="CornerRadius" Value="10" />
                 <Setter Property="Padding" Value="15,8" />
@@ -37,25 +37,25 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <AbsoluteLayout>
-        <Image Source="img.jpg" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />
+        <Image Source="barber.jpg" Opacity="0.95" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />
         <Grid Padding="20" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
-            <VerticalStackLayout Spacing="15">
-                <Label Text="Búsqueda de Citas🔎" FontSize="Large" FontAttributes="Bold" TextColor="Gold" HorizontalOptions="Center" />
+            <VerticalStackLayout Spacing="40">
+                <Label Text="Búsqueda de Citas🔎" FontSize="Large" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" />
 
-                <Border Stroke="Gold" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#80000000" Padding="15,12" Margin="0,0,0,10">
+                <Border Stroke="#c0aa4f" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#2b2b2b" Padding="15,12" Margin="0,0,0,10">
                     <Entry x:Name="SearchEntry"
                            Keyboard="Numeric"
-                           Placeholder="Ingrese nombre o ID" Style="{StaticResource EntryStyle}" />
+                           Placeholder="Ingrese nombre o ID" Style="{StaticResource EntryStyle}"/>
                 </Border>
 
                 <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
                     <Button Text="Buscar"
-                            TextColor="Black"
+                            TextColor="White"
                             Clicked="OnSearchClicked"
-                            BackgroundColor="Gold"/>
+                            BackgroundColor="#c0aa4f"/>
                     <Button Text="Limpiar"
-                            BackgroundColor="#b2babb"
-                            TextColor="Black"
+                            BackgroundColor="#555"
+                            TextColor="White"
                             Clicked="OnClearClicked"/>
                 </HorizontalStackLayout>
 
@@ -63,10 +63,10 @@
                                 HeightRequest="300">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Frame Padding="10" Margin="5" BorderColor="#444" BackgroundColor="#1F1F1F" CornerRadius="12" HasShadow="True">
+                            <Frame Padding="10" Margin="5" BorderColor="#444" BackgroundColor="#7d7c76" CornerRadius="12" HasShadow="True">
                                 <VerticalStackLayout>
-                                    <Label Text="{Binding Nombre}" FontSize="Medium" TextColor="White"/>
-                                    <Label Text="{Binding FechaConFormato, StringFormat='{0:hh:mm tt}'}" FontSize="Small" TextColor="Gray"/>
+                                    <Label Text="{Binding Nombre}" FontSize="Medium" TextColor="Black"/>
+                                    <Label Text="{Binding FechaConFormato, StringFormat='{0:hh:mm tt}'}" FontSize="Small" TextColor="White"/>
                                 </VerticalStackLayout>
                             </Frame>
                         </DataTemplate>
@@ -77,7 +77,7 @@
 
         </Grid>
         <Grid x:Name="LoaderOverlay" BackgroundColor="#80000000" IsVisible="False" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ZIndex="10">
-            <ActivityIndicator IsRunning="True" Color="Gold" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="50" HeightRequest="50"/>
+            <ActivityIndicator IsRunning="True" Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="50" HeightRequest="50"/>
         </Grid>
     </AbsoluteLayout>
 </ContentPage>
