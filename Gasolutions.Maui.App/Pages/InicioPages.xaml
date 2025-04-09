@@ -9,7 +9,7 @@
                 <Grid ColumnDefinitions="*,Auto">
                     <Label Text="Inicio" FontSize="32" FontAttributes="Bold" TextColor="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Start" />
 
-                    <ImageButton Source="user.png" BackgroundColor="Transparent" HeightRequest="32" WidthRequest="32"  VerticalOptions="Center" HorizontalOptions="End" Clicked="OnIconClicked" />
+                    <ImageButton Source="user.png" BackgroundColor="Transparent" HeightRequest="32" WidthRequest="32"  VerticalOptions="Center" HorizontalOptions="End" />
                 </Grid>
 
 
