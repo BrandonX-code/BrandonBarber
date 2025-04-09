@@ -23,18 +23,6 @@
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
-		<!-- Flecha de retroceso -->
-		<Image Source="arrow_back.png"
-               HeightRequest="24"
-               WidthRequest="24"
-               VerticalOptions="Start"
-               HorizontalOptions="Start"
-               Margin="0,10,0,20">
-			<Image.GestureRecognizers>
-				<TapGestureRecognizer Tapped="OnBackTapped"/>
-			</Image.GestureRecognizers>
-		</Image>
-
 		<!-- Contenido del perfil -->
 		<VerticalStackLayout Grid.Row="1" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
 			<!-- Avatar -->
@@ -49,13 +37,11 @@
                    TextColor="White"
                    HorizontalOptions="Center" />
 
-			<!-- Teléfono -->
 			<Label Text="555-123-4567"
                    FontSize="16"
                    TextColor="White"
                    HorizontalOptions="Center" />
 
-			<!-- Botón Editar Perfil -->
 			<Button Text="EDITAR PERFIL"
                     Style="{StaticResource ProfileButtonStyle}"
                     BackgroundColor="#c0aa4f"

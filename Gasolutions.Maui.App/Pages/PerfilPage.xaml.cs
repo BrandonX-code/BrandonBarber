@@ -13,11 +13,6 @@ namespace Gasolutions.Maui.App.Pages
             InitializeComponent();
         }
 
-        private void OnBackTapped(object sender, TappedEventArgs e)
-        {
-            // Esto te devuelve a la página anterior
-            Navigation.PopAsync();
-        }
 
         private void OnEditarPerfilClicked(object sender, EventArgs e)
         {

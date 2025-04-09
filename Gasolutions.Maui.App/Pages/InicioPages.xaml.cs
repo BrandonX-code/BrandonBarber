@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Gasolutions.Maui.App
+namespace Gasolutions.Maui.App.Pages
 {
     public partial class InicioPages : ContentPage
     {
