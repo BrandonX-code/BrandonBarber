@@ -31,6 +31,11 @@ namespace Gasolutions.Maui.App
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new BuscarPage(reservationService));
         }
+        private async void PerfilPage(object sender, EventArgs e)
+        {
+            //var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            await Navigation.PushAsync(new PerfilPage());
+        }
 
         private async void OnInicioClicked(object sender, EventArgs e)
         {

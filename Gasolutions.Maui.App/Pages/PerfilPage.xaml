@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gasolutions.Maui.App.Pages.PerfilPage"
+             BackgroundColor="#1e1e1e">
+
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<Style x:Key="ProfileButtonStyle" TargetType="Button">
+				<Setter Property="BackgroundColor" Value="#2b2b2b" />
+				<Setter Property="TextColor" Value="White" />
+				<Setter Property="FontAttributes" Value="Bold" />
+				<Setter Property="CornerRadius" Value="10" />
+				<Setter Property="HeightRequest" Value="45" />
+				<Setter Property="FontSize" Value="16" />
+			</Style>
+		</ResourceDictionary>
+	</ContentPage.Resources>
+
+	<Grid Padding="20">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<!-- Flecha de retroceso -->
+		<Image Source="arrow_back.png"
+               HeightRequest="24"
+               WidthRequest="24"
+               VerticalOptions="Start"
+               HorizontalOptions="Start"
+               Margin="0,10,0,20">
+			<Image.GestureRecognizers>
+				<TapGestureRecognizer Tapped="OnBackTapped"/>
+			</Image.GestureRecognizers>
+		</Image>
+
+		<!-- Contenido del perfil -->
+		<VerticalStackLayout Grid.Row="1" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
+			<!-- Avatar -->
+			<Frame WidthRequest="120" HeightRequest="120" CornerRadius="60" BackgroundColor="#3a3a3a" Padding="10" HasShadow="False">
+				<Image Source="default_avatar.png" Aspect="AspectFill" />
+			</Frame>
+
+			<!-- Nombre -->
+			<Label Text="Carlos Álvarez"
+                   FontSize="24"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center" />
+
+			<!-- Teléfono -->
+			<Label Text="555-123-4567"
+                   FontSize="16"
+                   TextColor="White"
+                   HorizontalOptions="Center" />
+
+			<!-- Botón Editar Perfil -->
+			<Button Text="EDITAR PERFIL"
+                    Style="{StaticResource ProfileButtonStyle}"
+                    BackgroundColor="#c0aa4f"
+                    TextColor="Black"
+                    Clicked="OnEditarPerfilClicked"/>
+		</VerticalStackLayout>
+	</Grid>
+</ContentPage>
