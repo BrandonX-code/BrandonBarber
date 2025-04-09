@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gasolutions.Maui.App.Pages.EditarPerfilPage"
+             BackgroundColor="#1e1e1e"
+             Title="Editar Perfil">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="ProfileEntryStyle" TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="#2b2b2b" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="PlaceholderColor" Value="#909090" />
+                <Setter Property="HeightRequest" Value="45" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+            <Style x:Key="ProfileButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#2b2b2b" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="HeightRequest" Value="45" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+            <Style x:Key="ProfileLabelStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="Margin" Value="0,0,0,5" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Label Text="EDITAR PERFIL" 
+               Grid.Row="0"
+               FontSize="24" 
+               FontAttributes="Bold" 
+               TextColor="White" 
+               HorizontalOptions="Center"
+               Margin="0,20,0,20" />
+
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="20" Margin="0,10">
+                <Frame WidthRequest="120" 
+                       HeightRequest="120" 
+                       CornerRadius="60" 
+                       BackgroundColor="#3a3a3a" 
+                       Padding="10" 
+                       HasShadow="False"
+                       HorizontalOptions="Center">
+                    <Image x:Name="PerfilImage" 
+                           Source="default_avatar.png" 
+                           Aspect="AspectFill" />
+                </Frame>
+
+                <Button Text="Cambiar imagen" 
+                        Style="{StaticResource ProfileButtonStyle}"
+                        BackgroundColor="#3a3a3a"
+                        Clicked="OnCambiarImagenClicked"
+                        HorizontalOptions="Center"
+                        WidthRequest="200"/>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Nombre completo" Style="{StaticResource ProfileLabelStyle}" />
+                    <Entry x:Name="NombreEntry" 
+                           Text="Carlos �lvarez"
+                           Style="{StaticResource ProfileEntryStyle}" 
+                           Placeholder="Nombre completo" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Telefono" Style="{StaticResource ProfileLabelStyle}" />
+                    <Entry x:Name="TelefonoEntry" 
+                           Text="555-123-4567"
+                           Style="{StaticResource ProfileEntryStyle}" 
+                           Placeholder="Numero de telefono"
+                           Keyboard="Telephone" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Correo electronico" Style="{StaticResource ProfileLabelStyle}" />
+                    <Entry x:Name="EmailEntry" 
+                           Style="{StaticResource ProfileEntryStyle}" 
+                           Placeholder="Correo electronico"
+                           Keyboard="Email" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Direccion" Style="{StaticResource ProfileLabelStyle}" />
+                    <Entry x:Name="DireccionEntry" 
+                           Style="{StaticResource ProfileEntryStyle}" 
+                           Placeholder="Direccion" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <Grid Grid.Row="2" ColumnSpacing="15" Margin="0,20,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Text="CANCELAR" 
+                    Grid.Column="0"
+                    Style="{StaticResource ProfileButtonStyle}"
+                    BackgroundColor="#3a3a3a"
+                    Clicked="OnCancelarClicked"/>
+
+            <Button Text="GUARDAR" 
+                    Grid.Column="1"
+                    Style="{StaticResource ProfileButtonStyle}"
+                    BackgroundColor="#c0aa4f"
+                    TextColor="Black"
+                    Clicked="OnGuardarClicked"/>
+        </Grid>
+    </Grid>
+</ContentPage>

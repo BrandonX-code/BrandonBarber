@@ -51,6 +51,11 @@ namespace Gasolutions.Maui.App
             });
 
             builder.Services.AddSingleton<ReservationService>();
+            builder.Services.AddSingleton<PerfilUsuarioService>(serviceProvider =>
+            {
+                var httpClient = serviceProvider.GetService<HttpClient>();
+                return new PerfilUsuarioService(httpClient);
+            });
             builder.Services.AddSingleton<BuscarPage>();
             builder.Services.AddSingleton<ListaCitas>();
             builder.UseMauiApp<App>().UseMauiCommunityToolkit();
