@@ -39,7 +39,7 @@
     </ContentPage.Resources>
 
     <AbsoluteLayout>
-        <Image Source="barber.jpg" Aspect="AspectFill" Opacity="0.90" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All"/>
+        <Image Source="fondobarber.jpg" Aspect="AspectFill" Opacity="0.90" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All"/>
 
         <Grid x:Name="mainContent" Opacity="0" RowDefinitions="Auto, *, Auto" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             

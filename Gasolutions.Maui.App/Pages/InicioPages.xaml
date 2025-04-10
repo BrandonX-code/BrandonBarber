@@ -3,7 +3,7 @@
              x:Class="Gasolutions.Maui.App.Pages.InicioPages">
     <Grid BackgroundColor="#566573" RowDefinitions="*,Auto">
         <Grid>
-            <Image Source="barber.jpg" Aspect="AspectFill" Opacity="0.8"/>
+            <Image Source="fondobarber.jpg" Aspect="AspectFill" Opacity="0.80"/>
             <VerticalStackLayout Padding="20" Spacing="70" ZIndex="1">
 
                 <Grid ColumnDefinitions="*,Auto">

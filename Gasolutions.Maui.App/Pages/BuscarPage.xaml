@@ -37,7 +37,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <AbsoluteLayout>
-        <Image Source="barber.jpg" Opacity="0.90" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />
+        <Image Source="fondobarber.jpg" Opacity="0.90" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />
         <Grid Padding="20" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <VerticalStackLayout Spacing="40">
                 <Label Text="Búsqueda de Citas🔎" FontSize="Large" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" />

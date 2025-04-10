@@ -2,8 +2,8 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Gasolutions.Maui.App.Pages.PerfilPage"
-             BackgroundColor="#1e1e1e"
-             Title="Perfil">
+             BackgroundColor="#1e1e1e">
+    
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style x:Key="ProfileButtonStyle" TargetType="Button">
@@ -22,26 +22,12 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <VerticalStackLayout Grid.Row="1" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
-         
             <Frame WidthRequest="120" HeightRequest="120" CornerRadius="60" BackgroundColor="#3a3a3a" Padding="10" HasShadow="False">
                 <Image x:Name="PerfilImage" Aspect="AspectFill" />
             </Frame>
-            <Label x:Name="NombreLabel"
-                   Text="xxx"
-                   FontSize="24"
-                   FontAttributes="Bold"
-                   TextColor="White"
-                   HorizontalOptions="Center" />
-            <Label x:Name="TelefonoLabel"
-                   Text="###"
-                   FontSize="16"
-                   TextColor="White"
-                   HorizontalOptions="Center" />
-            <Button Text="EDITAR PERFIL"
-                    Style="{StaticResource ProfileButtonStyle}"
-                    BackgroundColor="#c0aa4f"
-                    TextColor="Black"
-                    Clicked="OnEditarPerfilClicked"/>
+            <Label x:Name="NombreLabel" Text="xxx" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+            <Label x:Name="TelefonoLabel" Text="###" FontSize="16" TextColor="White" HorizontalOptions="Center" />
+            <Button Text="EDITAR PERFIL" Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#c0aa4f" TextColor="Black" Clicked="OnEditarPerfilClicked"/>
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

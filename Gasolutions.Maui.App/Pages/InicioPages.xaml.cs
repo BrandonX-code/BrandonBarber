@@ -56,7 +56,7 @@ namespace Gasolutions.Maui.App.Pages
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new ListaCitas(reservationService));
         }
-         private async Task AnimateButtonClick(Button button)
+        private async Task AnimateButtonClick(Button button)
         {
             if (button == null) return;
 

@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Gasolutions.Maui.App.Pages.EditarPerfilPage"
-             BackgroundColor="#1e1e1e"
-             Title="Editar Perfil">
+             BackgroundColor="#1e1e1e">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style x:Key="ProfileEntryStyle" TargetType="Entry">
@@ -52,8 +51,7 @@
                        Padding="10" 
                        HasShadow="False"
                        HorizontalOptions="Center">
-                    <Image x:Name="PerfilImage" 
-                           Source="default_avatar.png" 
+                    <Image x:Name="PerfilImage"
                            Aspect="AspectFill" />
                 </Frame>
 
@@ -67,7 +65,7 @@
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Nombre completo" Style="{StaticResource ProfileLabelStyle}" />
                     <Entry x:Name="NombreEntry" 
-                           Text="Carlos �lvarez"
+                           Text="xxx"
                            Style="{StaticResource ProfileEntryStyle}" 
                            Placeholder="Nombre completo" />
                 </VerticalStackLayout>
@@ -75,7 +73,7 @@
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Telefono" Style="{StaticResource ProfileLabelStyle}" />
                     <Entry x:Name="TelefonoEntry" 
-                           Text="555-123-4567"
+                           Text="###"
                            Style="{StaticResource ProfileEntryStyle}" 
                            Placeholder="Numero de telefono"
                            Keyboard="Telephone" />
