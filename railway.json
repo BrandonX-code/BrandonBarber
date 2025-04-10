@@ -1,0 +1,18 @@
+{
+  "build": {
+    "builder": "NIXPACKS",
+    "nixpacksPlan": {
+      "phases": {
+        "install": {
+          "cmds": [ "dotnet restore ./Barber.Maui.API/Barber.Maui.API.csproj" ]
+        },
+        "build": {
+          "cmds": [ "dotnet publish ./Barber.Maui.API/Barber.Maui.API.csproj -c Release -o out" ]
+        },
+        "start": {
+          "cmds": [ "dotnet out/Barber.Maui.API.dll" ]
+        }
+      }
+    }
+  }
+}
