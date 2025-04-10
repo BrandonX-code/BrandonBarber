@@ -7,11 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrandonBarber", "Gasolution
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Barber.Maui.API", "Barber.Maui.API\Barber.Maui.API.csproj", "{A842DD1A-54CE-4206-BB8A-239D9F6A170A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementos de la solución", "Elementos de la solución", "{588899DC-4082-4BDE-B110-B348985446E4}"
-	ProjectSection(SolutionItems) = preProject
-		railway.json = railway.json
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
