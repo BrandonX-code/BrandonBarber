@@ -1,18 +1,8 @@
 {
   "build": {
-    "builder": "NIXPACKS",
-    "nixpacksPlan": {
-      "phases": {
-        "install": {
-          "cmds": [ "dotnet restore ./Barber.Maui.API/Barber.Maui.API.csproj" ]
-        },
-        "build": {
-          "cmds": [ "dotnet publish ./Barber.Maui.API/Barber.Maui.API.csproj -c Release -o out" ]
-        },
-        "start": {
-          "cmds": [ "dotnet out/Barber.Maui.API.dll" ]
-        }
-      }
+    "env": {
+      "DOTNET_CLI_TELEMETRY_OPTOUT": "1"
     }
-  }
+  },
+  "start": "dotnet Barber.Maui.API.dll"
 }
