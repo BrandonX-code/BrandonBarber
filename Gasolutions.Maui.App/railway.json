@@ -1,8 +1,0 @@
-{
-  "build": {
-    "env": {
-      "DOTNET_CLI_TELEMETRY_OPTOUT": "1"
-    }
-  },
-  "start": "dotnet Barber.Maui.API.dll"
-}
