@@ -89,6 +89,31 @@ namespace Gasolutions.Maui.App.Services
 
             return citas ?? new List<CitaModel>();
         }
+        public async Task<bool> DeleteReservation(int id)
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"{_httpClient.BaseAddress}/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"✅ Cita con ID {id} eliminada correctamente.");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine($"❌ Error al eliminar la cita. Código: {response.StatusCode}");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Excepción al eliminar cita: {ex.Message}");
+                await Application.Current.MainPage.DisplayAlert("Error", "No se pudo eliminar la cita.", "Aceptar");
+                return false;
+            }
+        }
+
 
         public static bool ExistsReservation(int cedula)
         {

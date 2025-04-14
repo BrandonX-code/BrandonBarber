@@ -59,15 +59,21 @@
                             Clicked="OnClearClicked"/>
                 </HorizontalStackLayout>
 
-                <CollectionView x:Name="ResultadosCollection"
-                                HeightRequest="300">
+                <CollectionView x:Name="ResultadosCollection" HeightRequest="300">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Frame Padding="10" Margin="5" BorderColor="#444" BackgroundColor="#7d7c76" CornerRadius="12" HasShadow="True">
-                                <VerticalStackLayout>
-                                    <Label Text="{Binding Nombre}" FontSize="Medium" TextColor="Black"/>
-                                    <Label Text="{Binding FechaConFormato, StringFormat='{0:hh:mm tt}'}" FontSize="Small" TextColor="White"/>
-                                </VerticalStackLayout>
+                                <Grid ColumnDefinitions="*, Auto">
+                                    <VerticalStackLayout Grid.Column="0">
+                                        <Label Text="{Binding Nombre}" FontSize="Medium" TextColor="Black"/>
+                                        <Label Text="{Binding FechaConFormato, StringFormat='{0:hh:mm tt}'}" FontSize="Small" TextColor="White"/>
+                                    </VerticalStackLayout>
+                                    <Button Grid.Column="1" BackgroundColor="Transparent" CommandParameter="{Binding Id}" Clicked="EliminarCitaClicked" WidthRequest="60" HeightRequest="60">
+                                        <Button.ImageSource>
+                                            <FileImageSource File="delete.png" />
+                                        </Button.ImageSource>
+                                    </Button>
+                                </Grid>
                             </Frame>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>

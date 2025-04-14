@@ -66,14 +66,27 @@ public class CitasController : ControllerBase
         {
             _context.Citas.Add(nuevaCita);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetCitasPorCedula), new { id = nuevaCita.Id }, nuevaCita);
+            return StatusCode(201);
         }
         catch (Exception ex)
         {
             return StatusCode(500, new { message = "Error al guardar la cita.", error = ex.Message });
         }
     }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> EliminarCita(int id)
+    {
+        var cita = await _context.Citas.FindAsync(id);
+        if (cita == null)
+        {
+            return NotFound();
+        }
 
+        _context.Citas.Remove(cita);
+        await _context.SaveChangesAsync();
+
+        return NoContent();
+    }
 
 }
 //    using Barber.Maui.API.Data;

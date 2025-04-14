@@ -91,6 +91,39 @@ namespace Gasolutions.Maui.App.Pages
             var snackbar = Snackbar.Make(mensaje, duration: TimeSpan.FromSeconds(3), visualOptions: snackbarOptions);
             await snackbar.Show();
         }
+        private async void EliminarCitaClicked(object sender, EventArgs e)
+        {
+            if (sender is Button btn && btn.BindingContext is CitaModel cita)
+            {
+                bool confirm = await DisplayAlert("Confirmar", $"¿Eliminar la cita de {cita.Nombre}?", "Sí", "No");
+                if (!confirm) return;
+
+                try
+                {
+                    MostrarLoader(true);
+                    bool eliminado = await _reservationService.DeleteReservation(cita.Id);
+
+                    if (eliminado)
+                    {
+                        CitasFiltradas.Remove(cita);
+                        await MostrarSnackbar("Cita eliminada exitosamente.", Colors.Green, Colors.White);
+                    }
+                    else
+                    {
+                        await MostrarSnackbar("No se pudo eliminar la cita.", Colors.Red, Colors.White);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await MostrarSnackbar($"Error al eliminar: {ex.Message}", Colors.DarkRed, Colors.White);
+                }
+                finally
+                {
+                    MostrarLoader(false);
+                }
+            }
+        }
+
     }
 
 }

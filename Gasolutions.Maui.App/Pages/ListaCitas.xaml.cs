@@ -16,7 +16,7 @@ namespace Gasolutions.Maui.App.Pages
         {
             InitializeComponent();
             BindingContext = this;
-
+            ResultadosCollection.ItemsSource = CitasFiltradas;
             _reservationService = reservationService;
         }
 
@@ -55,20 +55,34 @@ namespace Gasolutions.Maui.App.Pages
 
         private async void EliminarCitasSeleccionadas(object sender, EventArgs e)
         {
-            var citasAEliminar = CitasFiltradas.Where(c => c.Seleccionado).ToList();
+            if (sender is Button btn && btn.BindingContext is CitaModel cita)
+            {
+                bool confirm = await DisplayAlert("Confirmar", $"¿Eliminar la cita de {cita.Nombre}?", "Sí", "No");
+                if (!confirm) return;
 
-            if (!citasAEliminar.Any())
-            {
-                await MostrarSnackbar("Debes seleccionar al menos una cita para eliminar.", Colors.Orange, Colors.White);
-            }
-            else
-            {
-                foreach (var cita in citasAEliminar)
+                try
                 {
-                    CitasFiltradas.Remove(cita);
-                }
+                    MostrarLoader(true);
+                    bool eliminado = await _reservationService.DeleteReservation(cita.Id);
 
-                await MostrarSnackbar("Citas seleccionadas eliminadas.", Colors.Green, Colors.White);
+                    if (eliminado)
+                    {
+                        CitasFiltradas.Remove(cita);
+                        await MostrarSnackbar("Cita eliminada exitosamente.", Colors.Green, Colors.White);
+                    }
+                    else
+                    {
+                        await MostrarSnackbar("No se pudo eliminar la cita.", Colors.Red, Colors.White);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await MostrarSnackbar($"Error al eliminar: {ex.Message}", Colors.DarkRed, Colors.White);
+                }
+                finally
+                {
+                    MostrarLoader(false);
+                }
             }
         }
 
