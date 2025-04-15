@@ -9,15 +9,11 @@ namespace Gasolutions.Maui.App.Pages
     public partial class PerfilPage : ContentPage
     {
         private PerfilUsuario _perfilData;
-
         private readonly PerfilUsuarioService _perfilService;
-
-        private long _currentUserCedula = 123456789;
 
         public PerfilPage()
         {
             InitializeComponent();
-
             _perfilService = Application.Current.Handler.MauiContext.Services.GetService<PerfilUsuarioService>();
 
             MessagingCenter.Subscribe<EditarPerfilPage, PerfilUsuario>(
@@ -35,7 +31,15 @@ namespace Gasolutions.Maui.App.Pages
             {
                 IsBusy = true;
 
-                var perfil = await _perfilService.GetPerfilUsuario(_currentUserCedula);
+                // Usar el usuario actual de AuthService
+                if (AuthService.CurrentUser == null)
+                {
+                    await DisplayAlert("Error", "No hay usuario conectado", "OK");
+                    return;
+                }
+
+                // Obtener perfil usando la cédula del usuario actual
+                var perfil = await _perfilService.GetPerfilUsuario(AuthService.CurrentUser.Cedula);
 
                 if (perfil != null)
                 {
@@ -43,15 +47,19 @@ namespace Gasolutions.Maui.App.Pages
                 }
                 else
                 {
+                    // Si no existe, crear uno con los datos del login
                     _perfilData = new PerfilUsuario
                     {
-                        Cedula = _currentUserCedula,
-                        Nombre = "xxx",
-                        Telefono = "###",
-                        Email = "",
-                        Direccion = "",
+                        Cedula = AuthService.CurrentUser.Cedula,
+                        Nombre = AuthService.CurrentUser.Nombre,
+                        Email = AuthService.CurrentUser.Email,
+                        Telefono = AuthService.CurrentUser.Telefono ?? "Sin teléfono",
+                        Direccion = "", // Este dato no lo tenemos del login
                         ImagenPath = "default_avatar.png"
                     };
+
+                    // Guardarlo en la base de datos para futuras ediciones
+                    await _perfilService.SavePerfilUsuario(_perfilData);
 
                     ActualizarUI();
                 }
@@ -69,7 +77,6 @@ namespace Gasolutions.Maui.App.Pages
         private void ActualizarPerfil(PerfilUsuario perfilActualizado)
         {
             _perfilData = perfilActualizado;
-
             ActualizarUI();
         }
 

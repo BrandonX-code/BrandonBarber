@@ -59,7 +59,7 @@
                             Clicked="OnClearClicked"/>
                 </HorizontalStackLayout>
 
-                <CollectionView x:Name="ResultadosCollection" HeightRequest="300">
+                <CollectionView x:Name="ResultadosCollection" HeightRequest="400">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Frame Padding="10" Margin="5" BorderColor="#444" BackgroundColor="#7d7c76" CornerRadius="12" HasShadow="True">

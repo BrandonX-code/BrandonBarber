@@ -10,12 +10,13 @@ namespace Barber.Maui.API.Data
 
         public DbSet<Cita> Citas { get; set; }
         public DbSet<Perfil> Perfiles { get; set; }
+        public DbSet<Auth> UsuarioPerfiles { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Auth>()
+                .HasKey(a => a.Cedula);
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);
-        //    modelBuilder.Entity<Cita>().HasIndex(x => x.Nombre).IsUnique();
-        //}
+        }
     }
 }

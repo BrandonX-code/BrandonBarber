@@ -1,0 +1,54 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
+namespace Gasolutions.Maui.App.Models
+{
+    public class UsuarioModels
+    {
+        public int Id { get; set; }
+        [Required]
+        public long Cedula { get; set; }
+        public string Nombre { get; set; }
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+        [Required]
+        [MinLength(6)]
+        public string Contraseña { get; set; }
+        public string Rol { get; set; }
+        public string Token { get; set; }
+        public string Telefono { get; set; }
+        [JsonIgnore]
+        public bool IsAdmin => Rol?.ToLower() == "administrador";
+    }
+
+    // Clase para el login
+    public class LoginRequest
+    {
+        public string Email { get; set; }
+        public string Contraseña { get; set; }
+    }
+
+    // Clase para el registro
+    public class RegistroRequest
+    {
+        public long Cedula { get; set; }
+        public string Nombre { get; set; }
+        public string Email { get; set; }
+        public string Contraseña { get; set; }
+        public string ConfirmContraseña { get; set; }
+        public string Telefono { get; set; }
+        public string Direccion { get; set; }
+        public string Rol { get; set; }
+    }
+
+    // Clase para la respuesta de autenticación
+    public class AuthResponse
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; }
+        public UsuarioModels User { get; set; }
+        public string Token { get; set; }
+        public bool IsSuccess { get; internal set; }
+    }
+}
