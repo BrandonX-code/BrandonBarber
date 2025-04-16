@@ -35,7 +35,7 @@
         </Grid>
 
         <VerticalStackLayout Grid.Row="1" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
-            <Border WidthRequest="120" HeightRequest="120" BackgroundColor="#3a3a3a" Padding="10"  StrokeShape="RoundRectangle 60">
+            <Border WidthRequest="120" HeightRequest="120" BackgroundColor="#3a3a3a" Padding="10"  StrokeShape="RoundRectangle 10">
                 <Image x:Name="PerfilImage" Aspect="AspectFill" />
             </Border>
             <Label x:Name="NombreLabel" Text="xxx" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />

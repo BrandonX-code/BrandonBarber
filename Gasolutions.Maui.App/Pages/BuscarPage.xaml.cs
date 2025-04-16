@@ -4,26 +4,63 @@ using Gasolutions.Maui.App.Services;
 using System.Collections.ObjectModel;
 using Font = Microsoft.Maui.Font;
 using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Gasolutions.Maui.App.Pages
 {
-    public partial class BuscarPage : ContentPage
+    public partial class BuscarPage : ContentPage, INotifyPropertyChanged
     {
-        public ObservableCollection<CitaModel> CitasFiltradas { get; set; } = new();
+        // Collections for appointments
+        public ObservableCollection<CitaModel> ProximasCitas { get; set; } = new();
+        public ObservableCollection<CitaModel> HistorialCitas { get; set; } = new();
+
+        // Properties for visibility control
+        private bool _hasProximasCitas;
+        public bool HasProximasCitas
+        {
+            get => _hasProximasCitas;
+            set
+            {
+                if (_hasProximasCitas != value)
+                {
+                    _hasProximasCitas = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private bool _hasHistorialCitas;
+        public bool HasHistorialCitas
+        {
+            get => _hasHistorialCitas;
+            set
+            {
+                if (_hasHistorialCitas != value)
+                {
+                    _hasHistorialCitas = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private readonly ReservationService _reservationService;
+
         public BuscarPage(ReservationService reservationService)
         {
             InitializeComponent();
             BindingContext = this;
-            ResultadosCollection.ItemsSource = CitasFiltradas;
             _reservationService = reservationService;
         }
-
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
+
+            // Clear collections
+            ProximasCitas.Clear();
+            HistorialCitas.Clear();
+            UpdateVisibility();
         }
 
         private async void OnSearchClicked(object sender, EventArgs e)
@@ -36,26 +73,49 @@ namespace Gasolutions.Maui.App.Pages
             try
             {
                 MostrarLoader(true);
-                CitasFiltradas.Clear();
+
+                // Clear previous data
+                ProximasCitas.Clear();
+                HistorialCitas.Clear();
 
                 if (string.IsNullOrWhiteSpace(SearchEntry.Text) || !long.TryParse(SearchEntry.Text, out long cedula))
                 {
                     await MostrarSnackbar("Ingrese una Cédula válida.", Colors.Orange, Colors.White);
+                    UpdateVisibility();
                     return;
                 }
 
+                // Get all reservations for the client
                 var citas = await _reservationService.GetReservationsById(cedula);
 
                 if (citas == null || !citas.Any())
                 {
                     await MostrarSnackbar("No se encontró ninguna cita con esa Cédula.", Colors.Red, Colors.White);
+                    UpdateVisibility();
                     return;
                 }
 
+                // Current date for comparison
+                DateTime now = DateTime.Now.Date;
+
+                // Split appointments into upcoming and past
                 foreach (var cita in citas)
                 {
-                    CitasFiltradas.Add(cita);
+                    if (cita.Fecha.Date >= now)
+                    {
+                        ProximasCitas.Add(cita);
+                    }
+                    else
+                    {
+                        HistorialCitas.Add(cita);
+                    }
                 }
+
+                // Update visibility
+                UpdateVisibility();
+
+                // Show success message
+                await MostrarSnackbar($"Se encontraron {citas.Count} citas.", Colors.Green, Colors.White);
             }
             catch (Exception ex)
             {
@@ -67,16 +127,25 @@ namespace Gasolutions.Maui.App.Pages
             }
         }
 
+        private void UpdateVisibility()
+        {
+            HasProximasCitas = ProximasCitas.Count > 0;
+            HasHistorialCitas = HistorialCitas.Count > 0;
+        }
 
         private void OnClearClicked(object sender, EventArgs e)
         {
             SearchEntry.Text = string.Empty;
-            CitasFiltradas.Clear();
+            ProximasCitas.Clear();
+            HistorialCitas.Clear();
+            UpdateVisibility();
         }
+
         private void MostrarLoader(bool mostrar)
         {
             LoaderOverlay.IsVisible = mostrar;
         }
+
         private async Task MostrarSnackbar(string mensaje, Color background, Color textColor)
         {
             var snackbarOptions = new SnackbarOptions
@@ -84,18 +153,27 @@ namespace Gasolutions.Maui.App.Pages
                 BackgroundColor = background,
                 TextColor = textColor,
                 CornerRadius = new CornerRadius(30),
-                Font = Font.OfSize("Arial", 16),
+                Font = Font.OfSize("Arial", 14),
                 CharacterSpacing = 0
             };
 
             var snackbar = Snackbar.Make(mensaje, duration: TimeSpan.FromSeconds(3), visualOptions: snackbarOptions);
             await snackbar.Show();
         }
+
         private async void EliminarCitaClicked(object sender, EventArgs e)
         {
-            if (sender is Button btn && btn.BindingContext is CitaModel cita)
+            if (sender is Button btn && btn.CommandParameter is int citaId)
             {
-                bool confirm = await DisplayAlert("Confirmar", $"¿Eliminar la cita de {cita.Nombre}?", "Sí", "No");
+                // Find the cita in our collection
+                CitaModel cita = ProximasCitas.FirstOrDefault(c => c.Id == citaId);
+                if (cita == null)
+                {
+                    await MostrarSnackbar("No se puede encontrar la cita seleccionada.", Colors.Red, Colors.White);
+                    return;
+                }
+
+                bool confirm = await DisplayAlert("Confirmar", $"¿Seguro Que Quieres Eliminar la cita de {cita.Nombre}?", "Sí", "No");
                 if (!confirm) return;
 
                 try
@@ -105,7 +183,8 @@ namespace Gasolutions.Maui.App.Pages
 
                     if (eliminado)
                     {
-                        CitasFiltradas.Remove(cita);
+                        ProximasCitas.Remove(cita);
+                        UpdateVisibility();
                         await MostrarSnackbar("Cita eliminada exitosamente.", Colors.Green, Colors.White);
                     }
                     else
@@ -123,10 +202,5 @@ namespace Gasolutions.Maui.App.Pages
                 }
             }
         }
-
     }
-
 }
-
-
-

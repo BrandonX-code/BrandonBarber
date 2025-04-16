@@ -19,7 +19,7 @@
                     </Frame.GestureRecognizers>
                     <HorizontalStackLayout Spacing="5" HeightRequest="60">
                         <Image Source="calendar.png" WidthRequest="24" HeightRequest="24" />
-                        <Label Text="Citas" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                        <Label Text="Agendar Una Cita" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
                     </HorizontalStackLayout>
                 </Frame>
 

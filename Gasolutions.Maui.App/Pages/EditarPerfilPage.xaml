@@ -46,7 +46,7 @@
             <VerticalStackLayout Spacing="20" Margin="0,10">
                 <Frame WidthRequest="120" 
                        HeightRequest="120" 
-                       CornerRadius="60" 
+                       CornerRadius="10" 
                        BackgroundColor="#3a3a3a" 
                        Padding="10" 
                        HasShadow="False"

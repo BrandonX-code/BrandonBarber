@@ -48,8 +48,6 @@ namespace Gasolutions.Maui.App.Services
             }
         }
 
-
-
         public async Task<List<CitaModel>> GetReservations(DateTime fecha)
         {
             string url = $"{_httpClient.BaseAddress}/by-date/{fecha:yyyy-MM-dd}";
@@ -78,17 +76,29 @@ namespace Gasolutions.Maui.App.Services
 
         public async Task<List<CitaModel>> GetReservationsById(long cedula)
         {
-            var response = await _httpClient.GetAsync(_httpClient.BaseAddress + $"/{cedula}");
+            try
+            {
+                var response = await _httpClient.GetAsync(_httpClient.BaseAddress + $"/{cedula}");
 
-            if (!response.IsSuccessStatusCode)
+                if (!response.IsSuccessStatusCode)
+                    return new List<CitaModel>();
+
+                var json = await response.Content.ReadAsStringAsync();
+
+                var citas = JsonSerializer.Deserialize<List<CitaModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                // Ordenar las citas por fecha
+                var sortedCitas = citas?.OrderByDescending(c => c.Fecha).ToList() ?? new List<CitaModel>();
+
+                return sortedCitas;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"❌ Excepción al obtener citas por ID: {ex.Message}");
                 return new List<CitaModel>();
-
-            var json = await response.Content.ReadAsStringAsync();
-
-            var citas = JsonSerializer.Deserialize<List<CitaModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-            return citas ?? new List<CitaModel>();
+            }
         }
+
         public async Task<bool> DeleteReservation(int id)
         {
             try
@@ -114,12 +124,9 @@ namespace Gasolutions.Maui.App.Services
             }
         }
 
-
         public static bool ExistsReservation(int cedula)
         {
             return _reservations.Any(c => c.Cedula == cedula);
         }
-
-
     }
 }
