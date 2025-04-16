@@ -1,8 +1,5 @@
-﻿using System;
-using Microsoft.Maui.Controls;
-using Gasolutions.Maui.App.Models;
+﻿using Gasolutions.Maui.App.Models;
 using Gasolutions.Maui.App.Services;
-using System.Threading.Tasks;
 
 namespace Gasolutions.Maui.App.Pages
 {
@@ -31,14 +28,12 @@ namespace Gasolutions.Maui.App.Pages
             {
                 IsBusy = true;
 
-                // Usar el usuario actual de AuthService
                 if (AuthService.CurrentUser == null)
                 {
                     await DisplayAlert("Error", "No hay usuario conectado", "OK");
                     return;
                 }
 
-                // Obtener perfil usando la cédula del usuario actual
                 var perfil = await _perfilService.GetPerfilUsuario(AuthService.CurrentUser.Cedula);
 
                 if (perfil != null)
@@ -47,18 +42,16 @@ namespace Gasolutions.Maui.App.Pages
                 }
                 else
                 {
-                    // Si no existe, crear uno con los datos del login
                     _perfilData = new PerfilUsuario
                     {
                         Cedula = AuthService.CurrentUser.Cedula,
                         Nombre = AuthService.CurrentUser.Nombre,
                         Email = AuthService.CurrentUser.Email,
                         Telefono = AuthService.CurrentUser.Telefono ?? "Sin teléfono",
-                        Direccion = "", // Este dato no lo tenemos del login
+                        Direccion = "",
                         ImagenPath = "default_avatar.png"
                     };
 
-                    // Guardarlo en la base de datos para futuras ediciones
                     await _perfilService.SavePerfilUsuario(_perfilData);
 
                     ActualizarUI();
@@ -112,11 +105,9 @@ namespace Gasolutions.Maui.App.Pages
 
             if (confirmacion)
             {
-                // Elimina los datos guardados
                 Preferences.Remove("isLoggedIn");
                 Preferences.Remove("currentUser");
 
-                // Redirige al login
                 Application.Current.MainPage = new NavigationPage(new LoginPage());
             }
         }
