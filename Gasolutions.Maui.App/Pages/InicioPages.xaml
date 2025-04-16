@@ -4,6 +4,7 @@
     <Grid BackgroundColor="#566573" RowDefinitions="*,Auto">
         <Grid>
             <Image Source="fondobarber.jpg" Aspect="AspectFill" Opacity="0.80"/>
+            <ScrollView>
             <VerticalStackLayout Padding="20" Spacing="70" ZIndex="1">
 
                 <Grid ColumnDefinitions="*,Auto">
@@ -51,15 +52,7 @@
                 </Frame>
 
             </VerticalStackLayout>
+            </ScrollView>
         </Grid>
-
-        <!--<Grid x:Name="footerGrid" BackgroundColor="Black" Opacity="0.85" HeightRequest="65" Grid.Row="1">
-            <HorizontalStackLayout HorizontalOptions="CenterAndExpand" VerticalOptions="Center" Spacing="15">
-                <Button Text="Inicio" Clicked="OnInicioClicked" Style="{StaticResource ButtonStyle}"/>
-                <Button Text="Buscar" Clicked="OnBuscarClicked" Style="{StaticResource ButtonStyle}"/>
-                <Button Text="Lista Citas" Clicked="OnConfiguracionClicked" Style="{StaticResource ButtonStyle}"/>
-            </HorizontalStackLayout>
-        </Grid>-->
-
     </Grid>
 </ContentPage>

@@ -44,79 +44,81 @@
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
+
     <AbsoluteLayout>
-        <Image Source="fondobarber.jpg" Opacity="0.90" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />
-        <Grid Padding="15,10" BackgroundColor="Transparent" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
-            <VerticalStackLayout Spacing="10">
-                <Label Text="Búsqueda de Citas🔎" FontSize="Medium" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" Margin="0,0,0,5" />
+        <Image Source="fondobarber.jpg" Opacity="0.90" Aspect="AspectFill" 
+               AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />
 
-                <Border Stroke="#c0aa4f" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#2b2b2b" Padding="10,8" Margin="0,0,0,5">
-                    <Entry x:Name="SearchEntry" Keyboard="Numeric" Placeholder="Ingrese cédula del cliente" Style="{StaticResource EntryStyle}" FontSize="14"/>
-                </Border>
+        <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+            <Grid Padding="15,10" BackgroundColor="Transparent">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Búsqueda de Citas🔎" FontSize="Medium" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" Margin="0,0,0,5" />
 
-                <HorizontalStackLayout HorizontalOptions="Center" Spacing="10" Margin="0,0,0,5">
-                    <Button Text="Buscar" TextColor="White" Clicked="OnSearchClicked" BackgroundColor="#c0aa4f" FontSize="14" Padding="15,5"/>
-                    <Button Text="Limpiar" BackgroundColor="#555" TextColor="White" Clicked="OnClearClicked" FontSize="14" Padding="15,5"/>
-                </HorizontalStackLayout>
+                    <Border Stroke="#c0aa4f" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#2b2b2b" Padding="10,8" Margin="0,0,0,5">
+                        <Entry x:Name="SearchEntry" Keyboard="Numeric" Placeholder="Ingrese cédula del cliente" Style="{StaticResource EntryStyle}" FontSize="14"/>
+                    </Border>
 
-                <ScrollView VerticalOptions="FillAndExpand">
-                    <VerticalStackLayout Spacing="10">
-                        <!-- Próximas Citas -->
-                        <Label Text="Próximas Citas" Style="{StaticResource SectionHeaderStyle}" 
-                               IsVisible="{Binding HasProximasCitas}"/>
-                        <CollectionView x:Name="ProximasCitasCollection" 
-                                        ItemsSource="{Binding ProximasCitas}"
-                                        EmptyView="No hay citas próximas Ingrese su Cedula"
-                                        HeightRequest="200">
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <Frame Padding="8" Margin="2" BorderColor="#444" BackgroundColor="#7d7c76" CornerRadius="8" HasShadow="True">
-                                        <Grid ColumnDefinitions="*, Auto">
-                                            <VerticalStackLayout Grid.Column="0" Spacing="1">
-                                                <Label Text="{Binding Nombre}" FontSize="14" TextColor="Black" FontAttributes="Bold"/>
-                                                <HorizontalStackLayout Spacing="5">
-                                                    <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" FontSize="12" TextColor="White"/>
-                                                    <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="12" TextColor="White"/>
-                                                </HorizontalStackLayout>
-                                            </VerticalStackLayout>
-                                            <Button Grid.Column="1" BackgroundColor="Transparent" CommandParameter="{Binding Id}" Clicked="EliminarCitaClicked" WidthRequest="40" HeightRequest="40" Padding="0">
-                                                <Button.ImageSource>
-                                                    <FileImageSource File="delete.png" />
-                                                </Button.ImageSource>
-                                            </Button>
-                                        </Grid>
-                                    </Frame>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
+                    <HorizontalStackLayout HorizontalOptions="Center" Spacing="10" Margin="0,0,0,5">
+                        <Button Text="Buscar" TextColor="White" Clicked="OnSearchClicked" BackgroundColor="#c0aa4f" FontSize="14" Padding="15,5"/>
+                        <Button Text="Limpiar" BackgroundColor="#555" TextColor="White" Clicked="OnClearClicked" FontSize="14" Padding="15,5"/>
+                    </HorizontalStackLayout>
 
-                        <Label Text="Historial de Citas" Style="{StaticResource SectionHeaderStyle}"
-                               IsVisible="{Binding HasHistorialCitas}" Margin="0,5,0,0"/>
-                        <CollectionView x:Name="HistorialCitasCollection" 
-                                        ItemsSource="{Binding HistorialCitas}"
-                                        EmptyView="No hay historial de citas Ingrese su Cedula"
-                                        HeightRequest="180">
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <Frame Padding="8" Margin="2" BorderColor="#444" BackgroundColor="#5a5a5a" CornerRadius="8" HasShadow="True">
-                                        <Grid ColumnDefinitions="*, Auto">
-                                            <VerticalStackLayout Grid.Column="0" Spacing="1">
-                                                <Label Text="{Binding Nombre}" FontSize="14" TextColor="White" FontAttributes="Bold"/>
-                                                <HorizontalStackLayout Spacing="5">
-                                                    <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" FontSize="12" TextColor="#ddd"/>
-                                                    <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="12" TextColor="#ddd"/>
-                                                </HorizontalStackLayout>
-                                            </VerticalStackLayout>
-                                            <Label Grid.Column="1" Text="✓" TextColor="#c0aa4f" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" />
-                                        </Grid>
-                                    </Frame>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-                    </VerticalStackLayout>
-                </ScrollView>
-            </VerticalStackLayout>
-        </Grid>
+                    <Label Text="Próximas Citas" Style="{StaticResource SectionHeaderStyle}" 
+                           IsVisible="{Binding HasProximasCitas}"/>
+                    <CollectionView x:Name="ProximasCitasCollection" 
+                                    ItemsSource="{Binding ProximasCitas}"
+                                    EmptyView="No hay citas próximas Ingrese su Cedula"
+                                    HeightRequest="200">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Padding="8" Margin="2" BorderColor="#444" BackgroundColor="#7d7c76" CornerRadius="8" HasShadow="True">
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        <VerticalStackLayout Grid.Column="0" Spacing="1">
+                                            <Label Text="{Binding Nombre}" FontSize="14" TextColor="Black" FontAttributes="Bold"/>
+                                            <HorizontalStackLayout Spacing="5">
+                                                <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" FontSize="12" TextColor="White"/>
+                                                <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="12" TextColor="White"/>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                        <Button Grid.Column="1" BackgroundColor="Transparent" CommandParameter="{Binding Id}" Clicked="EliminarCitaClicked" WidthRequest="40" HeightRequest="40" Padding="0">
+                                            <Button.ImageSource>
+                                                <FileImageSource File="delete.png" />
+                                            </Button.ImageSource>
+                                        </Button>
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <Label Text="Historial de Citas" Style="{StaticResource SectionHeaderStyle}"
+                           IsVisible="{Binding HasHistorialCitas}" Margin="0,5,0,0"/>
+                    <CollectionView x:Name="HistorialCitasCollection" 
+                                    ItemsSource="{Binding HistorialCitas}"
+                                    EmptyView="No hay historial de citas Ingrese su Cedula"
+                                    HeightRequest="180">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Frame Padding="8" Margin="2" BorderColor="#444" BackgroundColor="#5a5a5a" CornerRadius="8" HasShadow="True">
+                                    <Grid ColumnDefinitions="*, Auto">
+                                        <VerticalStackLayout Grid.Column="0" Spacing="1">
+                                            <Label Text="{Binding Nombre}" FontSize="14" TextColor="White" FontAttributes="Bold"/>
+                                            <HorizontalStackLayout Spacing="5">
+                                                <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" FontSize="12" TextColor="#ddd"/>
+                                                <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="12" TextColor="#ddd"/>
+                                            </HorizontalStackLayout>
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="1" Text="✓" TextColor="#c0aa4f" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" />
+                                    </Grid>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                </VerticalStackLayout>
+            </Grid>
+        </ScrollView>
+
         <Grid x:Name="LoaderOverlay" BackgroundColor="#80000000" IsVisible="False" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ZIndex="10">
             <BoxView BackgroundColor="Transparent">
                 <BoxView.GestureRecognizers>

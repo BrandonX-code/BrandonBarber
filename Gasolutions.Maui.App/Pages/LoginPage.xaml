@@ -31,7 +31,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid Padding="20">
+    <ScrollView Padding="20">
         <VerticalStackLayout Spacing="20" VerticalOptions="Center">
 
             <Label Text="Bienvenido" 
@@ -94,5 +94,5 @@
                               VerticalOptions="Center"
                               HorizontalOptions="Center" />
         </VerticalStackLayout>
-    </Grid>
+    </ScrollView>
 </ContentPage>
