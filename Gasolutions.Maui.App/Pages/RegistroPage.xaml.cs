@@ -1,9 +1,6 @@
 ﻿using Gasolutions.Maui.App.Models;
 using Gasolutions.Maui.App.Services;
-using System;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Gasolutions.Maui.App.Pages
 {
