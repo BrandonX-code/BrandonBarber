@@ -106,5 +106,20 @@ namespace Gasolutions.Maui.App.Pages
             var editarPerfilPage = new EditarPerfilPage(_perfilData);
             await Navigation.PushAsync(editarPerfilPage);
         }
+        private async void OnCerrarSesionClicked(object sender, EventArgs e)
+        {
+            var confirmacion = await DisplayAlert("Cerrar sesión", "¿Estás seguro que deseas cerrar sesión?", "Sí", "Cancelar");
+
+            if (confirmacion)
+            {
+                // Elimina los datos guardados
+                Preferences.Remove("isLoggedIn");
+                Preferences.Remove("currentUser");
+
+                // Redirige al login
+                Application.Current.MainPage = new NavigationPage(new LoginPage());
+            }
+        }
+
     }
 }

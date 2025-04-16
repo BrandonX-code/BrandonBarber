@@ -17,17 +17,31 @@
         </ResourceDictionary>
     </ContentPage.Resources>
     <Grid Padding="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" ColumnSpacing="10">
+            <Label Text="Perfil" FontSize="22" FontAttributes="Bold" TextColor="#c0aa4f" VerticalOptions="Center" />
+            <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand">
+                <ImageButton Source="logout.png" BackgroundColor="Transparent" HeightRequest="32" WidthRequest="32" VerticalOptions="Center" Clicked="OnCerrarSesionClicked"/>
+            </StackLayout>
+        </Grid>
+
         <VerticalStackLayout Grid.Row="1" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
-            <Frame WidthRequest="120" HeightRequest="120" CornerRadius="60" BackgroundColor="#3a3a3a" Padding="10" HasShadow="False">
+            <Border WidthRequest="120" HeightRequest="120" BackgroundColor="#3a3a3a" Padding="10"  StrokeShape="RoundRectangle 60">
                 <Image x:Name="PerfilImage" Aspect="AspectFill" />
-            </Frame>
+            </Border>
             <Label x:Name="NombreLabel" Text="xxx" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
             <Label x:Name="TelefonoLabel" Text="###" FontSize="16" TextColor="White" HorizontalOptions="Center" />
             <Button Text="EDITAR PERFIL" Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#c0aa4f" TextColor="Black" Clicked="OnEditarPerfilClicked"/>
         </VerticalStackLayout>
     </Grid>
+
 </ContentPage>

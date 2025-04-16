@@ -77,7 +77,8 @@ namespace Barber.Maui.API.Controllers
 
             if (usuario == null)
             {
-                return Unauthorized(new { message = "Credenciales inválidas." });
+                return Ok(new { Success = false, Message = "Credenciales inválidas." });
+
             }
 
             // Crear un objeto de respuesta para evitar enviar la contraseña

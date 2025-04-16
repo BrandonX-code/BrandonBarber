@@ -101,7 +101,8 @@ namespace Gasolutions.Maui.App.Pages
             }
             else
             {
-                await Application.Current.MainPage.Navigation.PushAsync(new InicioPages());
+                Preferences.Set("IsLoggedIn", true);
+                Application.Current.MainPage = new NavigationPage(new InicioPages());
             }
         }
     }
