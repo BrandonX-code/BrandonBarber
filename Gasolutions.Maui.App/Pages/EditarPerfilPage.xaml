@@ -34,11 +34,11 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Label Text="EDITAR PERFIL" 
+        <Label Text="Editar Perfil" 
                Grid.Row="0"
                FontSize="24" 
                FontAttributes="Bold" 
-               TextColor="White" 
+               TextColor="#c0aa4f" 
                HorizontalOptions="Center"
                Margin="0,20,0,20" />
 
@@ -57,7 +57,8 @@
 
                 <Button Text="Cambiar imagen" 
                         Style="{StaticResource ProfileButtonStyle}"
-                        BackgroundColor="#3a3a3a"
+                        BackgroundColor="#bfbfbf"
+                        TextColor="Black"
                         Clicked="OnCambiarImagenClicked"
                         HorizontalOptions="Center"
                         WidthRequest="200"/>

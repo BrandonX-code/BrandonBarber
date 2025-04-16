@@ -40,7 +40,7 @@
             </Border>
             <Label x:Name="NombreLabel" Text="xxx" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
             <Label x:Name="TelefonoLabel" Text="###" FontSize="16" TextColor="White" HorizontalOptions="Center" />
-            <Button Text="EDITAR PERFIL" Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#c0aa4f" TextColor="Black" Clicked="OnEditarPerfilClicked"/>
+            <Button Text="Editar Perfil" Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#c0aa4f" TextColor="Black" Clicked="OnEditarPerfilClicked"/>
         </VerticalStackLayout>
     </Grid>
 
