@@ -33,7 +33,6 @@ namespace Gasolutions.Maui.App.Pages
         }
         private async void PerfilPage(object sender, EventArgs e)
         {
-            //var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new PerfilPage());
         }
 

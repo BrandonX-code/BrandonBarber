@@ -105,7 +105,5 @@ namespace Gasolutions.Maui.App.Pages
             LoaderOverlay.IsVisible = mostrar;
         }
 
-
-
     }
 }

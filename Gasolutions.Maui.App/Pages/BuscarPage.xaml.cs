@@ -11,11 +11,9 @@ namespace Gasolutions.Maui.App.Pages
 {
     public partial class BuscarPage : ContentPage, INotifyPropertyChanged
     {
-        // Collections for appointments
         public ObservableCollection<CitaModel> ProximasCitas { get; set; } = new();
         public ObservableCollection<CitaModel> HistorialCitas { get; set; } = new();
 
-        // Properties for visibility control
         private bool _hasProximasCitas;
         public bool HasProximasCitas
         {
@@ -57,7 +55,6 @@ namespace Gasolutions.Maui.App.Pages
         {
             base.OnAppearing();
 
-            // Clear collections
             ProximasCitas.Clear();
             HistorialCitas.Clear();
             UpdateVisibility();
@@ -74,7 +71,6 @@ namespace Gasolutions.Maui.App.Pages
             {
                 MostrarLoader(true);
 
-                // Clear previous data
                 ProximasCitas.Clear();
                 HistorialCitas.Clear();
 
@@ -85,7 +81,6 @@ namespace Gasolutions.Maui.App.Pages
                     return;
                 }
 
-                // Get all reservations for the client
                 var citas = await _reservationService.GetReservationsById(cedula);
 
                 if (citas == null || !citas.Any())
@@ -95,10 +90,8 @@ namespace Gasolutions.Maui.App.Pages
                     return;
                 }
 
-                // Current date for comparison
                 DateTime now = DateTime.Now.Date;
 
-                // Split appointments into upcoming and past
                 foreach (var cita in citas)
                 {
                     if (cita.Fecha.Date >= now)
@@ -111,10 +104,8 @@ namespace Gasolutions.Maui.App.Pages
                     }
                 }
 
-                // Update visibility
                 UpdateVisibility();
 
-                // Show success message
                 await MostrarSnackbar($"Se encontraron {citas.Count} citas.", Colors.Green, Colors.White);
             }
             catch (Exception ex)
@@ -165,7 +156,6 @@ namespace Gasolutions.Maui.App.Pages
         {
             if (sender is Button btn && btn.CommandParameter is int citaId)
             {
-                // Find the cita in our collection
                 CitaModel cita = ProximasCitas.FirstOrDefault(c => c.Id == citaId);
                 if (cita == null)
                 {

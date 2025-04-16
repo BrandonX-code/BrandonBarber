@@ -34,65 +34,34 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Label Text="Editar Perfil" 
-               Grid.Row="0"
-               FontSize="24" 
-               FontAttributes="Bold" 
-               TextColor="#c0aa4f" 
-               HorizontalOptions="Center"
-               Margin="0,20,0,20" />
+        <Label Text="Editar Perfil"  Grid.Row="0" FontSize="24"  FontAttributes="Bold"  TextColor="#c0aa4f"  HorizontalOptions="Center" Margin="0,20,0,20" />
 
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Spacing="20" Margin="0,10">
-                <Frame WidthRequest="120" 
-                       HeightRequest="120" 
-                       CornerRadius="10" 
-                       BackgroundColor="#3a3a3a" 
-                       Padding="10" 
-                       HasShadow="False"
-                       HorizontalOptions="Center">
-                    <Image x:Name="PerfilImage"
-                           Aspect="AspectFill" />
+                <Frame WidthRequest="120"  HeightRequest="120"  CornerRadius="10"  BackgroundColor="#3a3a3a"  Padding="10"  HasShadow="False" HorizontalOptions="Center">
+                    <Image x:Name="PerfilImage" Aspect="AspectFill" />
                 </Frame>
 
-                <Button Text="Cambiar imagen" 
-                        Style="{StaticResource ProfileButtonStyle}"
-                        BackgroundColor="#bfbfbf"
-                        TextColor="Black"
-                        Clicked="OnCambiarImagenClicked"
-                        HorizontalOptions="Center"
-                        WidthRequest="200"/>
+                <Button Text="Cambiar imagen"  Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#bfbfbf" TextColor="Black" Clicked="OnCambiarImagenClicked" HorizontalOptions="Center" WidthRequest="200"/>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Nombre completo" Style="{StaticResource ProfileLabelStyle}" />
-                    <Entry x:Name="NombreEntry" 
-                           Text="xxx"
-                           Style="{StaticResource ProfileEntryStyle}" 
-                           Placeholder="Nombre completo" />
+                    <Entry x:Name="NombreEntry" Text="xxx" Style="{StaticResource ProfileEntryStyle}" Placeholder="Nombre completo" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Telefono" Style="{StaticResource ProfileLabelStyle}" />
-                    <Entry x:Name="TelefonoEntry" 
-                           Text="###"
-                           Style="{StaticResource ProfileEntryStyle}" 
-                           Placeholder="Numero de telefono"
-                           Keyboard="Telephone" />
+                    <Entry x:Name="TelefonoEntry"  Text="###" Style="{StaticResource ProfileEntryStyle}"  Placeholder="Numero de telefono" Keyboard="Telephone" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Correo electronico" Style="{StaticResource ProfileLabelStyle}" />
-                    <Entry x:Name="EmailEntry" 
-                           Style="{StaticResource ProfileEntryStyle}" 
-                           Placeholder="Correo electronico"
-                           Keyboard="Email" />
+                    <Entry x:Name="EmailEntry"  Style="{StaticResource ProfileEntryStyle}"  Placeholder="Correo electronico" Keyboard="Email" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Direccion" Style="{StaticResource ProfileLabelStyle}" />
-                    <Entry x:Name="DireccionEntry" 
-                           Style="{StaticResource ProfileEntryStyle}" 
-                           Placeholder="Direccion" />
+                    <Entry x:Name="DireccionEntry" Style="{StaticResource ProfileEntryStyle}" Placeholder="Direccion" />
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
@@ -103,18 +72,8 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Text="CANCELAR" 
-                    Grid.Column="0"
-                    Style="{StaticResource ProfileButtonStyle}"
-                    BackgroundColor="#3a3a3a"
-                    Clicked="OnCancelarClicked"/>
-
-            <Button Text="GUARDAR" 
-                    Grid.Column="1"
-                    Style="{StaticResource ProfileButtonStyle}"
-                    BackgroundColor="#c0aa4f"
-                    TextColor="Black"
-                    Clicked="OnGuardarClicked"/>
+            <Button Text="Cancelar" Grid.Column="0" Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#3a3a3a" Clicked="OnCancelarClicked"/>
+            <Button Text="Guardar" Grid.Column="1" Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#c0aa4f" TextColor="Black" Clicked="OnGuardarClicked"/>
         </Grid>
     </Grid>
 </ContentPage>

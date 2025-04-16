@@ -24,12 +24,10 @@ namespace Gasolutions.Maui.App.Pages
                 return;
             }
 
-            // Mostrar indicador de carga
             LoadingIndicator.IsVisible = true;
             LoadingIndicator.IsRunning = true;
             ErrorLabel.IsVisible = false;
 
-            // Deshabilitar botones durante la operación
             var registroButton = (Button)sender;
             registroButton.IsEnabled = false;
 
@@ -69,7 +67,6 @@ namespace Gasolutions.Maui.App.Pages
             }
             finally
             {
-                // Restablecer la UI
                 LoadingIndicator.IsVisible = false;
                 LoadingIndicator.IsRunning = false;
                 registroButton.IsEnabled = true;
@@ -78,7 +75,6 @@ namespace Gasolutions.Maui.App.Pages
 
         private bool ValidarFormulario()
         {
-            // Validar campos obligatorios
             if (string.IsNullOrWhiteSpace(NombreEntry.Text) ||
                 string.IsNullOrWhiteSpace(CedulaEntry.Text) ||
                 string.IsNullOrWhiteSpace(EmailEntry.Text) ||
@@ -90,7 +86,6 @@ namespace Gasolutions.Maui.App.Pages
                 return false;
             }
 
-            // Validar que la cédula sea un número válido
             if (!long.TryParse(CedulaEntry.Text, out _))
             {
                 ErrorLabel.Text = "La cédula debe ser un número válido";
@@ -98,7 +93,6 @@ namespace Gasolutions.Maui.App.Pages
                 return false;
             }
 
-            // Validar formato de correo electrónico
             if (!IsValidEmail(EmailEntry.Text))
             {
                 ErrorLabel.Text = "El formato del correo electrónico no es válido";
@@ -106,7 +100,6 @@ namespace Gasolutions.Maui.App.Pages
                 return false;
             }
 
-            // Validar que las contraseñas coincidan
             if (PasswordEntry.Text != ConfirmPasswordEntry.Text)
             {
                 ErrorLabel.Text = "Las contraseñas no coinciden";
@@ -114,7 +107,6 @@ namespace Gasolutions.Maui.App.Pages
                 return false;
             }
 
-            // Validar seguridad de la contraseña
             if (!IsPasswordSecure(PasswordEntry.Text))
             {
                 ErrorLabel.Text = "La contraseña debe tener al menos 8 caracteres, incluir letras mayúsculas, minúsculas y números";
@@ -133,19 +125,15 @@ namespace Gasolutions.Maui.App.Pages
 
         private bool IsPasswordSecure(string password)
         {
-            // Verificar longitud mínima
             if (password.Length < 8)
                 return false;
 
-            // Verificar que contenga al menos una letra mayúscula
             if (!password.Any(char.IsUpper))
                 return false;
 
-            // Verificar que contenga al menos una letra minúscula
             if (!password.Any(char.IsLower))
                 return false;
 
-            // Verificar que contenga al menos un número
             if (!password.Any(char.IsDigit))
                 return false;
 

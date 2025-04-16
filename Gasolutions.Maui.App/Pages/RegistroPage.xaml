@@ -34,100 +34,57 @@
     <Grid Padding="20">
         <ScrollView>
             <VerticalStackLayout Spacing="20" Padding="0,20">
-                <Label Text="CREAR CUENTA" 
-                       FontSize="24" 
-                       FontAttributes="Bold" 
-                       TextColor="White" 
-                       HorizontalOptions="Center"
-                       Margin="0,0,0,20" />
+                <Label Text="Creae Cuenta"  FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" Margin="0,0,0,20" />
 
-                <!-- Campos de registro -->
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Nombre completo" TextColor="White" FontSize="16" />
-                    <Entry x:Name="NombreEntry" 
-                           Style="{StaticResource RegistroEntryStyle}" 
-                           Placeholder="Nombre completo" />
+                    <Entry x:Name="NombreEntry"  Style="{StaticResource RegistroEntryStyle}" Placeholder="Nombre completo" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Cedula" TextColor="White" FontSize="16" />
-                    <Entry x:Name="CedulaEntry" 
-                           Style="{StaticResource RegistroEntryStyle}" 
-                           Placeholder="Numero de cedula"
-                           Keyboard="Numeric" />
+                    <Entry x:Name="CedulaEntry" Style="{StaticResource RegistroEntryStyle}" Placeholder="Numero de cedula" Keyboard="Numeric" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Correo electronico" TextColor="White" FontSize="16" />
-                    <Entry x:Name="EmailEntry" 
-                           Style="{StaticResource RegistroEntryStyle}" 
-                           Placeholder="ejemplo@correo.com"
-                           Keyboard="Email" />
+                    <Entry x:Name="EmailEntry" Style="{StaticResource RegistroEntryStyle}" Placeholder="ejemplo@correo.com" Keyboard="Email" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Telefono" TextColor="White" FontSize="16" />
-                    <Entry x:Name="TelefonoEntry" 
-                           Style="{StaticResource RegistroEntryStyle}" 
-                           Placeholder="Numero de telefono"
-                           Keyboard="Telephone" />
+                    <Entry x:Name="TelefonoEntry" Style="{StaticResource RegistroEntryStyle}" Placeholder="Numero de telefono" Keyboard="Telephone" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Direccion" TextColor="White" FontSize="16" />
-                    <Entry x:Name="DireccionEntry" 
-                           Style="{StaticResource RegistroEntryStyle}" 
-                           Placeholder="Direccion" />
+                    <Entry x:Name="DireccionEntry" Style="{StaticResource RegistroEntryStyle}" Placeholder="Direccion" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Contraseña" TextColor="White" FontSize="16" />
-                    <Entry x:Name="PasswordEntry" 
-                           Style="{StaticResource RegistroEntryStyle}" 
-                           Placeholder="Contraseña"
-                           IsPassword="True" />
+                    <Entry x:Name="PasswordEntry" Style="{StaticResource RegistroEntryStyle}" Placeholder="Contraseña" IsPassword="True" />
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Confirmar contraseña" TextColor="White" FontSize="16" />
-                    <Entry x:Name="ConfirmPasswordEntry" 
-                           Style="{StaticResource RegistroEntryStyle}" 
-                           Placeholder="Confirmar contraseña"
-                           IsPassword="True" />
+                    <Entry x:Name="ConfirmPasswordEntry" Style="{StaticResource RegistroEntryStyle}" Placeholder="Confirmar contraseña" IsPassword="True" />
                 </VerticalStackLayout>
 
-                <!-- Mensaje de error -->
-                <Label x:Name="ErrorLabel" 
-                       TextColor="#ff0000" 
-                       FontSize="14" 
-                       HorizontalOptions="Center"
-                       IsVisible="False" />
+                <Label x:Name="ErrorLabel" TextColor="#ff0000" FontSize="14" HorizontalOptions="Center" IsVisible="False" />
 
-                <!-- Botones -->
                 <Grid ColumnSpacing="15" Margin="0,20,0,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Button Text="CANCELAR" 
-                            Grid.Column="0"
-                            Style="{StaticResource CancelButtonStyle}"
-                            Clicked="OnCancelarClicked" />
+                    <Button Text="Cancelar" Grid.Column="0" Style="{StaticResource CancelButtonStyle}" Clicked="OnCancelarClicked" />
 
-                    <Button Text="REGISTRARSE" 
-                            Grid.Column="1"
-                            Style="{StaticResource RegistroButtonStyle}"
-                            Clicked="OnRegistrarClicked" />
+                    <Button Text="Registrarse" Grid.Column="1" Style="{StaticResource RegistroButtonStyle}" Clicked="OnRegistrarClicked" />
                 </Grid>
 
-                <!-- Indicador de actividad -->
-                <ActivityIndicator x:Name="LoadingIndicator" 
-                                  IsRunning="False" 
-                                  IsVisible="False"
-                                  Color="#c0aa4f"
-                                  VerticalOptions="Center"
-                                  HorizontalOptions="Center" />
+                <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" />
             </VerticalStackLayout>
         </ScrollView>
     </Grid>
