@@ -34,7 +34,7 @@
     <Grid Padding="20">
         <ScrollView>
             <VerticalStackLayout Spacing="20" Padding="0,20">
-                <Label Text="Creae Cuenta"  FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" Margin="0,0,0,20" />
+                <Label Text="Crear Cuenta"  FontSize="24" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" Margin="0,0,0,20" />
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Nombre completo" TextColor="White" FontSize="16" />
