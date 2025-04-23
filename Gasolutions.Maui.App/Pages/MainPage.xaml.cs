@@ -1,11 +1,4 @@
-﻿using Gasolutions.Maui.App.Models;
-using Gasolutions.Maui.App.Pages;
-using Gasolutions.Maui.App.Services;
-using Font = Microsoft.Maui.Font;
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-
-namespace Gasolutions.Maui.App
+﻿namespace Gasolutions.Maui.App
 {
     public partial class MainPage : ContentPage
     {

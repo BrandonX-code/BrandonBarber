@@ -1,14 +1,4 @@
-﻿using System;
-using Microsoft.Maui.Controls;
-using Microsoft.Maui.Storage;
-using System.Diagnostics;
-using Gasolutions.Maui.App.Models;
-using Gasolutions.Maui.App.Services;
-using System.Net.Http;
-using System.Text;
-using System.Text.Json;
-
-namespace Gasolutions.Maui.App.Pages
+﻿namespace Gasolutions.Maui.App.Pages
 {
     public partial class EditarPerfilPage : ContentPage
     {

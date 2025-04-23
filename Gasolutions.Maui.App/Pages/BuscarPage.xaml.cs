@@ -1,13 +1,4 @@
-﻿using CommunityToolkit.Maui.Core;
-using Gasolutions.Maui.App.Models;
-using Gasolutions.Maui.App.Services;
-using System.Collections.ObjectModel;
-using Font = Microsoft.Maui.Font;
-using CommunityToolkit.Maui.Alerts;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
-namespace Gasolutions.Maui.App.Pages
+﻿namespace Gasolutions.Maui.App.Pages
 {
     public partial class BuscarPage : ContentPage, INotifyPropertyChanged
     {

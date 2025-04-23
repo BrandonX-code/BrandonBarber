@@ -1,11 +1,4 @@
-﻿using Gasolutions.Maui.App.Models;
-using Gasolutions.Maui.App.Services;
-using System.Collections.ObjectModel;
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using Font = Microsoft.Maui.Font;
-
-namespace Gasolutions.Maui.App.Pages
+﻿namespace Gasolutions.Maui.App.Pages
 {
     public partial class ListaCitas : ContentPage
     {
@@ -46,7 +39,7 @@ namespace Gasolutions.Maui.App.Pages
             {
                 await MostrarSnackbar("Hubo un problema al recuperar las reservas.", Colors.Red, Colors.White);
             }
-            finally 
+            finally
             {
                 MostrarLoader(false);
 

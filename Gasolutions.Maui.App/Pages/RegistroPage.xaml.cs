@@ -1,8 +1,4 @@
-﻿using Gasolutions.Maui.App.Models;
-using Gasolutions.Maui.App.Services;
-using System.Text.RegularExpressions;
-
-namespace Gasolutions.Maui.App.Pages
+﻿namespace Gasolutions.Maui.App.Pages
 {
     public partial class RegistroPage : ContentPage
     {
