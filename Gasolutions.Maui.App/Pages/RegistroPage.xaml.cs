@@ -1,4 +1,8 @@
-﻿namespace Gasolutions.Maui.App.Pages
+﻿using Gasolutions.Maui.App.Models;
+using Gasolutions.Maui.App.Services;
+using System.Text.RegularExpressions;
+
+namespace Gasolutions.Maui.App.Pages
 {
     public partial class RegistroPage : ContentPage
     {
@@ -8,6 +12,8 @@
         {
             InitializeComponent();
             _authService = Application.Current.Handler.MauiContext.Services.GetService<AuthService>();
+
+            RolPicker.SelectedIndex = 0;
         }
 
         private async void OnRegistrarClicked(object sender, EventArgs e)
@@ -26,6 +32,20 @@
 
             try
             {
+                string rolSeleccionado;
+                switch (RolPicker.SelectedIndex)
+                {
+                    case 0:
+                        rolSeleccionado = "cliente";
+                        break;
+                    case 1:
+                        rolSeleccionado = "barbero";
+                        break;
+                    default:
+                        rolSeleccionado = "cliente";
+                        break;
+                }
+
                 var registroRequest = new RegistroRequest
                 {
                     Nombre = NombreEntry.Text,
@@ -35,16 +55,16 @@
                     ConfirmContraseña = ConfirmPasswordEntry.Text,
                     Telefono = TelefonoEntry.Text,
                     Direccion = DireccionEntry.Text,
-                    Rol = "user"
+                    Rol = rolSeleccionado
                 };
 
                 var response = await _authService.Register(registroRequest);
-                Console.WriteLine($"Respuesta de registro: Success = {response.Success}, Message = {response.Message}");
+                Console.WriteLine($"Respuesta de registro: Success = {response.IsSuccess}, Message = {response.Message}");
 
-                if (response.Success)
+                if (response.IsSuccess)
                 {
-                    await DisplayAlert("Registro Exitoso", "Tu cuenta ha sido creada correctamente. Ahora puedes iniciar sesión.", "OK");
-                    await Navigation.PopAsync();
+                    await DisplayAlert("Registro Exitoso", response.Message, "OK");
+                    await Navigation.PushAsync(new LoginPage());
                 }
                 else
                 {
@@ -72,7 +92,8 @@
                 string.IsNullOrWhiteSpace(CedulaEntry.Text) ||
                 string.IsNullOrWhiteSpace(EmailEntry.Text) ||
                 string.IsNullOrWhiteSpace(PasswordEntry.Text) ||
-                string.IsNullOrWhiteSpace(ConfirmPasswordEntry.Text))
+                string.IsNullOrWhiteSpace(ConfirmPasswordEntry.Text) ||
+                RolPicker.SelectedIndex == -1)
             {
                 ErrorLabel.Text = "Por favor, completa todos los campos obligatorios";
                 ErrorLabel.IsVisible = true;

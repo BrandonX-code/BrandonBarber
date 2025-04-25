@@ -48,7 +48,7 @@
             {
                 var response = await _authService.Login(EmailEntry.Text, PasswordEntry.Text);
 
-                if (response.Success)
+                if (response.IsSuccess)
                 {
                     await NavigateToMainPage();
                 }
@@ -88,7 +88,7 @@
             else
             {
                 Preferences.Set("IsLoggedIn", true);
-                Application.Current.MainPage = new NavigationPage(new InicioPages());
+                Application.Current.MainPage = new NavigationPage(new InicioPages(_authService));
             }
         }
     }

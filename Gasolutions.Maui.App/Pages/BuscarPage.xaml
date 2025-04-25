@@ -89,7 +89,7 @@
                     </CollectionView>
 
                     <Label Text="Historial de Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasHistorialCitas}" Margin="0,5,0,0"/>
-                    <CollectionView x:Name="HistorialCitasCollection"  ItemsSource="{Binding HistorialCitas}" EmptyView="No hay historial de citas Ingrese su Cedula" HeightRequest="180">
+                    <CollectionView x:Name="HistorialCitasCollection"  ItemsSource="{Binding HistorialCitas}" EmptyView="No hay historial de citas Ingrese su Cedula" HeightRequest="235">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Frame Padding="8" Margin="2" BorderColor="#444" BackgroundColor="#5a5a5a" CornerRadius="8" HasShadow="True">

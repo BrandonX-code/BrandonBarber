@@ -2,10 +2,18 @@
 {
     public partial class InicioPages : ContentPage
     {
-        public InicioPages()
+        private readonly AuthService _authService;
+        public InicioPages(AuthService authService)
         {
             InitializeComponent();
+            _authService = authService;
 
+            // Cargar la información del usuario y mostrar la vista correspondiente
+            LoadUserInfo();
+        }
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
         }
         private async void MainPage(object sender, EventArgs e)
         {
@@ -30,7 +38,7 @@
         private async void OnInicioClicked(object sender, EventArgs e)
         {
             await AnimateButtonClick(sender as Button);
-            await Navigation.PushAsync(new InicioPages());
+            await Navigation.PushAsync(new InicioPages(_authService));
         }
 
         private async void OnBuscarClicked(object sender, EventArgs e)
@@ -53,5 +61,63 @@
             await button.ScaleTo(0.9, 100);
             await button.ScaleTo(1, 100);
         }
+        private void LoadUserInfo()
+        {
+            if (AuthService.CurrentUser != null)
+            {
+                // Mostrar información del usuario
+                WelcomeLabel.Text = $"Bienvenido, {AuthService.CurrentUser.Nombre}";
+                UserTypeLabel.Text = $"Tipo de usuario: {AuthService.CurrentUser.Rol}";
+
+                // Ocultar indicador de carga
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsRunning = false;
+
+                // Mostrar la vista correspondiente según el rol
+                switch (AuthService.CurrentUser.Rol.ToLower())
+                {
+                    case "cliente":
+                        ClienteView.IsVisible = true;
+                        BarberoView.IsVisible = false;
+                        AdminView.IsVisible = false;
+                        break;
+                    case "barbero":
+                        ClienteView.IsVisible = false;
+                        BarberoView.IsVisible = true;
+                        AdminView.IsVisible = false;
+                        break;
+                    case "administrador":
+                        ClienteView.IsVisible = false;
+                        BarberoView.IsVisible = false;
+                        AdminView.IsVisible = true;
+                        break;
+                    default:
+                        // Si el rol no coincide con ninguno de los anteriores, mostrar vista de cliente por defecto
+                        ClienteView.IsVisible = true;
+                        BarberoView.IsVisible = false;
+                        AdminView.IsVisible = false;
+                        break;
+                }
+            }
+        }
+
+        //private async void OnLogoutClicked(object sender, EventArgs e)
+        //{
+        //    bool confirmed = await DisplayAlert("Cerrar Sesión", "¿Estás seguro de que deseas cerrar la sesión?", "Sí", "No");
+
+        //    if (confirmed)
+        //    {
+        //        bool logoutSuccess = await _authService.Logout();
+
+        //        if (logoutSuccess)
+        //        {
+        //            await Navigation.PushAsync(new LoginPage());
+        //        }
+        //        else
+        //        {
+        //            await DisplayAlert("Error", "No se pudo cerrar sesión. Inténtalo de nuevo.", "OK");
+        //        }
+        //    }
+        //}
     }
 }

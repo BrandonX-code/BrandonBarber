@@ -1,58 +1,113 @@
 ﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Gasolutions.Maui.App.Pages.InicioPages">
-    <Grid BackgroundColor="#566573" RowDefinitions="*,Auto">
-        <Grid>
-            <Image Source="fondobarber.jpg" Aspect="AspectFill" Opacity="0.80"/>
-            <ScrollView>
-            <VerticalStackLayout Padding="20" Spacing="70" ZIndex="1">
+    <Grid BackgroundColor="#2b2b2b">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-                <Grid ColumnDefinitions="*,Auto">
-                    <Label Text="Inicio" FontSize="32" FontAttributes="Bold" TextColor="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Start" />
+        <!-- Encabezado con información del usuario -->
+        <Grid Grid.Row="0" BackgroundColor="#2b2b2b" Padding="10,30">
+            <VerticalStackLayout>
+                <Label x:Name="WelcomeLabel" Text="Bienvenido" FontSize="20" TextColor="#c0aa4f" FontAttributes="Bold" />
+                <Label x:Name="UserTypeLabel" Text="Tipo de usuario: " FontSize="16" TextColor="LightGray" />
+            </VerticalStackLayout>
+            <ImageButton Source="user.png" BackgroundColor="Transparent" HeightRequest="32" WidthRequest="32"  VerticalOptions="Center" HorizontalOptions="End" Clicked="PerfilPage" />
+        </Grid>
 
-                    <ImageButton Source="user.png" BackgroundColor="Transparent" HeightRequest="32" WidthRequest="32"  VerticalOptions="Center" HorizontalOptions="End" Clicked="PerfilPage" />
-                </Grid>
+        <!-- Contenido específico según el rol (se cargará dinámicamente) -->
+        <Grid Grid.Row="1" x:Name="ContentContainer">
+            <!-- El contenido se añadirá dinámicamente según el rol -->
+            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" IsVisible="True"
+                          Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" />
 
-
+            <!-- Vista para Cliente -->
+            <VerticalStackLayout x:Name="ClienteView" IsVisible="false" Padding="20" Spacing="20">
+                <Label Text="Panel de Cliente" FontSize="24" TextColor="#c0aa4f" FontAttributes="Bold" HorizontalOptions="Center" />
+                <!--<Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                    <VerticalStackLayout Spacing="15">
+                        <Button Text="Solicitar Cita" BackgroundColor="#c0aa4f" TextColor="Black"
+                            CornerRadius="10" HeightRequest="50" FontAttributes="Bold" Clicked="MainPage"/>
+                        <Button Text="Mis Citas" BackgroundColor="#c0aa4f" TextColor="Black"
+                            CornerRadius="10" HeightRequest="50" FontAttributes="Bold" Clicked="BuscarCitas"/>
+                        <Button Text="Ver Barberos Disponibles" BackgroundColor="#c0aa4f" TextColor="Black"
+                            CornerRadius="10" HeightRequest="50" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Frame>-->
                 <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="MainPage" />
                     </Frame.GestureRecognizers>
-                    <HorizontalStackLayout Spacing="5" HeightRequest="60">
+                    <HorizontalStackLayout Spacing="10" HeightRequest="60">
                         <Image Source="calendar.png" WidthRequest="24" HeightRequest="24" />
                         <Label Text="Agendar Una Cita" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
                     </HorizontalStackLayout>
                 </Frame>
 
-                <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="CitasList" />
-                    </Frame.GestureRecognizers>
-                    <HorizontalStackLayout Spacing="5" HeightRequest="60">
-                        <Image Source="history.png" WidthRequest="24" HeightRequest="24" />
-                        <Label Text="Historial de Citas" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
-                    </HorizontalStackLayout>
-                </Frame>
 
                 <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="BuscarCitas" />
                     </Frame.GestureRecognizers>
-                    <HorizontalStackLayout Spacing="5" HeightRequest="60">
+                    <HorizontalStackLayout Spacing="10" HeightRequest="60">
                         <Image Source="busquedacitas.png" WidthRequest="24" HeightRequest="24" />
                         <Label Text="Buscar Tus Citas" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
                     </HorizontalStackLayout>
                 </Frame>
 
+            </VerticalStackLayout>
+
+            <!-- Vista para Barbero -->
+            <VerticalStackLayout x:Name="BarberoView" IsVisible="false" Padding="20" Spacing="20">
+                <Label Text="Panel de Barbero" FontSize="24" TextColor="#c0aa4f" FontAttributes="Bold" HorizontalOptions="Center" />
+
+
                 <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
-                    <HorizontalStackLayout Spacing="5" HeightRequest="60">
-                        <Image Source="rise.png" WidthRequest="24" HeightRequest="24" />
-                        <Label Text="Estadísticas" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="CitasList" />
+                    </Frame.GestureRecognizers>
+                    <HorizontalStackLayout Spacing="10" HeightRequest="60">
+                        <Image Source="history.png" WidthRequest="24" HeightRequest="24" />
+                        <Label Text="Tus Citas" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
                     </HorizontalStackLayout>
                 </Frame>
+                <!--<Button Text="Gestionar Disponibilidad" BackgroundColor="#c0aa4f" TextColor="Black"
+                            CornerRadius="10" HeightRequest="50" FontAttributes="Bold" />
+                        <Button Text="Ver Clientes" BackgroundColor="#c0aa4f" TextColor="Black"
+                            CornerRadius="10" HeightRequest="50" FontAttributes="Bold" />-->
 
             </VerticalStackLayout>
-            </ScrollView>
+
+            <!-- Vista para Administrador -->
+            <VerticalStackLayout x:Name="AdminView" IsVisible="false" Padding="20" Spacing="20">
+                <Label Text="Panel de Administrador" FontSize="24" TextColor="#c0aa4f" FontAttributes="Bold" HorizontalOptions="Center" />
+                <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                    <VerticalStackLayout Spacing="15">
+                        <Button Text="Gestionar Barberos" BackgroundColor="#c0aa4f" TextColor="Black"
+                            CornerRadius="10" HeightRequest="50" FontAttributes="Bold" />
+                        <Button Text="Gestionar Clientes" BackgroundColor="#c0aa4f" TextColor="Black"
+                            CornerRadius="10" HeightRequest="50" FontAttributes="Bold" />
+                        <Button Text="Ver Todas las Citas" BackgroundColor="#c0aa4f" TextColor="Black"
+                            CornerRadius="10" HeightRequest="50" FontAttributes="Bold" x:Name="VerCitasBtn" />
+                        <Button Text="Configuración" BackgroundColor="#c0aa4f" TextColor="Black"
+                            CornerRadius="10" HeightRequest="50" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
         </Grid>
+
+        <!-- Botón para cerrar sesión -->
+        <!--
+        <Button Text="Cerrar Sesión"
+            CornerRadius="10"
+            BackgroundColor="#c0aa4f"
+            TextColor="Black"
+            FontAttributes="Bold"
+            Margin="20"
+            VerticalOptions="End"
+            HorizontalOptions="Center"
+            Grid.Row="1"
+            Clicked="OnLogoutClicked" />-->
     </Grid>
 </ContentPage>

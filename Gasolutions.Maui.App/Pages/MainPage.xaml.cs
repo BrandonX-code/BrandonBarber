@@ -36,11 +36,11 @@
             await buttonsLayout.FadeTo(1, 300);
         }
 
-        private async void OnInicioClicked(object sender, EventArgs e)
-        {
-            await AnimateButtonClick(sender as Button);
-            await Navigation.PushAsync(new InicioPages());
-        }
+        //private async void OnInicioClicked(object sender, EventArgs e)
+        //{
+        //    await AnimateButtonClick(sender as Button);
+        //    await Navigation.PushAsync(new InicioPages());
+        //}
 
         private async void OnBuscarClicked(object sender, EventArgs e)
         {

@@ -44,7 +44,7 @@ namespace Gasolutions.Maui.App.Services
                 {
                     return new AuthResponse
                     {
-                        Success = false,
+                        IsSuccess = false,
                         Message = $"Error: {response.StatusCode} - {responseContent}"
                     };
                 }
@@ -52,7 +52,7 @@ namespace Gasolutions.Maui.App.Services
                 var authResponse = JsonSerializer.Deserialize<AuthResponse>(responseContent,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                if (authResponse.Success)
+                if (authResponse.IsSuccess)
                 {
                     CurrentUser = authResponse.User;
 
@@ -73,7 +73,7 @@ namespace Gasolutions.Maui.App.Services
                 Debug.WriteLine($"❌ Error en login: {ex.Message}");
                 return new AuthResponse
                 {
-                    Success = false,
+                    IsSuccess = false,
                     Message = $"Error de conexión: {ex.Message}"
                 };
             }
@@ -115,8 +115,7 @@ namespace Gasolutions.Maui.App.Services
 
                 if (responseContent.IsSuccessStatusCode)
                 {
-                    await Application.Current.MainPage.DisplayAlert("Éxito", "¡Registro exitoso! Ahora puedes iniciar sesión.", "Aceptar");
-                    return new AuthResponse { IsSuccess = true, Message = "Registro exitoso." };
+                    return new AuthResponse { IsSuccess = true, Message = "¡Registro exitoso! Ahora puedes iniciar sesión." };
                 }
 
                 // Si el código de estado no es específico

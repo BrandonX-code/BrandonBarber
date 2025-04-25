@@ -15,11 +15,18 @@ namespace Gasolutions.Maui.App.Models
         [Required]
         [MinLength(6)]
         public string Contraseña { get; set; }
-        public string Rol { get; set; }
+        public string Rol { get; set; } // cliente, barbero, administrador
         public string Token { get; set; }
         public string Telefono { get; set; }
+
         [JsonIgnore]
         public bool IsAdmin => Rol?.ToLower() == "administrador";
+
+        [JsonIgnore]
+        public bool IsBarbero => Rol?.ToLower() == "barbero";
+
+        [JsonIgnore]
+        public bool IsCliente => Rol?.ToLower() == "cliente";
     }
 
     // Clase para el login
@@ -39,16 +46,16 @@ namespace Gasolutions.Maui.App.Models
         public string ConfirmContraseña { get; set; }
         public string Telefono { get; set; }
         public string Direccion { get; set; }
-        public string Rol { get; set; }
+        public string Rol { get; set; } // cliente, barbero, administrador
     }
 
     // Clase para la respuesta de autenticación
     public class AuthResponse
     {
-        public bool Success { get; set; }
+        public bool IsSuccess { get; set; }
         public string Message { get; set; }
         public UsuarioModels User { get; set; }
         public string Token { get; set; }
-        public bool IsSuccess { get; internal set; }
+        //public bool IsSuccess { get; internal set; }
     }
 }

@@ -28,6 +28,12 @@
                 <Setter Property="HeightRequest" Value="45" />
                 <Setter Property="FontSize" Value="16" />
             </Style>
+            <Style x:Key="PickerStyle" TargetType="Picker">
+                <Setter Property="BackgroundColor" Value="#2b2b2b" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="HeightRequest" Value="45" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -60,6 +66,21 @@
                     <Label Text="Direccion" TextColor="White" FontSize="16" />
                     <Entry x:Name="DireccionEntry" Style="{StaticResource RegistroEntryStyle}" Placeholder="Direccion" />
                 </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Tipo de usuario" TextColor="White" FontSize="16" />
+                    <Picker x:Name="RolPicker"
+            Style="{StaticResource PickerStyle}"
+            TitleColor="#909090"
+            TextColor="White">
+                        <!-- fuerza color visible -->
+                        <Picker.Items>
+                            <x:String>Cliente</x:String>
+                            <x:String>Barbero</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </VerticalStackLayout>
+
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Contraseña" TextColor="White" FontSize="16" />
