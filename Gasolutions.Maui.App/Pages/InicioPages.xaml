@@ -27,7 +27,6 @@
                     </HorizontalStackLayout>
                 </Frame>
 
-
                 <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="BuscarCitas" />
@@ -40,10 +39,9 @@
 
             </VerticalStackLayout>
 
+            <!-- Update the BarberoView section in InicioPages.xaml -->
             <VerticalStackLayout x:Name="BarberoView" IsVisible="false" Padding="20" Spacing="20">
                 <Label Text="Panel de Barbero" FontSize="24" TextColor="#c0aa4f" FontAttributes="Bold" HorizontalOptions="Center" />
-
-
                 <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
                     <Frame.GestureRecognizers>
                         <TapGestureRecognizer Tapped="CitasList" />
@@ -51,6 +49,15 @@
                     <HorizontalStackLayout Spacing="10" HeightRequest="60">
                         <Image Source="history.png" WidthRequest="24" HeightRequest="24" />
                         <Label Text="Tus Citas" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                    </HorizontalStackLayout>
+                </Frame>
+                <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="GestionarDisponibilidad" />
+                    </Frame.GestureRecognizers>
+                    <HorizontalStackLayout Spacing="10" HeightRequest="60">
+                        <Image Source="calendar.png" WidthRequest="24" HeightRequest="24" />
+                        <Label Text="Gestionar Disponibilidad" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
                     </HorizontalStackLayout>
                 </Frame>
             </VerticalStackLayout>

@@ -11,6 +11,7 @@ namespace Barber.Maui.API.Data
         public DbSet<Cita> Citas { get; set; }
         public DbSet<Perfil> Perfiles { get; set; }
         public DbSet<Auth> UsuarioPerfiles { get; set; }
+        public DbSet<Disponibilidad> Disponibilidad { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

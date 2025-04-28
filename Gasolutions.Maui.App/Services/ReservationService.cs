@@ -10,6 +10,7 @@ namespace Gasolutions.Maui.App.Services
         private static List<CitaModel> _reservations = new();
         private readonly HttpClient _httpClient;
         private string URL;
+        public static DisponibilidadModel CurrentUser { get; set; }
 
         public ReservationService(HttpClient httpClient)
         {

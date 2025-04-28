@@ -27,6 +27,8 @@ namespace Gasolutions.Maui.App.Models
 
         [JsonIgnore]
         public bool IsCliente => Rol?.ToLower() == "cliente";
+
+        public int BarberoId { get; set; }
     }
 
     // Clase para el login

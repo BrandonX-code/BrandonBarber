@@ -15,6 +15,7 @@
         {
             base.OnAppearing();
         }
+
         private async void MainPage(object sender, EventArgs e)
         {
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
@@ -79,26 +80,30 @@
                     case "cliente":
                         ClienteView.IsVisible = true;
                         BarberoView.IsVisible = false;
-                        AdminView.IsVisible = false;
                         break;
                     case "barbero":
                         ClienteView.IsVisible = false;
                         BarberoView.IsVisible = true;
-                        AdminView.IsVisible = false;
                         break;
                     case "administrador":
                         ClienteView.IsVisible = false;
                         BarberoView.IsVisible = false;
-                        AdminView.IsVisible = true;
                         break;
                     default:
                         // Si el rol no coincide con ninguno de los anteriores, mostrar vista de cliente por defecto
                         ClienteView.IsVisible = true;
                         BarberoView.IsVisible = false;
-                        AdminView.IsVisible = false;
                         break;
                 }
             }
+        }
+        // Add this method to the InicioPages class
+        private async void GestionarDisponibilidad(object sender, EventArgs e)
+        {
+            await AnimateButtonClick(sender as Button);
+            var disponibilidadService = App.Current.Handler.MauiContext.Services.GetRequiredService<DisponibilidadService>();
+            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            await Navigation.PushAsync(new GestionarDisponibilidadPage(disponibilidadService, reservationService));
         }
     }
 }

@@ -1,0 +1,107 @@
+﻿using Gasolutions.Maui.App.Models;
+using System.Collections;
+using System.Diagnostics;
+using System.Net;
+using System.Text;
+using System.Text.Json;
+
+namespace Gasolutions.Maui.App.Services
+{
+    public class DisponibilidadService
+    {
+        private readonly HttpClient _httpClient;
+        private string URL;
+        public static DisponibilidadModel CurrentUser { get; set; }
+
+        public DisponibilidadService(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+            URL = _httpClient.BaseAddress.ToString();
+        }
+
+        public async Task<DisponibilidadModel> GetDisponibilidad(DateTime fecha, int barberoId)
+        {
+            try
+            {
+                string url = $"{_httpClient.BaseAddress}disponibilidad/by-date/{fecha:yyyy-MM-dd}/{barberoId}";
+                var response = await _httpClient.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        // No hay disponibilidad registrada para esta fecha y barbero
+                        return new DisponibilidadModel
+                        {
+                            Fecha = fecha,
+                            BarberoId = barberoId,
+                            Horarios = new Dictionary<string, bool>
+                            {
+                                { "9:00", true },
+                                { "10:00", true },
+                                { "11:00", true },
+                                { "14:00", true },
+                                { "15:00", true }
+                            }
+                        };
+                    }
+
+                    Debug.WriteLine($"❌ Error al obtener disponibilidad: {response.StatusCode}");
+                    return null;
+                }
+
+                var json = await response.Content.ReadAsStringAsync();
+                var disponibilidad = JsonSerializer.Deserialize<DisponibilidadModel>(json,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                return disponibilidad;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"❌ Excepción al obtener disponibilidad: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<bool> GuardarDisponibilidad(DisponibilidadModel disponibilidad)
+        {
+            try
+            {
+                var disponibilidadParaEnviar = new
+                {
+                    id = disponibilidad.Id,
+                    fecha = disponibilidad.Fecha.ToString("yyyy-MM-ddTHH:mm:ss"), // formatea fecha correcta
+                    barberoId = disponibilidad.BarberoId,
+                    horarios = JsonSerializer.Serialize(disponibilidad.Horarios), // serializa como string
+                    horariosDict = disponibilidad.Horarios  // envia como objeto
+                };
+
+                var json = JsonSerializer.Serialize(disponibilidadParaEnviar);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("disponibilidad", content);
+
+                string responseMessage = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"🔹 Código de estado API: {response.StatusCode}");
+                Console.WriteLine($"🔹 Respuesta API: {responseMessage}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"❌ Error en API: {responseContent}");
+
+                    await Application.Current.MainPage.DisplayAlert("Error", $"No se pudo guardar la disponibilidad: {responseContent}", "Aceptar");
+                }
+
+
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error al conectar con la API: {ex.Message}");
+                await Application.Current.MainPage.DisplayAlert("Error", "Error de conexión con el servidor.", "Aceptar");
+                return false;
+            }
+        }
+    }
+}
