@@ -84,7 +84,7 @@ namespace Barber.Maui.API.Controllers
             // Crear un objeto de respuesta para evitar enviar la contraseña
             var response = new
             {
-                Success = true,
+                IsSuccess = true,
                 Message = "Login exitoso",
                 User = new
                 {

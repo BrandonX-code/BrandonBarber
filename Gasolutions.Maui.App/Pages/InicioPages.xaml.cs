@@ -67,7 +67,7 @@
             {
                 // Mostrar información del usuario
                 WelcomeLabel.Text = $"Bienvenido, {AuthService.CurrentUser.Nombre}";
-                UserTypeLabel.Text = $"Tipo de usuario: {AuthService.CurrentUser.Rol}";
+                //UserTypeLabel.Text = $"Tipo de usuario: {AuthService.CurrentUser.Rol}";
 
                 // Ocultar indicador de carga
                 LoadingIndicator.IsVisible = false;
@@ -100,24 +100,5 @@
                 }
             }
         }
-
-        //private async void OnLogoutClicked(object sender, EventArgs e)
-        //{
-        //    bool confirmed = await DisplayAlert("Cerrar Sesión", "¿Estás seguro de que deseas cerrar la sesión?", "Sí", "No");
-
-        //    if (confirmed)
-        //    {
-        //        bool logoutSuccess = await _authService.Logout();
-
-        //        if (logoutSuccess)
-        //        {
-        //            await Navigation.PushAsync(new LoginPage());
-        //        }
-        //        else
-        //        {
-        //            await DisplayAlert("Error", "No se pudo cerrar sesión. Inténtalo de nuevo.", "OK");
-        //        }
-        //    }
-        //}
     }
 }
