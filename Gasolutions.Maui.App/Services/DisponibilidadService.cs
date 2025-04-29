@@ -19,11 +19,11 @@ namespace Gasolutions.Maui.App.Services
             URL = _httpClient.BaseAddress.ToString();
         }
 
-        public async Task<DisponibilidadModel> GetDisponibilidad(DateTime fecha, int barberoId)
+        public async Task<DisponibilidadModel> GetDisponibilidad(DateTime fecha)
         {
             try
             {
-                string url = $"{_httpClient.BaseAddress}disponibilidad/by-date/{fecha:yyyy-MM-dd}/{barberoId}";
+                string url = $"disponibilidad/by-date/{fecha:yyyy-MM-dd}";
                 var response = await _httpClient.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
@@ -31,19 +31,7 @@ namespace Gasolutions.Maui.App.Services
                     if (response.StatusCode == HttpStatusCode.NotFound)
                     {
                         // No hay disponibilidad registrada para esta fecha y barbero
-                        return new DisponibilidadModel
-                        {
-                            Fecha = fecha,
-                            BarberoId = barberoId,
-                            Horarios = new Dictionary<string, bool>
-                            {
-                                { "9:00", true },
-                                { "10:00", true },
-                                { "11:00", true },
-                                { "14:00", true },
-                                { "15:00", true }
-                            }
-                        };
+                        return null;
                     }
 
                     Debug.WriteLine($"❌ Error al obtener disponibilidad: {response.StatusCode}");
@@ -72,8 +60,8 @@ namespace Gasolutions.Maui.App.Services
                     id = disponibilidad.Id,
                     fecha = disponibilidad.Fecha.ToString("yyyy-MM-ddTHH:mm:ss"), // formatea fecha correcta
                     barberoId = disponibilidad.BarberoId,
-                    horarios = JsonSerializer.Serialize(disponibilidad.Horarios), // serializa como string
-                    horariosDict = disponibilidad.Horarios  // envia como objeto
+                    horarios = JsonSerializer.Serialize(disponibilidad.HorariosDict), // serializa como string
+                    horariosDict = disponibilidad.HorariosDict  // envia como objeto
                 };
 
                 var json = JsonSerializer.Serialize(disponibilidadParaEnviar);

@@ -36,11 +36,11 @@ namespace Gasolutions.Maui.App.Pages
         {
             _horariosDisponibles = new Dictionary<string, bool>
             {
-                { "9:00", false },
-                { "10:00", false },
-                { "11:00", false },
-                { "14:00", false },
-                { "15:00", false }
+                 { "6:00 AM - 12:00 PM", true },
+                 { "12:00 PM - 03:00 PM", true },
+                 { "03:00 PM - 05:00 PM", true },
+                 { "05:00 PM - 07:00 PM", true },
+                 { "07:00 PM- 08:00 PM", true }
             };
         }
 
@@ -72,25 +72,25 @@ namespace Gasolutions.Maui.App.Pages
             try
             {
                 // Resetear checkboxes
-                Horario9.IsChecked = false;
-                Horario10.IsChecked = false;
-                Horario11.IsChecked = false;
-                Horario14.IsChecked = false;
-                Horario15.IsChecked = false;
+                Horario6a12.IsChecked = false;
+                Horario12a3.IsChecked = false;
+                Horario3a5.IsChecked = false;
+                Horario5a7.IsChecked = false;
+                Horario7a8.IsChecked = false;
 
                 // Cargar disponibilidad para la fecha seleccionada
-                var disponibilidad = await _disponibilidadService.GetDisponibilidad(_selectedDate, AuthService.CurrentUser.BarberoId);
+                var disponibilidad = await _disponibilidadService.GetDisponibilidad(_selectedDate);
 
                 if (disponibilidad != null && disponibilidad.Horarios != null)
                 {
-                    _horariosDisponibles = disponibilidad.Horarios;
+                    _horariosDisponibles = disponibilidad.HorariosDict;
 
-                    // Actualizar checkboxes
-                    Horario9.IsChecked = _horariosDisponibles.ContainsKey("9:00") && _horariosDisponibles["9:00"];
-                    Horario10.IsChecked = _horariosDisponibles.ContainsKey("10:00") && _horariosDisponibles["10:00"];
-                    Horario11.IsChecked = _horariosDisponibles.ContainsKey("11:00") && _horariosDisponibles["11:00"];
-                    Horario14.IsChecked = _horariosDisponibles.ContainsKey("14:00") && _horariosDisponibles["14:00"];
-                    Horario15.IsChecked = _horariosDisponibles.ContainsKey("15:00") && _horariosDisponibles["15:00"];
+                    Horario6a12.IsChecked = _horariosDisponibles.ContainsKey("6:00 AM - 12:00 PM") && _horariosDisponibles["6:00 AM - 12:00 PM"];
+                    Horario12a3.IsChecked = _horariosDisponibles.ContainsKey("12:00 PM - 03:00 PM") && _horariosDisponibles["12:00 PM - 03:00 PM"];
+                    Horario3a5.IsChecked = _horariosDisponibles.ContainsKey("03:00 PM - 05:00 PM") && _horariosDisponibles["03:00 PM - 05:00 PM"];
+                    Horario5a7.IsChecked = _horariosDisponibles.ContainsKey("05:00 PM - 07:00 PM") && _horariosDisponibles["05:00 PM - 07:00 PM"];
+                    Horario7a8.IsChecked = _horariosDisponibles.ContainsKey("07:00 PM - 08:00 PM") && _horariosDisponibles["07:00 PM - 08:00 PM"];
+
                 }
             }
             catch (Exception ex)
@@ -112,11 +112,12 @@ namespace Gasolutions.Maui.App.Pages
                 string hora = "";
 
                 // Identificar la hora según el checkbox
-                if (checkBox == Horario9) hora = "9:00";
-                else if (checkBox == Horario10) hora = "10:00";
-                else if (checkBox == Horario11) hora = "11:00";
-                else if (checkBox == Horario14) hora = "14:00";
-                else if (checkBox == Horario15) hora = "15:00";
+                if (checkBox == Horario6a12) hora = "6:00 AM - 12:00 PM";
+                else if (checkBox == Horario12a3) hora = "12:00 PM - 03:00 PM";
+                else if (checkBox == Horario3a5) hora = "03:00 PM - 05:00 PM";
+                else if (checkBox == Horario5a7) hora = "05:00 PM - 07:00 PM";
+                else if (checkBox == Horario7a8) hora = "07:00 PM - 08:00 PM";
+
 
                 // Actualizar el diccionario
                 if (!string.IsNullOrEmpty(hora))
@@ -133,54 +134,63 @@ namespace Gasolutions.Maui.App.Pages
         {
             if (!disponible)
             {
-                // Verificar si hay citas programadas para este horario
-                var horaDateTime = DateTime.Parse(hora);
-                var citasAfectadas = _citas.Where(c => c.Fecha.Hour == horaDateTime.Hour).ToList();
+                var horaInicioTexto = hora.Split('-')[0].Trim();
 
-                if (citasAfectadas.Any())
+                if (DateTime.TryParse(horaInicioTexto, out DateTime horaDateTime))
                 {
-                    bool confirmar = await DisplayAlert("Atención",
-                        "Hay citas programadas para este horario. Si lo marca como no disponible, estas citas se cancelarán. ¿Desea continuar?",
-                        "Sí", "No");
+                    var citasAfectadas = _citas.Where(c => c.Fecha.Hour == horaDateTime.Hour).ToList();
 
-                    if (!confirmar)
+                    if (citasAfectadas.Any())
                     {
-                        // Revertir el cambio
-                        _horariosDisponibles[hora] = true;
-                        ActualizarCheckbox(hora, true);
+                        bool confirmar = await DisplayAlert("Atención",
+                            "Hay citas programadas para este horario. Si lo marca como no disponible, estas citas se cancelarán. ¿Desea continuar?",
+                            "Sí", "No");
+
+                        if (!confirmar)
+                        {
+                            _horariosDisponibles[hora] = true;
+                            ActualizarCheckbox(hora, true);
+                        }
                     }
                 }
             }
         }
 
+
         private void ActualizarCheckbox(string hora, bool estado)
         {
             switch (hora)
             {
-                case "9:00": Horario9.IsChecked = estado; break;
-                case "10:00": Horario10.IsChecked = estado; break;
-                case "11:00": Horario11.IsChecked = estado; break;
-                case "14:00": Horario14.IsChecked = estado; break;
-                case "15:00": Horario15.IsChecked = estado; break;
+                case "6:00 AM - 12:00 PM": Horario6a12.IsChecked = estado; break;
+                case "12:00 PM - 03:00 PM": Horario12a3.IsChecked = estado; break;
+                case "03:00 PM - 05:00 PM": Horario3a5.IsChecked = estado; break;
+                case "05:00 PM - 07:00 PM": Horario5a7.IsChecked = estado; break;
+                case "07:00 PM - 08:00 PM": Horario7a8.IsChecked = estado; break;
             }
         }
+
 
         // En GestionarDisponibilidadPage.xaml.cs, modifica el método OnGuardarClicked
         private async void OnGuardarClicked(object sender, EventArgs e)
         {
             try
             {
+                long idBarbero = Convert.ToInt64(await SecureStorage.Default.GetAsync("user_cedula"));
+                var HorariosJSON = new Dictionary<string, bool>
+                {
+                     { "6:00 AM - 12:00 PM", Horario6a12.IsChecked },
+                     { "12:00 PM - 03:00 PM", Horario12a3.IsChecked },
+                     { "03:00 PM - 05:00 PM", Horario3a5.IsChecked  },
+                     { "05:00 PM - 07:00 PM", Horario5a7.IsChecked  },
+                     { "07:00 PM- 08:00 PM", Horario7a8.IsChecked }
+                };
+
                 var disponibilidad = new DisponibilidadModel
                 {
                     Id = 0,
-                    Fecha = DateTime.Today,
-                    BarberoId = 1, // <--- PON UN ID MAYOR A CERO
-                    Horarios = new Dictionary<string, bool>
-                    {
-                        { "09:00", true },
-                        { "10:00", false },
-                        { "11:00", true }
-                    }
+                    Fecha = FechaSelector.Date,
+                    BarberoId = idBarbero, // <--- PON UN ID MAYOR A CERO
+                    HorariosDict = HorariosJSON
                 };
 
 

@@ -14,6 +14,10 @@
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            if (ClienteView.IsVisible)
+            {
+                LoadDisponibilidad();
+            }
         }
 
         private async void MainPage(object sender, EventArgs e)
@@ -105,5 +109,31 @@
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new GestionarDisponibilidadPage(disponibilidadService, reservationService));
         }
+        private async void LoadDisponibilidad()
+        {
+            var disponibilidadService = App.Current.Handler.MauiContext.Services.GetRequiredService<DisponibilidadService>();
+
+            // Obtener la disponibilidad del barbero
+            var disponibilidad = await disponibilidadService.GetDisponibilidad(DateTime.Now);
+
+            if (disponibilidad != null && disponibilidad.HorariosDict != null && disponibilidad.HorariosDict.Any())
+            {
+                // Crear una lista de horarios disponibles
+                var horariosDisponibles = disponibilidad.HorariosDict.Select(h => new { Hora = h.Key, Disponible = h.Value ? "Disponible" : "No Disponible" }).ToList();
+
+                // Mostrar los horarios en la vista de cliente
+                DisponibilidadListView.ItemsSource = horariosDisponibles;
+                DisponibilidadListView.IsVisible = true;
+            }
+            else
+            {
+                // Si no hay disponibilidad, mostrar un mensaje o cambiar la visibilidad
+                DisponibilidadListView.IsVisible = false;
+            }
+        }
+
+
+
+
     }
 }

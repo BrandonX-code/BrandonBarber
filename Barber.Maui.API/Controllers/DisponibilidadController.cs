@@ -23,11 +23,11 @@ namespace Barber.Maui.API.Controllers
             return await _context.Disponibilidad.ToListAsync();
         }
 
-        [HttpGet("by-date/{fecha}/{barberoId}")]
-        public async Task<ActionResult<Disponibilidad>> GetDisponibilidadPorFecha(DateTime fecha, int barberoId)
+        [HttpGet("by-date/{fecha}")]
+        public async Task<ActionResult<Disponibilidad>> GetDisponibilidadPorFecha(DateTime fecha)
         {
             var disponibilidad = await _context.Disponibilidad
-                .Where(d => d.Fecha.Date == fecha.Date && d.BarberoId == barberoId)
+                .Where(d => d.Fecha.Date == fecha.Date)
                 .FirstOrDefaultAsync();
 
             if (disponibilidad == null)

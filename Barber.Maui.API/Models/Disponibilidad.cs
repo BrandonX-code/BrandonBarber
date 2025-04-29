@@ -13,7 +13,7 @@ namespace Barber.Maui.API.Models
         public DateTime Fecha { get; set; }
 
         [Required]
-        public int BarberoId { get; set; }
+        public long BarberoId { get; set; }
 
         [Required]
         public string Horarios { get; set; } = "{}";

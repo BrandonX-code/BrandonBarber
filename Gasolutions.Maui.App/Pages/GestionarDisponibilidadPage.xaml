@@ -40,19 +40,19 @@
 
                             <!-- Horarios -->
                             <Label Text="6:00 AM - 12:00 PM" TextColor="White" Grid.Column="0" Grid.Row="1" VerticalOptions="Center" />
-                            <CheckBox x:Name="Horario9" Grid.Column="1" Grid.Row="1" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
+                            <CheckBox x:Name="Horario6a12" Grid.Column="1" Grid.Row="1" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
 
                             <Label Text="12:00 PM - 03:00 PM" TextColor="White" Grid.Column="0" Grid.Row="2" VerticalOptions="Center" />
-                            <CheckBox x:Name="Horario10" Grid.Column="1" Grid.Row="2" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
+                            <CheckBox x:Name="Horario12a3" Grid.Column="1" Grid.Row="2" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
 
                             <Label Text="03:00 PM - 05:00 PM" TextColor="White" Grid.Column="0" Grid.Row="3" VerticalOptions="Center" />
-                            <CheckBox x:Name="Horario11" Grid.Column="1" Grid.Row="3" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
+                            <CheckBox x:Name="Horario3a5" Grid.Column="1" Grid.Row="3" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
 
                             <Label Text="05:00 PM - 07:00 PM" TextColor="White" Grid.Column="0" Grid.Row="4" VerticalOptions="Center" />
-                            <CheckBox x:Name="Horario14" Grid.Column="1" Grid.Row="4" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
+                            <CheckBox x:Name="Horario5a7" Grid.Column="1" Grid.Row="4" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
 
                             <Label Text="07:00 PM- 08:00 PM" TextColor="White" Grid.Column="0" Grid.Row="5" VerticalOptions="Center" />
-                            <CheckBox x:Name="Horario15" Grid.Column="1" Grid.Row="5" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
+                            <CheckBox x:Name="Horario7a8" Grid.Column="1" Grid.Row="5" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
                         </Grid>
                     </VerticalStackLayout>
                 </Frame>
@@ -65,9 +65,15 @@
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                     <Frame Margin="0,5" BackgroundColor="#2b2b2b" Padding="10" CornerRadius="5">
-                                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                                            <!-- Nombre de la cita -->
                                             <Label Text="{Binding Nombre}" TextColor="White" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" />
-                                            <Label Text="{Binding Fecha, StringFormat='{0:t}'}" TextColor="#c0aa4f" Grid.Row="1" Grid.Column="0" />
+
+                                            <!-- Fecha de la cita -->
+                                            <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" TextColor="#c0aa4f" Grid.Row="1" Grid.Column="0" />
+
+                                            <!-- Hora de la cita -->
+                                            <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="12" TextColor="White" Grid.Row="2" Grid.Column="0" />
                                         </Grid>
                                     </Frame>
                                 </DataTemplate>
@@ -75,6 +81,7 @@
                         </CollectionView>
                     </VerticalStackLayout>
                 </Frame>
+
             </VerticalStackLayout>
         </ScrollView>
 

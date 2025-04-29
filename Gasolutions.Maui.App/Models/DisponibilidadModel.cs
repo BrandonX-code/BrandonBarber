@@ -4,9 +4,10 @@ namespace Gasolutions.Maui.App.Models
 {
     public class DisponibilidadModel
     {
-        public int Id { get; set; } = 0;
+        public int Id { get; set; }
         public DateTime Fecha { get; set; }
-        public int BarberoId { get; set; }
-        public Dictionary<string, bool> Horarios { get; set; } = new Dictionary<string, bool>();
+        public long BarberoId { get; set; }
+        public string Horarios { get; set; } = "{}";
+        public Dictionary<string, bool> HorariosDict { get; set; } = new Dictionary<string, bool>();
     }
 }
