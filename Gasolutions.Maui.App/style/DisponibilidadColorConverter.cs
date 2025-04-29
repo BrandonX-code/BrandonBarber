@@ -11,12 +11,16 @@ namespace Gasolutions.Maui.App.style
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool disponible)
+            if (value is string disponibilidad)
             {
-                return disponible ? Colors.LightGreen : Colors.IndianRed;
+                return disponibilidad.ToLower() switch
+                {
+                    "disponible" => Colors.LightGreen,
+                    "no disponible" => Colors.IndianRed,
+                    _ => Colors.Gray
+                };
             }
-
-            return Colors.Gray; // valor por defecto
+            return Colors.Gray;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -24,4 +28,5 @@ namespace Gasolutions.Maui.App.style
             throw new NotImplementedException();
         }
     }
+
 }

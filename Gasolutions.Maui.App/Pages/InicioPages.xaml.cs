@@ -119,7 +119,12 @@
             if (disponibilidad != null && disponibilidad.HorariosDict != null && disponibilidad.HorariosDict.Any())
             {
                 // Crear una lista de horarios disponibles
-                var horariosDisponibles = disponibilidad.HorariosDict.Select(h => new { Hora = h.Key, Disponible = h.Value ? "Disponible" : "No Disponible" }).ToList();
+                var horariosDisponibles = disponibilidad.HorariosDict
+                .Select(h => new {
+                    Hora = h.Key,
+                    Disponible = h.Value ? "Disponible" : "No Disponible"
+                }).ToList();
+
 
                 // Mostrar los horarios en la vista de cliente
                 DisponibilidadListView.ItemsSource = horariosDisponibles;

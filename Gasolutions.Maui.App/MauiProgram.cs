@@ -33,7 +33,7 @@ namespace Gasolutions.Maui.App
             }
             else
             {
-                apiBaseUrl = "https://localhost:7283/api/";
+                apiBaseUrl = "https://localhost:7283/api/citas";
             }
 
             builder.Services.AddSingleton<HttpClient>(sp =>
