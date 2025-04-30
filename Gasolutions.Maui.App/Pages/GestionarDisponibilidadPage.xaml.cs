@@ -189,7 +189,7 @@ namespace Gasolutions.Maui.App.Pages
                 {
                     Id = 0,
                     Fecha = FechaSelector.Date,
-                    BarberoId = idBarbero, // <--- PON UN ID MAYOR A CERO
+                    BarberoId = idBarbero,
                     HorariosDict = HorariosJSON
                 };
 
