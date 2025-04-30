@@ -38,7 +38,7 @@
             <Border WidthRequest="120" HeightRequest="120" BackgroundColor="#3a3a3a" Padding="10"  StrokeShape="RoundRectangle 10">
                 <Image x:Name="PerfilImage" Aspect="AspectFill" />
             </Border>
-            <Label x:Name="NombreLabel" Text="xxx" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+            <Label x:Name="NombreLabel" Text="xxx" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
             <Label x:Name="TelefonoLabel" Text="###" FontSize="16" TextColor="White" HorizontalOptions="Center" />
             <Button Text="Editar Perfil" Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#c0aa4f" TextColor="Black" Clicked="OnEditarPerfilClicked"/>
         </VerticalStackLayout>
