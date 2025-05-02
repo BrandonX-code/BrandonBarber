@@ -120,25 +120,25 @@
             {
                 // Crear una lista de horarios disponibles
                 var horariosDisponibles = disponibilidad.HorariosDict
-                .Select(h => new {
+                .Select(h => new
+                {
                     Hora = h.Key,
                     Disponible = h.Value ? "Disponible" : "No Disponible"
                 }).ToList();
 
-
                 // Mostrar los horarios en la vista de cliente
                 DisponibilidadListView.ItemsSource = horariosDisponibles;
                 DisponibilidadListView.IsVisible = true;
+
+                // Ocultar la alerta ya que hay datos de disponibilidad
+                NoDisponibilidadAlert.IsVisible = false;
             }
             else
             {
-                // Si no hay disponibilidad, mostrar un mensaje o cambiar la visibilidad
+                // Si no hay disponibilidad, mostrar el mensaje de alerta
                 DisponibilidadListView.IsVisible = false;
+                NoDisponibilidadAlert.IsVisible = true;
             }
         }
-
-
-
-
     }
 }
