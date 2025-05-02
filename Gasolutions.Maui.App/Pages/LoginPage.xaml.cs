@@ -1,4 +1,6 @@
-﻿namespace Gasolutions.Maui.App.Pages
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Gasolutions.Maui.App.Pages
 {
     public partial class LoginPage : ContentPage
     {
@@ -37,6 +39,15 @@
                 return;
             }
 
+            // Validar formato del email
+            var emailValidator = new EmailAddressAttribute();
+            if (!emailValidator.IsValid(EmailEntry.Text))
+            {
+                ErrorLabel.Text = "Error: El correo electrónico no tiene un formato válido.";
+                ErrorLabel.IsVisible = true;
+                return;
+            }
+
             LoadingIndicator.IsVisible = true;
             LoadingIndicator.IsRunning = true;
             ErrorLabel.IsVisible = false;
@@ -47,7 +58,6 @@
             try
             {
                 var response = await _authService.Login(EmailEntry.Text, PasswordEntry.Text);
-
                 if (response.IsSuccess)
                 {
                     await NavigateToMainPage();
@@ -70,6 +80,7 @@
                 loginButton.IsEnabled = true;
             }
         }
+
 
         private async void OnRegistroClicked(object sender, EventArgs e)
         {

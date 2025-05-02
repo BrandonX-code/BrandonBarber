@@ -41,11 +41,11 @@
                                                     <Label Text="{Binding FechaConFormato, StringFormat='{0:hh:mm tt}'}" FontSize="16" TextColor="Honeydew" />
                                                     <Label Text="{Binding Telefono}" FontSize="14" TextColor="White" />
                                                 </VerticalStackLayout>
-                                                <Button Grid.Column="1" BackgroundColor="Transparent" CommandParameter="{Binding Id}" Clicked="EliminarCitasSeleccionadas" WidthRequest="60"  HeightRequest="60">
+                                                <!--<Button Grid.Column="1" BackgroundColor="Transparent" CommandParameter="{Binding Id}" Clicked="EliminarCitasSeleccionadas" WidthRequest="60"  HeightRequest="60">
                                                     <Button.ImageSource>
                                                         <FileImageSource File="delete.png" />
                                                     </Button.ImageSource>
-                                                </Button>
+                                                </Button>-->
                                             </Grid>
                                         </Frame>
                                     </DataTemplate>

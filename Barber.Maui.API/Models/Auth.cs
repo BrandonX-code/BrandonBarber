@@ -12,7 +12,7 @@ namespace Barber.Maui.API.Models
         public string Nombre { get; set; }
 
         [Required]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "El correo electrónico no tiene un formato válido.")]
         [StringLength(100)] // Limitar el email a 100 caracteres
         public string Email { get; set; }
 
