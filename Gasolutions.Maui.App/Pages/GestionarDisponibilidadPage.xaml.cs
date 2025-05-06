@@ -182,7 +182,7 @@ namespace Gasolutions.Maui.App.Pages
                      { "12:00 PM - 03:00 PM", Horario12a3.IsChecked },
                      { "03:00 PM - 05:00 PM", Horario3a5.IsChecked  },
                      { "05:00 PM - 07:00 PM", Horario5a7.IsChecked  },
-                     { "07:00 PM- 08:00 PM", Horario7a8.IsChecked }
+                     { "07:00 PM - 08:00 PM", Horario7a8.IsChecked }
                 };
 
                 var disponibilidad = new DisponibilidadModel
