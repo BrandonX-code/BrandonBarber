@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gasolutions.Maui.App.Pages.DetalleImagenPage"
+             BackgroundColor="#1e1e1e">
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<Style x:Key="ButtonStyle" TargetType="Button">
+				<Setter Property="BackgroundColor" Value="#c0aa4f" />
+				<Setter Property="TextColor" Value="Black" />
+				<Setter Property="FontAttributes" Value="Bold" />
+				<Setter Property="CornerRadius" Value="10" />
+				<Setter Property="HeightRequest" Value="45" />
+				<Setter Property="FontSize" Value="16" />
+			</Style>
+		</ResourceDictionary>
+	</ContentPage.Resources>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<!-- Imagen principal ampliada -->
+		<Image x:Name="DetalleImagen"
+               Grid.Row="0"
+               Aspect="AspectFit"
+               HorizontalOptions="Fill"
+               VerticalOptions="Fill" />
+
+		<!-- Controles inferiores -->
+		<Grid Grid.Row="1" Padding="20" ColumnSpacing="15">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<Button Text="Volver"
+                    Grid.Column="0"
+                    Style="{StaticResource ButtonStyle}"
+                    Clicked="OnVolverClicked" />
+
+			<Button Text="Compartir"
+                    Grid.Column="1"
+                    Style="{StaticResource ButtonStyle}"
+                    Clicked="OnCompartirClicked" />
+		</Grid>
+	</Grid>
+</ContentPage>

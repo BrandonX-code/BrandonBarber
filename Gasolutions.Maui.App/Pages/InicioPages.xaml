@@ -82,6 +82,16 @@
                                 <Label Text="Buscar Tus Citas" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
+                        <Frame x:Name="GaleriaClienteFrame" BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True" IsVisible="False">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="galery" />
+                            </Frame.GestureRecognizers>
+                            <HorizontalStackLayout Spacing="10" HeightRequest="60">
+                                <Image Source="galeriuser.png" WidthRequest="24" HeightRequest="24" />
+                                <Label Text="Galeria De Cortes" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Frame>
+                        
                     </VerticalStackLayout>
 
                     <!-- BarberoView -->
@@ -107,6 +117,16 @@
                                 <Label Text="Gestionar Disponibilidad" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
+                        <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="AddGaleri" />
+                            </Frame.GestureRecognizers>
+                            <HorizontalStackLayout Spacing="10" HeightRequest="60">
+                                <Image Source="galeribarber.png" WidthRequest="24" HeightRequest="24" />
+                                <Label Text="Agregar Corte" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Frame>
+                        
                     </VerticalStackLayout>
 
                 </VerticalStackLayout>

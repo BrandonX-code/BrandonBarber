@@ -24,10 +24,10 @@ namespace Gasolutions.Maui.App.Services
                 var json = JsonSerializer.Serialize(cita);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                Console.WriteLine($"🔹 Enviando solicitud a {_httpClient.BaseAddress}citas");
+                Console.WriteLine($"🔹 Enviando solicitud a {_httpClient.BaseAddress}api/citas");
                 Console.WriteLine($"🔹 Datos enviados: {json}");
 
-                var response = await _httpClient.PostAsync("citas", content);
+                var response = await _httpClient.PostAsync("api/citas", content);
 
                 string responseMessage = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"🔹 Código de estado API: {response.StatusCode}");
@@ -51,7 +51,7 @@ namespace Gasolutions.Maui.App.Services
 
         public async Task<List<CitaModel>> GetReservations(DateTime fecha)
         {
-            string url = $"{_httpClient.BaseAddress}/by-date/{fecha:yyyy-MM-dd}";
+            string url = $"{_httpClient.BaseAddress}api/citas/by-date/{fecha:yyyy-MM-dd}";
 
             try
             {
@@ -79,7 +79,7 @@ namespace Gasolutions.Maui.App.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync(_httpClient.BaseAddress + $"/{cedula}");
+                var response = await _httpClient.GetAsync(_httpClient.BaseAddress + $"api/citas/{cedula}");
 
                 if (!response.IsSuccessStatusCode)
                     return new List<CitaModel>();
@@ -104,7 +104,7 @@ namespace Gasolutions.Maui.App.Services
         {
             try
             {
-                var response = await _httpClient.DeleteAsync($"{_httpClient.BaseAddress}/{id}");
+                var response = await _httpClient.DeleteAsync($"{_httpClient.BaseAddress}api/citas/{id}");
 
                 if (response.IsSuccessStatusCode)
                 {

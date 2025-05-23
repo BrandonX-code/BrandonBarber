@@ -25,7 +25,7 @@ namespace Gasolutions.Maui.App.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync($"perfiles/{cedula}");
+                var response = await _httpClient.GetAsync($"api/perfiles/{cedula}");
                 Console.WriteLine($"🔹 Código de estado API: {response.StatusCode}");
 
                 if (!response.IsSuccessStatusCode)
@@ -60,7 +60,7 @@ namespace Gasolutions.Maui.App.Services
                 var json = JsonSerializer.Serialize(perfil);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                Console.WriteLine($"🔹 Enviando solicitud a {_httpClient.BaseAddress}perfiles");
+                Console.WriteLine($"🔹 Enviando solicitud a {_httpClient.BaseAddress}api/perfiles");
                 Console.WriteLine($"🔹 Datos enviados: {json}");
 
                 HttpResponseMessage response;
@@ -68,11 +68,11 @@ namespace Gasolutions.Maui.App.Services
                 // Si el perfil ya existe, actualizarlo
                 if (perfil.Id != 0)
                 {
-                    response = await _httpClient.PutAsync($"perfiles/{perfil.Id}", content);
+                    response = await _httpClient.PutAsync($"api/perfiles/{perfil.Id}", content);
                 }
                 else
                 {
-                    response = await _httpClient.PostAsync("perfiles", content);
+                    response = await _httpClient.PostAsync("api/perfiles", content);
                 }
 
                 string responseMessage = await response.Content.ReadAsStringAsync();
@@ -102,7 +102,7 @@ namespace Gasolutions.Maui.App.Services
                 var content = new MultipartFormDataContent();
                 content.Add(new ByteArrayContent(imageBytes), "image", Path.GetFileName(imagePath));
 
-                var response = await _httpClient.PostAsync($"perfiles/{userId}/imagen", content);
+                var response = await _httpClient.PostAsync($"api/perfiles/{userId}/imagen", content);
 
                 string responseMessage = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"🔹 Código de estado API: {response.StatusCode}");

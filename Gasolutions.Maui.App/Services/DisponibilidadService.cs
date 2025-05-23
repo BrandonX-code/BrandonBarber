@@ -23,7 +23,7 @@ namespace Gasolutions.Maui.App.Services
         {
             try
             {
-                string url = $"disponibilidad/by-date/{fecha:yyyy-MM-dd}";
+                string url = $"api/disponibilidad/by-date/{fecha:yyyy-MM-dd}";
                 var response = await _httpClient.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)
@@ -67,7 +67,7 @@ namespace Gasolutions.Maui.App.Services
                 var json = JsonSerializer.Serialize(disponibilidadParaEnviar);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _httpClient.PostAsync("disponibilidad", content);
+                var response = await _httpClient.PostAsync("api/disponibilidad", content);
 
                 string responseMessage = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"🔹 Código de estado API: {response.StatusCode}");

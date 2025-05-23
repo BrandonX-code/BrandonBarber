@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gasolutions.Maui.App.Pages.GaleriaPage"
+             BackgroundColor="#1e1e1e">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="GaleriaButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#c0aa4f" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="HeightRequest" Value="45" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+            <Style x:Key="LabelStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid Padding="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Encabezado -->
+        <VerticalStackLayout Grid.Row="0" Spacing="10" Margin="0,10,0,20">
+            <Label Text="Galería de Cortes" FontSize="24" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" />
+            <Label Text="Selecciona la Imagen Para Verla Detalladamente" Style="{StaticResource LabelStyle}" HorizontalOptions="Center" FontSize="14" />
+        </VerticalStackLayout>
+
+        <!-- Contenedor de la galería con ScrollView -->
+        <ScrollView Grid.Row="1" Orientation="Vertical">
+            <FlexLayout x:Name="GaleriaContainer" 
+                        Direction="Row" 
+                        Wrap="Wrap" 
+                        JustifyContent="SpaceAround"
+                        AlignItems="Start"
+                        AlignContent="Start">
+                <!-- Las imágenes se agregarán aquí programáticamente -->
+            </FlexLayout>
+        </ScrollView>
+
+        <!-- Panel inferior con botón para agregar -->
+        <VerticalStackLayout Grid.Row="2" Spacing="15" Margin="0,15,0,5">
+           <Button x:Name="AgregarImagenButton" Text="Agregar Imagen" Style="{StaticResource GaleriaButtonStyle}" 
+        Clicked="OnAgregarImagenClicked" 
+        HorizontalOptions="Center"
+        WidthRequest="200" />
+
+
+            <ActivityIndicator x:Name="LoadingIndicator" 
+                            IsRunning="False" 
+                            IsVisible="False" 
+                            Color="#c0aa4f" 
+                            VerticalOptions="Center" 
+                            HorizontalOptions="Center" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

@@ -39,6 +39,18 @@
         {
             await Navigation.PushAsync(new PerfilPage());
         }
+        private async void galery(object sender, EventArgs e)
+        {
+            var galeriaService = Handler.MauiContext.Services.GetService<GaleriaService>();
+            await Navigation.PushAsync(new GaleriaPage(galeriaService));
+        }
+
+        private async void AddGaleri(object sender, EventArgs e)
+        {
+            var galeriaService = Handler.MauiContext.Services.GetService<GaleriaService>();
+            await Navigation.PushAsync(new GaleriaPage(galeriaService));
+        }
+
 
         private async void OnInicioClicked(object sender, EventArgs e)
         {
@@ -84,21 +96,23 @@
                     case "cliente":
                         ClienteView.IsVisible = true;
                         BarberoView.IsVisible = false;
+                        GaleriaClienteFrame.IsVisible = true;
                         break;
+
                     case "barbero":
                         ClienteView.IsVisible = false;
                         BarberoView.IsVisible = true;
+                        GaleriaClienteFrame.IsVisible = false;
                         break;
+
                     case "administrador":
+                    default:
                         ClienteView.IsVisible = false;
                         BarberoView.IsVisible = false;
-                        break;
-                    default:
-                        // Si el rol no coincide con ninguno de los anteriores, mostrar vista de cliente por defecto
-                        ClienteView.IsVisible = true;
-                        BarberoView.IsVisible = false;
+                        GaleriaClienteFrame.IsVisible = false;
                         break;
                 }
+
             }
         }
         // Add this method to the InicioPages class

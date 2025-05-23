@@ -18,6 +18,7 @@ namespace Gasolutions.Maui.App
            {
                options.SetShouldEnableSnackbarOnWindows(true); // 👈 Habilita Snackbar en Windows
            })
+
            .UseMauiCommunityToolkit()
            .UseMicrocharts()
            .ConfigureFonts(fonts =>
@@ -29,11 +30,11 @@ namespace Gasolutions.Maui.App
             string apiBaseUrl;
             if (DeviceInfo.Platform == DevicePlatform.Android)
             {
-                apiBaseUrl = "https://192.168.0.155:7283/api/citas";
+                apiBaseUrl = "https://192.168.0.155:7283/";
             }
             else
             {
-                apiBaseUrl = "https://localhost:7283/api/citas";
+                apiBaseUrl = "https://localhost:7283/";
             }
 
             builder.Services.AddSingleton<HttpClient>(sp =>
@@ -52,6 +53,7 @@ namespace Gasolutions.Maui.App
             builder.Services.AddSingleton<PerfilUsuarioService>();
             builder.Services.AddSingleton<AuthService>();
             builder.Services.AddSingleton<DisponibilidadService>();
+            builder.Services.AddSingleton<GaleriaService>();
 
             // Registrar páginas
             builder.Services.AddSingleton<LoginPage>();
@@ -59,6 +61,7 @@ namespace Gasolutions.Maui.App
             builder.Services.AddSingleton<BuscarPage>();
             builder.Services.AddSingleton<ListaCitas>();
             builder.Services.AddSingleton<PerfilPage>();
+            builder.Services.AddSingleton<GaleriaPage>();
 
             // Registrar páginas de administrador
             //builder.Services.AddTransient<AdminDashboardPage>();

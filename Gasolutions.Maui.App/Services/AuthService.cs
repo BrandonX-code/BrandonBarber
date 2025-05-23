@@ -35,7 +35,7 @@ namespace Gasolutions.Maui.App.Services
                 var json = JsonSerializer.Serialize(loginRequest);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                var response = await _BaseClient.PostAsync("auth/login", content);
+                var response = await _BaseClient.PostAsync("api/auth/login", content);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"🔹 Login Response: {responseContent}");
@@ -86,10 +86,10 @@ namespace Gasolutions.Maui.App.Services
                 var json = JsonSerializer.Serialize(registroRequest);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                Console.WriteLine($"🔹 Enviando solicitud a {_BaseClient.BaseAddress}auth/register");
+                Console.WriteLine($"🔹 Enviando solicitud a {_BaseClient.BaseAddress}api/auth/register");
                 Console.WriteLine($"🔹 Datos enviados: {json}");
 
-                var responseContent = await _BaseClient.PostAsync("auth/register", content);
+                var responseContent = await _BaseClient.PostAsync("api/auth/register", content);
                 string responseMessage = await responseContent.Content.ReadAsStringAsync();
                 Console.WriteLine($"🔹 Código de estado API: {responseContent.StatusCode}");
                 Console.WriteLine($"🔹 Respuesta API: {responseMessage}");
@@ -186,7 +186,7 @@ namespace Gasolutions.Maui.App.Services
                 }
 
                 // Obtener los datos del usuario
-                var userResponse = await _BaseClient.GetAsync($"{_BaseClient}auth/user/{userCedula}");
+                var userResponse = await _BaseClient.GetAsync($"{_BaseClient}api/auth/user/{userCedula}");
 
                 if (!userResponse.IsSuccessStatusCode)
                 {
