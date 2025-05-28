@@ -20,7 +20,7 @@ namespace Gasolutions.Maui.App.Services
             URL = _httpClient.BaseAddress.ToString();
         }
 
-        public async Task<bool> SubirImagen(string rutaImagen, string descripcion = null)
+        public async Task<bool> SubirImagen(string rutaImagen, string descripcion)
         {
             try
             {

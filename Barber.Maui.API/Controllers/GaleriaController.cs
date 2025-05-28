@@ -50,7 +50,7 @@ namespace Barber.Maui.API.Controllers
         }
 
         [HttpPost("addimg")]
-        public async Task<ActionResult<ImagenGaleria>> SubirImagen(IFormFile imagen, string? descripcion = null)
+        public async Task<ActionResult<ImagenGaleria>> SubirImagen(IFormFile imagen,[FromForm] string descripcion)
         {
             if (imagen == null || imagen.Length == 0)
             {
@@ -89,14 +89,15 @@ namespace Barber.Maui.API.Controllers
                 {
                     await imagen.CopyToAsync(stream);
                 }
-                
+
                 var rutaRelativa = $"/uploads/galeria/{nombreArchivo}";
+
                 // Crear registro en base de datos
                 var nuevaImagen = new ImagenGaleria
                 {
                     NombreArchivo = nombreArchivo,
                     RutaArchivo = rutaRelativa,
-                    Descripcion = descripcion,
+                    Descripcion = string.IsNullOrEmpty(descripcion) ? null : descripcion, // Asegurar que vacío sea null
                     TipoImagen = extension.Replace(".", ""),
                     TamanoBytes = imagen.Length,
                     FechaCreacion = DateTime.UtcNow,
@@ -113,6 +114,7 @@ namespace Barber.Maui.API.Controllers
                 return StatusCode(500, new { message = "Error al guardar la imagen.", error = ex.Message });
             }
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> ActualizarImagen(int id, [FromBody] ActualizarImagenRequest request)
@@ -150,13 +152,11 @@ namespace Barber.Maui.API.Controllers
                     return NotFound();
                 }
 
-                // Eliminación lógica
-                imagen.Activo = false;
-                imagen.FechaModificacion = DateTime.UtcNow;
-
+                // CAMBIO: Eliminación física del registro en la base de datos
+                _context.ImagenesGaleria.Remove(imagen);
                 await _context.SaveChangesAsync();
 
-                // Opcional: eliminar archivo físico
+                // Eliminar archivo físico
                 var rutaFisica = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",
                     imagen.RutaArchivo.TrimStart('/'));
 

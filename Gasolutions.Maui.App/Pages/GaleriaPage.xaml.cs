@@ -134,10 +134,19 @@ namespace Gasolutions.Maui.App.Pages
                 Debug.WriteLine($"➕ Agregada imagen: {imagen.NombreArchivo}");
             }
         }
-
         // Crear un frame para cada imagen
         private Frame CreateImageFrame(ImagenGaleriaModel imagen)
         {
+            // Determinar si el usuario actual es barbero
+            bool esBarbero = AuthService.CurrentUser?.Rol?.ToLower() == "barbero";
+
+            // Crear un contenedor principal que incluirá imagen y descripción
+            var mainContainer = new StackLayout
+            {
+                Spacing = 8,
+                WidthRequest = 160
+            };
+
             // Crear un contenedor para la imagen
             var imageContainer = new Grid
             {
@@ -207,26 +216,61 @@ namespace Gasolutions.Maui.App.Pages
                 VerticalOptions = LayoutOptions.Start,
                 HorizontalOptions = LayoutOptions.End,
                 Margin = new Thickness(5),
-                IsVisible = AuthService.CurrentUser?.Rol?.ToLower() == "barbero"
+                IsVisible = esBarbero
             };
 
             deleteButton.Clicked += async (sender, e) => await DeleteImage(imagen.Id);
 
-            // Agregar elementos al contenedor
+            // Agregar elementos al contenedor de imagen
             imageContainer.Children.Add(imageControl);
             imageContainer.Children.Add(placeholderLabel);
             imageContainer.Children.Add(deleteButton);
 
-            // Frame contenedor
+            // Agregar la imagen al contenedor principal
+            mainContainer.Children.Add(imageContainer);
+
+            // NUEVA FUNCIONALIDAD: Agregar descripción solo para clientes
+            if (!esBarbero && !string.IsNullOrWhiteSpace(imagen.Descripcion))
+            {
+                var descripcionLabel = new Label
+                {
+                    Text = imagen.Descripcion,
+                    TextColor = Colors.White,
+                    FontSize = 15,
+                    LineBreakMode = LineBreakMode.WordWrap,
+                    MaxLines = 2,
+                    HorizontalTextAlignment = TextAlignment.Center,
+                    Margin = new Thickness(5, 0, 5, 5),
+                    BackgroundColor = Color.FromArgb("#2a2a2a"),
+                    Padding = new Thickness(8, 4)
+                };
+
+                // Aplicar esquinas redondeadas a la descripción
+                var descripcionFrame = new Frame
+                {
+                    Content = descripcionLabel,
+                    BackgroundColor = Color.FromArgb("#2a2a2a"),
+                    BorderColor = Color.FromArgb("black"),
+                    CornerRadius = 5,
+                    Padding = new Thickness(0),
+                    Margin = new Thickness(0),
+                    HasShadow = false
+                };
+
+                mainContainer.Children.Add(descripcionFrame);
+            }
+
+            // Frame contenedor principal
             var frame = new Frame
             {
-                Content = imageContainer,
+                Content = mainContainer,
                 CornerRadius = 10,
-                Padding = new Thickness(0),
+                Padding = new Thickness(8),
                 Margin = new Thickness(5, 5, 5, 15),
                 IsClippedToBounds = true,
-                BorderColor = Color.FromArgb("#c0aa4f"),
-                HasShadow = true
+                BorderColor = Color.FromArgb("black"),
+                HasShadow = true,
+                BackgroundColor = Color.FromArgb("#1e1e1e")
             };
 
             // Gesto para ver detalle
