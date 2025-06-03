@@ -54,7 +54,7 @@
                 <VerticalStackLayout Spacing="10">
                     <Frame BackgroundColor="#2b2b2b" BorderColor="Black" CornerRadius="10" Padding="15" HasShadow="True">
                         <VerticalStackLayout Spacing="15">
-                            <Label Text="Búsqueda de Citas🔎" FontSize="Medium" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" Margin="0,0,0,5" />
+                            <Label Text="Búsqueda de Citas" FontSize="Medium" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" Margin="0,0,0,5" />
                             <Border Stroke="#c0aa4f" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#2b2b2b" Padding="10,8" Margin="0,0,0,5">
                                 <Entry x:Name="SearchEntry" Keyboard="Numeric" Placeholder="Ingrese cédula del cliente" Style="{StaticResource EntryStyle}" FontSize="14"/>
                             </Border>

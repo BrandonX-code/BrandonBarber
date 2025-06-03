@@ -27,38 +27,19 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <!-- Encabezado -->
         <VerticalStackLayout Grid.Row="0" Spacing="10" Margin="0,10,0,20">
             <Label Text="Galería de Cortes" FontSize="24" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" />
             <Label Text="Selecciona la Imagen Para Verla Detalladamente" Style="{StaticResource LabelStyle}" HorizontalOptions="Center" FontSize="14" />
         </VerticalStackLayout>
 
-        <!-- Contenedor de la galería con ScrollView -->
         <ScrollView Grid.Row="1" Orientation="Vertical">
-            <FlexLayout x:Name="GaleriaContainer" 
-                        Direction="Row" 
-                        Wrap="Wrap" 
-                        JustifyContent="SpaceAround"
-                        AlignItems="Start"
-                        AlignContent="Start">
-                <!-- Las imágenes se agregarán aquí programáticamente -->
+            <FlexLayout x:Name="GaleriaContainer" Direction="Row" Wrap="Wrap" JustifyContent="SpaceAround" AlignItems="Start"  AlignContent="Start">
             </FlexLayout>
         </ScrollView>
 
-        <!-- Panel inferior con botón para agregar -->
         <VerticalStackLayout Grid.Row="2" Spacing="15" Margin="0,15,0,5">
-           <Button x:Name="AgregarImagenButton" Text="Agregar Imagen" Style="{StaticResource GaleriaButtonStyle}" 
-        Clicked="OnAgregarImagenClicked" 
-        HorizontalOptions="Center"
-        WidthRequest="200" />
-
-
-            <ActivityIndicator x:Name="LoadingIndicator" 
-                            IsRunning="False" 
-                            IsVisible="False" 
-                            Color="#c0aa4f" 
-                            VerticalOptions="Center" 
-                            HorizontalOptions="Center" />
+            <Button x:Name="AgregarImagenButton" Text="Agregar Imagen" Style="{StaticResource GaleriaButtonStyle}"  Clicked="OnAgregarImagenClicked"  HorizontalOptions="Center"  WidthRequest="200" />
+            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" />
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

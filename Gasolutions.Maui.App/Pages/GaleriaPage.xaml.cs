@@ -32,7 +32,20 @@ namespace Gasolutions.Maui.App.Pages
 
             LoadGaleria();
         }
+        private async Task MostrarSnackbar(string mensaje, Color background, Color textColor)
+        {
+            var snackbarOptions = new SnackbarOptions
+            {
+                BackgroundColor = background,
+                TextColor = textColor,
+                CornerRadius = new CornerRadius(30),
+                Font = Font.OfSize("Arial", 16),
+                CharacterSpacing = 0
+            };
 
+            var snackbar = Snackbar.Make(mensaje, duration: TimeSpan.FromSeconds(3), visualOptions: snackbarOptions);
+            await snackbar.Show();
+        }
 
         // Método para cargar imágenes desde la API
         private async void LoadGaleria()
@@ -52,7 +65,7 @@ namespace Gasolutions.Maui.App.Pages
 
                 if (networkAccess != NetworkAccess.Internet)
                 {
-                    await DisplayAlert("Sin conexión", "Verifica tu conexión a internet", "OK");
+                    await MostrarSnackbar("Verifica tu conexión a internet", Colors.Red, Colors.White);
                     return;
                 }
 
@@ -60,30 +73,6 @@ namespace Gasolutions.Maui.App.Pages
                 imagenes = await _galeriaService.ObtenerImagenes();
 
                 Debug.WriteLine($"📷 Se obtuvieron {imagenes.Count} imágenes de la API");
-
-                // Log detallado de cada imagen
-                foreach (var imagen in imagenes)
-                {
-                    Debug.WriteLine($"🖼️ Imagen ID: {imagen.Id}");
-                    Debug.WriteLine($"📄 Nombre: {imagen.NombreArchivo}");
-                    Debug.WriteLine($"📂 Ruta: {imagen.RutaArchivo}");
-
-                    var imageUrl = $"{_galeriaService.BaseUrl.TrimEnd('/')}{imagen.RutaArchivo}";
-                    Debug.WriteLine($"🔗 URL completa: {imageUrl}");
-
-                    // Verificar si la URL es accesible
-                    try
-                    {
-                        using var httpClient = new HttpClient();
-                        httpClient.Timeout = TimeSpan.FromSeconds(5);
-                        var response = await httpClient.GetAsync(imageUrl);
-                        Debug.WriteLine($"📡 Status de {imagen.NombreArchivo}: {response.StatusCode}");
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine($"❌ Error verificando {imagen.NombreArchivo}: {ex.Message}");
-                    }
-                }
 
                 UpdateGaleriaUI();
             }
@@ -104,7 +93,7 @@ namespace Gasolutions.Maui.App.Pages
         private void UpdateGaleriaUI()
         {
             Debug.WriteLine($"🖼️ Actualizando UI con {imagenes.Count} imágenes");
-            
+
             // Limpiar el contenedor
             GaleriaContainer.Children.Clear();
 
@@ -206,18 +195,22 @@ namespace Gasolutions.Maui.App.Pages
             Button deleteButton = new Button
             {
                 Text = "✕",
-                FontSize = 16,
-                TextColor = Colors.White,
-                BackgroundColor = Colors.Red,
-                CornerRadius = 15,
-                WidthRequest = 30,
-                HeightRequest = 30,
+                FontSize = 20, // Tamaño pequeño pero visible
+                TextColor = Colors.Black,
+                BackgroundColor = Colors.Transparent, // Sin relleno
+                BorderColor = Colors.Black,     // Sin borde visible
+                CornerRadius = 0,                     // Sin esquinas redondeadas
+                WidthRequest = 24,
+                HeightRequest = 24,
                 Padding = new Thickness(0),
                 VerticalOptions = LayoutOptions.Start,
                 HorizontalOptions = LayoutOptions.End,
-                Margin = new Thickness(5),
+                Margin = new Thickness(4),
+
                 IsVisible = esBarbero
             };
+
+
 
             deleteButton.Clicked += async (sender, e) => await DeleteImage(imagen.Id);
 
@@ -301,11 +294,11 @@ namespace Gasolutions.Maui.App.Pages
                     // Remover de la lista local
                     imagenes.RemoveAll(i => i.Id == imagenId);
                     UpdateGaleriaUI();
-                    await DisplayAlert("Éxito", "Imagen eliminada correctamente.", "OK");
+                    await MostrarSnackbar("Imagen eliminada correctamente.", Colors.Green, Colors.White);
                 }
                 else
                 {
-                    await DisplayAlert("Error", "No se pudo eliminar la imagen.", "OK");
+                    await MostrarSnackbar("No se pudo eliminar la imagen.", Colors.Red, Colors.White);
                 }
             }
             catch (Exception ex)
@@ -327,7 +320,7 @@ namespace Gasolutions.Maui.App.Pages
 
             if (string.IsNullOrWhiteSpace(imagen.RutaArchivo))
             {
-                await DisplayAlert("Error", "La imagen no tiene ruta asignada", "OK");
+                await MostrarSnackbar("La imagen no tiene ruta asignada", Colors.Red, Colors.White);
                 return;
             }
 
@@ -343,36 +336,44 @@ namespace Gasolutions.Maui.App.Pages
                 LoadingIndicator.IsVisible = true;
                 LoadingIndicator.IsRunning = true;
 
-                // Usar el selector de archivos para elegir una imagen
-                var result = await FilePicker.Default.PickAsync(new PickOptions
-                {
-                    PickerTitle = "Selecciona una imagen de corte de cabello",
-                    FileTypes = FilePickerFileType.Images
-                });
+                // Solo barberos
                 if (AuthService.CurrentUser?.Rol?.ToLower() != "barbero")
                 {
                     await DisplayAlert("Acceso Denegado", "Solo los barberos pueden subir imágenes.", "OK");
                     return;
                 }
-                if (result != null)
+
+                // Abre la galería
+                var foto = await MediaPicker.PickPhotoAsync(new MediaPickerOptions
                 {
-                    // Pedir descripción opcional
-                    string descripcion = await DisplayPromptAsync("Descripción", "Ingresa una descripción para la imagen (opcional):",
-                        placeholder: "Ej: Corte fade con barba", maxLength: 500);
+                    Title = "Selecciona una imagen de corte de cabello"
+                });
 
-                    // Subir la imagen a la API
-                    bool subida = await _galeriaService.SubirImagen(result.FullPath, descripcion);
+                if (foto == null)
+                    return; // usuario canceló
 
-                    if (subida)
-                    {
-                        await DisplayAlert("Éxito", "Imagen subida correctamente.", "OK");
-                        // Recargar la galería
-                        await LoadGaleriaAsync();
-                    }
-                    else
-                    {
-                        await DisplayAlert("Error", "No se pudo subir la imagen.", "OK");
-                    }
+                // Opcional: pide descripción
+                string descripcion = await DisplayPromptAsync("Descripción","Ingresa una descripción para la imagen (opcional):", placeholder: "Ej: Corte fade con barba",maxLength: 500
+                );
+
+                // Obtén la ruta o el stream para subir
+                string rutaLocal = foto.FullPath;
+                // o bien
+                // using var stream = await foto.OpenReadAsync();
+
+                // Subir la imagen a la API
+                bool subida = await _galeriaService.SubirImagen(rutaLocal, descripcion);
+                // si tu API acepta stream, pásalo en lugar de la ruta:
+                // bool subida = await _galeriaService.SubirImagen(stream, descripcion);
+
+                if (subida)
+                {
+                    await MostrarSnackbar("Imagen subida correctamente.", Colors.Green, Colors.White);
+                    await LoadGaleriaAsync();
+                }
+                else
+                {
+                    await MostrarSnackbar("No se pudo subir la imagen.", Colors.Red, Colors.White);
                 }
             }
             catch (Exception ex)

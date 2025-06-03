@@ -14,7 +14,7 @@
                 <VerticalStackLayout Spacing="15">
                     <Frame BackgroundColor="#343434" CornerRadius="10" Padding="15" HasShadow="True">
                         <VerticalStackLayout Spacing="15">
-                            <Label Text="Citas Agendadas 🗓️" TextColor="#c0aa4f" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="Citas Agendadas" TextColor="#c0aa4f" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center" />
 
                             <Frame CornerRadius="12" Padding="3" HasShadow="True" BackgroundColor="#2b2b2b" BorderColor="Black" WidthRequest="260" HorizontalOptions="Center">
                                 <DatePicker x:Name="datePicker" Date="{Binding FechaSeleccionada, Mode=TwoWay}" Format="dd/MM/yyyy" TextColor="White" WidthRequest="250" FontSize="20" FontAttributes="Bold" HeightRequest="65" />

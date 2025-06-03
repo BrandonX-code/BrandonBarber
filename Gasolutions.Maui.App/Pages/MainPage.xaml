@@ -43,7 +43,7 @@
 
         <Grid x:Name="mainContent" Opacity="0" RowDefinitions="Auto, *, Auto" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             
-            <Label Text="Reservar Turno 💈" FontSize="32" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" />
+            <Label Text="Reservar Turno" FontSize="32" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" />
             
             <ScrollView Grid.Row="1">
                 <VerticalStackLayout x:Name="formLayout" Padding="20" Spacing="18" BackgroundColor="Transparent" TranslationY="50" Opacity="0">
