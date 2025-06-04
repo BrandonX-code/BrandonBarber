@@ -5,9 +5,7 @@
 
     <AbsoluteLayout>
 
-        <Image Source="fondobarber.jpg" Opacity="0.90" Aspect="AspectFill"
-               AbsoluteLayout.LayoutBounds="0,0,1,1"
-               AbsoluteLayout.LayoutFlags="All" />
+        <Image Source="fondobarber.jpg" Opacity="0.90" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />
 
         <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <Grid RowDefinitions="Auto, Auto, *" Padding="20">
@@ -24,10 +22,10 @@
                                 <Button Text="Buscar Reservas" Clicked="RecuperarCitasPorFecha" BackgroundColor="#c0aa4f" TextColor="White" CornerRadius="10" />
                             </HorizontalStackLayout>
                         </VerticalStackLayout>
-                        
+
                     </Frame>
-                    
-                    
+
+
                     <Frame BackgroundColor="#343434" CornerRadius="10" Padding="15" HasShadow="True">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Tus Citas" TextColor="#f0e68c" FontSize="18" />
@@ -41,11 +39,6 @@
                                                     <Label Text="{Binding FechaConFormato, StringFormat='{0:hh:mm tt}'}" FontSize="16" TextColor="Honeydew" />
                                                     <Label Text="{Binding Telefono}" FontSize="14" TextColor="White" />
                                                 </VerticalStackLayout>
-                                                <!--<Button Grid.Column="1" BackgroundColor="Transparent" CommandParameter="{Binding Id}" Clicked="EliminarCitasSeleccionadas" WidthRequest="60"  HeightRequest="60">
-                                                    <Button.ImageSource>
-                                                        <FileImageSource File="delete.png" />
-                                                    </Button.ImageSource>
-                                                </Button>-->
                                             </Grid>
                                         </Frame>
                                     </DataTemplate>
@@ -54,7 +47,7 @@
                         </VerticalStackLayout>
                     </Frame>
 
-                    
+
                 </VerticalStackLayout>
             </Grid>
         </ScrollView>

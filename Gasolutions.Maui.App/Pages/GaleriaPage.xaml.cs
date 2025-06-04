@@ -195,8 +195,8 @@ namespace Gasolutions.Maui.App.Pages
             Button deleteButton = new Button
             {
                 Text = "✕",
-                FontSize = 20, // Tamaño pequeño pero visible
-                TextColor = Colors.Black,
+                FontSize = 30, // Tamaño pequeño pero visible
+                TextColor = Colors.Red,
                 BackgroundColor = Colors.Transparent, // Sin relleno
                 BorderColor = Colors.Black,     // Sin borde visible
                 CornerRadius = 0,                     // Sin esquinas redondeadas
