@@ -59,7 +59,7 @@
                     FileTypes = FilePickerFileType.Images
                 };
 
-                var result = await FilePicker.PickAsync(options);
+                var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions {});
                 if (result != null)
                 {
                     PerfilImage.Source = result.FullPath;

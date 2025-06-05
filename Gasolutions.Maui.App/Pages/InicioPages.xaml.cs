@@ -59,12 +59,14 @@
 
         private async void ListarBarberos(object sender, EventArgs e)
         {
-            //await Navigation.PushAsync(new ListarBarberosPage());
+            var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
+            await Navigation.PushAsync(new ListarBarberosPage(authService));
         }
 
         private async void ListarClientes(object sender, EventArgs e)
         {
-            //await Navigation.PushAsync(new ListarClientesPage());
+            var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
+            await Navigation.PushAsync(new ListarClientesPage(authService));
         }
 
         private async void VerCitas(object sender, EventArgs e)

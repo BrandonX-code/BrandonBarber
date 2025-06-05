@@ -12,7 +12,7 @@ namespace Gasolutions.Maui.App.Services
 {
     public class AuthService
     {
-        private readonly HttpClient _BaseClient;
+        public readonly HttpClient _BaseClient;
         private string URLServices;
         public static UsuarioModels CurrentUser { get; set; }
 
@@ -212,5 +212,18 @@ namespace Gasolutions.Maui.App.Services
                 return false;
             }
         }
+        public async Task<bool> EliminarUsuario(long cedula)
+        {
+            var response = await _BaseClient.DeleteAsync($"api/auth/{cedula}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Error al eliminar usuario: {error}");
+            }
+
+            return true;
+        }
+
     }
 }

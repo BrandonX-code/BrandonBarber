@@ -100,6 +100,21 @@ namespace Barber.Maui.API.Controllers
             return Ok(response);
         }
 
+        [HttpDelete("{cedula}")]
+        public async Task<IActionResult> EliminarUsuario(long cedula)
+        {
+            var usuario = await _context.UsuarioPerfiles.FirstOrDefaultAsync(u => u.Cedula == cedula);
+
+            if (usuario == null)
+            {
+                return NotFound(new { message = "Usuario no encontrado." });
+            }
+
+            _context.UsuarioPerfiles.Remove(usuario);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Usuario eliminado correctamente." });
+        }
 
     }
 }

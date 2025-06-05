@@ -16,7 +16,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" BackgroundColor="#2b2b2b" Padding="10,30">
+        <Grid Grid.Row="0" BackgroundColor="#2b2b2b" Padding="20,30">
             <Label x:Name="WelcomeLabel" Text="Bienvenido" FontSize="20" TextColor="#c0aa4f" FontAttributes="Bold" />
             <ImageButton Source="user.png" BackgroundColor="Transparent" HeightRequest="32" WidthRequest="32"  VerticalOptions="Center" HorizontalOptions="End" Clicked="PerfilPage" />
         </Grid>

@@ -133,13 +133,13 @@ namespace Gasolutions.Maui.App.Pages
             var mainContainer = new StackLayout
             {
                 Spacing = 8,
-                WidthRequest = 160
+                WidthRequest = 150
             };
 
             // Crear un contenedor para la imagen
             var imageContainer = new Grid
             {
-                WidthRequest = 160,
+                WidthRequest = 150,
                 HeightRequest = 200
             };
 
