@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gasolutions.Maui.App.Pages.AgregarBarberoPage"
+             BackgroundColor="#1e1e1e">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="EntryStyle" TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="#2b2b2b" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="PlaceholderColor" Value="#909090" />
+                <Setter Property="HeightRequest" Value="45" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+            <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#c0aa4f" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="HeightRequest" Value="45" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+            <Style x:Key="SecondaryButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#3a3a3a" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="HeightRequest" Value="45" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid Padding="20">
+        <ScrollView>
+            <VerticalStackLayout Spacing="20" Padding="0,20">
+                <Label Text="Agregar Nuevo Barbero" FontSize="24" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" Margin="0,0,0,20" />
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Nombre completo *" TextColor="White" FontSize="16" />
+                    <Entry x:Name="NombreEntry" Style="{StaticResource EntryStyle}" Placeholder="Nombre completo del barbero" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Cédula *" TextColor="White" FontSize="16" />
+                    <Entry x:Name="CedulaEntry" Style="{StaticResource EntryStyle}" Placeholder="Número de cédula" Keyboard="Numeric" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Correo electrónico *" TextColor="White" FontSize="16" />
+                    <Entry x:Name="EmailEntry" Style="{StaticResource EntryStyle}" Placeholder="ejemplo@correo.com" Keyboard="Email" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Teléfono" TextColor="White" FontSize="16" />
+                    <Entry x:Name="TelefonoEntry" Style="{StaticResource EntryStyle}" Placeholder="Número de teléfono" Keyboard="Telephone" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Dirección" TextColor="White" FontSize="16" />
+                    <Entry x:Name="DireccionEntry" Style="{StaticResource EntryStyle}" Placeholder="Dirección del barbero" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Especialidades" TextColor="White" FontSize="16" />
+                    <Entry x:Name="EspecialidadesEntry" Style="{StaticResource EntryStyle}" Placeholder="Ej: Corte clásico, Barba, Afeitado" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Experiencia (años)" TextColor="White" FontSize="16" />
+                    <Entry x:Name="ExperienciaEntry" Style="{StaticResource EntryStyle}" Placeholder="Años de experiencia" Keyboard="Numeric" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Contraseña *" TextColor="White" FontSize="16" />
+                    <Entry x:Name="PasswordEntry" Style="{StaticResource EntryStyle}" Placeholder="Contraseña" IsPassword="True" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Confirmar contraseña *" TextColor="White" FontSize="16" />
+                    <Entry x:Name="ConfirmPasswordEntry" Style="{StaticResource EntryStyle}" Placeholder="Confirmar contraseña" IsPassword="True" />
+                </VerticalStackLayout>
+
+                <!-- Switch para barbero activo --><!--
+                <HorizontalStackLayout Spacing="10" Margin="0,10">
+                    <Label Text="Barbero activo:" TextColor="White" FontSize="16" VerticalOptions="Center" />
+                    <Switch x:Name="ActivoSwitch" IsToggled="True" OnColor="#c0aa4f" />
+                </HorizontalStackLayout>-->
+
+                <Label x:Name="ErrorLabel" TextColor="#ff0000" FontSize="14" HorizontalOptions="Center" IsVisible="False" />
+                <Label x:Name="SuccessLabel" TextColor="#00ff00" FontSize="14" HorizontalOptions="Center" IsVisible="False" />
+
+                <Grid ColumnSpacing="15" Margin="0,20,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Text="Cancelar" Grid.Column="0" Style="{StaticResource SecondaryButtonStyle}" Clicked="OnCancelarClicked" />
+                    <Button Text="Agregar Barbero" Grid.Column="1" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnAgregarBarberoClicked" />
+                </Grid>
+
+                <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

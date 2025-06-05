@@ -20,7 +20,7 @@ namespace Gasolutions.Maui.App.Models
         public string Telefono { get; set; }
 
         [JsonIgnore]
-        public bool IsAdmin => Rol?.ToLower() == "administrador";
+        public bool IsAdmin => Rol?.ToLower() == "admin";
 
         [JsonIgnore]
         public bool IsBarbero => Rol?.ToLower() == "barbero";

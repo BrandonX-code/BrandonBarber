@@ -91,16 +91,8 @@ namespace Gasolutions.Maui.App.Pages
         {
             EmailEntry.Text = string.Empty;
             PasswordEntry.Text = string.Empty;
-
-            if (AuthService.CurrentUser.IsAdmin)
-            {
-                //await Application.Current.MainPage.Navigation.PushAsync(new AdminPage());
-            }
-            else
-            {
-                Preferences.Set("IsLoggedIn", true);
-                Application.Current.MainPage = new NavigationPage(new InicioPages(_authService));
-            }
+            Preferences.Set("IsLoggedIn", true);
+            Application.Current.MainPage = new NavigationPage(new InicioPages(_authService));
         }
     }
 }

@@ -1,20 +1,16 @@
-﻿using Gasolutions.Maui.App.Models;
-using Gasolutions.Maui.App.Services;
-using System.Text.RegularExpressions;
-
-namespace Gasolutions.Maui.App.Pages
+﻿namespace Gasolutions.Maui.App.Pages
 {
-    public partial class RegistroPage : ContentPage
+    public partial class AgregarBarberoPage : ContentPage
     {
         private readonly AuthService _authService;
 
-        public RegistroPage()
+        public AgregarBarberoPage()
         {
             InitializeComponent();
             _authService = Application.Current.Handler.MauiContext.Services.GetService<AuthService>();
         }
 
-        private async void OnRegistrarClicked(object sender, EventArgs e)
+        private async void OnAgregarBarberoClicked(object sender, EventArgs e)
         {
             if (!ValidarFormulario())
             {
@@ -24,9 +20,10 @@ namespace Gasolutions.Maui.App.Pages
             LoadingIndicator.IsVisible = true;
             LoadingIndicator.IsRunning = true;
             ErrorLabel.IsVisible = false;
+            SuccessLabel.IsVisible = false;
 
-            var registroButton = (Button)sender;
-            registroButton.IsEnabled = false;
+            var agregarButton = (Button)sender;
+            agregarButton.IsEnabled = false;
 
             try
             {
@@ -37,25 +34,28 @@ namespace Gasolutions.Maui.App.Pages
                     Email = EmailEntry.Text,
                     Contraseña = PasswordEntry.Text,
                     ConfirmContraseña = ConfirmPasswordEntry.Text,
-                    Telefono = TelefonoEntry.Text,
-                    Direccion = DireccionEntry.Text,
-                    Rol = "cliente" // Siempre cliente en registro público
+                    Telefono = TelefonoEntry.Text ?? "",
+                    Direccion = DireccionEntry.Text ?? "",
+                    Rol = "barbero" // Siempre barbero
                 };
 
                 var response = await _authService.Register(registroRequest);
-                Console.WriteLine($"Respuesta de registro: Success = {response.IsSuccess}, Message = {response.Message}");
 
                 if (response.IsSuccess)
                 {
-                    await DisplayAlert("Registro Exitoso", response.Message, "OK");
-                    await Navigation.PushAsync(new LoginPage());
+                    SuccessLabel.Text = "Barbero agregado exitosamente";
+                    SuccessLabel.IsVisible = true;
+
+                    // Limpiar formulario después de éxito
+                    LimpiarFormulario();
+
+                    await DisplayAlert("Éxito", "El barbero ha sido agregado correctamente", "OK");
                 }
                 else
                 {
                     ErrorLabel.Text = response.Message;
                     ErrorLabel.IsVisible = true;
                 }
-
             }
             catch (Exception ex)
             {
@@ -66,23 +66,43 @@ namespace Gasolutions.Maui.App.Pages
             {
                 LoadingIndicator.IsVisible = false;
                 LoadingIndicator.IsRunning = false;
-                registroButton.IsEnabled = true;
+                agregarButton.IsEnabled = true;
             }
+        }
+
+        private void LimpiarFormulario()
+        {
+            NombreEntry.Text = "";
+            CedulaEntry.Text = "";
+            EmailEntry.Text = "";
+            TelefonoEntry.Text = "";
+            DireccionEntry.Text = "";
+            EspecialidadesEntry.Text = "";
+            ExperienciaEntry.Text = "";
+            PasswordEntry.Text = "";
+            ConfirmPasswordEntry.Text = "";
+            //ActivoSwitch.IsToggled = true;
         }
 
         private bool ValidarFormulario()
         {
+            // Limpiar mensajes anteriores
+            ErrorLabel.IsVisible = false;
+            SuccessLabel.IsVisible = false;
+
+            // Validar campos obligatorios
             if (string.IsNullOrWhiteSpace(NombreEntry.Text) ||
                 string.IsNullOrWhiteSpace(CedulaEntry.Text) ||
                 string.IsNullOrWhiteSpace(EmailEntry.Text) ||
                 string.IsNullOrWhiteSpace(PasswordEntry.Text) ||
                 string.IsNullOrWhiteSpace(ConfirmPasswordEntry.Text))
             {
-                ErrorLabel.Text = "Por favor, completa todos los campos obligatorios";
+                ErrorLabel.Text = "Por favor, completa todos los campos obligatorios (*)";
                 ErrorLabel.IsVisible = true;
                 return false;
             }
 
+            // Validar cédula numérica
             if (!long.TryParse(CedulaEntry.Text, out _))
             {
                 ErrorLabel.Text = "La cédula debe ser un número válido";
@@ -90,6 +110,7 @@ namespace Gasolutions.Maui.App.Pages
                 return false;
             }
 
+            // Validar email
             if (!IsValidEmail(EmailEntry.Text))
             {
                 ErrorLabel.Text = "El formato del correo electrónico no es válido";
@@ -97,6 +118,7 @@ namespace Gasolutions.Maui.App.Pages
                 return false;
             }
 
+            // Validar coincidencia de contraseñas
             if (PasswordEntry.Text != ConfirmPasswordEntry.Text)
             {
                 ErrorLabel.Text = "Las contraseñas no coinciden";
@@ -104,9 +126,19 @@ namespace Gasolutions.Maui.App.Pages
                 return false;
             }
 
+            // Validar seguridad de contraseña
             if (!IsPasswordSecure(PasswordEntry.Text))
             {
                 ErrorLabel.Text = "La contraseña debe tener al menos 8 caracteres, incluir letras mayúsculas, minúsculas y números";
+                ErrorLabel.IsVisible = true;
+                return false;
+            }
+
+            // Validar experiencia si se proporciona
+            if (!string.IsNullOrWhiteSpace(ExperienciaEntry.Text) &&
+                !int.TryParse(ExperienciaEntry.Text, out int experiencia))
+            {
+                ErrorLabel.Text = "Los años de experiencia deben ser un número válido";
                 ErrorLabel.IsVisible = true;
                 return false;
             }

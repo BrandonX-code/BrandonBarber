@@ -51,32 +51,43 @@
             await Navigation.PushAsync(new GaleriaPage(galeriaService));
         }
 
+        // Métodos para el panel de administrador
+        private async void AgregarBarbero(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new AgregarBarberoPage());
+        }
+
+        private async void ListarBarberos(object sender, EventArgs e)
+        {
+            //await Navigation.PushAsync(new ListarBarberosPage());
+        }
+
+        private async void ListarClientes(object sender, EventArgs e)
+        {
+            //await Navigation.PushAsync(new ListarClientesPage());
+        }
+
+        private async void VerCitas(object sender, EventArgs e)
+        {
+            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            await Navigation.PushAsync(new ListaCitas(reservationService));
+        }
 
         private async void OnInicioClicked(object sender, EventArgs e)
         {
-            await AnimateButtonClick(sender as Button);
             await Navigation.PushAsync(new InicioPages(_authService));
         }
 
         private async void OnBuscarClicked(object sender, EventArgs e)
         {
-            await AnimateButtonClick(sender as Button);
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new BuscarPage(reservationService));
         }
 
         private async void OnConfiguracionClicked(object sender, EventArgs e)
         {
-            await AnimateButtonClick(sender as Button);
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new ListaCitas(reservationService));
-        }
-        private async Task AnimateButtonClick(Button button)
-        {
-            if (button == null) return;
-
-            await button.ScaleTo(0.9, 100);
-            await button.ScaleTo(1, 100);
         }
         private void LoadUserInfo()
         {
@@ -84,7 +95,6 @@
             {
                 // Mostrar información del usuario
                 WelcomeLabel.Text = $"Bienvenido, {AuthService.CurrentUser.Nombre}";
-                //UserTypeLabel.Text = $"Tipo de usuario: {AuthService.CurrentUser.Rol}";
 
                 // Ocultar indicador de carga
                 LoadingIndicator.IsVisible = false;
@@ -96,29 +106,36 @@
                     case "cliente":
                         ClienteView.IsVisible = true;
                         BarberoView.IsVisible = false;
+                        AdminView.IsVisible = false; // Ocultar panel admin
                         GaleriaClienteFrame.IsVisible = true;
                         break;
 
                     case "barbero":
                         ClienteView.IsVisible = false;
                         BarberoView.IsVisible = true;
+                        AdminView.IsVisible = false; // Ocultar panel admin
                         GaleriaClienteFrame.IsVisible = false;
                         break;
 
                     case "administrador":
+                        ClienteView.IsVisible = false;
+                        BarberoView.IsVisible = false;
+                        AdminView.IsVisible = true; // Mostrar panel admin
+                        GaleriaClienteFrame.IsVisible = false;
+                        break;
+
                     default:
                         ClienteView.IsVisible = false;
                         BarberoView.IsVisible = false;
+                        AdminView.IsVisible = false;
                         GaleriaClienteFrame.IsVisible = false;
                         break;
                 }
-
             }
         }
         // Add this method to the InicioPages class
         private async void GestionarDisponibilidad(object sender, EventArgs e)
         {
-            await AnimateButtonClick(sender as Button);
             var disponibilidadService = App.Current.Handler.MauiContext.Services.GetRequiredService<DisponibilidadService>();
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new GestionarDisponibilidadPage(disponibilidadService, reservationService));

@@ -39,6 +39,7 @@ namespace Gasolutions.Maui.App.Services
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"🔹 Login Response: {responseContent}");
+                Console.WriteLine($"🔹 Status Code: {response.StatusCode}");
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -52,25 +53,30 @@ namespace Gasolutions.Maui.App.Services
                 var authResponse = JsonSerializer.Deserialize<AuthResponse>(responseContent,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                if (authResponse.IsSuccess)
+                Console.WriteLine($"🔹 AuthResponse IsSuccess: {authResponse?.IsSuccess}");
+                Console.WriteLine($"🔹 AuthResponse Message: {authResponse?.Message}");
+
+                if (authResponse != null && authResponse.IsSuccess)
                 {
                     CurrentUser = authResponse.User;
 
                     // Guardar el token para futuras peticiones
                     await SecureStorage.Default.SetAsync("auth_token", authResponse.Token);
-                    // ya está bien con sólo:
                     await SecureStorage.Default.SetAsync("user_cedula", CurrentUser.Cedula.ToString());
 
                     // Configurar el token en el HttpClient para futuras peticiones
                     _BaseClient.DefaultRequestHeaders.Authorization =
                         new AuthenticationHeaderValue("Bearer", authResponse.Token);
+
+                    Console.WriteLine($"🔹 Usuario logueado: {CurrentUser.Nombre} - Rol: {CurrentUser.Rol}");
                 }
 
-                return authResponse;
+                return authResponse ?? new AuthResponse { IsSuccess = false, Message = "Respuesta vacía del servidor" };
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"❌ Error en login: {ex.Message}");
+                Console.WriteLine($"❌ Error en login: {ex.Message}");
                 return new AuthResponse
                 {
                     IsSuccess = false,
@@ -130,8 +136,6 @@ namespace Gasolutions.Maui.App.Services
             }
         }
 
-
-
         public async Task<bool> Logout()
         {
             try
@@ -158,51 +162,52 @@ namespace Gasolutions.Maui.App.Services
             try
             {
                 var token = await SecureStorage.Default.GetAsync("auth_token");
+                var userCedula = await SecureStorage.Default.GetAsync("user_cedula");
 
-                if (string.IsNullOrEmpty(token))
+                Console.WriteLine($"🔹 Token almacenado: {(string.IsNullOrEmpty(token) ? "No encontrado" : "Encontrado")}");
+                Console.WriteLine($"🔹 Cedula almacenada: {userCedula ?? "No encontrada"}");
+
+                if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(userCedula))
+                {
+                    Console.WriteLine("🔹 No hay token o cedula almacenados");
                     return false;
+                }
 
                 // Configurar el token en el HttpClient
                 _BaseClient.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
 
-                // Verificar si el token es válido haciendo una petición al servidor
-                var response = await _BaseClient.GetAsync($"{_BaseClient}validate");
+                // Obtener los datos del usuario directamente
+                var userResponse = await _BaseClient.GetAsync($"api/auth/user/{userCedula}");
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    // Token inválido, hacer logout
-                    await Logout();
-                    return false;
-                }
-
-                // Obtener información del usuario
-                var userCedula = await SecureStorage.Default.GetAsync("user_cedula");
-
-                if (string.IsNullOrEmpty(userCedula) || string.IsNullOrEmpty(userCedula))
-                {
-                    await Logout();
-                    return false;
-                }
-
-                // Obtener los datos del usuario
-                var userResponse = await _BaseClient.GetAsync($"{_BaseClient}api/auth/user/{userCedula}");
+                Console.WriteLine($"🔹 Respuesta del servidor para usuario: {userResponse.StatusCode}");
 
                 if (!userResponse.IsSuccessStatusCode)
                 {
+                    Console.WriteLine("🔹 No se pudo obtener datos del usuario, haciendo logout");
                     await Logout();
                     return false;
                 }
 
                 var responseContent = await userResponse.Content.ReadAsStringAsync();
+                Console.WriteLine($"🔹 Datos del usuario obtenidos: {responseContent}");
+
                 CurrentUser = JsonSerializer.Deserialize<UsuarioModels>(responseContent,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                return true;
+                if (CurrentUser != null)
+                {
+                    Console.WriteLine($"🔹 Usuario cargado: {CurrentUser.Nombre} - Rol: {CurrentUser.Rol}");
+                    return true;
+                }
+
+                await Logout();
+                return false;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"❌ Error al verificar autenticación: {ex.Message}");
+                Console.WriteLine($"❌ Error al verificar autenticación: {ex.Message}");
                 await Logout();
                 return false;
             }
