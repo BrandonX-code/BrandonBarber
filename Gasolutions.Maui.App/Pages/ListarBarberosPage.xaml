@@ -9,7 +9,7 @@
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
-		<Grid Grid.Row="0" BackgroundColor="#2b2b2b" Padding="20,30,20,10">
+		<Grid Grid.Row="0" BackgroundColor="#2b2b2b" Padding="20,30,40,0">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto" />
 				<ColumnDefinition Width="*" />
@@ -18,7 +18,7 @@
 
 			<Label Grid.Column="1" Text="Lista de Barberos" FontSize="20" TextColor="#c0aa4f" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" />
 
-			<ImageButton Grid.Column="2" Source="refresh.png" BackgroundColor="Transparent" HeightRequest="24" WidthRequest="24" VerticalOptions="Center" Clicked="OnRefreshClicked" />
+			<ImageButton Grid.Column="2" Source="refresh.png" HeightRequest="24" WidthRequest="24" VerticalOptions="Center" Padding="5,0" Clicked="OnRefreshClicked" />
 		</Grid>
 
 		<Grid Grid.Row="1" Padding="20">
@@ -30,19 +30,17 @@
                         <SearchBar x:Name="SearchBar" Placeholder="Buscar barbero por nombre o email..." PlaceholderColor="#888888" TextColor="#f0e68c" BackgroundColor="Transparent" TextChanged="OnSearchTextChanged" />
                     </Frame>
                     <Frame BackgroundColor="#3d3d3d" CornerRadius="10" Padding="15" HasShadow="True">
-						<HorizontalStackLayout Spacing="30">
-							<VerticalStackLayout>
-								<Label x:Name="TotalBarberosLabel" Text="0" FontSize="24" TextColor="#c0aa4f" FontAttributes="Bold" HorizontalOptions="Center" />
-								<Label Text="Total Barberos" FontSize="12" TextColor="#f0e68c" HorizontalOptions="Center" />
-							</VerticalStackLayout>
-
-							<VerticalStackLayout>
-								<Label x:Name="BarberosActivosLabel" Text="0" FontSize="24" TextColor="#4CAF50" FontAttributes="Bold" HorizontalOptions="Center" />
-								<Label Text="Activos" FontSize="12" TextColor="#f0e68c" HorizontalOptions="Center" />
-							</VerticalStackLayout>
-						</HorizontalStackLayout>
-					</Frame>
-
+                        <Grid ColumnDefinitions="*,*">
+                            <VerticalStackLayout Grid.Column="0" HorizontalOptions="Start" VerticalOptions="Center">
+                                <Label x:Name="TotalBarberosLabel" Text="0" FontSize="24" TextColor="#c0aa4f" FontAttributes="Bold" HorizontalOptions="Center" />
+                                <Label Text="Total Barberos" FontSize="12" TextColor="#f0e68c" HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
+                                <Label x:Name="BarberosActivosLabel" Text="0" FontSize="24" TextColor="#4CAF50" FontAttributes="Bold" HorizontalOptions="Center" />
+                                <Label Text="Activos" FontSize="12" TextColor="#f0e68c" HorizontalOptions="Center" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Frame>
                     <CollectionView x:Name="BarberosCollectionView" ItemsSource="{Binding BarberosFiltrados}" BackgroundColor="Transparent" Margin="0,0,0,10">
                         <CollectionView.ItemsLayout>
                             <LinearItemsLayout Orientation="Vertical" ItemSpacing="15" />
@@ -77,15 +75,15 @@
 											</HorizontalStackLayout>
 										</HorizontalStackLayout>
 
-										<HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="10" Margin="0,15,0,0" HorizontalOptions="End">
-                                            <Button Text="Ver Detalles" FontSize="12" BackgroundColor="#c0aa4f" TextColor="Black" CornerRadius="15" Padding="15,5" Clicked="OnVerDetallesClicked" CommandParameter="{Binding}" />
-                                            <Button Grid.Column="1" BackgroundColor="Transparent" Clicked="OnEliminarBarberoClicked" WidthRequest="40" HeightRequest="40" Padding="0" CommandParameter="{Binding}">
-												<Button.ImageSource>
-													<FileImageSource File="delete.png" />
-												</Button.ImageSource>
-											</Button>
-										</HorizontalStackLayout>
-									</Grid>
+                                        <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="10" Margin="0,15,0,0" HorizontalOptions="End">
+                                            <Button Text="Ver Detalles" FontSize="10" BackgroundColor="#c0aa4f" TextColor="Black" CornerRadius="15" Padding="5,0" Clicked="OnVerDetallesClicked" CommandParameter="{Binding}" />
+                                            <Image Source="delete.png"  WidthRequest="30" HeightRequest="30" Aspect="AspectFit">
+                                                <Image.GestureRecognizers>
+                                                    <TapGestureRecognizer Tapped="OnEliminarBarberoClicked" CommandParameter="{Binding}" />
+                                                </Image.GestureRecognizers>
+                                            </Image>
+                                        </HorizontalStackLayout>
+                                    </Grid>
 								</Frame>
 							</DataTemplate>
 						</CollectionView.ItemTemplate>
