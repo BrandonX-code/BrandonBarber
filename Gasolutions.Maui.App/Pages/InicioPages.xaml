@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
              x:Class="Gasolutions.Maui.App.Pages.InicioPages"  
-             xmlns:local="clr-namespace:Gasolutions.Maui.App.style"  
->
+             xmlns:local="clr-namespace:Gasolutions.Maui.App.style">
     <ContentPage.Resources>
         <ResourceDictionary>
             <local:DisponibilidadColorConverter x:Key="DisponibilidadColorConverter" />
