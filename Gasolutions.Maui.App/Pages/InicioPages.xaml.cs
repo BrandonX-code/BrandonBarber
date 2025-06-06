@@ -3,6 +3,18 @@
     public partial class InicioPages : ContentPage
     {
         private readonly AuthService _authService;
+        private List<UsuarioModels> _todosLosBarberos;
+        public List<UsuarioModels> TodosLosBarberos
+        {
+            get => _todosLosBarberos;
+            set
+            {
+                _todosLosBarberos = value;
+                OnPropertyChanged(nameof(TodosLosBarberos)); // Asegúrate de implementar INotifyPropertyChanged
+            }
+        }
+
+
         public InicioPages(AuthService authService)
         {
             InitializeComponent();
@@ -16,7 +28,9 @@
             base.OnAppearing();
             if (ClienteView.IsVisible)
             {
-                LoadDisponibilidad();
+                //LoadDisponibilidad();
+                _ = LoadBarberos();
+                
             }
         }
 
@@ -142,12 +156,65 @@
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new GestionarDisponibilidadPage(disponibilidadService, reservationService));
         }
-        private async void LoadDisponibilidad()
+
+        private async Task LoadBarberos()
+        {
+            try
+            {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsRunning = true;
+                ContentContainer.IsVisible = false;
+
+                var response = await _authService._BaseClient.GetAsync("api/auth");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonContent = await response.Content.ReadAsStringAsync();
+                    var usuarios = System.Text.Json.JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent,
+                        new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero").ToList() ?? new List<UsuarioModels>();
+                    TodosLosBarberos = barberos;
+                    Picker.ItemsSource = TodosLosBarberos;
+                }
+
+
+                else
+                {
+                    await DisplayAlert("Error", "No se pudieron cargar los barberos", "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Error al cargar los barberos: {ex.Message}", "OK");
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsRunning = false;
+                ContentContainer.IsVisible = true;
+            }
+        }
+
+        private void Picker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var picker = (Picker)sender;
+            int selectedIndex = picker.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                UsuarioModels barbero = (UsuarioModels)picker.SelectedItem;
+                _ = CargarDisponibilidadPorBarberoAsync(barbero.Cedula);
+                NoDisponibilidadAlert.IsVisible = true;
+                //NoDisponibilidadAlert. (string)picker.ItemsSource[selectedIndex];
+            }
+        }
+
+        private async Task CargarDisponibilidadPorBarberoAsync(long cedula)
         {
             var disponibilidadService = App.Current.Handler.MauiContext.Services.GetRequiredService<DisponibilidadService>();
 
             // Obtener la disponibilidad del barbero
-            var disponibilidad = await disponibilidadService.GetDisponibilidad(DateTime.Now);
+            var disponibilidad = await disponibilidadService.GetDisponibilidadPorBarbero(cedula);
 
             if (disponibilidad != null && disponibilidad.HorariosDict != null && disponibilidad.HorariosDict.Any())
             {

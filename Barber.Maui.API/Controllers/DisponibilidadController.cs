@@ -38,6 +38,22 @@ namespace Barber.Maui.API.Controllers
             return Ok(disponibilidad);
         }
 
+        [HttpGet("by-barberId/{cedula}")]
+        public async Task<ActionResult<Disponibilidad>> GetDisponibilidadPorBarberoId(long cedula)
+        {
+            var fecha = DateTime.Now;
+            var disponibilidad = await _context.Disponibilidad
+                .Where(d => d.Fecha.Date == fecha.Date).Where(d => d.BarberoId == cedula)
+                .FirstOrDefaultAsync();
+
+            if (disponibilidad == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(disponibilidad);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Disponibilidad>> CrearDisponibilidad([FromBody] Disponibilidad nuevaDisponibilidad)
         {
@@ -76,34 +92,5 @@ namespace Barber.Maui.API.Controllers
                 return StatusCode(500, new { message = "Error al guardar la disponibilidad.", error = ex.Message });
             }
         }
-
-
-
-        //private async Task CancelarCitasAfectadas(Disponibilidad disponibilidad)
-        //{
-        //    // Obtener todas las citas para la fecha
-        //    var citas = await _context.Disponibilidad
-        //        .Where(c => c.Fecha.Date == disponibilidad.Fecha.Date && c.BarberoId == disponibilidad.BarberoId)
-        //        .ToListAsync();
-
-        //    if (citas.Any())
-        //    {
-        //        var horariosDict = JsonSerializer.Deserialize<Dictionary<string, bool>>(disponibilidad.Horarios);
-
-        //        // Verificar cada cita
-        //        foreach (var cita in citas)
-        //        {
-        //            string horaKey = $"{cita.Fecha.Hour}:00";
-
-        //            // Si el horario ahora no está disponible, cancelar la cita
-        //            if (horariosDict.ContainsKey(horaKey) && !horariosDict[horaKey])
-        //            {
-        //                _context.Disponibilidad.Remove(cita);
-        //            }
-        //        }
-
-        //        await _context.SaveChangesAsync();
-        //    }
-        //}
     }
 }

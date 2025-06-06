@@ -78,9 +78,9 @@
                                         </VerticalStackLayout>
 
                                         <!-- Status Badge -->
-                                        <Frame Grid.Row="0" Grid.Column="1" BackgroundColor="#4CAF50" CornerRadius="15" Padding="10,5" VerticalOptions="Start"  HasShadow="False">
-                                            <Label Text="{Binding Rol}" FontSize="12" TextColor="White" FontAttributes="Bold" />
-                                        </Frame>
+                                        <VerticalStackLayout Grid.Row="0" Grid.Column="1"  Padding="10,5" VerticalOptions="Start">
+                                            <Label Text="{Binding Rol}" FontSize="15" TextColor="White" FontAttributes="Bold" />
+                                        </VerticalStackLayout>
 
                                         <!-- Información adicional -->
                                         <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="15" Margin="0,10,0,0">
@@ -93,8 +93,12 @@
                                         <!-- Botones de acción -->
                                         <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="10" Margin="0,15,0,0" HorizontalOptions="End">
                                             <Button Text="Ver Detalles" FontSize="12" BackgroundColor="#c0aa4f" TextColor="Black" CornerRadius="15" Padding="15,5" Clicked="OnVerDetallesClicked"  CommandParameter="{Binding}" />
-
-                                            <Button Text="Eliminar" FontSize="12" BackgroundColor="#f44336" TextColor="White"  CornerRadius="15" Padding="15,5" Clicked="OnEliminarClienteClicked" CommandParameter="{Binding}" />
+                                            <Button Grid.Column="1" BackgroundColor="Transparent" Clicked="OnEliminarClienteClicked" WidthRequest="40" HeightRequest="40" Padding="0" CommandParameter="{Binding}">
+                                                <Button.ImageSource>
+                                                    <FileImageSource File="delete.png" />
+                                                </Button.ImageSource>
+                                            </Button>
+                                            <!--<Button Text="Eliminar" FontSize="12" BackgroundColor="#f44336" TextColor="White"  CornerRadius="15" Padding="15,5" Clicked="OnEliminarClienteClicked" CommandParameter="{Binding}" />-->
                                         </HorizontalStackLayout>
                                     </Grid>
                                 </Frame>

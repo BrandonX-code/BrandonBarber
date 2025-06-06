@@ -51,6 +51,39 @@ namespace Gasolutions.Maui.App.Services
             }
         }
 
+        public async Task<DisponibilidadModel> GetDisponibilidadPorBarbero(long cedula)
+        {
+            try
+            {
+                string url = $"api/disponibilidad/by-barberId/{cedula}";
+                var response = await _httpClient.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == HttpStatusCode.NotFound)
+                    {
+                        // No hay disponibilidad registrada para esta fecha y barbero
+                        return null;
+                    }
+
+                    Debug.WriteLine($"❌ Error al obtener disponibilidad: {response.StatusCode}");
+                    return null;
+                }
+
+                var json = await response.Content.ReadAsStringAsync();
+                var disponibilidad = JsonSerializer.Deserialize<DisponibilidadModel>(json,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                return disponibilidad;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"❌ Excepción al obtener disponibilidad: {ex.Message}");
+                return null;
+            }
+        }
+
+
         public async Task<bool> GuardarDisponibilidad(DisponibilidadModel disponibilidad)
         {
             try
