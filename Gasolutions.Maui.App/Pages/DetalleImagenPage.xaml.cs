@@ -43,7 +43,7 @@ namespace Gasolutions.Maui.App.Pages
 
                 if (string.IsNullOrEmpty(localFilePath))
                 {
-                    await DisplayAlert("Error", "No se pudo descargar la imagen para compartir.", "OK");
+                    await AppUtils.MostrarSnackbar("No se pudo descargar la imagen para compartir.", Colors.Red, Colors.White);
                     return;
                 }
 
@@ -55,7 +55,7 @@ namespace Gasolutions.Maui.App.Pages
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"No se pudo compartir la imagen: {ex.Message}", "OK");
+                await AppUtils.MostrarSnackbar($"No se pudo compartir la imagen: {ex.Message}", Colors.Red, Colors.White);
             }
         }
 

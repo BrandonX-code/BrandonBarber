@@ -67,7 +67,7 @@
 
                 if (string.IsNullOrWhiteSpace(SearchEntry.Text) || !long.TryParse(SearchEntry.Text, out long cedula))
                 {
-                    await MostrarSnackbar("Ingrese una Cédula válida.", Colors.Orange, Colors.White);
+                    await AppUtils.MostrarSnackbar("Ingrese una Cédula válida.", Colors.Orange, Colors.White);
                     UpdateVisibility();
                     return;
                 }
@@ -76,7 +76,7 @@
 
                 if (citas == null || !citas.Any())
                 {
-                    await MostrarSnackbar("No se encontró ninguna cita con esa Cédula.", Colors.Red, Colors.White);
+                    await AppUtils.MostrarSnackbar("No se encontró ninguna cita con esa Cédula.", Colors.Red, Colors.White);
                     UpdateVisibility();
                     return;
                 }
@@ -97,11 +97,11 @@
 
                 UpdateVisibility();
 
-                await MostrarSnackbar($"Se encontraron {citas.Count} citas.", Colors.Green, Colors.White);
+                await AppUtils.MostrarSnackbar($"Se encontraron {citas.Count} citas.", Colors.Green, Colors.White);
             }
             catch (Exception ex)
             {
-                await MostrarSnackbar($"Ocurrió un error: {ex.Message}", Colors.DarkRed, Colors.White);
+                await AppUtils.MostrarSnackbar($"Ocurrió un error: {ex.Message}", Colors.DarkRed, Colors.White);
             }
             finally
             {
@@ -128,21 +128,6 @@
             LoaderOverlay.IsVisible = mostrar;
         }
 
-        private async Task MostrarSnackbar(string mensaje, Color background, Color textColor)
-        {
-            var snackbarOptions = new SnackbarOptions
-            {
-                BackgroundColor = background,
-                TextColor = textColor,
-                CornerRadius = new CornerRadius(30),
-                Font = Font.OfSize("Arial", 14),
-                CharacterSpacing = 0
-            };
-
-            var snackbar = Snackbar.Make(mensaje, duration: TimeSpan.FromSeconds(3), visualOptions: snackbarOptions);
-            await snackbar.Show();
-        }
-
         private async void EliminarCitaClicked(object sender, EventArgs e)
         {
             if (sender is Button btn && btn.CommandParameter is int citaId)
@@ -150,7 +135,7 @@
                 CitaModel cita = ProximasCitas.FirstOrDefault(c => c.Id == citaId);
                 if (cita == null)
                 {
-                    await MostrarSnackbar("No se puede encontrar la cita seleccionada.", Colors.Red, Colors.White);
+                    await AppUtils.MostrarSnackbar("No se puede encontrar la cita seleccionada.", Colors.Red, Colors.White);
                     return;
                 }
 
@@ -166,16 +151,16 @@
                     {
                         ProximasCitas.Remove(cita);
                         UpdateVisibility();
-                        await MostrarSnackbar("Cita eliminada exitosamente.", Colors.Green, Colors.White);
+                        await AppUtils.MostrarSnackbar("Cita eliminada exitosamente.", Colors.Green, Colors.White);
                     }
                     else
                     {
-                        await MostrarSnackbar("No se pudo eliminar la cita.", Colors.Red, Colors.White);
+                        await AppUtils.MostrarSnackbar("No se pudo eliminar la cita.", Colors.Red, Colors.White);
                     }
                 }
                 catch (Exception ex)
                 {
-                    await MostrarSnackbar($"Error al eliminar: {ex.Message}", Colors.DarkRed, Colors.White);
+                    await AppUtils.MostrarSnackbar($"Error al eliminar: {ex.Message}", Colors.DarkRed, Colors.White);
                 }
                 finally
                 {

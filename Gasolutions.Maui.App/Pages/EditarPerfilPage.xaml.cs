@@ -108,18 +108,18 @@
 
                 if (perfilGuardado)
                 {
-                    await DisplayAlert("Perfil actualizado", "Los cambios se han guardado correctamente", "OK");
+                    await AppUtils.MostrarSnackbar( "Los cambios se han guardado correctamente", Colors.Red, Colors.White);
                     await Navigation.PopAsync();
                 }
 
                 else
                 {
-                    await DisplayAlert("Error", "No se pudieron guardar todos los cambios.", "OK");
+                    await AppUtils.MostrarSnackbar("No se pudieron guardar todos los cambios.", Colors.Red, Colors.White);
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al guardar los cambios: {ex.Message}", "OK");
+                await AppUtils.MostrarSnackbar($"Error al guardar los cambios: {ex.Message}", Colors.Red, Colors.White);
             }
             finally
             {

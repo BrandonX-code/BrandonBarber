@@ -28,13 +28,13 @@ namespace Gasolutions.Maui.App.Pages
             _barberosFiltrados = new ObservableCollection<UsuarioModels>();
 
             BindingContext = this;
-            LoadBarberos();
+            _ = LoadBarberos();
         }
 
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            LoadBarberos();
+            _ = LoadBarberos();
         }
 
         private async Task LoadBarberos()
@@ -68,12 +68,12 @@ namespace Gasolutions.Maui.App.Pages
                 }
                 else
                 {
-                    await DisplayAlert("Error", "No se pudieron cargar los barberos", "OK");
+                    await AppUtils.MostrarSnackbar("No se pudieron cargar los barberos", Colors.Red, Colors.White);
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al cargar los barberos: {ex.Message}", "OK");
+                await AppUtils.MostrarSnackbar($"Error al cargar los barberos: {ex.Message}", Colors.Red, Colors.White);
             }
             finally
             {
@@ -139,17 +139,17 @@ namespace Gasolutions.Maui.App.Pages
                     {
                         await _authService.EliminarUsuario(barbero.Cedula);
 
-                        _todosLosBarberos.Remove(barbero);
+                        _todosLosBarberos.Remove(barbero); 
                         _barberosFiltrados.Remove(barbero);
 
                         UpdateStats();
                         EmptyStateFrame.IsVisible = !_barberosFiltrados.Any();
 
-                        await DisplayAlert("Éxito", "Barbero eliminado correctamente", "OK");
+                        await AppUtils.MostrarSnackbar("Barbero eliminado correctamente", Colors.Green, Colors.White);
                     }
                     catch (Exception ex)
                     {
-                        await DisplayAlert("Error", $"Error al eliminar barbero: {ex.Message}", "OK");
+                        await AppUtils.MostrarSnackbar($"Error al eliminar barbero: {ex.Message}", Colors.Red, Colors.White);
                     }
                 }
             }

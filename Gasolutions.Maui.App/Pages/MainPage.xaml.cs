@@ -65,14 +65,14 @@
                 if (_reservationServices == null)
                 {
                     MostrarLoader(false);
-                    await MostrarSnackbar("No se pudo conectar con el servicio.", Colors.Red, Colors.White);
+                    await AppUtils.MostrarSnackbar("No se pudo conectar con el servicio.", Colors.Red, Colors.White);
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(CedulaEntry.Text) || !long.TryParse(CedulaEntry.Text, out long cedula) || CedulaEntry.Text.Length < 6 || CedulaEntry.Text.Length > 10)
                 {
                     MostrarLoader(false);
-                    await MostrarSnackbar("Por favor, ingrese una cédula válida (entre 6 y 10 dígitos).", Colors.Orange, Colors.White);
+                    await AppUtils.MostrarSnackbar("Por favor, ingrese una cédula válida (entre 6 y 10 dígitos).", Colors.Orange, Colors.White);
                     return;
                 }
 
@@ -80,21 +80,21 @@
                 if (string.IsNullOrWhiteSpace(NombreEntry.Text) || NombreEntry.Text.Length < 2 || NombreEntry.Text.Length > 50)
                 {
                     MostrarLoader(false);
-                    await MostrarSnackbar("El Nombre debe tener entre 2 y 50 caracteres.", Colors.Orange, Colors.White);
+                    await AppUtils.MostrarSnackbar("El Nombre debe tener entre 2 y 50 caracteres.", Colors.Orange, Colors.White);
                     return;
                 }
 
                 if (string.IsNullOrWhiteSpace(TelefonoEntry.Text) || !TelefonoEntry.Text.All(char.IsDigit) || TelefonoEntry.Text.Length != 10)
                 {
                     MostrarLoader(false);
-                    await MostrarSnackbar("El Teléfono debe contener 10 dígitos numéricos.", Colors.Orange, Colors.White);
+                    await AppUtils.MostrarSnackbar("El Teléfono debe contener 10 dígitos numéricos.", Colors.Orange, Colors.White);
                     return;
                 }
 
                 if (FechaPicker.Date < DateTime.Today)
                 {
                     MostrarLoader(false);
-                    await MostrarSnackbar("La fecha de la cita debe ser futura.", Colors.Orange, Colors.White);
+                    await AppUtils.MostrarSnackbar("La fecha de la cita debe ser futura.", Colors.Orange, Colors.White);
                     return;
                 }
 
@@ -126,14 +126,14 @@
                 {
                     MostrarLoader(false);
                     Console.WriteLine($"Mostrando alerta de conflicto para hora {fechaSeleccionada.Hour}:{fechaSeleccionada.Minute:D2}");
-                    await MostrarSnackbar("Ya existe una cita en esta fecha y hora. Elija otro horario.", Colors.DarkRed, Colors.White);
+                    await AppUtils.MostrarSnackbar("Ya existe una cita en esta fecha y hora. Elija otro horario.", Colors.DarkRed, Colors.White);
                     return;
                 }
                 bool cedulaYaRegistrada = citasActuales.Any(c => c.Cedula == cedula);
                 if (cedulaYaRegistrada)
                 {
                     MostrarLoader(false);
-                    await MostrarSnackbar("Ya existe una cita registrada con esta cédula para el día seleccionado.", Colors.OrangeRed, Colors.White);
+                    await AppUtils.MostrarSnackbar("Ya existe una cita registrada con esta cédula para el día seleccionado.", Colors.OrangeRed, Colors.White);
                     return;
                 }
 
@@ -154,7 +154,7 @@
 
                 if (guardadoExitoso)
                 {
-                    await MostrarSnackbar("La reserva se guardó correctamente.", Colors.Green, Colors.White);
+                    await AppUtils.MostrarSnackbar("La reserva se guardó correctamente.", Colors.Green, Colors.White);
                     Limpiarcampos();
                 }
                 else
@@ -169,12 +169,12 @@
                     if (ahoraHayConflicto)
                     {
                         Console.WriteLine("Se detectó conflicto al verificar después del fallo");
-                        await MostrarSnackbar("Ya existe una cita en esta fecha y hora. Elija otro horario.", Colors.DarkRed, Colors.White);
+                        await AppUtils.MostrarSnackbar("Ya existe una cita en esta fecha y hora. Elija otro horario.", Colors.DarkRed, Colors.White);
                     }
                     else
                     {
                         Console.WriteLine("Fallo al guardar sin detectar conflicto");
-                        await MostrarSnackbar("Hubo un problema al guardar la reserva.", Colors.DarkRed, Colors.White);
+                        await AppUtils.MostrarSnackbar("Hubo un problema al guardar la reserva.", Colors.DarkRed, Colors.White);
                     }
                 }
             }
@@ -183,7 +183,7 @@
                 Console.WriteLine($"ERROR: {ex.Message}");
                 Console.WriteLine($"STACK TRACE: {ex.StackTrace}");
                 MostrarLoader(false);
-                await MostrarSnackbar("Ocurrió un error al procesar la solicitud.", Colors.DarkRed, Colors.White);
+                await AppUtils.MostrarSnackbar("Ocurrió un error al procesar la solicitud.", Colors.DarkRed, Colors.White);
             }
         }
 
@@ -227,20 +227,6 @@
         private void MostrarLoader(bool mostrar)
         {
             LoaderOverlay.IsVisible = mostrar;
-        }
-        private async Task MostrarSnackbar(string mensaje, Color background, Color textColor)
-        {
-            var snackbarOptions = new SnackbarOptions
-            {
-                BackgroundColor = background,
-                TextColor = textColor,
-                CornerRadius = new CornerRadius(30),
-                Font = Font.OfSize("Arial", 16),
-                CharacterSpacing = 0
-            };
-
-            var snackbar = Snackbar.Make(mensaje, duration: TimeSpan.FromSeconds(3), visualOptions: snackbarOptions);
-            await snackbar.Show();
         }
     }
 }

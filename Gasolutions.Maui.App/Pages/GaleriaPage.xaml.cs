@@ -32,20 +32,6 @@ namespace Gasolutions.Maui.App.Pages
 
             LoadGaleria();
         }
-        private async Task MostrarSnackbar(string mensaje, Color background, Color textColor)
-        {
-            var snackbarOptions = new SnackbarOptions
-            {
-                BackgroundColor = background,
-                TextColor = textColor,
-                CornerRadius = new CornerRadius(30),
-                Font = Font.OfSize("Arial", 16),
-                CharacterSpacing = 0
-            };
-
-            var snackbar = Snackbar.Make(mensaje, duration: TimeSpan.FromSeconds(3), visualOptions: snackbarOptions);
-            await snackbar.Show();
-        }
 
         // Método para cargar imágenes desde la API
         private async void LoadGaleria()
@@ -65,7 +51,7 @@ namespace Gasolutions.Maui.App.Pages
 
                 if (networkAccess != NetworkAccess.Internet)
                 {
-                    await MostrarSnackbar("Verifica tu conexión a internet", Colors.Red, Colors.White);
+                    await AppUtils.MostrarSnackbar("Verifica tu conexión a internet", Colors.Orange, Colors.White);
                     return;
                 }
 
@@ -294,11 +280,11 @@ namespace Gasolutions.Maui.App.Pages
                     // Remover de la lista local
                     imagenes.RemoveAll(i => i.Id == imagenId);
                     UpdateGaleriaUI();
-                    await MostrarSnackbar("Imagen eliminada correctamente.", Colors.Green, Colors.White);
+                    await AppUtils.MostrarSnackbar("Imagen eliminada correctamente.", Colors.Green, Colors.White);
                 }
                 else
                 {
-                    await MostrarSnackbar("No se pudo eliminar la imagen.", Colors.Red, Colors.White);
+                    await AppUtils.MostrarSnackbar("No se pudo eliminar la imagen.", Colors.Red, Colors.White);
                 }
             }
             catch (Exception ex)
@@ -320,7 +306,7 @@ namespace Gasolutions.Maui.App.Pages
 
             if (string.IsNullOrWhiteSpace(imagen.RutaArchivo))
             {
-                await MostrarSnackbar("La imagen no tiene ruta asignada", Colors.Red, Colors.White);
+                await AppUtils.MostrarSnackbar("La imagen no tiene ruta asignada", Colors.Red, Colors.White);
                 return;
             }
 
@@ -368,12 +354,12 @@ namespace Gasolutions.Maui.App.Pages
 
                 if (subida)
                 {
-                    await MostrarSnackbar("Imagen subida correctamente.", Colors.Green, Colors.White);
+                    await AppUtils.MostrarSnackbar("Imagen subida correctamente.", Colors.Green, Colors.White);
                     await LoadGaleriaAsync();
                 }
                 else
                 {
-                    await MostrarSnackbar("No se pudo subir la imagen.", Colors.Red, Colors.White);
+                    await AppUtils.MostrarSnackbar("No se pudo subir la imagen.", Colors.Red, Colors.White);
                 }
             }
             catch (Exception ex)

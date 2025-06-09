@@ -43,13 +43,9 @@
 
                 if (response.IsSuccess)
                 {
-                    SuccessLabel.Text = "Barbero agregado exitosamente";
-                    SuccessLabel.IsVisible = true;
-
-                    // Limpiar formulario después de éxito
                     LimpiarFormulario();
 
-                    await DisplayAlert("Éxito", "El barbero ha sido agregado correctamente", "OK");
+                    await AppUtils.MostrarSnackbar( "El barbero ha sido agregado correctamente", Colors.Green, Colors.White);
                 }
                 else
                 {

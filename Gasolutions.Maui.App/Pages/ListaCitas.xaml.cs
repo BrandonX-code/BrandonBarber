@@ -25,7 +25,7 @@
 
                 if (listaReservas == null || !listaReservas.Any())
                 {
-                    await MostrarSnackbar("No hay reservas para esta fecha.", Colors.DarkRed, Colors.White);
+                    await AppUtils.MostrarSnackbar("No hay reservas para esta fecha.", Colors.DarkRed, Colors.White);
                 }
                 else
                 {
@@ -37,7 +37,7 @@
             }
             catch (Exception)
             {
-                await MostrarSnackbar("Hubo un problema al recuperar las reservas.", Colors.Red, Colors.White);
+                await AppUtils.MostrarSnackbar("Hubo un problema al recuperar las reservas.", Colors.Red, Colors.White);
             }
             finally
             {
@@ -61,16 +61,16 @@
                     if (eliminado)
                     {
                         CitasFiltradas.Remove(cita);
-                        await MostrarSnackbar("Cita eliminada exitosamente.", Colors.Green, Colors.White);
+                        await AppUtils.MostrarSnackbar("Cita eliminada exitosamente.", Colors.Green, Colors.White);
                     }
                     else
                     {
-                        await MostrarSnackbar("No se pudo eliminar la cita.", Colors.Red, Colors.White);
+                        await AppUtils.MostrarSnackbar("No se pudo eliminar la cita.", Colors.Red, Colors.White);
                     }
                 }
                 catch (Exception ex)
                 {
-                    await MostrarSnackbar($"Error al eliminar: {ex.Message}", Colors.DarkRed, Colors.White);
+                    await AppUtils.MostrarSnackbar($"Error al eliminar: {ex.Message}", Colors.DarkRed, Colors.White);
                 }
                 finally
                 {
@@ -79,20 +79,6 @@
             }
         }
 
-        private async Task MostrarSnackbar(string mensaje, Color background, Color textColor)
-        {
-            var snackbarOptions = new SnackbarOptions
-            {
-                BackgroundColor = background,
-                TextColor = textColor,
-                CornerRadius = new CornerRadius(30),
-                Font = Font.OfSize("Arial", 16),
-                CharacterSpacing = 0
-            };
-
-            var snackbar = Snackbar.Make(mensaje, duration: TimeSpan.FromSeconds(3), visualOptions: snackbarOptions);
-            await snackbar.Show();
-        }
         private void MostrarLoader(bool mostrar)
         {
             LoaderOverlay.IsVisible = mostrar;

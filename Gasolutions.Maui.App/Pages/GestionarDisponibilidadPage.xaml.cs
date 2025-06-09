@@ -63,7 +63,7 @@ namespace Gasolutions.Maui.App.Pages
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"No se pudieron cargar las citas: {ex.Message}", "Aceptar");
+                await AppUtils.MostrarSnackbar($"No se pudieron cargar las citas: {ex.Message}", Colors.Red, Colors.White);
             }
         }
 
@@ -95,7 +95,7 @@ namespace Gasolutions.Maui.App.Pages
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"No se pudo cargar la disponibilidad: {ex.Message}", "Aceptar");
+                await AppUtils.MostrarSnackbar($"No se pudo cargar la disponibilidad: {ex.Message}", Colors.Red, Colors.White);
             }
         }
 
@@ -199,11 +199,11 @@ namespace Gasolutions.Maui.App.Pages
 
                 if (result)
                 {
-                    await DisplayAlert("Éxito", "La disponibilidad ha sido guardada correctamente", "Aceptar");
+                    await AppUtils.MostrarSnackbar("La disponibilidad ha sido guardada correctamente", Colors.Green, Colors.White);
                 }
                 else
                 {
-                    await DisplayAlert("Error", "No se pudo guardar la disponibilidad", "Aceptar");
+                    await AppUtils.MostrarSnackbar("No se pudo guardar la disponibilidad", Colors.Red, Colors.White);
                 }
             }
             catch (Exception ex)

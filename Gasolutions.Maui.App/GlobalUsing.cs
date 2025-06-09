@@ -9,3 +9,4 @@ global using System.Collections.ObjectModel;
 global using System.ComponentModel;
 global using System.Diagnostics;
 global using System.Text.RegularExpressions;
+global using Gasolutions.Maui.App.Utils;

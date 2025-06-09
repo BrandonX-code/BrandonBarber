@@ -69,12 +69,12 @@ namespace Gasolutions.Maui.App.Pages
                 }
                 else
                 {
-                    await DisplayAlert("Error", "No se pudieron cargar los clientes", "OK");
+                    await AppUtils.MostrarSnackbar("No se pudieron cargar los clientes", Colors.Red, Colors.White);
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al cargar los clientes: {ex.Message}", "OK");
+                await AppUtils.MostrarSnackbar($"Error al cargar los clientes: {ex.Message}", Colors.Red, Colors.White);
             }
             finally
             {
@@ -147,11 +147,11 @@ namespace Gasolutions.Maui.App.Pages
                         UpdateStats();
                         EmptyStateFrame.IsVisible = !_clientesFiltrados.Any();
 
-                        await DisplayAlert("Éxito", "Cliente eliminado correctamente", "OK");
+                        await AppUtils.MostrarSnackbar("Cliente eliminado correctamente", Colors.Green, Colors.White);
                     }
                     catch (Exception ex)
                     {
-                        await DisplayAlert("Error", $"Error al eliminar cliente: {ex.Message}", "OK");
+                        await AppUtils.MostrarSnackbar($"Error al eliminar cliente: {ex.Message}", Colors.Red, Colors.White);
                     }
                 }
             }
