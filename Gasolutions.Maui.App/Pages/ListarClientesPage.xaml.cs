@@ -129,7 +129,9 @@ namespace Gasolutions.Maui.App.Pages
 
         private async void OnEliminarClienteClicked(object sender, EventArgs e)
         {
-            if (sender is Button button && button.CommandParameter is UsuarioModels cliente)
+            if (sender is Image image &&
+                image.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tap &&
+                tap.CommandParameter is UsuarioModels cliente)
             {
                 var confirm = await DisplayAlert("Confirmar",
                     $"¿Está seguro de que desea eliminar al cliente {cliente.Nombre}?",
@@ -156,7 +158,6 @@ namespace Gasolutions.Maui.App.Pages
                 }
             }
         }
-
 
         private async void OnRefreshClicked(object sender, EventArgs e)
         {

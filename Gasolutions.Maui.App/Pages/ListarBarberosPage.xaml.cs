@@ -127,7 +127,9 @@ namespace Gasolutions.Maui.App.Pages
         }
         private async void OnEliminarBarberoClicked(object sender, EventArgs e)
         {
-            if (sender is Button button && button.CommandParameter is UsuarioModels barbero)
+            if (sender is Image image &&
+                image.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tap &&
+                tap.CommandParameter is UsuarioModels barbero)
             {
                 var confirm = await DisplayAlert("Confirmar",
                     $"¿Está seguro de que desea eliminar al barbero {barbero.Nombre}?",
@@ -139,7 +141,7 @@ namespace Gasolutions.Maui.App.Pages
                     {
                         await _authService.EliminarUsuario(barbero.Cedula);
 
-                        _todosLosBarberos.Remove(barbero); 
+                        _todosLosBarberos.Remove(barbero);
                         _barberosFiltrados.Remove(barbero);
 
                         UpdateStats();
