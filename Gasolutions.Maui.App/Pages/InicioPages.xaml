@@ -43,7 +43,7 @@
 
                         <Label Text="Disponibilidad del barbero" TextColor="#f0e68c" FontSize="20" VerticalOptions="Center"/>
                         <VerticalStackLayout Spacing="5">
-                            <Label Text="Seleccione el Barbero" TextColor="#c0aa4f" FontSize="16" />
+                            <Label Text="Seleccione el Barbero Para Ver Su Disponibilidad" TextColor="#c0aa4f" FontSize="16" />
                             <Frame BackgroundColor="Transparent" Padding="0" CornerRadius="10" HasShadow="False">
                                 <Picker TitleColor="#2b2b2b" TextColor="#f0e68c" x:Name="Picker" SelectedIndexChanged="Picker_SelectedIndexChanged"  ItemDisplayBinding="{Binding Nombre}" BackgroundColor="Transparent"></Picker>
                             </Frame>
