@@ -177,33 +177,35 @@ namespace Gasolutions.Maui.App.Pages
                 }
             };
 
-            // Botón para eliminar (solo visible para barberos)
-            Button deleteButton = new Button
+            // Contenedor de botones (eliminar y editar)
+            var buttonContainer = new HorizontalStackLayout
             {
-                Text = "✕",
-                FontSize = 30, // Tamaño pequeño pero visible
-                TextColor = Colors.Red,
-                BackgroundColor = Colors.Transparent, // Sin relleno
-                BorderColor = Colors.Black,     // Sin borde visible
-                CornerRadius = 0,                     // Sin esquinas redondeadas
-                WidthRequest = 24,
-                HeightRequest = 24,
-                Padding = new Thickness(0),
-                VerticalOptions = LayoutOptions.Start,
+                Spacing = 4,
+                Padding = new Thickness(4),
                 HorizontalOptions = LayoutOptions.End,
-                Margin = new Thickness(4),
-
+                VerticalOptions = LayoutOptions.Start,
                 IsVisible = esBarbero
             };
 
+            // Botón eliminar
+            var deleteButton = new ImageButton
+            {
+                Source = "delete.png",
+                BackgroundColor = Colors.Transparent,
+                WidthRequest = 24,
+                HeightRequest = 24,
+                Padding = new Thickness(0),
+                Margin = new Thickness(2)
+            };
+            deleteButton.Clicked += async (s, e) => await DeleteImage(imagen.Id);
 
-
-            deleteButton.Clicked += async (sender, e) => await DeleteImage(imagen.Id);
+            // Agregar botones al contenedo
+            buttonContainer.Children.Add(deleteButton);
 
             // Agregar elementos al contenedor de imagen
             imageContainer.Children.Add(imageControl);
             imageContainer.Children.Add(placeholderLabel);
-            imageContainer.Children.Add(deleteButton);
+            imageContainer.Children.Add(buttonContainer);
 
             // Agregar la imagen al contenedor principal
             mainContainer.Children.Add(imageContainer);
@@ -259,7 +261,31 @@ namespace Gasolutions.Maui.App.Pages
 
             return frame;
         }
+        private async Task EditarDescripcionImagen(ImagenGaleriaModel imagen)
+        {
+            string nuevaDescripcion = await DisplayPromptAsync(
+                "Editar descripción",
+                "Modifica la descripción de la imagen:",
+                initialValue: imagen.Descripcion ?? "",
+                maxLength: 500
+            );
 
+            if (nuevaDescripcion == null) // Cancelado
+                return;
+
+            bool actualizado = await _galeriaService.ActualizarImagen(imagen.Id, nuevaDescripcion);
+
+            if (actualizado)
+            {
+                await AppUtils.MostrarSnackbar("Descripción actualizada.", Colors.Green, Colors.White);
+                imagen.Descripcion = nuevaDescripcion;
+                UpdateGaleriaUI();
+            }
+            else
+            {
+                await AppUtils.MostrarSnackbar("No se pudo actualizar la descripción.", Colors.Red, Colors.White);
+            }
+        }
         // Método para eliminar una imagen
         private async Task DeleteImage(int imagenId)
         {

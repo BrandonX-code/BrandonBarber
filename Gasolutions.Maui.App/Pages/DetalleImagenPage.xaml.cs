@@ -13,26 +13,52 @@ namespace Gasolutions.Maui.App.Pages
         private string _imageUrl;
 
         private string _baseUrl;
-
-        public DetalleImagenPage(ImagenGaleriaModel imagen, string baseUrl) 
+        public DetalleImagenPage(ImagenGaleriaModel imagen, string baseUrl)
         {
             InitializeComponent();
             _imagen = imagen;
             _baseUrl = baseUrl;
 
             _imageUrl = $"{_baseUrl.TrimEnd('/')}{imagen.RutaArchivo}";
-
             DetalleImagen.Source = ImageSource.FromUri(new Uri(_imageUrl));
+
+            // Mostrar botón de editar solo para barberos
+            EditarButton.IsVisible = AuthService.CurrentUser?.Rol?.ToLower() == "barbero";
 
             if (!string.IsNullOrEmpty(imagen.Descripcion))
             {
                 Title = imagen.Descripcion;
             }
         }
-
         private async void OnVolverClicked(object sender, EventArgs e)
         {
             await Navigation.PopAsync();
+        }
+        private async void OnEditarClicked(object sender, EventArgs e)
+        {
+            string nuevaDescripcion = await DisplayPromptAsync(
+                "Editar descripción",
+                "Modifica la descripción de la imagen:",
+                initialValue: _imagen.Descripcion ?? "",
+                maxLength: 500
+            );
+
+            if (nuevaDescripcion == null) // Cancelado
+                return;
+
+            // Actualizar usando el servicio
+            var galeriaService = Application.Current.Handler.MauiContext.Services.GetService<GaleriaService>();
+            bool actualizado = await galeriaService.ActualizarImagen(_imagen.Id, nuevaDescripcion);
+
+            if (actualizado)
+            {
+                await AppUtils.MostrarSnackbar("Descripción actualizada.", Colors.Green, Colors.White);
+                _imagen.Descripcion = nuevaDescripcion;
+            }
+            else
+            {
+                await AppUtils.MostrarSnackbar("No se pudo actualizar la descripción.", Colors.Red, Colors.White);
+            }
         }
 
         private async void OnCompartirClicked(object sender, EventArgs e)

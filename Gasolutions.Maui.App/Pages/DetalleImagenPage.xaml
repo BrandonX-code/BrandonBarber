@@ -3,48 +3,39 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Gasolutions.Maui.App.Pages.DetalleImagenPage"
              BackgroundColor="#1e1e1e">
-	<ContentPage.Resources>
-		<ResourceDictionary>
-			<Style x:Key="ButtonStyle" TargetType="Button">
-				<Setter Property="BackgroundColor" Value="#c0aa4f" />
-				<Setter Property="TextColor" Value="Black" />
-				<Setter Property="FontAttributes" Value="Bold" />
-				<Setter Property="CornerRadius" Value="10" />
-				<Setter Property="HeightRequest" Value="45" />
-				<Setter Property="FontSize" Value="16" />
-			</Style>
-		</ResourceDictionary>
-	</ContentPage.Resources>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="#c0aa4f" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="HeightRequest" Value="45" />
+                <Setter Property="FontSize" Value="16" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="*" />
-			<RowDefinition Height="Auto" />
-		</Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-		<!-- Imagen principal ampliada -->
-		<Image x:Name="DetalleImagen"
-               Grid.Row="0"
-               Aspect="AspectFit"
-               HorizontalOptions="Fill"
-               VerticalOptions="Fill" />
+        <Image x:Name="DetalleImagen" Grid.Row="0" Aspect="AspectFit" HorizontalOptions="Fill" VerticalOptions="Fill" />
 
-		<!-- Controles inferiores -->
-		<Grid Grid.Row="1" Padding="20" ColumnSpacing="15">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="*" />
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
+        <ImageButton x:Name="EditarButton" Grid.Row="0" Source="pencil.png" HeightRequest="60" WidthRequest="60" Padding="8" Margin="10" BackgroundColor="Transparent" CornerRadius="20" HorizontalOptions="End" VerticalOptions="Start" Clicked="OnEditarClicked" IsVisible="False" />
 
-			<Button Text="Volver"
-                    Grid.Column="0"
-                    Style="{StaticResource ButtonStyle}"
-                    Clicked="OnVolverClicked" />
+        <Grid Grid.Row="1" Padding="20" ColumnSpacing="15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-			<Button Text="Compartir"
-                    Grid.Column="1"
-                    Style="{StaticResource ButtonStyle}"
-                    Clicked="OnCompartirClicked" />
-		</Grid>
-	</Grid>
+            <Button Text="Volver" Grid.Column="0" Style="{StaticResource ButtonStyle}" Clicked="OnVolverClicked" />
+
+            <Button Text="Compartir" Grid.Column="1" Style="{StaticResource ButtonStyle}" Clicked="OnCompartirClicked" />
+        </Grid>
+    </Grid>
 </ContentPage>
