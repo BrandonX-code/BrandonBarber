@@ -3,11 +3,12 @@
     public partial class MainPage : ContentPage
     {
         private readonly ReservationService _reservationServices;
-
-        public MainPage(ReservationService reservationService)
+        private readonly AuthService _authService;
+        public MainPage(ReservationService reservationService, AuthService authService)
         {
             InitializeComponent();
             _reservationServices = reservationService;
+            _authService = authService;
         }
 
         protected override async void OnAppearing()
@@ -15,6 +16,7 @@
             base.OnAppearing();
 
             await StartEntryAnimations();
+            await CargarBarberosAsync();
         }
 
         private async Task StartEntryAnimations()
@@ -29,11 +31,20 @@
             await Task.Delay((int)delay);
             await telefonoBorder.FadeTo(1, 300);
             await Task.Delay((int)delay);
+            await barberoBorder.FadeTo(1, 300); // <-- Nuevo
+            await Task.Delay((int)delay);
             await fechaBorder.FadeTo(1, 300);
             await Task.Delay((int)delay);
             await horaBorder.FadeTo(1, 300);
             await Task.Delay((int)delay);
             await buttonsLayout.FadeTo(1, 300);
+        }
+
+        private async Task CargarBarberosAsync()
+        {
+            var barberos = await _authService.ObtenerBarberos();
+            BarberoPicker.ItemsSource = barberos;
+            BarberoPicker.SelectedIndex = -1;
         }
 
         //private async void OnInicioClicked(object sender, EventArgs e)
@@ -98,6 +109,13 @@
                     return;
                 }
 
+                if (BarberoPicker.SelectedItem is not UsuarioModels barberoSeleccionado)
+                {
+                    MostrarLoader(false);
+                    await AppUtils.MostrarSnackbar("Debe seleccionar un barbero.", Colors.Orange, Colors.White);
+                    return;
+                }
+
                 DateTime fechaSeleccionada = FechaPicker.Date.Add(HoraPicker.Time);
                 Console.WriteLine($"Fecha y hora seleccionada: {fechaSeleccionada:yyyy-MM-dd HH:mm:ss}");
 
@@ -142,7 +160,8 @@
                     Cedula = cedula,
                     Nombre = NombreEntry.Text,
                     Telefono = TelefonoEntry.Text,
-                    Fecha = fechaSeleccionada
+                    Fecha = fechaSeleccionada,
+                    BarberoId = barberoSeleccionado.Cedula
                 };
 
                 Console.WriteLine($"Intentando guardar cita: Cedula={nuevaReserva.Cedula}, Fecha={nuevaReserva.Fecha:yyyy-MM-dd HH:mm:ss}");

@@ -37,7 +37,8 @@
         private async void MainPage(object sender, EventArgs e)
         {
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
-            await Navigation.PushAsync(new MainPage(reservationService));
+            var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
+            await Navigation.PushAsync(new MainPage(reservationService, authService));
         }
         private async void CitasList(object sender, EventArgs e)
         {

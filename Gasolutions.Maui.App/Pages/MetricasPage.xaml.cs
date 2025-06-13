@@ -191,27 +191,47 @@ namespace Gasolutions.Maui.App.Pages
         {
             try
             {
-                var barberos = await _authService.ObtenerBarberos();
+                // Obtén todas las citas del sistema
+                var todasLasCitas = await _reservationService.GetAllReservations();
+
+                var ranking = todasLasCitas
+                    .Where(c => c.BarberoId > 0)
+                    .GroupBy(c => c.BarberoId)
+                    .Select(g => new { BarberoId = g.Key, Total = g.Count() })
+                    .OrderByDescending(x => x.Total)
+                    .Take(3)
+                    .ToList();
+
                 var entries = new List<ChartEntry>();
                 var colores = new[]
                 {
-                    SKColor.Parse("#FFD700"),
-                    SKColor.Parse("#c0aa4f"),
-                    SKColor.Parse("#DAA520")
-                };
+            SKColor.Parse("#FFD700"),
+            SKColor.Parse("#c0aa4f"),
+            SKColor.Parse("#DAA520")
+        };
 
                 int colorIndex = 0;
-                foreach (var barbero in barberos.Take(3))
+                foreach (var item in ranking)
                 {
-                    var citas = await _reservationService.GetReservationsById(barbero.Cedula);
-                    entries.Add(new ChartEntry(citas.Count)
+                    var barbero = await _authService.GetUserByCedula(item.BarberoId);
+                    if (barbero != null)
                     {
-                        Label = barbero.Nombre,
-                        ValueLabel = citas.Count.ToString(),
-                        Color = colores[colorIndex++],
-                        TextColor = SKColor.Parse("#232323"),
-                        ValueLabelColor = SKColor.Parse("#232323")
-                    });
+                        entries.Add(new ChartEntry(item.Total)
+                        {
+                            Label = barbero.Nombre,
+                            ValueLabel = item.Total.ToString(),
+                            Color = colores[colorIndex++ % colores.Length],
+                            TextColor = SKColor.Parse("#232323"),
+                            ValueLabelColor = SKColor.Parse("#232323")
+                        });
+                    }
+                }
+
+                if (entries.Count == 0)
+                {
+                    RankingBarberosChart.Chart = null;
+                    await AppUtils.MostrarSnackbar("No hay datos de barberos para mostrar en el ranking.", Colors.Orange, Colors.White);
+                    return;
                 }
 
                 Chart chart;
@@ -219,7 +239,7 @@ namespace Gasolutions.Maui.App.Pages
                 {
                     chart = new BarChart
                     {
-                        Entries = entries.OrderByDescending(e => e.Value).ToList(),
+                        Entries = entries.OrderByDescending(e => float.Parse(e.ValueLabel)).ToList(),
                         LabelTextSize = 40,
                         Margin = 50,
                         LabelOrientation = Orientation.Horizontal,
@@ -231,7 +251,7 @@ namespace Gasolutions.Maui.App.Pages
                 {
                     chart = new LineChart
                     {
-                        Entries = entries.OrderByDescending(e => e.Value).ToList(),
+                        Entries = entries.OrderByDescending(e => float.Parse(e.ValueLabel)).ToList(),
                         LabelTextSize = 40,
                         Margin = 50,
                         LabelOrientation = Orientation.Horizontal,
@@ -247,7 +267,6 @@ namespace Gasolutions.Maui.App.Pages
                 await AppUtils.MostrarSnackbar($"Error al cargar ranking: {ex.Message}", Colors.Red, Colors.White);
             }
         }
-
         private async Task CargarClientesFrecuentes()
         {
             try

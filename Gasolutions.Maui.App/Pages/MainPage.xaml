@@ -68,6 +68,13 @@
                             <Entry x:Name="TelefonoEntry" Placeholder="Ingrese su Teléfono" Keyboard="Telephone" Style="{StaticResource EntryStyle}" />
                         </VerticalStackLayout>
                     </Border>
+                    
+                    <Border x:Name="barberoBorder" Stroke="Black" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#2b2b2b" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Seleccione un barbero:" TextColor="White" FontSize="16"/>
+                            <Picker x:Name="BarberoPicker"  ItemDisplayBinding="{Binding Nombre}" Style="{StaticResource EntryStyle}" />
+                        </VerticalStackLayout>
+                    </Border>
 
                     <Border x:Name="fechaBorder" Stroke="Black" StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#2b2b2b" Padding="15,12" Margin="0,0,0,10" Opacity="0">
                         <VerticalStackLayout Spacing="10"  >
