@@ -129,5 +129,47 @@ namespace Gasolutions.Maui.App.Services
         {
             return _reservations.Any(c => c.Cedula == cedula);
         }
+
+        //public async Task<List<CitaModel>> GetAllReservations()
+        //{
+        //    try
+        //    {
+        //        var response = await _httpClient.GetAsync($"{URL}/todas");
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            var content = await response.Content.ReadAsStringAsync();
+        //            var citas = JsonSerializer.Deserialize<List<CitaModel>>(content, 
+        //                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        //            return citas ?? new List<CitaModel>();
+        //        }
+        //        return new List<CitaModel>();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"Error al obtener todas las citas: {ex.Message}");
+        //        return new List<CitaModel>();
+        //    }
+        //}
+
+        //public async Task<List<CitaModel>> GetReservationsByBarber(long cedula)
+        //{
+        //    try
+        //    {
+        //        var response = await _httpClient.GetAsync($"{URL}/barbero/{cedula}");
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            var content = await response.Content.ReadAsStringAsync();
+        //            var citas = JsonSerializer.Deserialize<List<CitaModel>>(content,
+        //                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        //            return citas ?? new List<CitaModel>();
+        //        }
+        //        return new List<CitaModel>();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"Error al obtener citas del barbero: {ex.Message}");
+        //        return new List<CitaModel>();
+        //    }
+        //}
     }
 }

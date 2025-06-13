@@ -224,6 +224,45 @@ namespace Gasolutions.Maui.App.Services
 
             return true;
         }
+        public async Task<List<UsuarioModels>> ObtenerBarberos()
+        {
+            try
+            {
+                var response = await _BaseClient.GetAsync("api/auth/barberos");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var barberos = JsonSerializer.Deserialize<List<UsuarioModels>>(content,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return barberos ?? new List<UsuarioModels>();
+                }
+                return new List<UsuarioModels>();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error al obtener barberos: {ex.Message}");
+                return new List<UsuarioModels>();
+            }
+        }
 
+        public async Task<UsuarioModels> GetUserByCedula(long cedula)
+        {
+            try
+            {
+                var response = await _BaseClient.GetAsync($"api/auth/usuario/{cedula}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<UsuarioModels>(content,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error al obtener usuario: {ex.Message}");
+                return null;
+            }
+        }
     }
 }

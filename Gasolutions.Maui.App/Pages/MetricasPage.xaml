@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
+             x:Class="Gasolutions.Maui.App.Pages.MetricasPage"
+             BackgroundColor="#181818">
+
+    <RefreshView x:Name="metricsRefreshView" 
+                 Command="{Binding RefreshCommand}">
+        <ScrollView>
+            <VerticalStackLayout Spacing="20" Padding="16">
+                <!-- Header -->
+                <Grid Margin="0,10,0,20">
+                    <Label Text="Dashboard de Métricas" 
+                           FontSize="32" 
+                           TextColor="#c0aa4f" 
+                           FontAttributes="Bold" 
+                           HorizontalOptions="Center">
+                        <Label.Shadow>
+                            <Shadow Brush="#40000000"
+                                   Offset="0,2"
+                                   Radius="4" />
+                        </Label.Shadow>
+                    </Label>
+                </Grid>
+
+                <!-- Resumen General -->
+                <Grid ColumnDefinitions="*,*" 
+                      RowDefinitions="Auto,Auto"
+                      ColumnSpacing="16" 
+                      RowSpacing="16">
+                    <!-- Total Citas -->
+                    <Frame Grid.Column="0" Grid.Row="0"
+                           BackgroundColor="#232323"
+                           BorderColor="#c0aa4f"
+                           CornerRadius="12"
+                           Padding="16">
+                        <VerticalStackLayout>
+                            <Label Text="Total Citas"
+                                   TextColor="#c0aa4f"
+                                   FontSize="16"/>
+                            <Label x:Name="TotalCitasLabel"
+                                   Text="0"
+                                   TextColor="White"
+                                   FontSize="24"
+                                   FontAttributes="Bold"/>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <!-- Tasa de Asistencia -->
+                    <Frame Grid.Column="1" Grid.Row="0"
+                           BackgroundColor="#232323"
+                           BorderColor="#c0aa4f"
+                           CornerRadius="12"
+                           Padding="16">
+                        <VerticalStackLayout>
+                            <Label Text="Tasa de Asistencia"
+                                   TextColor="#c0aa4f"
+                                   FontSize="16"/>
+                            <Label x:Name="TasaAsistenciaLabel"
+                                   Text="0%"
+                                   TextColor="White"
+                                   FontSize="24"
+                                   FontAttributes="Bold"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </Grid>
+
+                <!-- Gráficos -->
+                <Frame BackgroundColor="#232323"
+                       BorderColor="#c0aa4f"
+                       Padding="16"
+                       CornerRadius="16"
+                       HasShadow="True">
+                    <VerticalStackLayout>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Asistencia Mensual" 
+                                   TextColor="#c0aa4f" 
+                                   FontSize="20" 
+                                   FontAttributes="Bold"/>
+                            <Picker x:Name="ChartTypePicker"
+                                    Grid.Column="1"
+                                    TextColor="#c0aa4f"
+                                    BackgroundColor="#333333"
+                                    SelectedIndexChanged="OnChartTypeChanged">
+                                <Picker.Items>
+                                    <x:String>Barras</x:String>
+                                    <x:String>Líneas</x:String>
+                                </Picker.Items>
+                            </Picker>
+                        </Grid>
+                        <microcharts:ChartView x:Name="AsistenciaChart" 
+                                             HeightRequest="220"
+                                             BackgroundColor="#fffbe6"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Gráfico de Cancelaciones -->
+                <!--<Frame BackgroundColor="#232323"
+                       BorderColor="#c0aa4f"
+                       Padding="16"
+                       CornerRadius="16"
+                       HasShadow="True">
+                    <VerticalStackLayout>
+                        <Label Text="Tasa de Cancelaciones" 
+                               TextColor="#c0aa4f" 
+                               FontSize="20" 
+                               FontAttributes="Bold"/>
+                        <microcharts:ChartView x:Name="CancelacionesChart" 
+                                             HeightRequest="220"
+                                             BackgroundColor="#fffbe6"/>
+                    </VerticalStackLayout>
+                </Frame>-->
+
+                <!-- Ranking de Barberos -->
+                <Frame BackgroundColor="#232323"
+       BorderColor="#c0aa4f"
+       Padding="16"
+       CornerRadius="16"
+       HasShadow="True">
+                    <VerticalStackLayout>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Top Barberos" 
+                   TextColor="#c0aa4f" 
+                   FontSize="20" 
+                   FontAttributes="Bold"/>
+                            <Picker x:Name="RankingChartTypePicker"
+                    Grid.Column="1"
+                    TextColor="#c0aa4f"
+                    BackgroundColor="#333333"
+                    SelectedIndexChanged="OnRankingChartTypeChanged">
+                                <Picker.Items>
+                                    <x:String>Barras</x:String>
+                                    <x:String>Líneas</x:String>
+                                </Picker.Items>
+                            </Picker>
+                        </Grid>
+                        <microcharts:ChartView x:Name="RankingBarberosChart" 
+                               HeightRequest="220"
+                               BackgroundColor="#fffbe6"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Clientes Frecuentes -->
+                <Frame BackgroundColor="#232323"
+                       BorderColor="#c0aa4f"
+                       Padding="16"
+                       CornerRadius="16"
+                       HasShadow="True">
+                    <VerticalStackLayout Spacing="10">
+                        <Label Text="Top Clientes Frecuentes" 
+                               TextColor="#c0aa4f" 
+                               FontSize="20" 
+                               FontAttributes="Bold"/>
+                        <CollectionView x:Name="ClientesFrecuentesCollection"
+                                      HeightRequest="220">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Padding="10" ColumnDefinitions="Auto,*,Auto">
+                                        <Label Grid.Column="0" 
+                                               Text="{Binding Position}"
+                                               TextColor="#c0aa4f"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               Margin="0,0,10,0"/>
+                                        <Label Grid.Column="1" 
+                                               Text="{Binding Nombre}" 
+                                               TextColor="White" 
+                                               FontSize="16"/>
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="5">
+                                            <Label Text="{Binding Visitas}" 
+                                                   TextColor="#c0aa4f" 
+                                                   FontSize="16"
+                                                   FontAttributes="Bold"/>
+                                            <Label Text="visitas" 
+                                                   TextColor="#c0aa4f" 
+                                                   FontSize="16"/>
+                                        </HorizontalStackLayout>
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>

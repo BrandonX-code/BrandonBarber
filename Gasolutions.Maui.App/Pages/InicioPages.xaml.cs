@@ -105,6 +105,12 @@
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new ListaCitas(reservationService));
         }
+        private async void VerMetricas(object sender, EventArgs e)
+        {
+            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
+            await Navigation.PushAsync(new MetricasPage(reservationService, authService));
+        }
         private void LoadUserInfo()
         {
             if (AuthService.CurrentUser != null)

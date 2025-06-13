@@ -10,7 +10,20 @@
         public bool Seleccionado { get; set; }
         public long Cedula { get; set; }
         public bool EsHoy => Fecha.Date == DateTime.Today;
+        public long BarberoId { get; set; }
 
+        public string Estado
+        {
+            get
+            {
+                if (Fecha < DateTime.Now)
+                    return "Pasada";
+                else if (Fecha.Date == DateTime.Today)
+                    return "Hoy";
+                else
+                    return "Futura";
+            }
+        }
     }
 
 }

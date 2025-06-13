@@ -132,6 +132,19 @@
                     <VerticalStackLayout x:Name="AdminView" IsVisible="false" Padding="20" Spacing="20">
                         <Label Text="Panel de Administrador" FontSize="24" TextColor="#c0aa4f" FontAttributes="Bold" HorizontalOptions="Center" />
 
+                        <!-- Nueva sección de Métricas -->
+                        <Label Text="Métricas y Estadísticas" FontSize="18" TextColor="#c0aa4f" FontAttributes="Bold" Margin="0,20,0,0" />
+                        
+                        <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="VerMetricas" />
+                            </Frame.GestureRecognizers>
+                            <HorizontalStackLayout Spacing="10" HeightRequest="60">
+                                <Image Source="metrics.png" WidthRequest="40" HeightRequest="40" />
+                                <Label Text="Dashboard de Métricas" TextColor="#f0e68c" FontSize="20" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Frame>
+
                         <!-- Gestión de Barberos -->
                         <Label Text="Gestión de Barberos" FontSize="18" TextColor="#c0aa4f" FontAttributes="Bold" />
 

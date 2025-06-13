@@ -115,6 +115,25 @@ namespace Barber.Maui.API.Controllers
 
             return Ok(new { message = "Usuario eliminado correctamente." });
         }
+        [HttpGet("barberos")]
+        public async Task<ActionResult<List<Auth>>> GetBarberos()
+        {
+            var barberos = await _context.UsuarioPerfiles
+                .Where(u => u.Rol.ToLower() == "barbero")
+                .ToListAsync();
+            return Ok(barberos);
+        }
 
+        [HttpGet("usuario/{cedula}")]
+        public async Task<ActionResult<Auth>> GetUsuario(long cedula)
+        {
+            var usuario = await _context.UsuarioPerfiles
+                .FirstOrDefaultAsync(u => u.Cedula == cedula);
+
+            if (usuario == null)
+                return NotFound();
+
+            return Ok(usuario);
+        }
     }
 }
