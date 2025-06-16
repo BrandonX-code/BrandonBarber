@@ -205,10 +205,10 @@ namespace Gasolutions.Maui.App.Pages
                 var entries = new List<ChartEntry>();
                 var colores = new[]
                 {
-            SKColor.Parse("#FFD700"),
-            SKColor.Parse("#c0aa4f"),
-            SKColor.Parse("#DAA520")
-        };
+                    SKColor.Parse("#FFD700"),
+                    SKColor.Parse("#c0aa4f"),
+                    SKColor.Parse("#DAA520")
+                };
 
                 int colorIndex = 0;
                 foreach (var item in ranking)

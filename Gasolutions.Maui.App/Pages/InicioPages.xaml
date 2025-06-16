@@ -129,7 +129,7 @@
                     </VerticalStackLayout>
 
                     <!-- AdminView -->
-                    <VerticalStackLayout x:Name="AdminView" IsVisible="false" Padding="20" Spacing="20">
+                    <VerticalStackLayout x:Name="AdminView" IsVisible="false" Padding="20" Spacing="17">
                         <Label Text="Panel de Administrador" FontSize="24" TextColor="#c0aa4f" FontAttributes="Bold" HorizontalOptions="Center" />
 
                         <!-- Nueva sección de Métricas -->
