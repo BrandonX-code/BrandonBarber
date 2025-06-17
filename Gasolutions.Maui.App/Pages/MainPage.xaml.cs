@@ -11,12 +11,12 @@
             _authService = authService;
         }
 
-        protected override async void OnAppearing()
+        protected override void OnAppearing()
         {
             base.OnAppearing();
-
-            await StartEntryAnimations();
-            await CargarBarberosAsync();
+            CedulaEntry.TextChanged += OnCedulaEntryTextChanged;
+            _ = StartEntryAnimations();
+            _ = CargarBarberosAsync();
         }
 
         private async Task StartEntryAnimations()
@@ -31,7 +31,7 @@
             await Task.Delay((int)delay);
             await telefonoBorder.FadeTo(1, 300);
             await Task.Delay((int)delay);
-            await barberoBorder.FadeTo(1, 300); // <-- Nuevo
+            await barberoBorder.FadeTo(1, 300);
             await Task.Delay((int)delay);
             await fechaBorder.FadeTo(1, 300);
             await Task.Delay((int)delay);
@@ -47,11 +47,37 @@
             BarberoPicker.SelectedIndex = -1;
         }
 
-        //private async void OnInicioClicked(object sender, EventArgs e)
-        //{
-        //    await AnimateButtonClick(sender as Button);
-        //    await Navigation.PushAsync(new InicioPages());
-        //}
+        private async void OnCedulaEntryTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (long.TryParse(CedulaEntry.Text, out long cedula) && CedulaEntry.Text.Length >= 6)
+            {
+                var usuario = await _authService.GetUserByCedula(cedula);
+                if (usuario != null)
+                {
+                    NombreEntry.Text = usuario.Nombre;
+                    TelefonoEntry.Text = usuario.Telefono;
+                    // Deshabilitar campos
+                    NombreEntry.IsEnabled = false;
+                    TelefonoEntry.IsEnabled = false;
+                }
+                else
+                {
+                    // Si no existe, limpiar y habilitar campos
+                    NombreEntry.Text = string.Empty;
+                    TelefonoEntry.Text = string.Empty;
+                    NombreEntry.IsEnabled = true;
+                    TelefonoEntry.IsEnabled = true;
+                }
+            }
+            else
+            {
+                // Si la cédula no es válida, limpiar y habilitar campos
+                NombreEntry.Text = string.Empty;
+                TelefonoEntry.Text = string.Empty;
+                NombreEntry.IsEnabled = true;
+                TelefonoEntry.IsEnabled = true;
+            }
+        }
 
         private async void OnBuscarClicked(object sender, EventArgs e)
         {

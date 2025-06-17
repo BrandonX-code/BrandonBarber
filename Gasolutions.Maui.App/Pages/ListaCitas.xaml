@@ -29,7 +29,7 @@
                     <Frame BackgroundColor="#343434" CornerRadius="10" Padding="15" HasShadow="True">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Tus Citas" TextColor="#f0e68c" FontSize="18" />
-                            <CollectionView x:Name="ResultadosCollection" HeightRequest="400">
+                            <CollectionView x:Name="ResultadosCollection" HeightRequest="420">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <Frame Padding="10" Margin="5" BorderColor="Black" BackgroundColor="#2b2b2b" CornerRadius="12" HasShadow="True">

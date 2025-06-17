@@ -63,6 +63,11 @@ namespace Gasolutions.Maui.App.Pages
             CargarGraficoAsistencia().ConfigureAwait(false);
         }
 
+        private void OnRankingChartTypeChanged(object sender, EventArgs e)
+        {
+            CargarRankingBarberos().ConfigureAwait(false);
+        }
+
         //private async Task CargarGraficoCancelaciones()
         //{
         //    try
@@ -182,11 +187,6 @@ namespace Gasolutions.Maui.App.Pages
             return entries;
         }
 
-        private void OnRankingChartTypeChanged(object sender, EventArgs e)
-        {
-            CargarRankingBarberos().ConfigureAwait(false);
-        }
-
         private async Task CargarRankingBarberos()
         {
             try
@@ -267,6 +267,7 @@ namespace Gasolutions.Maui.App.Pages
                 await AppUtils.MostrarSnackbar($"Error al cargar ranking: {ex.Message}", Colors.Red, Colors.White);
             }
         }
+
         private async Task CargarClientesFrecuentes()
         {
             try
