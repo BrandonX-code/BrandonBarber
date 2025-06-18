@@ -32,7 +32,7 @@
     </ContentPage.Resources>
 
     <ScrollView Padding="20">
-        <Border BackgroundColor="#2b2b2b" HeightRequest="500" Padding="15">
+        <Border BackgroundColor="#2b2b2b" HeightRequest="600" Padding="15">
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="30" />
             </Border.StrokeShape>
