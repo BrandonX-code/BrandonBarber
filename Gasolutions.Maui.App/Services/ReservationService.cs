@@ -39,8 +39,8 @@ namespace Gasolutions.Maui.App.Services
         }
         public async Task<bool> AddReservation(CitaModel cita)
         {
-            try
-            {
+            //try
+            //{
                 var json = JsonSerializer.Serialize(cita);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
@@ -53,20 +53,19 @@ namespace Gasolutions.Maui.App.Services
                 Console.WriteLine($"🔹 Código de estado API: {response.StatusCode}");
                 Console.WriteLine($"🔹 Respuesta API: {responseMessage}");
 
-                if (response.StatusCode == HttpStatusCode.Conflict)
+                if (response.StatusCode != HttpStatusCode.Created)
                 {
-                    await Application.Current.MainPage.DisplayAlert("Error", "Ya existe una cita en esta fecha y hora. Elija otro horario.", "Aceptar");
-                    return false;
+                    throw new Exception(responseMessage);
                 }
 
                 return response.IsSuccessStatusCode;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Error al conectar con la API: {ex.Message}");
-                await Application.Current.MainPage.DisplayAlert("Error", "Error de conexión con el servidor.", "Aceptar");
-                return false;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine($"❌ Error al conectar con la API: {ex.Message}");
+            //    await Application.Current.MainPage.DisplayAlert("Error", "Error de conexión con el servidor.", "Aceptar");
+            //    return false;
+            //}
         }
 
         public async Task<List<CitaModel>> GetReservations(DateTime fecha)

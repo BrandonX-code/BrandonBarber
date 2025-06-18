@@ -54,6 +54,16 @@ namespace Barber.Maui.API.Controllers
             return Ok(disponibilidad);
         }
 
+        [HttpGet("barbero/{barberoId}")]
+        public async Task<ActionResult<List<Disponibilidad>>> GetDisponibilidadPorBarbero(long barberoId)
+        {
+            var disponibilidad = await _context.Disponibilidad
+                .Where(d => d.BarberoId == barberoId)
+                .ToListAsync();
+
+            return Ok(disponibilidad);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Disponibilidad>> CrearDisponibilidad([FromBody] Disponibilidad nuevaDisponibilidad)
         {

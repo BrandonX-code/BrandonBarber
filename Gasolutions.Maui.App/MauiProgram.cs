@@ -30,7 +30,7 @@ namespace Gasolutions.Maui.App
             string apiBaseUrl;
             if (DeviceInfo.Platform == DevicePlatform.Android)
             {
-                apiBaseUrl = "https://192.168.0.155:7283/";
+                apiBaseUrl = "https://192.168.0.28:7283/";
             }
             else
             {
@@ -62,11 +62,6 @@ namespace Gasolutions.Maui.App
             builder.Services.AddSingleton<ListaCitas>();
             builder.Services.AddSingleton<PerfilPage>();
             builder.Services.AddSingleton<GaleriaPage>();
-
-            // Registrar páginas de administrador
-            //builder.Services.AddTransient<AdminDashboardPage>();
-            //builder.Services.AddTransient<AdminBarberosPage>();
-            //builder.Services.AddTransient<AdminReportesPage>();
 
             builder.UseMauiApp<App>().UseMauiCommunityToolkit();
 

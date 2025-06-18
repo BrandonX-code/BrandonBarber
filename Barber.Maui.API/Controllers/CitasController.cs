@@ -52,14 +52,14 @@ public class CitasController : ControllerBase
     {
         if (nuevaCita == null || string.IsNullOrWhiteSpace(nuevaCita.Nombre) || nuevaCita.Fecha < DateTime.Now)
         {
-            return BadRequest(new { message = "Error: Datos inválidos en la solicitud." });
+            return BadRequest("Error: Datos inválidos en la solicitud." );
         }
 
-        bool existeCita = await _context.Citas.AnyAsync(c => c.Fecha == nuevaCita.Fecha);
+        bool existeCita = await _context.Citas.AnyAsync(c => c.Fecha == nuevaCita.Fecha && c.BarberoId == nuevaCita.BarberoId);
 
         if (existeCita)
         {
-            return Conflict(new { message = "Ya existe una cita en esta fecha y hora." });
+            return Conflict("Ya existe una cita en esta fecha y hora. Elija otro horario.");
         }
 
         try

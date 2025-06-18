@@ -203,46 +203,42 @@
             }
         }
 
-        private void Picker_SelectedIndexChanged(object sender, EventArgs e)
+        private async void Picker_SelectedIndexChanged(object sender, EventArgs e)
         {
             var picker = (Picker)sender;
             int selectedIndex = picker.SelectedIndex;
             if (selectedIndex != -1)
             {
                 UsuarioModels barbero = (UsuarioModels)picker.SelectedItem;
-                _ = CargarDisponibilidadPorBarberoAsync(barbero.Cedula);
-                NoDisponibilidadAlert.IsVisible = true;
-                //NoDisponibilidadAlert. (string)picker.ItemsSource[selectedIndex];
+                await CargarDisponibilidadesPorBarberoAsync(barbero.Cedula);
             }
         }
 
-        private async Task CargarDisponibilidadPorBarberoAsync(long cedula)
+        private async Task CargarDisponibilidadesPorBarberoAsync(long barberoId)
         {
             var disponibilidadService = App.Current.Handler.MauiContext.Services.GetRequiredService<DisponibilidadService>();
 
-            // Obtener la disponibilidad del barbero
-            var disponibilidad = await disponibilidadService.GetDisponibilidadPorBarbero(cedula);
+            // Llama al método que devuelve la lista de disponibilidades para el barbero
+            var disponibilidades = await disponibilidadService.GetDisponibilidadActualPorBarbero(barberoId);
 
-            if (disponibilidad != null && disponibilidad.HorariosDict != null && disponibilidad.HorariosDict.Any())
+            if (disponibilidades != null && disponibilidades.Any())
             {
-                // Crear una lista de horarios disponibles
-                var horariosDisponibles = disponibilidad.HorariosDict
-                .Select(h => new
-                {
-                    Hora = h.Key,
-                    Disponible = h.Value ? "Disponible" : "No Disponible"
-                }).ToList();
+                // Puedes adaptar esto según cómo quieras mostrar los horarios
+                var horariosDisponibles = disponibilidades
+                    .SelectMany(d => d.HorariosDict.Select(h => new
+                    {
+                        Fecha = d.Fecha.ToString("yyyy-MM-dd"),
+                        Hora = h.Key,
+                        Disponible = h.Value ? "Disponible" : "No Disponible"
+                    }))
+                    .ToList();
 
-                // Mostrar los horarios en la vista de cliente
                 DisponibilidadListView.ItemsSource = horariosDisponibles;
                 DisponibilidadListView.IsVisible = true;
-
-                // Ocultar la alerta ya que hay datos de disponibilidad
                 NoDisponibilidadAlert.IsVisible = false;
             }
             else
             {
-                // Si no hay disponibilidad, mostrar el mensaje de alerta
                 DisponibilidadListView.IsVisible = false;
                 NoDisponibilidadAlert.IsVisible = true;
             }
