@@ -200,6 +200,7 @@ namespace Gasolutions.Maui.App.Pages
                 if (result)
                 {
                     await AppUtils.MostrarSnackbar("La disponibilidad ha sido guardada correctamente", Colors.Green, Colors.White);
+                    await Navigation.PopAsync();
                 }
                 else
                 {
