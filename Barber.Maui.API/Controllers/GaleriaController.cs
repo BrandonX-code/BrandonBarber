@@ -16,11 +16,12 @@ namespace Barber.Maui.API.Controllers
             _context = context;
         }
 
-        [HttpGet("img")]
-        public async Task<ActionResult<IEnumerable<ImagenGaleria>>> ObtenerImagenes()
+        // Updated route to avoid conflict
+        [HttpGet("barbero/{idbarbero}")]
+        public async Task<ActionResult<IEnumerable<ImagenGaleria>>> ObtenerImagenes(long idbarbero)
         {
             var imagenes = await _context.ImagenesGaleria
-                .Where(i => i.Activo)
+                .Where(i => i.Activo && i.BarberoId == idbarbero)
                 .OrderByDescending(i => i.FechaCreacion)
                 .ToListAsync();
 
@@ -50,7 +51,7 @@ namespace Barber.Maui.API.Controllers
         }
 
         [HttpPost("addimg")]
-        public async Task<ActionResult<ImagenGaleria>> SubirImagen(IFormFile imagen,[FromForm] string descripcion)
+        public async Task<ActionResult<ImagenGaleria>> SubirImagen(IFormFile imagen,[FromForm] string descripcion, [FromForm] long idbarbero)
         {
             if (imagen == null || imagen.Length == 0)
             {
@@ -101,7 +102,8 @@ namespace Barber.Maui.API.Controllers
                     TipoImagen = extension.Replace(".", ""),
                     TamanoBytes = imagen.Length,
                     FechaCreacion = DateTime.UtcNow,
-                    Activo = true
+                    Activo = true,
+                    BarberoId = idbarbero
                 };
 
                 _context.ImagenesGaleria.Add(nuevaImagen);

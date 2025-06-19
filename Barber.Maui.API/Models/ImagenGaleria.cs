@@ -8,6 +8,8 @@ namespace Barber.Maui.API.Models
         [Key]
         public int Id { get; set; }
 
+        public long BarberoId { get; set; }
+
         [Required]
         [MaxLength(255)]
         public string NombreArchivo { get; set; }

@@ -20,7 +20,7 @@ namespace Gasolutions.Maui.App.Services
             URL = _httpClient.BaseAddress.ToString();
         }
 
-        public async Task<bool> SubirImagen(string rutaImagen, string descripcion)
+        public async Task<bool> SubirImagen(string rutaImagen, string descripcion, long idbarbero)
         {
             try
             {
@@ -50,6 +50,9 @@ namespace Gasolutions.Maui.App.Services
                     content.Add(new StringContent(descripcion), "descripcion");
                 }
 
+                // Convertir idbarbero a string antes de agregarlo
+                content.Add(new StringContent(idbarbero.ToString()), "idbarbero");
+
                 Console.WriteLine($"🔹 Enviando imagen a {_httpClient.BaseAddress}api/galeria/addimg");
                 Console.WriteLine($"🔹 Archivo: {fileName}, Tamaño: {fileBytes.Length} bytes");
 
@@ -75,11 +78,11 @@ namespace Gasolutions.Maui.App.Services
             }
         }
 
-        public async Task<List<ImagenGaleriaModel>> ObtenerImagenes()
+        public async Task<List<ImagenGaleriaModel>> ObtenerImagenes(long idbarbero)
         {
             try
             {
-                var response = await _httpClient.GetAsync($"api/galeria/img");
+                var response = await _httpClient.GetAsync($"api/galeria/barbero/{idbarbero}");
 
                 if (!response.IsSuccessStatusCode)
                 {

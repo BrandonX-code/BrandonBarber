@@ -56,7 +56,8 @@ namespace Gasolutions.Maui.App.Pages
                 }
 
                 // Obtener imágenes desde la API
-                imagenes = await _galeriaService.ObtenerImagenes();
+                long barberoId = AuthService.CurrentUser.Cedula;
+                imagenes = await _galeriaService.ObtenerImagenes(barberoId);
 
                 Debug.WriteLine($"📷 Se obtuvieron {imagenes.Count} imágenes de la API");
 
@@ -374,7 +375,8 @@ namespace Gasolutions.Maui.App.Pages
                 // using var stream = await foto.OpenReadAsync();
 
                 // Subir la imagen a la API
-                bool subida = await _galeriaService.SubirImagen(rutaLocal, descripcion);
+                long barberoId = AuthService.CurrentUser.Cedula;
+                bool subida = await _galeriaService.SubirImagen(rutaLocal, descripcion, barberoId);
                 // si tu API acepta stream, pásalo en lugar de la ruta:
                 // bool subida = await _galeriaService.SubirImagen(stream, descripcion);
 
@@ -406,7 +408,8 @@ namespace Gasolutions.Maui.App.Pages
             try
             {
                 Debug.WriteLine("🔄 Recargando galería...");
-                imagenes = await _galeriaService.ObtenerImagenes();
+                long barberoId = AuthService.CurrentUser.Cedula;
+                imagenes = await _galeriaService.ObtenerImagenes(barberoId);
                 UpdateGaleriaUI();
             }
             catch (Exception ex)
