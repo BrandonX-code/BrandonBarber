@@ -79,7 +79,8 @@ namespace Gasolutions.Maui.App.Pages
                 Horario7a8.IsChecked = false;
 
                 // Cargar disponibilidad para la fecha seleccionada
-                var disponibilidad = await _disponibilidadService.GetDisponibilidad(_selectedDate);
+                var barberoId = AuthService.CurrentUser?.Cedula ?? 0;
+                var disponibilidad = await _disponibilidadService.GetDisponibilidad(_selectedDate, barberoId);
 
                 if (disponibilidad != null && disponibilidad.Horarios != null)
                 {

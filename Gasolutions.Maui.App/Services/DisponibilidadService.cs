@@ -19,11 +19,11 @@ namespace Gasolutions.Maui.App.Services
             URL = _httpClient.BaseAddress.ToString();
         }
 
-        public async Task<DisponibilidadModel> GetDisponibilidad(DateTime fecha)
+        public async Task<DisponibilidadModel> GetDisponibilidad(DateTime fecha, long barberoId)
         {
             try
             {
-                string url = $"api/disponibilidad/by-date/{fecha:yyyy-MM-dd}";
+                string url = $"api/disponibilidad/by-date?fecha={fecha:yyyy-MM-dd}&barberoId={barberoId}";
                 var response = await _httpClient.GetAsync(url);
 
                 if (!response.IsSuccessStatusCode)

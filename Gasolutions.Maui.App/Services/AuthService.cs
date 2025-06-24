@@ -245,31 +245,6 @@ namespace Gasolutions.Maui.App.Services
             }
         }
 
-        public async Task<UsuarioModels> GetUserByCedula(long cedula)
-        {
-            try
-            {
-                var response = await _BaseClient.GetAsync($"api/auth/usuario/{cedula}");
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    var usuario = JsonSerializer.Deserialize<UsuarioModels>(content,
-                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-                    // Filtrar solo clientes
-                    if (usuario != null && usuario.Rol?.ToLower() == "cliente")
-                    {
-                        return usuario;
-                    }
-                }
-                return null;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"Error al obtener cliente: {ex.Message}");
-                return null;
-            }
-        }
         //public async Task<UsuarioModels> GetUserByCedula(long cedula)
         //{
         //    try
@@ -278,16 +253,41 @@ namespace Gasolutions.Maui.App.Services
         //        if (response.IsSuccessStatusCode)
         //        {
         //            var content = await response.Content.ReadAsStringAsync();
-        //            return JsonSerializer.Deserialize<UsuarioModels>(content,
+        //            var usuario = JsonSerializer.Deserialize<UsuarioModels>(content,
         //                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+        //            // Filtrar solo clientes
+        //            if (usuario != null && usuario.Rol?.ToLower() == "cliente")
+        //            {
+        //                return usuario;
+        //            }
         //        }
         //        return null;
         //    }
         //    catch (Exception ex)
         //    {
-        //        Debug.WriteLine($"Error al obtener usuario: {ex.Message}");
+        //        Debug.WriteLine($"Error al obtener cliente: {ex.Message}");
         //        return null;
         //    }
         //}
+        public async Task<UsuarioModels> GetUserByCedula(long cedula)
+        {
+            try
+            {
+                var response = await _BaseClient.GetAsync($"api/auth/usuario/{cedula}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<UsuarioModels>(content,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error al obtener usuario: {ex.Message}");
+                return null;
+            }
+        }
     }
 }

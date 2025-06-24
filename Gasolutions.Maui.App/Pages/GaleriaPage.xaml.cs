@@ -138,7 +138,7 @@ namespace Gasolutions.Maui.App.Pages
 
                 // Obtener imágenes desde la API
                 long cedulaBarbero = barberoId == 0 ? AuthService.CurrentUser.Cedula : barberoId;
-                imagenes = await _galeriaService.ObtenerImagenes(barberoId);
+                imagenes = await _galeriaService.ObtenerImagenes(cedulaBarbero);
 
                 Debug.WriteLine($"📷 Se obtuvieron {imagenes.Count} imágenes de la API");
 
