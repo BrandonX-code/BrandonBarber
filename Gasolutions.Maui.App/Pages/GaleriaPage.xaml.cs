@@ -26,11 +26,11 @@ namespace Gasolutions.Maui.App.Pages
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            if (Picker.IsVisible)
-            {
-                //LoadDisponibilidad();
-                _ = LoadBarberos();
 
+            // Solo cargar barberos si es cliente
+            if (AuthService.CurrentUser?.Rol?.ToLower() != "barbero")
+            {
+                _ = LoadBarberos();
             }
         }
         // Lista para almacenar las imágenes
@@ -42,19 +42,31 @@ namespace Gasolutions.Maui.App.Pages
             InitializeComponent();
             _galeriaService = galeriaService;
             _authService = barberoid;
-            // Mostrar/ocultar el botón basado en el rol
-            if (AuthService.CurrentUser?.Rol?.ToLower() != "barbero")
+
+            // Determinar si el usuario es barbero o cliente
+            bool esBarbero = AuthService.CurrentUser?.Rol?.ToLower() == "barbero";
+
+            if (esBarbero)
             {
-                // Ocultar botón si no es barbero
+                // Si es barbero: ocultar picker y mostrar solo su galería
+                var pickerSection = this.FindByName<VerticalStackLayout>("PickerSection");
+                if (pickerSection != null)
+                    pickerSection.IsVisible = false;
+
+                // Cargar la galería del barbero actual
+                LoadGaleria();
+            }
+            else
+            {
+                // Si es cliente: mostrar picker y ocultar botón de agregar
+                var pickerSection = this.FindByName<VerticalStackLayout>("PickerSection");
+                if (pickerSection != null)
+                    pickerSection.IsVisible = true;
+
                 var addButton = this.FindByName<Button>("AgregarImagenButton");
                 if (addButton != null)
                     addButton.IsVisible = false;
             }
-            else
-            {
-                LoadGaleria();
-            }
-
         }
         private async void Picker_SelectedIndexChanged(object sender, EventArgs e)
         {

@@ -270,5 +270,24 @@ namespace Gasolutions.Maui.App.Services
                 return null;
             }
         }
+        //public async Task<UsuarioModels> GetUserByCedula(long cedula)
+        //{
+        //    try
+        //    {
+        //        var response = await _BaseClient.GetAsync($"api/auth/usuario/{cedula}");
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            var content = await response.Content.ReadAsStringAsync();
+        //            return JsonSerializer.Deserialize<UsuarioModels>(content,
+        //                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        //        }
+        //        return null;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Debug.WriteLine($"Error al obtener usuario: {ex.Message}");
+        //        return null;
+        //    }
+        //}
     }
 }

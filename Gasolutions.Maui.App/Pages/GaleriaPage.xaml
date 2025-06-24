@@ -13,9 +13,18 @@
                 <Setter Property="HeightRequest" Value="45" />
                 <Setter Property="FontSize" Value="16" />
             </Style>
-            <Style x:Key="LabelStyle" TargetType="Label">
-                <Setter Property="TextColor" Value="White" />
+            <Style x:Key="EntryStyle" TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="#2b2b2b" />
+                <Setter Property="TextColor" Value="#f0e68c" />
                 <Setter Property="FontSize" Value="16" />
+            </Style>
+            <Style x:Key="ButtonStyle" TargetType="Button">
+                <Setter Property="BackgroundColor" Value="Transparent" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="BorderColor" Value="#c0aa4f" />
+                <Setter Property="BorderWidth" Value="1" />
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="Padding" Value="15,8" />
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
@@ -29,27 +38,13 @@
 
             <VerticalStackLayout Grid.Row="0" Spacing="10" Margin="0,10,0,20">
                 <Label Text="Galería de Cortes" FontSize="24" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" />
-                <Label Text="Selecciona la Imagen Para Verla Detalladamente" Style="{StaticResource LabelStyle}" HorizontalOptions="Center" FontSize="14" />
+                <Label Text="Selecciona la Imagen Para Verla Detalladamente" TextColor="#c0aa4f" HorizontalOptions="Center" FontSize="14" />
             </VerticalStackLayout>
-            <VerticalStackLayout Grid.Row="0" 
-                       Spacing="10" 
-                       Margin="0,100,0,20">
-                <Label Text="Seleccione el Barbero Para Ver Su Disponibilidad" 
-               TextColor="#c0aa4f" 
-               FontSize="16" 
-               HorizontalOptions="Start" />
+            <VerticalStackLayout Grid.Row="0"  Spacing="5"  Margin="0,100,0,10">
+                <Label Text="Seleccione el Barbero Para Ver Su Galeria" TextColor="#c0aa4f"  FontSize="16"  HorizontalOptions="Center" />
 
-                <Frame BackgroundColor="#2b2b2b" 
-               Padding="5" 
-               CornerRadius="10" 
-               HasShadow="True"
-               BorderColor="#c0aa4f"
-               HeightRequest="50">
-                    <Picker x:Name="Picker"
-                    SelectedIndexChanged="Picker_SelectedIndexChanged"  
-                    ItemDisplayBinding="{Binding Nombre}"
-                    Title="Seleccionar Barbero"
-                    VerticalOptions="Center" />
+                <Frame BackgroundColor="#2b2b2b" Padding="5" CornerRadius="10" HasShadow="True" BorderColor="Black" HeightRequest="100">
+                    <Picker x:Name="Picker" SelectedIndexChanged="Picker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}" Title="Seleccionar Barbero" TitleColor="#c0aa4f" Style="{StaticResource EntryStyle}"  VerticalOptions="Center" />
                 </Frame>
             </VerticalStackLayout>
             <ScrollView Grid.Row="1" Orientation="Vertical">
