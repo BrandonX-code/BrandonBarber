@@ -57,13 +57,15 @@
         private async void galery(object sender, EventArgs e)
         {
             var galeriaService = Handler.MauiContext.Services.GetService<GaleriaService>();
-            await Navigation.PushAsync(new GaleriaPage(galeriaService));
+            var barberoid = Handler.MauiContext.Services.GetService<AuthService>();
+            await Navigation.PushAsync(new GaleriaPage(galeriaService, barberoid));
         }
 
         private async void AddGaleri(object sender, EventArgs e)
         {
             var galeriaService = Handler.MauiContext.Services.GetService<GaleriaService>();
-            await Navigation.PushAsync(new GaleriaPage(galeriaService));
+            var barberoid = Handler.MauiContext.Services.GetService<AuthService>();
+            await Navigation.PushAsync(new GaleriaPage(galeriaService, barberoid));
         }
 
         // Métodos para el panel de administrador

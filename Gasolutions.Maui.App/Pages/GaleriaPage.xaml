@@ -19,27 +19,49 @@
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
+    <ScrollView>
+        <Grid Padding="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-    <Grid Padding="20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
+            <VerticalStackLayout Grid.Row="0" Spacing="10" Margin="0,10,0,20">
+                <Label Text="Galería de Cortes" FontSize="24" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" />
+                <Label Text="Selecciona la Imagen Para Verla Detalladamente" Style="{StaticResource LabelStyle}" HorizontalOptions="Center" FontSize="14" />
+            </VerticalStackLayout>
+            <VerticalStackLayout Grid.Row="0" 
+                       Spacing="10" 
+                       Margin="0,100,0,20">
+                <Label Text="Seleccione el Barbero Para Ver Su Disponibilidad" 
+               TextColor="#c0aa4f" 
+               FontSize="16" 
+               HorizontalOptions="Start" />
 
-        <VerticalStackLayout Grid.Row="0" Spacing="10" Margin="0,10,0,20">
-            <Label Text="Galería de Cortes" FontSize="24" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" />
-            <Label Text="Selecciona la Imagen Para Verla Detalladamente" Style="{StaticResource LabelStyle}" HorizontalOptions="Center" FontSize="14" />
-        </VerticalStackLayout>
+                <Frame BackgroundColor="#2b2b2b" 
+               Padding="5" 
+               CornerRadius="10" 
+               HasShadow="True"
+               BorderColor="#c0aa4f"
+               HeightRequest="50">
+                    <Picker x:Name="Picker"
+                    SelectedIndexChanged="Picker_SelectedIndexChanged"  
+                    ItemDisplayBinding="{Binding Nombre}"
+                    Title="Seleccionar Barbero"
+                    VerticalOptions="Center" />
+                </Frame>
+            </VerticalStackLayout>
+            <ScrollView Grid.Row="1" Orientation="Vertical">
+                <FlexLayout x:Name="GaleriaContainer" Direction="Row" Wrap="Wrap" JustifyContent="SpaceAround" AlignItems="Start"  AlignContent="Start">
+                </FlexLayout>
+            </ScrollView>
 
-        <ScrollView Grid.Row="1" Orientation="Vertical">
-            <FlexLayout x:Name="GaleriaContainer" Direction="Row" Wrap="Wrap" JustifyContent="SpaceAround" AlignItems="Start"  AlignContent="Start">
-            </FlexLayout>
-        </ScrollView>
-
-        <VerticalStackLayout Grid.Row="2" Spacing="15" Margin="0,15,0,5">
-            <Button x:Name="AgregarImagenButton" Text="Agregar Imagen" Style="{StaticResource GaleriaButtonStyle}"  Clicked="OnAgregarImagenClicked"  HorizontalOptions="Center"  WidthRequest="200" />
-            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" />
-        </VerticalStackLayout>
-    </Grid>
+            <VerticalStackLayout Grid.Row="2" Spacing="15" Margin="0,15,0,5">
+                <Button x:Name="AgregarImagenButton" Text="Agregar Imagen" Style="{StaticResource GaleriaButtonStyle}"  Clicked="OnAgregarImagenClicked"  HorizontalOptions="Center"  WidthRequest="200" />
+                <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" />
+            </VerticalStackLayout>
+        </Grid>
+    </ScrollView>
+    
 </ContentPage>

@@ -20,7 +20,7 @@ namespace Gasolutions.Maui.App.Pages
             BindingContext = this;
             ChartTypePicker.SelectedIndex = 0;
             RankingChartTypePicker.SelectedIndex = 0;
-            CargarMetricas();
+            _ = CargarMetricas();
         }
 
         private async Task RefreshMetricas()
@@ -199,7 +199,6 @@ namespace Gasolutions.Maui.App.Pages
                     .GroupBy(c => c.BarberoId)
                     .Select(g => new { BarberoId = g.Key, Total = g.Count() })
                     .OrderByDescending(x => x.Total)
-                    .Take(3)
                     .ToList();
 
                 var entries = new List<ChartEntry>();
@@ -312,12 +311,12 @@ namespace Gasolutions.Maui.App.Pages
 
     public class ClienteFrecuenteExtendido : ClienteFrecuente
     {
-        public string Position { get; set; }
+        public string? Position { get; set; }
     }
 
     public class ClienteFrecuente
     {
-        public string Nombre { get; set; }
+        public string? Nombre { get; set; }
         public int Visitas { get; set; }
     }
 }

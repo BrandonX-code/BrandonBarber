@@ -1,26 +1,47 @@
-﻿using Microsoft.Maui.Controls;
+﻿using Gasolutions.Maui.App.Models;
+using Gasolutions.Maui.App.Services;
+using Microsoft.Maui.Controls;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
-using Gasolutions.Maui.App.Services;
-using Gasolutions.Maui.App.Models;
-using System.Diagnostics;
 
 
 namespace Gasolutions.Maui.App.Pages
 {
     public partial class GaleriaPage : ContentPage
     {
+        private readonly AuthService _authService;
+        private List<UsuarioModels> _todosLosBarberos;
+        public List<UsuarioModels> TodosLosBarberos
+        {
+            get => _todosLosBarberos;
+            set
+            {
+                _todosLosBarberos = value;
+                OnPropertyChanged(nameof(TodosLosBarberos)); // Asegúrate de implementar INotifyPropertyChanged
+            }
+        }
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            if (Picker.IsVisible)
+            {
+                //LoadDisponibilidad();
+                _ = LoadBarberos();
+
+            }
+        }
         // Lista para almacenar las imágenes
         private List<ImagenGaleriaModel> imagenes = new List<ImagenGaleriaModel>();
         private readonly GaleriaService _galeriaService;
 
-        public GaleriaPage(GaleriaService galeriaService)
+        public GaleriaPage(GaleriaService galeriaService, AuthService barberoid)
         {
             InitializeComponent();
             _galeriaService = galeriaService;
-
+            _authService = barberoid;
             // Mostrar/ocultar el botón basado en el rol
             if (AuthService.CurrentUser?.Rol?.ToLower() != "barbero")
             {
@@ -29,12 +50,60 @@ namespace Gasolutions.Maui.App.Pages
                 if (addButton != null)
                     addButton.IsVisible = false;
             }
+            else
+            {
+                LoadGaleria();
+            }
 
-            LoadGaleria();
         }
+        private async void Picker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var picker = (Picker)sender;
+            int selectedIndex = picker.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                UsuarioModels barbero = (UsuarioModels)picker.SelectedItem;
+                LoadGaleria(barbero.Cedula);
+            }
+        }
+        private async Task LoadBarberos()
+        {
+            try
+            {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsRunning = true;
 
+                var response = await _authService._BaseClient.GetAsync("api/auth");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonContent = await response.Content.ReadAsStringAsync();
+                    var usuarios = System.Text.Json.JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent,
+                        new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero").ToList() ?? new List<UsuarioModels>();
+                    TodosLosBarberos = barberos;
+                    Picker.ItemsSource = TodosLosBarberos;
+                }
+
+
+                else
+                {
+                    await DisplayAlert("Error", "No se pudieron cargar los barberos", "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Error al cargar los barberos: {ex.Message}", "OK");
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsRunning = false;
+            }
+        }
         // Método para cargar imágenes desde la API
-        private async void LoadGaleria()
+        private async void LoadGaleria(long barberoId = 0)
         {
             try
             {
@@ -56,7 +125,7 @@ namespace Gasolutions.Maui.App.Pages
                 }
 
                 // Obtener imágenes desde la API
-                long barberoId = AuthService.CurrentUser.Cedula;
+                long cedulaBarbero = barberoId == 0 ? AuthService.CurrentUser.Cedula : barberoId;
                 imagenes = await _galeriaService.ObtenerImagenes(barberoId);
 
                 Debug.WriteLine($"📷 Se obtuvieron {imagenes.Count} imágenes de la API");
