@@ -108,7 +108,7 @@
 
                 if (perfilGuardado)
                 {
-                    await AppUtils.MostrarSnackbar( "Los cambios se han guardado correctamente", Colors.Red, Colors.White);
+                    await AppUtils.MostrarSnackbar( "Los cambios se han guardado correctamente", Colors.Green, Colors.White);
                     await Navigation.PopAsync();
                 }
 

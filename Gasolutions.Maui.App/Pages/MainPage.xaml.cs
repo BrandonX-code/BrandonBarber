@@ -150,12 +150,12 @@ namespace Gasolutions.Maui.App
 
                 Console.WriteLine($"Fecha y hora seleccionada: {fechaSeleccionada:yyyy-MM-dd HH:mm:ss}");
 
-                //var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date);
-                //Console.WriteLine($"Citas encontradas para el día {FechaPicker.Date:yyyy-MM-dd}: {citasDelDia?.Count ?? 0}");
+                var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date);
+                Console.WriteLine($"Citas encontradas para el día {FechaPicker.Date:yyyy-MM-dd}: {citasDelDia?.Count ?? 0}");
 
-                //var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? new List<CitaModel>();
+                var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? new List<CitaModel>();
 
-                //Console.WriteLine($"Citas filtradas solo para fecha actual: {citasActuales.Count}");
+                Console.WriteLine($"Citas filtradas solo para fecha actual: {citasActuales.Count}");
 
                 //bool conflictoHora = false;
                 //CitaModel citaConflicto = null;
@@ -178,13 +178,13 @@ namespace Gasolutions.Maui.App
                 //    await AppUtils.MostrarSnackbar("Ya existe una cita en esta fecha y hora. Elija otro horario.", Colors.DarkRed, Colors.White);
                 //    return;
                 //}
-                //bool cedulaYaRegistrada = citasActuales.Any(c => c.Cedula == cedula);
-                //if (cedulaYaRegistrada)
-                //{
-                //    MostrarLoader(false);
-                //    await AppUtils.MostrarSnackbar("Ya existe una cita registrada con esta cédula para el día seleccionado.", Colors.OrangeRed, Colors.White);
-                //    return;
-                //}
+                bool cedulaYaRegistrada = citasActuales.Any(c => c.Cedula == cedula);
+                if (cedulaYaRegistrada)
+                {
+                    MostrarLoader(false);
+                    await AppUtils.MostrarSnackbar("Ya existe una cita registrada con esta cédula para el día seleccionado.", Colors.OrangeRed, Colors.White);
+                    return;
+                }
 
                 CitaModel nuevaReserva = new CitaModel
                 {

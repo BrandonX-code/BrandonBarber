@@ -160,7 +160,7 @@ namespace Gasolutions.Maui.App.Pages
             {
                 var emptyLabel = new Label
                 {
-                    Text = "No hay imágenes en la galería. Agrega tu primer corte.",
+                    Text = "No hay imágenes en la galería.",
                     TextColor = Color.FromArgb("#909090"),
                     FontSize = 16,
                     HorizontalOptions = LayoutOptions.Center,
