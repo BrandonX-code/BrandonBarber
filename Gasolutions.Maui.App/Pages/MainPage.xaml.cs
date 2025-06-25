@@ -54,17 +54,18 @@ namespace Gasolutions.Maui.App
             if (long.TryParse(CedulaEntry.Text, out long cedula) && CedulaEntry.Text.Length >= 6)
             {
                 var usuario = await _authService.GetUserByCedula(cedula);
-                if (usuario != null)
+
+                // Validar si el usuario existe y su rol es cliente
+                if (usuario != null && usuario.Rol?.ToLower() == "cliente")
                 {
                     NombreEntry.Text = usuario.Nombre;
                     TelefonoEntry.Text = usuario.Telefono;
-                    // Deshabilitar campos
                     NombreEntry.IsEnabled = false;
                     TelefonoEntry.IsEnabled = false;
                 }
                 else
                 {
-                    // Si no existe, limpiar y habilitar campos
+                    // Si el usuario no es cliente o no existe, limpiar y habilitar
                     NombreEntry.Text = string.Empty;
                     TelefonoEntry.Text = string.Empty;
                     NombreEntry.IsEnabled = true;
@@ -80,6 +81,7 @@ namespace Gasolutions.Maui.App
                 TelefonoEntry.IsEnabled = true;
             }
         }
+
 
         private async void OnBuscarClicked(object sender, EventArgs e)
         {

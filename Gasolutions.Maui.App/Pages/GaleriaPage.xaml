@@ -40,10 +40,9 @@
                 <Label Text="Galería de Cortes" FontSize="24" FontAttributes="Bold" TextColor="#c0aa4f" HorizontalOptions="Center" />
                 <Label Text="Selecciona la Imagen Para Verla Detalladamente" TextColor="#c0aa4f" HorizontalOptions="Center" FontSize="14" />
             </VerticalStackLayout>
-            <VerticalStackLayout IsVisible="False" Grid.Row="0"  Spacing="5"  Margin="0,100,0,10">
+            <VerticalStackLayout x:Name="PickerSection" Grid.Row="0"  Spacing="5"  Margin="0,100,0,10" IsVisible="False">
                 <Label Text="Seleccione el Barbero Para Ver Su Galeria" TextColor="#c0aa4f"  FontSize="16"  HorizontalOptions="Center" />
-
-                <Frame BackgroundColor="#2b2b2b" Padding="5" CornerRadius="10" HasShadow="True" BorderColor="Black" HeightRequest="100">
+                <Frame BackgroundColor="#2b2b2b" Padding="15" CornerRadius="10" HasShadow="True" BorderColor="Black" HeightRequest="100">
                     <Picker x:Name="Picker" SelectedIndexChanged="Picker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}" Title="Seleccionar Barbero" TitleColor="#c0aa4f" Style="{StaticResource EntryStyle}"  VerticalOptions="Center" />
                 </Frame>
             </VerticalStackLayout>
