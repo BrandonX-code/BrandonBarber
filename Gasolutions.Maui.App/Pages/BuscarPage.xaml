@@ -92,9 +92,9 @@
                                                         <HorizontalStackLayout>
                                                             <HorizontalStackLayout Spacing="5">
                                                                 <Image Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />
-                                                                <Label Text="Nombre del Barbero: " FontSize="Body" TextColor="White" />
+                                                                <Label Text="Barbero: " FontSize="Small" TextColor="White" />
                                                             </HorizontalStackLayout>
-                                                            <Label Text="{Binding BarberoNombre}" FontSize="Body" TextColor="Black" FontAttributes="Bold"/>
+                                                            <Label Text="{Binding BarberoNombre}" FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
                                                         </HorizontalStackLayout>
                                                         <HorizontalStackLayout Spacing="5">
                                                             <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
@@ -119,7 +119,7 @@
                                     <DataTemplate>
                                         <Frame Padding="8" Margin="2" BorderColor="#444" BackgroundColor="#5a5a5a" CornerRadius="8" HasShadow="True">
                                             <Grid ColumnDefinitions="*, Auto">
-                                                <VerticalStackLayout Grid.Column="0" Spacing="1">
+                                                <VerticalStackLayout Grid.Column="0" Spacing="5">
                                                     <HorizontalStackLayout Spacing="5">
                                                         <HorizontalStackLayout Spacing="5">
                                                             <Image Source="id.png" WidthRequest="20" HeightRequest="20" />
@@ -129,9 +129,9 @@
                                                     <HorizontalStackLayout>
                                                         <HorizontalStackLayout Spacing="5">
                                                             <Image Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />
-                                                            <Label Text="Nombre del Barbero: " FontSize="Body" TextColor="White" />
+                                                            <Label Text="Barbero: " FontSize="Small" TextColor="White" />
                                                         </HorizontalStackLayout>
-                                                        <Label Text="{Binding BarberoNombre}" FontSize="Body" TextColor="Black" FontAttributes="Bold"/>
+                                                        <Label Text="{Binding BarberoNombre}" FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
                                                     </HorizontalStackLayout>
 
                                                     <HorizontalStackLayout Spacing="5">
