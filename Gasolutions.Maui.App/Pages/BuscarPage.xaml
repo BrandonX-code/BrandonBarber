@@ -66,16 +66,29 @@
                     </Frame>
 
                     <Frame BackgroundColor="#2b2b2b" BorderColor="Black" CornerRadius="10" Padding="15" HasShadow="True">
-                        <VerticalStackLayout Spacing="15">
+                        <VerticalStackLayout Spacing="25">
                             <Label Text="Próximas Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasProximasCitas}"/>
-                            <CollectionView x:Name="ProximasCitasCollection"  ItemsSource="{Binding ProximasCitas}" EmptyView="No hay citas próximas Ingrese su Cedula" HeightRequest="220">
+                            <CollectionView x:Name="ProximasCitasCollection"  ItemsSource="{Binding ProximasCitas}" EmptyView="No hay citas próximas Ingrese su Cedula" HeightRequest="330">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Frame Padding="8" Margin="2" BorderColor="#444" BackgroundColor="#7d7c76" CornerRadius="8" HasShadow="True">
+                                        <Frame Padding="8" Margin="4" BorderColor="#444" BackgroundColor="#7d7c76" CornerRadius="8" HasShadow="True">
                                             <Grid ColumnDefinitions="*, Auto">
-                                                <VerticalStackLayout Grid.Column="0" Spacing="1">
-                                                    <Label Text="{Binding Nombre}" FontSize="Body" TextColor="Black" FontAttributes="Bold"/>
+                                                <VerticalStackLayout Grid.Column="0" Spacing="10">
                                                     <HorizontalStackLayout Spacing="5">
+                                                        <HorizontalStackLayout Spacing="5">
+                                                            <Image Source="id.png" WidthRequest="20" HeightRequest="20" />
+                                                        </HorizontalStackLayout>
+                                                        <Label Text="{Binding Nombre}" FontSize="Body" TextColor="Black" FontAttributes="Bold"/>
+                                                    </HorizontalStackLayout>
+                                                    <HorizontalStackLayout>
+                                                        <HorizontalStackLayout Spacing="5">
+                                                            <Image Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />
+                                                            <Label Text="Nombre del Barbero: " FontSize="Body" TextColor="White" />
+                                                        </HorizontalStackLayout>
+                                                        <Label Text="{Binding BarberoNombre}" FontSize="Body" TextColor="Black" FontAttributes="Bold"/>
+                                                    </HorizontalStackLayout>
+                                                    <HorizontalStackLayout Spacing="5">
+                                                        <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
                                                         <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" FontSize="15" TextColor="White"/>
                                                         <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="15" TextColor="White"/>
                                                     </HorizontalStackLayout>
@@ -92,7 +105,6 @@
                             </CollectionView>
                         </VerticalStackLayout>
                     </Frame>
-
                     <Frame BackgroundColor="#2b2b2b" BorderColor="Black" CornerRadius="10" Padding="15" HasShadow="True">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Historial de Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasHistorialCitas}" Margin="0,5,0,0"/>
@@ -102,8 +114,22 @@
                                         <Frame Padding="8" Margin="2" BorderColor="#444" BackgroundColor="#5a5a5a" CornerRadius="8" HasShadow="True">
                                             <Grid ColumnDefinitions="*, Auto">
                                                 <VerticalStackLayout Grid.Column="0" Spacing="1">
-                                                    <Label Text="{Binding Nombre}" FontSize="Body" TextColor="Black" FontAttributes="Bold"/>
                                                     <HorizontalStackLayout Spacing="5">
+                                                        <HorizontalStackLayout Spacing="5">
+                                                            <Image Source="id.png" WidthRequest="20" HeightRequest="20" />
+                                                        </HorizontalStackLayout>
+                                                        <Label Text="{Binding Nombre}" FontSize="Body" TextColor="Black" FontAttributes="Bold"/>
+                                                    </HorizontalStackLayout>
+                                                    <HorizontalStackLayout>
+                                                        <HorizontalStackLayout Spacing="5">
+                                                            <Image Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />
+                                                            <Label Text="Nombre del Barbero: " FontSize="Body" TextColor="White" />
+                                                        </HorizontalStackLayout>
+                                                        <Label Text="{Binding BarberoNombre}" FontSize="Body" TextColor="Black" FontAttributes="Bold"/>
+                                                    </HorizontalStackLayout>
+
+                                                    <HorizontalStackLayout Spacing="5">
+                                                        <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
                                                         <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" FontSize="15" TextColor="White"/>
                                                         <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="15" TextColor="White"/>
                                                     </HorizontalStackLayout>

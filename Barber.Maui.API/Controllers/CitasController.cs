@@ -28,9 +28,10 @@ public class CitasController : ControllerBase
             .Where(c => c.Cedula == cedula)
             .ToListAsync();
 
-        if (citas == null || citas.Count == 0)
+        foreach (var cita in citas)
         {
-            return NotFound();
+            Perfil barbero = _context.Perfiles.Where(b => b.Cedula == cita.BarberoId).FirstOrDefault();
+            cita.BarberoNombre = barbero.Nombre;
         }
 
         return Ok(citas);
