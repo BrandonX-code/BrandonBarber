@@ -128,9 +128,11 @@
             LoaderOverlay.IsVisible = mostrar;
         }
 
-        private async void EliminarCitaClicked(object sender, EventArgs e)
+        // Agregar este método a tu clase BuscarPage
+
+        private async void EliminarCitaSwipeInvoked(object sender, EventArgs e)
         {
-            if (sender is Button btn && btn.CommandParameter is int citaId)
+            if (sender is SwipeItem swipeItem && swipeItem.CommandParameter is int citaId)
             {
                 CitaModel cita = ProximasCitas.FirstOrDefault(c => c.Id == citaId);
                 if (cita == null)

@@ -30,7 +30,7 @@ public class CitasController : ControllerBase
 
         foreach (var cita in citas)
         {
-            Perfil barbero = _context.Perfiles.Where(b => b.Cedula == cita.BarberoId).FirstOrDefault();
+            Auth barbero = _context.UsuarioPerfiles.Where(b => b.Cedula == cita.BarberoId).FirstOrDefault();
             cita.BarberoNombre = barbero.Nombre;
         }
 
@@ -47,7 +47,7 @@ public class CitasController : ControllerBase
 
         foreach (var cita in citas)
         {
-            Perfil barbero = _context.Perfiles.Where(b => b.Cedula == cita.BarberoId).FirstOrDefault();
+            Auth barbero = _context.UsuarioPerfiles.Where(b => b.Cedula == cita.BarberoId).FirstOrDefault();
             cita.BarberoNombre = barbero.Nombre;
         }
 

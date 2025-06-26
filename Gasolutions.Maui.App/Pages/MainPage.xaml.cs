@@ -192,7 +192,8 @@ namespace Gasolutions.Maui.App
                     Nombre = NombreEntry.Text,
                     Telefono = TelefonoEntry.Text,
                     Fecha = fechaSeleccionada,
-                    BarberoId = barberoSeleccionado.Cedula
+                    BarberoId = barberoSeleccionado.Cedula,
+                    BarberoNombre = string.Empty
                 };
 
                 Console.WriteLine($"Intentando guardar cita: Cedula={nuevaReserva.Cedula}, Fecha={nuevaReserva.Fecha:yyyy-MM-dd HH:mm:ss}");
