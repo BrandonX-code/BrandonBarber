@@ -44,6 +44,12 @@ public class CitasController : ControllerBase
             .Where(c => c.Fecha.Date == fecha.Date)
             .ToListAsync();
 
+        foreach (var cita in citas)
+        {
+            Perfil barbero = _context.Perfiles.Where(b => b.Cedula == cita.BarberoId).FirstOrDefault();
+            cita.BarberoNombre = barbero.Nombre;
+        }
+
         return Ok(citas);
     }
 

@@ -12,6 +12,8 @@
         public bool EsHoy => Fecha.Date == DateTime.Today;
         public long BarberoId { get; set; }
 
+        public string BarberoNombre { get; set; }
+
         public string Estado
         {
             get

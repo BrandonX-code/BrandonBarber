@@ -54,15 +54,16 @@ namespace Barber.Maui.API.Controllers
             return Ok(disponibilidad);
         }
 
-        [HttpGet("barbero/{barberoId}")]
-        public async Task<ActionResult<List<Disponibilidad>>> GetDisponibilidadPorBarbero(long barberoId)
+        [HttpGet("barbero/{barberoId}/fecha/{fecha}")]
+        public async Task<ActionResult<List<Disponibilidad>>> GetDisponibilidadPorBarberoYFecha(long barberoId, DateTime fecha)
         {
             var disponibilidad = await _context.Disponibilidad
-                .Where(d => d.BarberoId == barberoId)
+                .Where(d => d.BarberoId == barberoId && d.Fecha.Date == fecha.Date)
                 .ToListAsync();
 
             return Ok(disponibilidad);
         }
+
 
         [HttpPost]
         public async Task<ActionResult<Disponibilidad>> CrearDisponibilidad([FromBody] Disponibilidad nuevaDisponibilidad)

@@ -82,17 +82,21 @@ namespace Gasolutions.Maui.App.Services
                 return null;
             }
         }
-        
+
         public async Task<List<DisponibilidadModel>> GetDisponibilidadActualPorBarbero(long barberoId)
         {
-            var response = await _httpClient.GetAsync($"api/disponibilidad/barbero/{barberoId}");
+            var fechaActual = DateTime.Now.Date.ToString("yyyy-MM-dd"); // o DateTime.Today
+            var response = await _httpClient.GetAsync($"api/disponibilidad/barbero/{barberoId}/fecha/{fechaActual}");
+
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
                 return JsonSerializer.Deserialize<List<DisponibilidadModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new List<DisponibilidadModel>();
             }
+
             return new List<DisponibilidadModel>();
         }
+
 
         public async Task<bool> GuardarDisponibilidad(DisponibilidadModel disponibilidad)
         {

@@ -1,4 +1,6 @@
-﻿namespace Barber.Maui.API.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Barber.Maui.API.Models
 {
     public class Cita
     {
@@ -8,5 +10,7 @@
         public string Telefono { get; set; }
         public DateTime Fecha { get; set; } = DateTime.Now;
         public long BarberoId { get; set; }
+        [NotMapped]
+        public string BarberoNombre { get; set; }
     }
 }
