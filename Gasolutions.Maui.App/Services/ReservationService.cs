@@ -93,6 +93,34 @@ namespace Gasolutions.Maui.App.Services
                 return new List<CitaModel>();
             }
         }
+        public async Task<List<CitaModel>> GetReservationsByBarberoAndFecha(long barberoId, DateTime fecha)
+        {
+            string url = $"{_httpClient.BaseAddress}api/citas/barbero/{barberoId}/fecha/{fecha:yyyy-MM-dd}";
+
+            try
+            {
+                var response = await _httpClient.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Debug.WriteLine($"❌ Error al obtener citas para barbero {barberoId} en {fecha:yyyy-MM-dd}: {response.StatusCode}");
+                    return new List<CitaModel>();
+                }
+
+                var json = await response.Content.ReadAsStringAsync();
+                var citas = JsonSerializer.Deserialize<List<CitaModel>>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                return citas ?? new List<CitaModel>();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"❌ Excepción al obtener citas: {ex.Message}");
+                return new List<CitaModel>();
+            }
+        }
 
         public async Task<List<CitaModel>> GetReservationsById(long cedula)
         {

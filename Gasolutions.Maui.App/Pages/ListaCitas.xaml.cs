@@ -18,12 +18,32 @@
             try
             {
                 MostrarLoader(true);
-
-                var listaReservas = await _reservationService.GetReservations(datePicker.Date);
-
                 CitasFiltradas.Clear();
 
-                if (listaReservas == null || !listaReservas.Any())
+                var user = AuthService.CurrentUser;
+                if (user == null)
+                {
+                    await AppUtils.MostrarSnackbar("Usuario no autenticado.", Colors.DarkRed, Colors.White);
+                    return;
+                }
+
+                List<CitaModel> listaReservas = new();
+
+                if (user.Rol?.ToLower() == "admin" || user.Rol?.ToLower() == "administrador")
+                {
+                    listaReservas = await _reservationService.GetReservations(datePicker.Date);
+                }
+                else if (user.Rol?.ToLower() == "barbero")
+                {
+                    listaReservas = await _reservationService.GetReservationsByBarberoAndFecha(user.Cedula, datePicker.Date);
+                }
+                else
+                {
+                    await AppUtils.MostrarSnackbar("Rol no autorizado para ver reservas.", Colors.DarkRed, Colors.White);
+                    return;
+                }
+
+                if (!listaReservas.Any())
                 {
                     await AppUtils.MostrarSnackbar("No hay reservas para esta fecha.", Colors.DarkRed, Colors.White);
                 }
@@ -35,16 +55,16 @@
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await AppUtils.MostrarSnackbar("Hubo un problema al recuperar las reservas.", Colors.Red, Colors.White);
+                await AppUtils.MostrarSnackbar($"Hubo un problema al recuperar las reservas: {ex.Message}", Colors.Red, Colors.White);
             }
             finally
             {
                 MostrarLoader(false);
-
             }
         }
+
 
         private async void EliminarCitasSeleccionadas(object sender, EventArgs e)
         {

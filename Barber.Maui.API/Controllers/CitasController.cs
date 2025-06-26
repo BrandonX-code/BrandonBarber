@@ -47,6 +47,17 @@ public class CitasController : ControllerBase
         return Ok(citas);
     }
 
+    [HttpGet("barbero/{barberoId}/fecha/{fecha}")]
+    public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorBarberoYFecha(long barberoId, DateTime fecha)
+    {
+        var citas = await _context.Citas
+            .Where(c => c.BarberoId == barberoId && c.Fecha.Date == fecha.Date)
+            .OrderBy(c => c.Fecha)
+            .ToListAsync();
+
+        return Ok(citas);
+    }
+
     [HttpPost]
     public async Task<ActionResult<Cita>> CrearCita([FromBody] Cita nuevaCita)
     {
