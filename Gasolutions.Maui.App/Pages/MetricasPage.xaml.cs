@@ -36,13 +36,13 @@ namespace Gasolutions.Maui.App.Pages
         {
             try
             {
-                var fechaActual = DateTime.Now; // Agregar fecha actual como parámetro
-                var todasLasCitas = await _reservationService.GetReservations(fechaActual);
+                var fechaActual = DateTime.Now; // Para estadísticas del día actual
+                var citasDelDia = await _reservationService.GetReservations(fechaActual);
 
-                // Actualizar estadísticas generales
-                TotalCitasLabel.Text = todasLasCitas.Count.ToString();
-                var tasaAsistencia = todasLasCitas.Count > 0
-                    ? (double)todasLasCitas.Count(c => c.Estado == "Completada") / todasLasCitas.Count * 100
+                // Actualizar estadísticas generales (solo del día actual)
+                TotalCitasLabel.Text = citasDelDia.Count.ToString();
+                var tasaAsistencia = citasDelDia.Count > 0
+                    ? (double)citasDelDia.Count(c => c.Estado == "Completada") / citasDelDia.Count * 100
                     : 0;
                 TasaAsistenciaLabel.Text = $"{tasaAsistencia:F1}%";
 
@@ -67,53 +67,6 @@ namespace Gasolutions.Maui.App.Pages
         {
             CargarRankingBarberos().ConfigureAwait(false);
         }
-
-        //private async Task CargarGraficoCancelaciones()
-        //{
-        //    try
-        //    {
-        //        var entries = new List<ChartEntry>();
-        //        var fechaActual = DateTime.Now;
-        //        var colores = new[]
-        //        {
-        //            SKColor.Parse("#FFD700"),
-        //            SKColor.Parse("#c0aa4f"),
-        //            SKColor.Parse("#DAA520"),
-        //            SKColor.Parse("#B8860B"),
-        //            SKColor.Parse("#CD853F"),
-        //            SKColor.Parse("#D2691E")
-        //        };
-
-        //        for (int i = 5; i >= 0; i--)
-        //        {
-        //            var fecha = fechaActual.AddMonths(-i);
-        //            var todasLasCitas = await _reservationService.GetReservations(fecha);
-        //            var citasCanceladas = todasLasCitas.Count(c => c.Estado == "Cancelada");
-
-        //            entries.Add(new ChartEntry(citasCanceladas)
-        //            {
-        //                Label = fecha.ToString("MMM"),
-        //                ValueLabel = citasCanceladas.ToString(),
-        //                Color = colores[5 - i],
-        //                TextColor = SKColor.Parse("#232323"),
-        //                ValueLabelColor = SKColor.Parse("#232323")
-        //            });
-        //        }
-
-        //        CancelacionesChart.Chart = new BarChart
-        //        {
-        //            Entries = entries,
-        //            LabelTextSize = 40,
-        //            LabelOrientation = Orientation.Horizontal,
-        //            ValueLabelOrientation = Orientation.Horizontal,
-        //            BackgroundColor = SKColor.Parse("#fffbe6")
-        //        };
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await AppUtils.MostrarSnackbar($"Error al cargar gráfico de cancelaciones: {ex.Message}", Colors.Red, Colors.White);
-        //    }
-        //}
 
         private async Task CargarGraficoAsistencia()
         {
@@ -172,12 +125,14 @@ namespace Gasolutions.Maui.App.Pages
             for (int i = 5; i >= 0; i--)
             {
                 var fecha = fechaActual.AddMonths(-i);
-                var citas = await _reservationService.GetReservations(fecha);
 
-                entries.Add(new ChartEntry(citas.Count)
+                // Obtener todas las citas del mes completo
+                var todasLasCitasDelMes = await ObtenerCitasDelMesCompleto(fecha);
+
+                entries.Add(new ChartEntry(todasLasCitasDelMes.Count)
                 {
                     Label = fecha.ToString("MMM"),
-                    ValueLabel = citas.Count.ToString(),
+                    ValueLabel = todasLasCitasDelMes.Count.ToString(),
                     Color = colores[5 - i],
                     TextColor = SKColor.Parse("#232323"),
                     ValueLabelColor = SKColor.Parse("#232323")
@@ -185,6 +140,19 @@ namespace Gasolutions.Maui.App.Pages
             }
 
             return entries;
+        }
+
+        private async Task<List<CitaModel>> ObtenerCitasDelMesCompleto(DateTime fecha)
+        {
+            var todasLasCitas = new List<CitaModel>();
+            var primerDiaDelMes = new DateTime(fecha.Year, fecha.Month, 1);
+            var ultimoDiaDelMes = primerDiaDelMes.AddMonths(1).AddDays(-1);
+            var todasLasCitasDelSistema = await _reservationService.GetAllReservations();
+            todasLasCitas = todasLasCitasDelSistema
+                .Where(c => c.Fecha.Year == fecha.Year && c.Fecha.Month == fecha.Month)
+                .ToList();
+
+            return todasLasCitas;
         }
 
         private async Task CargarRankingBarberos()
@@ -271,10 +239,11 @@ namespace Gasolutions.Maui.App.Pages
         {
             try
             {
-                var fechaActual = DateTime.Now; // Agregar fecha actual como parámetro
-                var todasLasCitas = await _reservationService.GetReservations(fechaActual); // Corregir llamada al método
+                // Obtener todas las citas del sistema para el ranking general de clientes
+                var todasLasCitas = await _reservationService.GetAllReservations();
 
                 var clientesFrecuentes = todasLasCitas
+                    .Where(c => c.Cedula > 0) // Filtrar citas con cédula válida
                     .GroupBy(c => c.Cedula)
                     .Select(g => new { Cedula = g.Key, Visitas = g.Count() })
                     .OrderByDescending(x => x.Visitas)
@@ -297,8 +266,10 @@ namespace Gasolutions.Maui.App.Pages
                     }
                 }
 
-                // Log temporal para depuración
-                await AppUtils.MostrarSnackbar($"Clientes frecuentes encontrados: {clientesDetallados.Count}", Colors.Green, Colors.White);
+                if (clientesDetallados.Count == 0)
+                {
+                    await AppUtils.MostrarSnackbar("No hay datos de clientes para mostrar en el ranking.", Colors.Orange, Colors.White);
+                }
 
                 ClientesFrecuentesCollection.ItemsSource = clientesDetallados;
             }
@@ -308,7 +279,6 @@ namespace Gasolutions.Maui.App.Pages
             }
         }
     }
-
     public class ClienteFrecuenteExtendido : ClienteFrecuente
     {
         public string? Position { get; set; }
