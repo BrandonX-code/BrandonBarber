@@ -56,37 +56,31 @@
                 </Frame>
 
                 <!-- Citas Existentes -->
-                <Frame BackgroundColor="#343434" CornerRadius="10" Padding="15" HasShadow="True">
-                    <VerticalStackLayout Spacing="15">
-                        <Label Text="Citas Programadas" TextColor="#f0e68c" FontSize="18" />
-                        <CollectionView x:Name="CitasCollection" EmptyView="No hay citas programadas para esta fecha.">
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <Frame Margin="0,5" BackgroundColor="#2b2b2b" Padding="10" CornerRadius="5">
-                                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
-                                            <!-- Nombre de la cita -->
-                                            <Label Text="{Binding Nombre}" TextColor="White" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" />
-
-                                            <!-- Fecha de la cita -->
-                                            <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" TextColor="#c0aa4f" Grid.Row="1" Grid.Column="0" />
-
-                                            <!-- Hora de la cita -->
-                                            <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="12" TextColor="White" Grid.Row="2" Grid.Column="0" />
-                                        </Grid>
-                                    </Frame>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-                    </VerticalStackLayout>
-                </Frame>
-
+                <ScrollView>
+                    <Frame BackgroundColor="#343434" CornerRadius="10" Padding="15" HasShadow="True">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="Citas Programadas" TextColor="#f0e68c" FontSize="18" />
+                            <CollectionView x:Name="CitasCollection" HeightRequest="260" EmptyView="No hay citas programadas para esta fecha.">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Frame Margin="0,5" BackgroundColor="#2b2b2b" Padding="10" CornerRadius="5">
+                                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                                                <Label Text="{Binding Nombre}" TextColor="White" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" />
+                                                <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" TextColor="#c0aa4f" Grid.Row="1" Grid.Column="0" />
+                                                <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="12" TextColor="White" Grid.Row="2" Grid.Column="0" />
+                                            </Grid>
+                                        </Frame>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </Frame>
+                </ScrollView>
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Footer -->
-        <Grid Grid.Row="2" Padding="20">
-            <Button Text="Guardar Disponibilidad" BackgroundColor="#c0aa4f" TextColor="Black" 
-                    CornerRadius="10" Clicked="OnGuardarClicked" />
-        </Grid>
+        <HorizontalStackLayout Grid.Row="2" Padding="20" HorizontalOptions="Center">
+            <Button Text="Guardar Disponibilidad"  BackgroundColor="#c0aa4f" TextColor="Black" CornerRadius="10" Clicked="OnGuardarClicked" />
+        </HorizontalStackLayout>
     </Grid>
 </ContentPage>

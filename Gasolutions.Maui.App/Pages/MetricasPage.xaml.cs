@@ -207,7 +207,7 @@ namespace Gasolutions.Maui.App.Pages
                     chart = new BarChart
                     {
                         Entries = entries.OrderByDescending(e => float.Parse(e.ValueLabel)).ToList(),
-                        LabelTextSize = 40,
+                        LabelTextSize = 20,
                         Margin = 50,
                         LabelOrientation = Orientation.Horizontal,
                         ValueLabelOrientation = Orientation.Horizontal,

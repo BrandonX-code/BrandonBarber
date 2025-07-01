@@ -45,10 +45,8 @@
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
-            ProximasCitas.Clear();
-            HistorialCitas.Clear();
             UpdateVisibility();
+            _ = ActualizarLista();
         }
 
         private async void OnSearchClicked(object sender, EventArgs e)
@@ -62,17 +60,15 @@
             {
                 MostrarLoader(true);
 
-                ProximasCitas.Clear();
-                HistorialCitas.Clear();
+                //if (string.IsNullOrWhiteSpace(SearchEntry.Text) || !long.TryParse(SearchEntry.Text, out long cedula))
+                //{
+                //    await AppUtils.MostrarSnackbar("Ingrese una Cédula válida.", Colors.Orange, Colors.White);
+                //    UpdateVisibility();
+                //    return;
+                //}
 
-                if (string.IsNullOrWhiteSpace(SearchEntry.Text) || !long.TryParse(SearchEntry.Text, out long cedula))
-                {
-                    await AppUtils.MostrarSnackbar("Ingrese una Cédula válida.", Colors.Orange, Colors.White);
-                    UpdateVisibility();
-                    return;
-                }
-
-                var citas = await _reservationService.GetReservationsById(cedula);
+                var clienteCedula = AuthService.CurrentUser.Cedula;
+                var citas = await _reservationService.GetReservationsById(clienteCedula);
 
                 if (citas == null || !citas.Any())
                 {
@@ -113,14 +109,6 @@
         {
             HasProximasCitas = ProximasCitas.Count > 0;
             HasHistorialCitas = HistorialCitas.Count > 0;
-        }
-
-        private void OnClearClicked(object sender, EventArgs e)
-        {
-            SearchEntry.Text = string.Empty;
-            ProximasCitas.Clear();
-            HistorialCitas.Clear();
-            UpdateVisibility();
         }
 
         private void MostrarLoader(bool mostrar)

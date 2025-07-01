@@ -29,7 +29,7 @@
                     <Frame BackgroundColor="#343434" CornerRadius="10" Padding="15" HasShadow="True">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Citas" TextColor="#f0e68c" FontSize="18" />
-                            <CollectionView x:Name="ResultadosCollection" HeightRequest="430">
+                            <CollectionView x:Name="ResultadosCollection" HeightRequest="420">
                                 <CollectionView.ItemsLayout>
                                     <LinearItemsLayout Orientation="Vertical" />
                                 </CollectionView.ItemsLayout>
