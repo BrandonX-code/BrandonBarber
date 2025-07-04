@@ -3,13 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui"
              x:Class="Gasolutions.Maui.App.Pages.MetricasPage"
-             BackgroundColor="#181818">
+             BackgroundColor="#0E2A36">
 
 	<RefreshView x:Name="metricsRefreshView" Command="{Binding RefreshCommand}">
 		<ScrollView>
 			<VerticalStackLayout Spacing="10" Padding="16">
 				<Grid>
-					<Label Text="Dashboard de Métricas" FontSize="32" TextColor="#c0aa4f"  FontAttributes="Bold"  HorizontalOptions="Center">
+                    <Label Text="Dashboard de Métricas" FontSize="32" TextColor="White"  FontAttributes="Bold"  HorizontalOptions="Center">
 						<Label.Shadow>
 							<Shadow Brush="#40000000" Offset="0,2" Radius="4" />
 						</Label.Shadow>
@@ -17,34 +17,37 @@
 				</Grid>
 
 				<Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16"  RowSpacing="16">
-					<Frame Grid.Column="0" Grid.Row="0" BackgroundColor="#232323" BorderColor="#c0aa4f" CornerRadius="12" Padding="16">
+                    <Frame Grid.Column="0" Grid.Row="0" BackgroundColor="#90A4AE" CornerRadius="12" Padding="16">
 						<VerticalStackLayout>
-							<Label Text="Total Citas" TextColor="#c0aa4f" FontSize="16"/>
-							<Label x:Name="TotalCitasLabel" Text="0" TextColor="White" FontSize="24" FontAttributes="Bold"/>
+                            <Label Text="Total Citas" TextColor="Black" FontSize="16"/>
+							<Label x:Name="TotalCitasLabel" Text="0" TextColor="Black" FontSize="24" FontAttributes="Bold"/>
 						</VerticalStackLayout>
 					</Frame>
 
-					<Frame Grid.Column="1" Grid.Row="0" BackgroundColor="#232323" BorderColor="#c0aa4f" CornerRadius="12" Padding="16">
+                    <Frame Grid.Column="1" Grid.Row="0" BackgroundColor="#90A4AE" CornerRadius="12" Padding="16">
 						<VerticalStackLayout>
-							<Label Text="Tasa de Asistencia" TextColor="#c0aa4f" FontSize="16"/>
-							<Label x:Name="TasaAsistenciaLabel" Text="0%" TextColor="White" FontSize="24" FontAttributes="Bold"/>
+							<Label Text="Tasa de Asistencia" TextColor="Black" FontSize="16"/>
+							<Label x:Name="TasaAsistenciaLabel" Text="0%" TextColor="Black" FontSize="24" FontAttributes="Bold"/>
 						</VerticalStackLayout>
 					</Frame>
 				</Grid>
 
-				<Frame BackgroundColor="#232323" BorderColor="#c0aa4f" Padding="16" CornerRadius="16" HasShadow="True">
+                <Frame BackgroundColor="#90A4AE" Padding="16" CornerRadius="16" HasShadow="True">
 					<VerticalStackLayout>
 						<Grid ColumnDefinitions="*,Auto">
-							<Label Text="Asistencia Mensual" TextColor="#c0aa4f" FontSize="20" FontAttributes="Bold"/>
-							<Picker x:Name="ChartTypePicker" Grid.Column="1" TextColor="#c0aa4f" BackgroundColor="#333333" SelectedIndexChanged="OnChartTypeChanged">
+                            <Label Text="Asistencia Mensual" TextColor="Black" FontSize="20" FontAttributes="Bold"/>
+                            <Picker x:Name="ChartTypePicker" Grid.Column="1" TextColor="Black" BackgroundColor="#90A4AE" SelectedIndexChanged="OnChartTypeChanged">
 								<Picker.Items>
 									<x:String>Barras</x:String>
 									<x:String>Líneas</x:String>
 								</Picker.Items>
 							</Picker>
 						</Grid>
-						<microcharts:ChartView x:Name="AsistenciaChart" HeightRequest="220" BackgroundColor="#fffbe6"/>
-					</VerticalStackLayout>
+                        <Frame BackgroundColor="#0E2A36" Padding="0" CornerRadius="16" HasShadow="False">
+                            <microcharts:ChartView x:Name="AsistenciaChart" HeightRequest="220" BackgroundColor="Transparent" />
+                        </Frame>
+
+                    </VerticalStackLayout>
 				</Frame>
 
 				<!-- Gráfico de Cancelaciones -->
@@ -56,34 +59,36 @@
                 </Frame>-->
 
 				<!-- Ranking de Barberos -->
-				<Frame BackgroundColor="#232323" BorderColor="#c0aa4f" Padding="16" CornerRadius="16" HasShadow="True">
+                <Frame BackgroundColor="#90A4AE" Padding="16" CornerRadius="16" HasShadow="True">
 					<VerticalStackLayout>
 						<Grid ColumnDefinitions="*,Auto">
-							<Label Text="Top Barberos" TextColor="#c0aa4f" FontSize="20"  FontAttributes="Bold"/>
-							<Picker x:Name="RankingChartTypePicker" Grid.Column="1" TextColor="#c0aa4f" BackgroundColor="#333333" SelectedIndexChanged="OnRankingChartTypeChanged">
+							<Label Text="Top Barberos" TextColor="Black" FontSize="20"  FontAttributes="Bold"/>
+                            <Picker x:Name="RankingChartTypePicker" Grid.Column="1" TextColor="Black" BackgroundColor="#90A4AE" SelectedIndexChanged="OnRankingChartTypeChanged">
 								<Picker.Items>
 									<x:String>Barras</x:String>
 									<x:String>Líneas</x:String>
 								</Picker.Items>
 							</Picker>
 						</Grid>
-						<microcharts:ChartView x:Name="RankingBarberosChart" HeightRequest="220" BackgroundColor="#fffbe6"/>
-					</VerticalStackLayout>
+                        <Frame BackgroundColor="#0E2A36" Padding="0" CornerRadius="16" HasShadow="False">
+                            <microcharts:ChartView x:Name="RankingBarberosChart" HeightRequest="220" BackgroundColor="#fffbe6"/>
+                        </Frame>
+                    </VerticalStackLayout>
 				</Frame>
 
 				<!-- Clientes Frecuentes -->
-				<Frame BackgroundColor="#232323" BorderColor="#c0aa4f" Padding="16" CornerRadius="16" HasShadow="True">
+                <Frame BackgroundColor="#90A4AE" Padding="16" CornerRadius="16" HasShadow="True">
 					<VerticalStackLayout Spacing="10">
-						<Label Text="Top Clientes Frecuentes" TextColor="#c0aa4f" FontSize="20" FontAttributes="Bold"/>
+						<Label Text="Top Clientes Frecuentes" TextColor="Black" FontSize="20" FontAttributes="Bold"/>
 						<CollectionView x:Name="ClientesFrecuentesCollection" HeightRequest="220">
 							<CollectionView.ItemTemplate>
 								<DataTemplate>
 									<Grid Padding="10" ColumnDefinitions="Auto,*,Auto">
-										<Label Grid.Column="0" Text="{Binding Position}" TextColor="#c0aa4f" FontSize="16" FontAttributes="Bold" Margin="0,0,10,0"/>
-										<Label Grid.Column="1"  Text="{Binding Nombre}" TextColor="White" FontSize="16"/>
+										<Label Grid.Column="0" Text="{Binding Position}" TextColor="Black" FontSize="16" FontAttributes="Bold" Margin="0,0,10,0"/>
+										<Label Grid.Column="1"  Text="{Binding Nombre}" TextColor="Black" FontSize="16"/>
 										<HorizontalStackLayout Grid.Column="2" Spacing="5">
-											<Label Text="{Binding Visitas}" TextColor="#c0aa4f" FontSize="16" FontAttributes="Bold"/>
-											<Label Text="visitas" TextColor="#c0aa4f" FontSize="16"/>
+											<Label Text="{Binding Visitas}" TextColor="Black" FontSize="16" FontAttributes="Bold"/>
+											<Label Text="visitas" TextColor="Black" FontSize="16"/>
 										</HorizontalStackLayout>
 									</Grid>
 								</DataTemplate>

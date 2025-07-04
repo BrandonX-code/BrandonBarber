@@ -1,57 +1,42 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Gasolutions.Maui.App.Pages.ListarClientesPage">
+             x:Class="Gasolutions.Maui.App.Pages.ListarClientesPage" BackgroundColor="#0E2A36">
 
-    <Grid BackgroundColor="#2b2b2b">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <Grid Grid.Row="0" BackgroundColor="#2b2b2b" Padding="20,30,20,10">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-
-            <Label Grid.Column="1" Text="Lista de Clientes" FontSize="20" TextColor="#c0aa4f" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" />
-
-            <ImageButton Grid.Column="2" Source="refresh.png"  BackgroundColor="Transparent" HeightRequest="24"  WidthRequest="24" Padding="5,0" VerticalOptions="Center" Clicked="OnRefreshClicked" />
-        </Grid>
-
+    <RefreshView x:Name="ClienteRefreshView" Command="{Binding RefreshCommand}">
         <Grid Grid.Row="1" Padding="20">
-            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" IsVisible="True" Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" />
+            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" IsVisible="True" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" />
 
             <ScrollView x:Name="ContentContainer" IsVisible="False">
                 <VerticalStackLayout Spacing="5">
-
-                    <Frame BackgroundColor="#3d3d3d" CornerRadius="10" Padding="5" HasShadow="False">
-                        <SearchBar x:Name="SearchBar" Placeholder="Buscar cliente por nombre o email..." PlaceholderColor="#888888" TextColor="#f0e68c" BackgroundColor="Transparent" TextChanged="OnSearchTextChanged" />
+                    <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="20,30,20,10">
+                        <Label Grid.Column="1" Text="Lista de Clientes" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" />
+                    </Grid>
+                    <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="5" HasShadow="False">
+                        <SearchBar x:Name="SearchBar" Placeholder="Buscar cliente por nombre o email..." PlaceholderColor="Black" TextColor="Black" BackgroundColor="#90A4AE" TextChanged="OnSearchTextChanged" />
                     </Frame>
 
-                    <Frame BackgroundColor="#3d3d3d" CornerRadius="10" Padding="10" HasShadow="True">
+                    <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="10" HasShadow="True">
                         <Grid ColumnDefinitions="*,*">
                             <VerticalStackLayout Grid.Column="0" HorizontalOptions="Start" VerticalOptions="Center">
-                                <Label x:Name="TotalClientesLabel" Text="0" FontSize="24" TextColor="#c0aa4f" FontAttributes="Bold" HorizontalOptions="Center" />
-                                <Label Text="Total Clientes" FontSize="12" TextColor="#f0e68c" HorizontalOptions="Center" />
+                                <Label x:Name="TotalClientesLabel" Text="0" FontSize="24" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" />
+                                <Label Text="Total Clientes" FontSize="12" TextColor="Black" HorizontalOptions="Center" />
                             </VerticalStackLayout>
                             <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
-                                <Label x:Name="ClientesActivosLabel" Text="0" FontSize="24" TextColor="#4CAF50" FontAttributes="Bold" HorizontalOptions="Center" />
-                                <Label Text="Activos" FontSize="12" TextColor="#f0e68c" HorizontalOptions="Center" />
+                                <Label x:Name="ClientesActivosLabel" Text="0" FontSize="24" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" />
+                                <Label Text="Activos" FontSize="12" TextColor="Black" HorizontalOptions="Center" />
                             </VerticalStackLayout>
                         </Grid>
                     </Frame>
 
                     <CollectionView x:Name="ClientesCollectionView" ItemsSource="{Binding ClientesFiltrados}" BackgroundColor="Transparent" Margin="0,0,0,10">
                         <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Vertical"/>
+                            <LinearItemsLayout Orientation="Vertical" />
                         </CollectionView.ItemsLayout>
 
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Frame BackgroundColor="#3d3d3d" CornerRadius="10" Padding="10" Margin="0,10" HasShadow="True">
+                                <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="10" Margin="0,10" HasShadow="True">
 
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -65,23 +50,23 @@
                                         </Grid.ColumnDefinitions>
 
                                         <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="5">
-                                            <Label Text="{Binding Nombre}" FontSize="18" TextColor="#f0e68c" FontAttributes="Bold" />
-                                            <Label Text="{Binding Email}" FontSize="14" TextColor="#c0aa4f" />
+                                            <Label Text="{Binding Nombre}" FontSize="18" TextColor="Black" FontAttributes="Bold" />
+                                            <Label Text="{Binding Email}" FontSize="14" TextColor="Black" />
                                         </VerticalStackLayout>
 
-                                        <VerticalStackLayout Grid.Row="0" Grid.Column="1"  Padding="10,5" VerticalOptions="Start">
-                                            <Label Text="{Binding Rol}" FontSize="15" TextColor="White" FontAttributes="Bold" />
+                                        <VerticalStackLayout Grid.Row="0" Grid.Column="1" Padding="10,5" VerticalOptions="Start">
+                                            <Label Text="{Binding Rol}" FontSize="15" TextColor="Black" FontAttributes="Bold" />
                                         </VerticalStackLayout>
 
                                         <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="15" Margin="0,10,0,0">
                                             <HorizontalStackLayout Spacing="5">
                                                 <Image Source="id.png" WidthRequest="16" HeightRequest="16" />
-                                                <Label Text="{Binding Cedula}" FontSize="12" TextColor="#888888" />
+                                                <Label Text="{Binding Cedula}" FontSize="12" TextColor="Black" />
                                             </HorizontalStackLayout>
                                         </HorizontalStackLayout>
                                         <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="10" Margin="0,15,0,0" HorizontalOptions="End">
-                                            <Button Text="Ver Detalles" FontSize="10" BackgroundColor="#c0aa4f" TextColor="Black" CornerRadius="15" Padding="6,3" Clicked="OnVerDetallesClicked" CommandParameter="{Binding}" />
-                                            <Image Source="delete.png"  WidthRequest="30" HeightRequest="30" Aspect="AspectFit">
+                                            <Button Text="Ver Detalles" FontSize="10" BackgroundColor="#264570" TextColor="White" CornerRadius="15" Padding="6,3" Clicked="OnVerDetallesClicked" CommandParameter="{Binding}" />
+                                            <Image Source="delete.png" WidthRequest="30" HeightRequest="30" Aspect="AspectFit">
                                                 <Image.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="OnEliminarClienteClicked" CommandParameter="{Binding}" />
                                                 </Image.GestureRecognizers>
@@ -93,18 +78,17 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
-
                     <!-- Empty State -->
-                    <Frame x:Name="EmptyStateFrame" BackgroundColor="#3d3d3d" CornerRadius="10" Padding="30" IsVisible="False" HasShadow="True">
+                    <Frame x:Name="EmptyStateFrame" BackgroundColor="#90A4AE" CornerRadius="10" Padding="30" IsVisible="False" HasShadow="True">
                         <VerticalStackLayout Spacing="15" HorizontalOptions="Center">
-                            <Image Source="id.png" WidthRequest="64"  HeightRequest="64" />
-                            <Label Text="No hay clientes registrados" FontSize="18" TextColor="#888888" HorizontalOptions="Center" />
-                            <Label Text="Los clientes aparecerán aquí cuando se registren en la aplicación" FontSize="14" TextColor="#666666" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                            <Image Source="id.png" WidthRequest="64" HeightRequest="64" />
+                            <Label Text="No hay clientes registrados" FontSize="18" TextColor="Black" HorizontalOptions="Center" />
+                            <Label Text="Los clientes aparecerán aquí cuando se registren en la aplicación" FontSize="14" TextColor="Black" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
                         </VerticalStackLayout>
                     </Frame>
 
                 </VerticalStackLayout>
             </ScrollView>
         </Grid>
-    </Grid>
+    </RefreshView>
 </ContentPage>

@@ -8,6 +8,7 @@ namespace Gasolutions.Maui.App.Pages
         public readonly AuthService _authService;
         private ObservableCollection<UsuarioModels> _todosLosClientes;
         private ObservableCollection<UsuarioModels> _clientesFiltrados;
+        public Command RefreshCommand { get; }
         public ObservableCollection<UsuarioModels> ClientesFiltrados
         {
             get => _clientesFiltrados;
@@ -24,11 +25,18 @@ namespace Gasolutions.Maui.App.Pages
             _authService = authService;
             _todosLosClientes = new ObservableCollection<UsuarioModels>();
             _clientesFiltrados = new ObservableCollection<UsuarioModels>();
-
+            RefreshCommand = new Command(async () => await RefreshClienteList());
             BindingContext = this;
-            LoadClientes();
+            _ = LoadClientes();
         }
-
+        private async Task RefreshClienteList()
+        {
+            if (ClienteRefreshView.IsRefreshing)
+            {
+                await LoadClientes();
+                ClienteRefreshView.IsRefreshing = false;
+            }
+        }
         protected override void OnAppearing()
         {
             base.OnAppearing();

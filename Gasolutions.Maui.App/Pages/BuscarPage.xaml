@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Gasolutions.Maui.App.Pages.BuscarPage">
+             x:Class="Gasolutions.Maui.App.Pages.BuscarPage"
+             Background="#0E2A36">
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style x:Key="EntryStyle" TargetType="Entry">
@@ -29,30 +30,21 @@
             <Style x:Key="SectionHeaderStyle" TargetType="Label">
                 <Setter Property="FontSize" Value="16" />
                 <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="#c0aa4f" />
+                <Setter Property="TextColor" Value="White" />
                 <Setter Property="Margin" Value="0,5,0,2" />
                 <Setter Property="HorizontalOptions" Value="Start" />
-            </Style>
-
-            <Style x:Key="ButtonStyle" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="Transparent" />
-                <Setter Property="TextColor" Value="#c0aa4f" />
-                <Setter Property="BorderColor" Value="#c0aa4f" />
-                <Setter Property="BorderWidth" Value="1" />
-                <Setter Property="CornerRadius" Value="10" />
-                <Setter Property="Padding" Value="15,8" />
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <AbsoluteLayout>
-        <Image Source="fondobarber.jpg" Opacity="0.90" Aspect="AspectFill" 
-               AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />
+        <!--<Image Source="fondobarber.jpg" Opacity="0.90" Aspect="AspectFill" 
+               AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />-->
 
         <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <Grid Padding="15,10" BackgroundColor="Transparent">
                 <VerticalStackLayout Spacing="5">
-                    <Frame BackgroundColor="#2b2b2b" BorderColor="Black" CornerRadius="10" Padding="15" HasShadow="True">
+                    <Frame BackgroundColor="#555f64" CornerRadius="10" Padding="15" HasShadow="True">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Próximas Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasProximasCitas}"/>
                             <CollectionView x:Name="ProximasCitasCollection" ItemsSource="{Binding ProximasCitas}" EmptyView="No hay citas próximas Ingrese su Cedula" HeightRequest="330">
@@ -65,7 +57,7 @@
                                                 </SwipeItems>
                                             </SwipeView.RightItems>
 
-                                            <Frame Padding="8" Margin="4" BorderColor="#444" BackgroundColor="#7d7c76" CornerRadius="8" HasShadow="True">
+                                            <Frame Padding="8" Margin="4" BackgroundColor="#90A4AE" CornerRadius="8" HasShadow="True">
                                                 <Grid ColumnDefinitions="*">
                                                     <VerticalStackLayout Grid.Column="0" Spacing="10">
                                                         <HorizontalStackLayout Spacing="5">
@@ -77,14 +69,14 @@
                                                         <HorizontalStackLayout>
                                                             <HorizontalStackLayout Spacing="5">
                                                                 <Image Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />
-                                                                <Label Text="Barbero: " FontSize="Small" TextColor="White" />
+                                                                <Label Text="Barbero: " FontSize="Small" TextColor="Black" />
                                                             </HorizontalStackLayout>
                                                             <Label Text="{Binding BarberoNombre}" FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
                                                         </HorizontalStackLayout>
                                                         <HorizontalStackLayout Spacing="5">
                                                             <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
-                                                            <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" FontSize="15" TextColor="White"/>
-                                                            <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="15" TextColor="White"/>
+                                                            <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" FontSize="15" TextColor="Black"/>
+                                                            <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="15" TextColor="Black"/>
                                                         </HorizontalStackLayout>
                                                     </VerticalStackLayout>
                                                 </Grid>
@@ -96,13 +88,13 @@
                         </VerticalStackLayout>
                     </Frame>
 
-                    <Frame BackgroundColor="#2b2b2b" BorderColor="Black" CornerRadius="10" Padding="15" HasShadow="True">
+                    <Frame BackgroundColor="#555f64" CornerRadius="10" Padding="15" HasShadow="True">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Historial de Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasHistorialCitas}" Margin="0,5,0,0"/>
                             <CollectionView x:Name="HistorialCitasCollection"  ItemsSource="{Binding HistorialCitas}" EmptyView="No hay historial de citas Ingrese su Cedula" HeightRequest="285">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Frame Padding="8" Margin="2" BorderColor="#444" BackgroundColor="#5a5a5a" CornerRadius="8" HasShadow="True">
+                                        <Frame Padding="8" Margin="2" BackgroundColor="#90A4AE" CornerRadius="8" HasShadow="True">
                                             <Grid ColumnDefinitions="*, Auto">
                                                 <VerticalStackLayout Grid.Column="0" Spacing="5">
                                                     <HorizontalStackLayout Spacing="5">
@@ -114,18 +106,18 @@
                                                     <HorizontalStackLayout>
                                                         <HorizontalStackLayout Spacing="5">
                                                             <Image Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />
-                                                            <Label Text="Barbero: " FontSize="Small" TextColor="White" />
+                                                            <Label Text="Barbero: " FontSize="Small" TextColor="Black" />
                                                         </HorizontalStackLayout>
                                                         <Label Text="{Binding BarberoNombre}" FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
                                                     </HorizontalStackLayout>
 
                                                     <HorizontalStackLayout Spacing="5">
                                                         <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
-                                                        <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" FontSize="15" TextColor="White"/>
-                                                        <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="15" TextColor="White"/>
+                                                        <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" FontSize="15" TextColor="Black"/>
+                                                        <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="15" TextColor="Black"/>
                                                     </HorizontalStackLayout>
                                                 </VerticalStackLayout>
-                                                <Label Grid.Column="1" Text="✓" TextColor="#c0aa4f" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" />
+                                                <Label Grid.Column="1" Text="✓" TextColor="Black" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" />
                                             </Grid>
                                         </Frame>
                                     </DataTemplate>
@@ -145,7 +137,7 @@
                     <TapGestureRecognizer />
                 </BoxView.GestureRecognizers>
             </BoxView>
-            <ActivityIndicator IsRunning="True" Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="50" HeightRequest="50"/>
+            <ActivityIndicator IsRunning="True" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="50" HeightRequest="50"/>
         </Grid>
     </AbsoluteLayout>
 </ContentPage>

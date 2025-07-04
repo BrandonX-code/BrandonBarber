@@ -9,7 +9,7 @@ namespace Gasolutions.Maui.App.Pages
         public readonly AuthService _authService;
         private ObservableCollection<UsuarioModels> _todosLosBarberos;
         private ObservableCollection<UsuarioModels> _barberosFiltrados;
-
+        public Command RefreshCommand { get; }
         public ObservableCollection<UsuarioModels> BarberosFiltrados
         {
             get => _barberosFiltrados;
@@ -26,11 +26,18 @@ namespace Gasolutions.Maui.App.Pages
             _authService = authService;
             _todosLosBarberos = new ObservableCollection<UsuarioModels>();
             _barberosFiltrados = new ObservableCollection<UsuarioModels>();
-
+            RefreshCommand = new Command(async () => await RefreshBarberoList());
             BindingContext = this;
             _ = LoadBarberos();
         }
-
+        private async Task RefreshBarberoList()
+        {
+            if (BarberoRefreshView.IsRefreshing)
+            {
+                await LoadBarberos();
+                BarberoRefreshView.IsRefreshing = false;
+            }
+        }
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -162,10 +169,6 @@ namespace Gasolutions.Maui.App.Pages
             await Navigation.PopAsync();
         }
 
-        private async void OnRefreshClicked(object sender, EventArgs e)
-        {
-            await LoadBarberos();
-        }
     }
 }
 

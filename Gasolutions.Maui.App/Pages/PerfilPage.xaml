@@ -2,20 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Gasolutions.Maui.App.Pages.PerfilPage"
-             BackgroundColor="#1e1e1e">
-    
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <Style x:Key="ProfileButtonStyle" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="#2b2b2b" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="CornerRadius" Value="10" />
-                <Setter Property="HeightRequest" Value="45" />
-                <Setter Property="FontSize" Value="16" />
-            </Style>
-        </ResourceDictionary>
-    </ContentPage.Resources>
+             BackgroundColor="#0E2A36">
     <Grid Padding="20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
@@ -28,19 +15,19 @@
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" ColumnSpacing="10">
-            <Label Text="Perfil" FontSize="22" FontAttributes="Bold" TextColor="#c0aa4f" VerticalOptions="Center" />
+            <Label Text="Perfil" FontSize="22" FontAttributes="Bold" TextColor="White" VerticalOptions="Center" />
             <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand">
-                <ImageButton Source="logout.png" BackgroundColor="Transparent" HeightRequest="32" WidthRequest="32" VerticalOptions="Center" Clicked="OnCerrarSesionClicked"/>
+                <ImageButton Source="logout.png" HeightRequest="32" WidthRequest="32" VerticalOptions="Center" Clicked="OnCerrarSesionClicked"/>
             </StackLayout>
         </Grid>
 
         <VerticalStackLayout Grid.Row="1" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
-            <Border WidthRequest="120" HeightRequest="120" BackgroundColor="#3a3a3a" Padding="10"  StrokeShape="RoundRectangle 10">
+            <Border WidthRequest="120" HeightRequest="120" BackgroundColor="#90A4AE" Padding="10"  StrokeShape="RoundRectangle 10">
                 <Image x:Name="PerfilImage" Aspect="AspectFill" />
             </Border>
             <Label x:Name="NombreLabel" Text="xxx" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
             <Label x:Name="TelefonoLabel" Text="###" FontSize="16" TextColor="White" HorizontalOptions="Center" />
-            <Button Text="Editar Perfil" Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#c0aa4f" TextColor="Black" Clicked="OnEditarPerfilClicked"/>
+            <Button Text="Editar Perfil" BackgroundColor="#FF6F91" TextColor="Black" Clicked="OnEditarPerfilClicked"/>
         </VerticalStackLayout>
     </Grid>
 

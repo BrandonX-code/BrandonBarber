@@ -9,60 +9,63 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid BackgroundColor="#2b2b2b">
+    <Grid BackgroundColor="#0E2A36">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" BackgroundColor="#2b2b2b" Padding="30,30">
-            <Label x:Name="WelcomeLabel" Text="Bienvenido" FontSize="20" TextColor="#c0aa4f" FontAttributes="Bold" />
-            <ImageButton Source="user.png" BackgroundColor="Transparent" HeightRequest="32" WidthRequest="32" VerticalOptions="Center" HorizontalOptions="End" Clicked="PerfilPage" />
+        <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="20,30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label x:Name="WelcomeLabel"  Grid.Column="0" FontSize="20" TextColor="#E0F7FA" FontAttributes="Bold" VerticalOptions="Center" LineBreakMode="TailTruncation" />
+            <ImageButton Grid.Column="1" Source="user.png" BackgroundColor="Transparent" HeightRequest="32" WidthRequest="32" VerticalOptions="Center" HorizontalOptions="End" Clicked="PerfilPage" />
         </Grid>
 
         <Grid Grid.Row="1" x:Name="ContentContainer">
-            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" IsVisible="True"  
-                               Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" />
+            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" IsVisible="True" Color="#E0F7FA" VerticalOptions="Center" HorizontalOptions="Center" />
 
             <ScrollView>
                 <VerticalStackLayout>
 
                     <!-- ClienteView -->
                     <VerticalStackLayout x:Name="ClienteView" IsVisible="false" Padding="20" Spacing="20">
-                        <Label Text="Panel de Cliente" FontSize="24" TextColor="#c0aa4f" FontAttributes="Bold" HorizontalOptions="Center" />
+                        <Label Text="Panel de Cliente" FontSize="24" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center" />
 
-                        <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                        <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="MainPage" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
-                                <Image Source="calendar.png" WidthRequest="24" HeightRequest="24" />
-                                <Label Text="Agendar Una Cita" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                                <Image Source="calendar.png" WidthRequest="30" HeightRequest="30" />
+                                <Label Text="Agendar Una Cita" TextColor="Black" FontSize="25" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
 
-                        <Label Text="Disponibilidad del barbero" TextColor="#f0e68c" FontSize="20" VerticalOptions="Center"/>
+                        <Label Text="Disponibilidad del barbero" TextColor="White" FontSize="20" VerticalOptions="Center"/>
                         <VerticalStackLayout Spacing="5">
-                            <Label Text="Seleccione el Barbero Para Ver Su Disponibilidad" TextColor="#c0aa4f" FontSize="16" />
-                            <Frame BackgroundColor="Transparent" Padding="0" CornerRadius="10" HasShadow="False">
-                                <Picker TitleColor="#2b2b2b" TextColor="#f0e68c" x:Name="Picker" SelectedIndexChanged="Picker_SelectedIndexChanged"  ItemDisplayBinding="{Binding Nombre}" BackgroundColor="Transparent"></Picker>
+                            <Label Text="Seleccione el Barbero Para Ver Su Disponibilidad" TextColor="#B0BEC5" FontSize="16" />
+                            <Frame CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#90A4AE" HeightRequest="45" IsClippedToBounds="True">
+                                <Picker x:Name="Picker" SelectedIndexChanged="Picker_SelectedIndexChanged" TextColor="Black" ItemDisplayBinding="{Binding Nombre}" ></Picker>
                             </Frame>
                         </VerticalStackLayout>
-                        <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                        <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <VerticalStackLayout Spacing="15">
-                                <Frame x:Name="NoDisponibilidadAlert" BackgroundColor="#3d3d3d" BorderColor="#c0aa4f" CornerRadius="10" Padding="15" IsVisible="false">
+                                <Frame x:Name="NoDisponibilidadAlert" BackgroundColor="#90A4AE"  CornerRadius="10" Padding="15" IsVisible="false">
                                     <StackLayout Orientation="Horizontal" Spacing="15">
                                         <Image Source="alert.png" WidthRequest="24" HeightRequest="24" VerticalOptions="Center" />
-                                        <Label Text="El barbero no ha configurado su disponibilidad para hoy." HorizontalOptions="FillAndExpand" TextColor="#f0e68c" FontSize="18" VerticalOptions="Center"/>
+                                        <Label Text="El barbero no ha configurado su disponibilidad para hoy." HorizontalOptions="FillAndExpand" TextColor="Black" FontSize="18" VerticalOptions="Center"/>
                                     </StackLayout>
                                 </Frame>
 
                                 <CollectionView x:Name="DisponibilidadListView" IsVisible="false" HeightRequest="250">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
-                                            <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="10" Margin="5">
+                                            <Frame BackgroundColor="#0E2A36" CornerRadius="10" Padding="10" Margin="5">
                                                 <StackLayout>
-                                                    <Label Text="{Binding Hora}" TextColor="#f0e68c" FontSize="20" FontAttributes="Bold" />
+                                                    <Label Text="{Binding Hora}" TextColor="White" FontSize="20" FontAttributes="Bold" />
                                                     <Label Text="{Binding Disponible}" TextColor="{Binding Disponible, Converter={StaticResource DisponibilidadColorConverter}}" FontSize="18" />
                                                 </StackLayout>
                                             </Frame>
@@ -72,22 +75,22 @@
                             </VerticalStackLayout>
                         </Frame>
 
-                        <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                        <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="BuscarCitas" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
-                                <Image Source="busquedacitas.png" WidthRequest="24" HeightRequest="24" />
-                                <Label Text="Buscar Tus Citas" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                                <Image Source="busquedacitas.png" WidthRequest="30" HeightRequest="30" />
+                                <Label Text="Buscar Tus Citas" TextColor="Black" FontSize="25" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
-                        <Frame x:Name="GaleriaClienteFrame" BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True" IsVisible="False">
+                        <Frame x:Name="GaleriaClienteFrame" BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True" IsVisible="False">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="galery" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
-                                <Image Source="galeriuser.png" WidthRequest="24" HeightRequest="24" />
-                                <Label Text="Galeria De Cortes" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                                <Image Source="galeriuser.png" WidthRequest="30" HeightRequest="30" />
+                                <Label Text="Galeria De Cortes" TextColor="Black" FontSize="25" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
 
@@ -95,34 +98,34 @@
 
                     <!-- BarberoView -->
                     <VerticalStackLayout x:Name="BarberoView" IsVisible="false" Padding="20" Spacing="20">
-                        <Label Text="Panel de Barbero" FontSize="24" TextColor="#c0aa4f" FontAttributes="Bold" HorizontalOptions="Center" />
+                        <Label Text="Panel de Barbero" FontSize="24" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
 
-                        <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                        <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="CitasList" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
                                 <Image Source="history.png" WidthRequest="24" HeightRequest="24" />
-                                <Label Text="Tus Citas" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                                <Label Text="Tus Citas" TextColor="Black" FontSize="25" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
 
-                        <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                        <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="GestionarDisponibilidad" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
                                 <Image Source="calendar.png" WidthRequest="24" HeightRequest="24" />
-                                <Label Text="Gestionar Disponibilidad" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                                <Label Text="Gestionar Disponibilidad" TextColor="Black" FontSize="25" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
-                        <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                        <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="AddGaleri" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
                                 <Image Source="galeribarber.png" WidthRequest="24" HeightRequest="24" />
-                                <Label Text="Agregar Corte" TextColor="#f0e68c" FontSize="25" VerticalOptions="Center"/>
+                                <Label Text="Agregar Corte" TextColor="Black" FontSize="25" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
 
@@ -130,67 +133,67 @@
 
                     <!-- AdminView -->
                     <VerticalStackLayout x:Name="AdminView" IsVisible="false" Padding="20" Spacing="17">
-                        <Label Text="Panel de Administrador" FontSize="24" TextColor="#c0aa4f" FontAttributes="Bold" HorizontalOptions="Center" />
+                        <Label Text="Panel de Administrador" FontSize="24" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
 
                         <!-- Nueva sección de Métricas -->
-                        <Label Text="Métricas y Estadísticas" FontSize="18" TextColor="#c0aa4f" FontAttributes="Bold" Margin="0,20,0,0" />
-                        
-                        <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                        <Label Text="Métricas y Estadísticas" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
+
+                        <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="VerMetricas" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
                                 <Image Source="metrics.png" WidthRequest="40" HeightRequest="40" />
-                                <Label Text="Dashboard de Métricas" TextColor="#f0e68c" FontSize="20" VerticalOptions="Center"/>
+                                <Label Text="Dashboard de Métricas" TextColor="Black" FontSize="20" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
 
                         <!-- Gestión de Barberos -->
-                        <Label Text="Gestión de Barberos" FontSize="18" TextColor="#c0aa4f" FontAttributes="Bold" />
+                        <Label Text="Gestión de Barberos" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" />
 
-                        <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                        <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="AgregarBarbero" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
                                 <Image Source="agregarbarbero.png" WidthRequest="40" HeightRequest="30" />
-                                <Label Text="Agregar Barbero" TextColor="#f0e68c" FontSize="20" VerticalOptions="Center"/>
+                                <Label Text="Agregar Barbero" TextColor="black" FontSize="20" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
 
-                        <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                        <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="ListarBarberos" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
                                 <Image Source="listarbarbero.png" WidthRequest="40" HeightRequest="40" />
-                                <Label Text="Listar Barberos" TextColor="#f0e68c" FontSize="20" VerticalOptions="Center"/>
+                                <Label Text="Listar Barberos" TextColor="black" FontSize="20" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
 
                         <!-- Gestión de Clientes -->
-                        <Label Text="Gestión de Clientes" FontSize="18" TextColor="#c0aa4f" FontAttributes="Bold" Margin="0,20,0,0" />
+                        <Label Text="Gestión de Clientes" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
 
-                        <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                        <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="ListarClientes" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
                                 <Image Source="listarcliente.png" WidthRequest="40" HeightRequest="40" />
-                                <Label Text="Listar Clientes" TextColor="#f0e68c" FontSize="20" VerticalOptions="Center"/>
+                                <Label Text="Listar Clientes" TextColor="black" FontSize="20" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
 
                         <!-- Reportes -->
-                        <Label Text="Reportes" FontSize="18" TextColor="#c0aa4f" FontAttributes="Bold" Margin="0,20,0,0" />
+                        <Label Text="Reportes" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
 
-                        <Frame BackgroundColor="#2b2b2b" CornerRadius="10" Padding="15" HasShadow="True">
+                        <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="VerCitas" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
                                 <Image Source="todaslascitas.png" WidthRequest="40" HeightRequest="40" />
-                                <Label Text="Ver Todas las Citas" TextColor="#f0e68c" FontSize="20" VerticalOptions="Center"/>
+                                <Label Text="Ver Todas las Citas" TextColor="black" FontSize="20" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
 

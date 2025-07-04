@@ -84,7 +84,7 @@ namespace Gasolutions.Maui.App.Pages
                         Margin = 50,
                         LabelOrientation = Orientation.Horizontal,
                         ValueLabelOrientation = Orientation.Horizontal,
-                        BackgroundColor = SKColor.Parse("#fffbe6")
+                        BackgroundColor = SKColor.Parse("#0E2A36")
                     };
                 }
                 else
@@ -96,7 +96,7 @@ namespace Gasolutions.Maui.App.Pages
                         Margin = 50,
                         LabelOrientation = Orientation.Horizontal,
                         ValueLabelOrientation = Orientation.Horizontal,
-                        BackgroundColor = SKColor.Parse("#fffbe6")
+                        BackgroundColor = SKColor.Parse("#0E2A36")
                     };
                 }
 
@@ -114,12 +114,12 @@ namespace Gasolutions.Maui.App.Pages
             var fechaActual = DateTime.Now;
             var colores = new[]
             {
-                SKColor.Parse("#FFD700"),
-                SKColor.Parse("#c0aa4f"),
-                SKColor.Parse("#DAA520"),
-                SKColor.Parse("#B8860B"),
-                SKColor.Parse("#CD853F"),
-                SKColor.Parse("#D2691E")
+                SKColor.Parse("#868788"),
+                SKColor.Parse("#9ebcca"),
+                SKColor.Parse("#ffffff"),
+                SKColor.Parse("#88a0aa"),
+                SKColor.Parse("#83817e"),
+                SKColor.Parse("#a5a29a")
             };
 
             for (int i = 5; i >= 0; i--)
@@ -134,8 +134,8 @@ namespace Gasolutions.Maui.App.Pages
                     Label = fecha.ToString("MMM"),
                     ValueLabel = todasLasCitasDelMes.Count.ToString(),
                     Color = colores[5 - i],
-                    TextColor = SKColor.Parse("#232323"),
-                    ValueLabelColor = SKColor.Parse("#232323")
+                    TextColor = SKColor.Parse("#ffffff"),
+                    ValueLabelColor = SKColor.Parse("#ffffff")
                 });
             }
 
@@ -172,9 +172,9 @@ namespace Gasolutions.Maui.App.Pages
                 var entries = new List<ChartEntry>();
                 var colores = new[]
                 {
-                    SKColor.Parse("#FFD700"),
-                    SKColor.Parse("#c0aa4f"),
-                    SKColor.Parse("#DAA520")
+                    SKColor.Parse("#ffffff"),
+                    SKColor.Parse("#83817e"),
+                    SKColor.Parse("#88a0aa")
                 };
 
                 int colorIndex = 0;
@@ -188,8 +188,8 @@ namespace Gasolutions.Maui.App.Pages
                             Label = barbero.Nombre,
                             ValueLabel = item.Total.ToString(),
                             Color = colores[colorIndex++ % colores.Length],
-                            TextColor = SKColor.Parse("#232323"),
-                            ValueLabelColor = SKColor.Parse("#232323")
+                            TextColor = SKColor.Parse("#ffffff"),
+                            ValueLabelColor = SKColor.Parse("#ffffff")
                         });
                     }
                 }
@@ -211,7 +211,7 @@ namespace Gasolutions.Maui.App.Pages
                         Margin = 50,
                         LabelOrientation = Orientation.Horizontal,
                         ValueLabelOrientation = Orientation.Horizontal,
-                        BackgroundColor = SKColor.Parse("#fffbe6")
+                        BackgroundColor = SKColor.Parse("#0E2A36")
                     };
                 }
                 else
@@ -219,11 +219,11 @@ namespace Gasolutions.Maui.App.Pages
                     chart = new LineChart
                     {
                         Entries = entries.OrderByDescending(e => float.Parse(e.ValueLabel)).ToList(),
-                        LabelTextSize = 40,
+                        LabelTextSize = 20,
                         Margin = 50,
                         LabelOrientation = Orientation.Horizontal,
                         ValueLabelOrientation = Orientation.Horizontal,
-                        BackgroundColor = SKColor.Parse("#fffbe6")
+                        BackgroundColor = SKColor.Parse("#0E2A36")
                     };
                 }
 

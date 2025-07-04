@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Gasolutions.Maui.App.Pages.GestionarDisponibilidadPage">
 
-    <Grid BackgroundColor="#2b2b2b">
+    <Grid BackgroundColor="#0E2A36">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -11,63 +11,61 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <Grid Grid.Row="0" BackgroundColor="#2b2b2b" Padding="10,30"  HorizontalOptions="Center">
-            <Label Text="Gestionar Disponibilidad" FontSize="20" TextColor="#c0aa4f" FontAttributes="Bold" />
+        <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="10,30"  HorizontalOptions="Center">
+            <Label Text="Gestionar Disponibilidad" FontSize="20" TextColor="White" FontAttributes="Bold" />
         </Grid>
 
         <!-- Content -->
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Padding="20" Spacing="20">
                 <!-- Calendario -->
-                <Frame BackgroundColor="#343434" CornerRadius="10" Padding="15" HasShadow="True">
+                <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                     <VerticalStackLayout Spacing="15">
-                        <Label Text="Selecciona fecha" TextColor="#f0e68c" FontSize="18" />
-                        <DatePicker x:Name="FechaSelector" Format="D" TextColor="White" 
-                                   MinimumDate="{Binding MinimumDate}"
-                                   DateSelected="OnDateSelected" />
+                        <Label Text="Selecciona fecha" TextColor="Black" FontSize="18" />
+                        <DatePicker x:Name="FechaSelector" Format="D" TextColor="Black" MinimumDate="{Binding MinimumDate}" DateSelected="OnDateSelected" />
                     </VerticalStackLayout>
                 </Frame>
 
                 <!-- Horarios Disponibles -->
-                <Frame BackgroundColor="#343434" CornerRadius="10" Padding="15" HasShadow="True">
+                <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                     <VerticalStackLayout Spacing="15">
-                        <Label Text="Horarios Disponibles" TextColor="#f0e68c" FontSize="18" />
+                        <Label Text="Horarios Disponibles" TextColor="Black" FontSize="18" />
                         <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="10">
-                            <Label Text="Horario" TextColor="White" FontAttributes="Bold" Grid.Column="0" Grid.Row="0" />
-                            <Label Text="Disponible" TextColor="White" FontAttributes="Bold" Grid.Column="1" Grid.Row="0" />
+                            <Label Text="Horario" TextColor="Black" FontAttributes="Bold" Grid.Column="0" Grid.Row="0" />
+                            <Label Text="Disponible" TextColor="Black" FontAttributes="Bold" Grid.Column="1" Grid.Row="0" />
 
                             <!-- Horarios -->
-                            <Label Text="6:00 AM - 12:00 PM" TextColor="White" Grid.Column="0" Grid.Row="1" VerticalOptions="Center" />
-                            <CheckBox x:Name="Horario6a12" Grid.Column="1" Grid.Row="1" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
+                            <Label Text="6:00 AM - 12:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="1" VerticalOptions="Center" />
+                            <CheckBox x:Name="Horario6a12" Grid.Column="1" Grid.Row="1" Color="Black" CheckedChanged="OnHorarioCheckedChanged" />
 
-                            <Label Text="12:00 PM - 03:00 PM" TextColor="White" Grid.Column="0" Grid.Row="2" VerticalOptions="Center" />
-                            <CheckBox x:Name="Horario12a3" Grid.Column="1" Grid.Row="2" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
+                            <Label Text="12:00 PM - 03:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="2" VerticalOptions="Center" />
+                            <CheckBox x:Name="Horario12a3" Grid.Column="1" Grid.Row="2" Color="Black" CheckedChanged="OnHorarioCheckedChanged" />
 
-                            <Label Text="03:00 PM - 05:00 PM" TextColor="White" Grid.Column="0" Grid.Row="3" VerticalOptions="Center" />
-                            <CheckBox x:Name="Horario3a5" Grid.Column="1" Grid.Row="3" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
+                            <Label Text="03:00 PM - 05:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="3" VerticalOptions="Center" />
+                            <CheckBox x:Name="Horario3a5" Grid.Column="1" Grid.Row="3" Color="Black" CheckedChanged="OnHorarioCheckedChanged" />
 
-                            <Label Text="05:00 PM - 07:00 PM" TextColor="White" Grid.Column="0" Grid.Row="4" VerticalOptions="Center" />
-                            <CheckBox x:Name="Horario5a7" Grid.Column="1" Grid.Row="4" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
+                            <Label Text="05:00 PM - 07:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="4" VerticalOptions="Center" />
+                            <CheckBox x:Name="Horario5a7" Grid.Column="1" Grid.Row="4" Color="Black" CheckedChanged="OnHorarioCheckedChanged" />
 
-                            <Label Text="07:00 PM- 08:00 PM" TextColor="White" Grid.Column="0" Grid.Row="5" VerticalOptions="Center" />
-                            <CheckBox x:Name="Horario7a8" Grid.Column="1" Grid.Row="5" Color="#c0aa4f" CheckedChanged="OnHorarioCheckedChanged" />
+                            <Label Text="07:00 PM- 08:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="5" VerticalOptions="Center" />
+                            <CheckBox x:Name="Horario7a8" Grid.Column="1" Grid.Row="5" Color="Black" CheckedChanged="OnHorarioCheckedChanged" />
                         </Grid>
                     </VerticalStackLayout>
                 </Frame>
 
                 <!-- Citas Existentes -->
                 <ScrollView>
-                    <Frame BackgroundColor="#343434" CornerRadius="10" Padding="15" HasShadow="True">
+                    <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                         <VerticalStackLayout Spacing="15">
-                            <Label Text="Citas Programadas" TextColor="#f0e68c" FontSize="18" />
+                            <Label Text="Citas Programadas" TextColor="Black" FontSize="18" />
                             <CollectionView x:Name="CitasCollection" HeightRequest="260" EmptyView="No hay citas programadas para esta fecha.">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Frame Margin="0,5" BackgroundColor="#2b2b2b" Padding="10" CornerRadius="5">
+                                        <Frame Margin="0,5" BackgroundColor="#90A4AE" Padding="10" CornerRadius="5">
                                             <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
-                                                <Label Text="{Binding Nombre}" TextColor="White" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" />
-                                                <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" TextColor="#c0aa4f" Grid.Row="1" Grid.Column="0" />
-                                                <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="12" TextColor="White" Grid.Row="2" Grid.Column="0" />
+                                                <Label Text="{Binding Nombre}" TextColor="Black" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" />
+                                                <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" TextColor="Black" Grid.Row="1" Grid.Column="0" />
+                                                <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="12" TextColor="Black" Grid.Row="2" Grid.Column="0" />
                                             </Grid>
                                         </Frame>
                                     </DataTemplate>
@@ -80,7 +78,7 @@
         </ScrollView>
 
         <HorizontalStackLayout Grid.Row="2" Padding="20" HorizontalOptions="Center">
-            <Button Text="Guardar Disponibilidad"  BackgroundColor="#c0aa4f" TextColor="Black" CornerRadius="10" Clicked="OnGuardarClicked" />
+            <Button Text="Guardar Disponibilidad"  BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="10" Clicked="OnGuardarClicked" />
         </HorizontalStackLayout>
     </Grid>
 </ContentPage>
