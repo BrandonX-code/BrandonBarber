@@ -54,6 +54,7 @@ namespace Gasolutions.Maui.App
             builder.Services.AddSingleton<AuthService>();
             builder.Services.AddSingleton<DisponibilidadService>();
             builder.Services.AddSingleton<GaleriaService>();
+            builder.Services.AddSingleton<ServicioService>();
 
             // Registrar páginas
             builder.Services.AddSingleton<LoginPage>();

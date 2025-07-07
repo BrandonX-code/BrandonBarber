@@ -3,6 +3,7 @@
     public partial class InicioPages : ContentPage
     {
         private readonly AuthService _authService;
+        private readonly ServicioService _servicioService; // Inyecta este servicio
         private List<UsuarioModels> _todosLosBarberos;
         public List<UsuarioModels> TodosLosBarberos
         {
@@ -14,15 +15,14 @@
             }
         }
 
-
-        public InicioPages(AuthService authService)
+        public InicioPages(AuthService authService, ServicioService servicioService)
         {
             InitializeComponent();
             _authService = authService;
-
-            // Cargar la información del usuario y mostrar la vista correspondiente
+            _servicioService = servicioService;
             LoadUserInfo();
         }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -30,7 +30,19 @@
             {
                 //LoadDisponibilidad();
                 _ = LoadBarberos();
-                
+            }
+        }
+
+        private async void CargarServicios()
+        {
+            try
+            {
+                var servicios = await _servicioService.GetServiciosAsync();
+                ServiciosCarousel.ItemsSource = servicios;
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", "No se pudieron cargar los servicios: " + ex.Message, "OK");
             }
         }
 
@@ -40,20 +52,24 @@
             var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
             await Navigation.PushAsync(new MainPage(reservationService, authService));
         }
+
         private async void CitasList(object sender, EventArgs e)
         {
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new ListaCitas(reservationService));
         }
+
         private async void BuscarCitas(object sender, EventArgs e)
         {
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new BuscarPage(reservationService));
         }
+
         private async void PerfilPage(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new PerfilPage());
         }
+
         private async void galery(object sender, EventArgs e)
         {
             var galeriaService = Handler.MauiContext.Services.GetService<GaleriaService>();
@@ -94,7 +110,13 @@
 
         private async void OnInicioClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new InicioPages(_authService));
+            var serviciosService = App.Current.Handler.MauiContext.Services.GetRequiredService<ServicioService>();
+            await Navigation.PushAsync(new InicioPages(_authService, serviciosService));
+        }
+        private async void GestionDeServicios(object sender, EventArgs e)
+        {
+            var serviciosService = App.Current.Handler.MauiContext.Services.GetRequiredService<ServicioService>();
+            await Navigation.PushAsync(new GestionarServiciosPage(serviciosService));
         }
 
         private async void OnBuscarClicked(object sender, EventArgs e)
@@ -108,12 +130,14 @@
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new ListaCitas(reservationService));
         }
+
         private async void VerMetricas(object sender, EventArgs e)
         {
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
             await Navigation.PushAsync(new MetricasPage(reservationService, authService));
         }
+
         private void LoadUserInfo()
         {
             if (AuthService.CurrentUser != null)
@@ -133,6 +157,7 @@
                         BarberoView.IsVisible = false;
                         AdminView.IsVisible = false; // Ocultar panel admin
                         GaleriaClienteFrame.IsVisible = true;
+                        CargarServicios();
                         break;
 
                     case "barbero":
@@ -158,6 +183,7 @@
                 }
             }
         }
+
         // Add this method to the InicioPages class
         private async void GestionarDisponibilidad(object sender, EventArgs e)
         {
@@ -186,8 +212,6 @@
                     TodosLosBarberos = barberos;
                     Picker.ItemsSource = TodosLosBarberos;
                 }
-
-
                 else
                 {
                     await DisplayAlert("Error", "No se pudieron cargar los barberos", "OK");

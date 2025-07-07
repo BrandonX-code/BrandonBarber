@@ -92,7 +92,8 @@ namespace Gasolutions.Maui.App.Pages
             EmailEntry.Text = string.Empty;
             PasswordEntry.Text = string.Empty;
             Preferences.Set("IsLoggedIn", true);
-            Application.Current.MainPage = new NavigationPage(new InicioPages(_authService));
+            var serviciosService = App.Current.Handler.MauiContext.Services.GetRequiredService<ServicioService>();
+            Application.Current.MainPage = new NavigationPage(new InicioPages(_authService, serviciosService));
         }
     }
 }
