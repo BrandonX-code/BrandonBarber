@@ -51,9 +51,9 @@
 				</Frame>
 
 				<!-- Gráfico de Cancelaciones -->
-				<!--<Frame BackgroundColor="#232323" BorderColor="#c0aa4f" Padding="16" CornerRadius="16" HasShadow="True">
+				<!--<Frame BackgroundColor="#232323" BorderColor="#90A4AE" Padding="16" CornerRadius="16" HasShadow="True">
                     <VerticalStackLayout>
-                        <Label Text="Tasa de Cancelaciones" TextColor="#c0aa4f" FontSize="20" FontAttributes="Bold"/>
+                        <Label Text="Tasa de Cancelaciones" TextColor="#90A4AE" FontSize="20" FontAttributes="Bold"/>
                         <microcharts:ChartView x:Name="CancelacionesChart" HeightRequest="220" BackgroundColor="#fffbe6"/>
                     </VerticalStackLayout>
                 </Frame>-->
@@ -71,7 +71,7 @@
 							</Picker>
 						</Grid>
                         <Frame BackgroundColor="#0E2A36" Padding="0" CornerRadius="16" HasShadow="False">
-                            <microcharts:ChartView x:Name="RankingBarberosChart" HeightRequest="220" BackgroundColor="#fffbe6"/>
+                            <microcharts:ChartView x:Name="RankingBarberosChart" HeightRequest="220" BackgroundColor="Transparent"/>
                         </Frame>
                     </VerticalStackLayout>
 				</Frame>

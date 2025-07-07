@@ -27,21 +27,10 @@
                     </VisualStateGroupList>
                 </Setter>
             </Style>
-
-            <Style x:Key="ButtonStyle" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="Transparent" />
-                <Setter Property="TextColor" Value="Black" />
-                <Setter Property="BorderColor" Value="#c0aa4f" />
-                <Setter Property="BorderWidth" Value="1" />
-                <Setter Property="CornerRadius" Value="10" />
-                <Setter Property="Padding" Value="15,8" />
-            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
     <AbsoluteLayout>
-        <!--<Image Source="fondobarber.jpg" Aspect="AspectFill" Opacity="0.90" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All"/>-->
-
         <Grid x:Name="mainContent" Opacity="0" RowDefinitions="Auto, *, Auto" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
 
             <Label Text="Reservar Turno" FontSize="32" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
@@ -115,7 +104,7 @@
                     <TapGestureRecognizer />
                 </BoxView.GestureRecognizers>
             </BoxView>
-            <ActivityIndicator IsRunning="True" Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="50" HeightRequest="50"/>
+            <ActivityIndicator IsRunning="True" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="50" HeightRequest="50"/>
         </Grid>
     </AbsoluteLayout>
 </ContentPage>

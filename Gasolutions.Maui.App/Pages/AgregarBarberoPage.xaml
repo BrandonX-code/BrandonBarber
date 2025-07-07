@@ -97,7 +97,7 @@
                 <!--
                 <HorizontalStackLayout Spacing="10" Margin="0,10">
                     <Label Text="Barbero activo:" TextColor="White" FontSize="16" VerticalOptions="Center" />
-                    <Switch x:Name="ActivoSwitch" IsToggled="True" OnColor="#c0aa4f" />
+                    <Switch x:Name="ActivoSwitch" IsToggled="True" OnColor="#90A4AE" />
                 </HorizontalStackLayout>-->
 
                 <Label x:Name="ErrorLabel" TextColor="#ff0000" FontSize="14" HorizontalOptions="Center" IsVisible="False" />
@@ -113,7 +113,7 @@
                     <Button Text="Agregar Barbero" Grid.Column="1" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnAgregarBarberoClicked" />
                 </Grid>
 
-                <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#c0aa4f" VerticalOptions="Center" HorizontalOptions="Center" />
+                <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" />
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

@@ -63,7 +63,7 @@
                                 <CollectionView x:Name="DisponibilidadListView" IsVisible="false" HeightRequest="250">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
-                                            <Frame BackgroundColor="#0E2A36" CornerRadius="10" Padding="10" Margin="5">
+                                            <Frame BackgroundColor="#2a3f48" CornerRadius="10" Padding="10" Margin="5">
                                                 <StackLayout>
                                                     <Label Text="{Binding Hora}" TextColor="White" FontSize="20" FontAttributes="Bold" />
                                                     <Label Text="{Binding Disponible}" TextColor="{Binding Disponible, Converter={StaticResource DisponibilidadColorConverter}}" FontSize="18" />

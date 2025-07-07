@@ -44,7 +44,7 @@
         <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <Grid Padding="15,10" BackgroundColor="Transparent">
                 <VerticalStackLayout Spacing="5">
-                    <Frame BackgroundColor="#555f64" CornerRadius="10" Padding="15" HasShadow="True">
+                    <Frame BackgroundColor="#2a3f48" CornerRadius="10" Padding="15" HasShadow="True">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Próximas Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasProximasCitas}"/>
                             <CollectionView x:Name="ProximasCitasCollection" ItemsSource="{Binding ProximasCitas}" EmptyView="No hay citas próximas Ingrese su Cedula" HeightRequest="330">
@@ -88,7 +88,7 @@
                         </VerticalStackLayout>
                     </Frame>
 
-                    <Frame BackgroundColor="#555f64" CornerRadius="10" Padding="15" HasShadow="True">
+                    <Frame BackgroundColor="#2a3f48" CornerRadius="10" Padding="15" HasShadow="True">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Historial de Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasHistorialCitas}" Margin="0,5,0,0"/>
                             <CollectionView x:Name="HistorialCitasCollection"  ItemsSource="{Binding HistorialCitas}" EmptyView="No hay historial de citas Ingrese su Cedula" HeightRequest="285">
