@@ -196,8 +196,15 @@ namespace Gasolutions.Maui.App.Pages
                 if (result != null)
                 {
                     _imagenSeleccionada = result;
+
+                    // Crear una copia del stream en memoria
                     using var stream = await result.OpenReadAsync();
-                    PreviewImage.Source = ImageSource.FromStream(() => stream);
+                    var memoryStream = new MemoryStream();
+                    await stream.CopyToAsync(memoryStream);
+                    memoryStream.Position = 0;
+
+                    // Asignar la imagen y hacerla visible
+                    PreviewImage.Source = ImageSource.FromStream(() => new MemoryStream(memoryStream.ToArray()));
                     PreviewImage.IsVisible = true;
                 }
             }

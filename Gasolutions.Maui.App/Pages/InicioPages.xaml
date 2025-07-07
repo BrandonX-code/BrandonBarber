@@ -250,7 +250,7 @@
                             </HorizontalStackLayout>
                         </Frame>
                         
-                        <Label Text="Gestion De Servicios" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
+                        <Label Text="Servicios" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
 
                         <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
