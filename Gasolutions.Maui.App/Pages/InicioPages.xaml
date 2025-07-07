@@ -34,60 +34,58 @@
                     <VerticalStackLayout x:Name="ClienteView" IsVisible="false" Padding="20" Spacing="20">
                         <Label Text="Panel de Cliente" FontSize="24" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center" />
 
-                        <Frame BackgroundColor="#2a3f48" CornerRadius="10" Margin="0,10,0,20" Padding="15">
-                            <VerticalStackLayout Spacing="15">
-                                <Label Text="Nuestros Servicios"  TextColor="#E0F7FA" 
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="Nuestros Servicios"  TextColor="#E0F7FA" 
                                        FontSize="22" 
                                        FontAttributes="Bold" 
                                        HorizontalOptions="Center"/>
-                                       
-                                <CarouselView x:Name="ServiciosCarousel" 
+
+                            <CarouselView x:Name="ServiciosCarousel" 
                                               HeightRequest="280" 
                                               PeekAreaInsets="70"
                                               Loop="False">
-                                    <CarouselView.ItemsLayout>
-                                        <LinearItemsLayout Orientation="Horizontal"
+                                <CarouselView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Horizontal"
                                                          SnapPointsType="MandatorySingle"
                                                          SnapPointsAlignment="Center"/>
-                                    </CarouselView.ItemsLayout>
-                                    <CarouselView.ItemTemplate>
-                                        <DataTemplate>
-                                            <Frame BackgroundColor="#90A4AE" 
+                                </CarouselView.ItemsLayout>
+                                <CarouselView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Frame BackgroundColor="#90A4AE" 
                                                    CornerRadius="10" 
                                                    Margin="5" 
                                                    HeightRequest="280"
                                                    WidthRequest="180">
-                                                <Grid RowSpacing="15">
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="130"/>
-                                                        <RowDefinition Height="Auto"/>
-                                                        <RowDefinition Height="Auto"/>
-                                                    </Grid.RowDefinitions>
-                                                    
-                                                    <Image Grid.Row="0"
+                                            <Grid RowSpacing="15">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="130"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <Image Grid.Row="0"
                                                            Source="{Binding Imagen}"
                                                            Aspect="AspectFill"
                                                            HeightRequest="130"/>
-                                                    
-                                                    <Label Grid.Row="1"
+
+                                                <Label Grid.Row="1"
                                                            Text="{Binding Nombre}"
                                                            TextColor="Black"
                                                            FontSize="18"
                                                            FontAttributes="Bold"
                                                            HorizontalOptions="Center"/>
-                                                    
-                                                    <Label Grid.Row="2"
+
+                                                <Label Grid.Row="2"
                                                            Text="{Binding Precio, StringFormat='${0:N0}'}"
                                                            TextColor="#0E2A36"
                                                            FontSize="16"
                                                            HorizontalOptions="Center"/>
-                                                </Grid>
-                                            </Frame>
-                                        </DataTemplate>
-                                    </CarouselView.ItemTemplate>
-                                </CarouselView>
-                            </VerticalStackLayout>
-                        </Frame>
+                                            </Grid>
+                                        </Frame>
+                                    </DataTemplate>
+                                </CarouselView.ItemTemplate>
+                            </CarouselView>
+                        </VerticalStackLayout>
 
                         <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
