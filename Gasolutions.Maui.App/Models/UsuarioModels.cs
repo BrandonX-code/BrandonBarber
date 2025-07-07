@@ -19,6 +19,12 @@ namespace Gasolutions.Maui.App.Models
         public string Token { get; set; }
         public string Telefono { get; set; }
 
+        [JsonPropertyName("imagenPath")]
+        public string? ImagenPath { get; set; }
+
+        [StringLength(200)]
+        public string Direccion { get; set; }
+
         [JsonIgnore]
         public bool IsAdmin => Rol?.ToLower() == "admin";
 

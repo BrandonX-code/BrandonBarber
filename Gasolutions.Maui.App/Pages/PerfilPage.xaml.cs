@@ -2,7 +2,7 @@
 {
     public partial class PerfilPage : ContentPage
     {
-        private PerfilUsuario _perfilData;
+        private UsuarioModels _perfilData;
         private readonly PerfilUsuarioService _perfilService;
 
         public PerfilPage()
@@ -10,7 +10,7 @@
             InitializeComponent();
             _perfilService = Application.Current.Handler.MauiContext.Services.GetService<PerfilUsuarioService>();
 
-            MessagingCenter.Subscribe<EditarPerfilPage, PerfilUsuario>(
+            MessagingCenter.Subscribe<EditarPerfilPage, UsuarioModels>(
                 this, "PerfilActualizado", (sender, perfilActualizado) =>
                 {
                     ActualizarPerfil(perfilActualizado);
@@ -39,7 +39,7 @@
                 }
                 else
                 {
-                    _perfilData = new PerfilUsuario
+                    _perfilData = new UsuarioModels
                     {
                         Cedula = AuthService.CurrentUser.Cedula,
                         Nombre = AuthService.CurrentUser.Nombre,
@@ -64,7 +64,7 @@
             }
         }
 
-        private void ActualizarPerfil(PerfilUsuario perfilActualizado)
+        private void ActualizarPerfil(UsuarioModels perfilActualizado)
         {
             _perfilData = perfilActualizado;
             ActualizarUI();

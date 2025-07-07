@@ -21,7 +21,7 @@ namespace Gasolutions.Maui.App.Services
         /// <summary>
         /// Obtiene el perfil de usuario por su ID o cédula
         /// </summary>
-        public async Task<PerfilUsuario> GetPerfilUsuario(long cedula)
+        public async Task<UsuarioModels> GetPerfilUsuario(long cedula)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace Gasolutions.Maui.App.Services
                 var json = await response.Content.ReadAsStringAsync();
                 Console.WriteLine($"🔹 Respuesta API: {json}");
 
-                var perfil = JsonSerializer.Deserialize<PerfilUsuario>(json,
+                var perfil = JsonSerializer.Deserialize<UsuarioModels>(json,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 return perfil;
@@ -53,7 +53,7 @@ namespace Gasolutions.Maui.App.Services
         /// <summary>
         /// Guarda o actualiza el perfil de usuario
         /// </summary>
-        public async Task<bool> SavePerfilUsuario(PerfilUsuario perfil)
+        public async Task<bool> SavePerfilUsuario(UsuarioModels perfil)
         {
             try
             {
@@ -66,9 +66,9 @@ namespace Gasolutions.Maui.App.Services
                 HttpResponseMessage response;
 
                 // Si el perfil ya existe, actualizarlo
-                if (perfil.Id != 0)
+                if (perfil.Cedula != 0)
                 {
-                    response = await _httpClient.PutAsync($"api/perfiles/{perfil.Id}", content);
+                    response = await _httpClient.PutAsync($"api/perfiles/{perfil.Cedula}", content);
                 }
                 else
                 {

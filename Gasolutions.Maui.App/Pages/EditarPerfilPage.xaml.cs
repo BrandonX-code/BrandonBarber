@@ -2,19 +2,19 @@
 {
     public partial class EditarPerfilPage : ContentPage
     {
-        private PerfilUsuario _perfilData;
+        private UsuarioModels _perfilData;
 
         private readonly PerfilUsuarioService _perfilService;
 
         private bool _imagenModificada = false;
 
-        public EditarPerfilPage(PerfilUsuario perfilData = null)
+        public EditarPerfilPage(UsuarioModels perfilData = null)
         {
             InitializeComponent();
 
             _perfilService = Application.Current.Handler.MauiContext.Services.GetService<PerfilUsuarioService>();
 
-            _perfilData = perfilData ?? new PerfilUsuario
+            _perfilData = perfilData ?? new UsuarioModels
             {
                 Nombre = "Carlos Álvarez",
                 Telefono = "555-123-4567",

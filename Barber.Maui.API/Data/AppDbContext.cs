@@ -9,7 +9,7 @@ namespace Barber.Maui.API.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Cita> Citas { get; set; }
-        public DbSet<Perfil> Perfiles { get; set; }
+        //public DbSet<Perfil> Perfiles { get; set; }
         public DbSet<Auth> UsuarioPerfiles { get; set; }
         public DbSet<Disponibilidad> Disponibilidad { get; set; }
         public DbSet<ImagenGaleria> ImagenesGaleria { get; set; }

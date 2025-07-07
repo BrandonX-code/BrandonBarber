@@ -4,6 +4,7 @@ namespace Barber.Maui.API.Models
 {
     public class Auth
     {
+        
         [Key]
         [Required]
         public long Cedula { get; set; }
@@ -27,5 +28,8 @@ namespace Barber.Maui.API.Models
 
         [StringLength(50)] // Limitar el rol a 50 caracteres
         public string Rol { get; set; }
+
+        [StringLength(300)]
+        public string? ImagenPath { get; set; }
     }
 }
