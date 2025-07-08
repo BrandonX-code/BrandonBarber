@@ -35,6 +35,9 @@ namespace Gasolutions.Maui.App.Models
         public bool IsCliente => Rol?.ToLower() == "cliente";
 
         public int BarberoId { get; set; }
+        public int Visitas { get; set; }
+
+        public string Especialidades { get; set; }
     }
 
     // Clase para el login
@@ -56,6 +59,8 @@ namespace Gasolutions.Maui.App.Models
         public string Telefono { get; set; }
         public string Direccion { get; set; }
         public string Rol { get; set; } // cliente, barbero, administrador
+
+        public string Especialidades { get; set; }
     }
 
     // Clase para la respuesta de autenticación

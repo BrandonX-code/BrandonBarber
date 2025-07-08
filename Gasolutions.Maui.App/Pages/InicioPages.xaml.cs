@@ -5,6 +5,7 @@
         private readonly AuthService _authService;
         private readonly ServicioService _servicioService; // Inyecta este servicio
         private List<UsuarioModels> _todosLosBarberos;
+        public int Visitas { get; set; }
         public List<UsuarioModels> TodosLosBarberos
         {
             get => _todosLosBarberos;
@@ -158,6 +159,7 @@
                         AdminView.IsVisible = false; // Ocultar panel admin
                         GaleriaClienteFrame.IsVisible = true;
                         CargarServicios();
+                        CargarBarberos();
                         break;
 
                     case "barbero":
@@ -269,5 +271,49 @@
                 NoDisponibilidadAlert.IsVisible = true;
             }
         }
+        private async void CargarBarberos()
+        {
+            try
+            {
+                var response = await _authService._BaseClient.GetAsync("api/auth");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var jsonContent = await response.Content.ReadAsStringAsync();
+                    var usuarios = System.Text.Json.JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent,
+                        new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero").ToList() ?? new List<UsuarioModels>();
+                    BarberosCollectionView.ItemsSource = barberos;
+                }
+                else
+                {
+                    await DisplayAlert("Error", "No se pudieron cargar los barberos", "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Error al cargar los barberos: {ex.Message}", "OK");
+            }
+        }
+        //private async void OnBarberoSelected(object sender, EventArgs e)
+        //{
+        //    var tappedEventArgs = e as TappedEventArgs;
+        //    if (tappedEventArgs?.Parameter is UsuarioModels barbero)
+        //    {
+        //        // Aquí puedes navegar a la página de detalles del barbero
+        //        // o cargar su disponibilidad
+        //        await CargarDisponibilidadesPorBarberoAsync(barbero.Cedula);
+        //    }
+        //}
+        private async void OnBarberoSelected(object sender, EventArgs e)
+        {
+            if (sender is Frame frame && frame.BindingContext is UsuarioModels barbero)
+            {
+                await Navigation.PushAsync(new BarberoDetailPage(barbero));
+            }
+        }
+
+
     }
 }

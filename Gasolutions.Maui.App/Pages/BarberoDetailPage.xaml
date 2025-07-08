@@ -1,0 +1,158 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gasolutions.Maui.App.Pages.BarberoDetailPage"
+             BackgroundColor="#0E2A36">
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<!-- Header -->
+		<Grid Grid.Row="0" Padding="20,40,20,20">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="Auto"/>
+			</Grid.ColumnDefinitions>
+
+			<Image Grid.Column="2"
+                   Source="menu.png"
+                   HeightRequest="24"
+                   WidthRequest="24"/>
+		</Grid>
+
+		<ScrollView Grid.Row="1">
+			<VerticalStackLayout Padding="20" Spacing="20">
+
+				<!-- Perfil del Barbero -->
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+
+					<Frame Grid.Column="0"
+                           BackgroundColor="#E8F4FD"
+                           CornerRadius="10"
+                           Padding="0"
+                           HeightRequest="180"
+                           WidthRequest="150"
+                           IsClippedToBounds="True">
+						<Image x:Name="BarberoImage"
+                               Source="{Binding ImagenPath}"
+                               Aspect="AspectFill"/>
+					</Frame>
+
+					<VerticalStackLayout Grid.Column="1"
+                                       Padding="15,0,0,0"
+                                       Spacing="5">
+						<Label x:Name="BarberoName"
+                               FontSize="30"
+                               TextColor="white"
+                               FontAttributes="Bold"/>
+						<Label Text="★★★★★"
+                               FontSize="14"
+                               TextColor="orange"/>
+						<Label x:Name="BarberoVisitasLabel" TextColor="White" FontSize="14"/>
+					</VerticalStackLayout>
+				</Grid>
+
+				<!-- Descripción y Especialidades -->
+				<VerticalStackLayout Spacing="10">
+					<Label Text="Especialidades"
+						   TextColor="#4A90E2"
+						   FontSize="16"
+						   FontAttributes="Bold"/>
+
+					<Label x:Name="DescripcionLabel"
+						   TextColor="White"
+						   FontSize="14"
+						   LineHeight="1.4"/>
+
+					<FlexLayout x:Name="EspecialidadesContainer"
+								Wrap="Wrap"
+								JustifyContent="Start"
+								AlignItems="Center"/>
+				</VerticalStackLayout>
+
+				<!-- Calendario Mejorado -->
+				<Frame BackgroundColor="#90A4AE"
+                       CornerRadius="15"
+                       Padding="0"
+                       HasShadow="False">
+					<VerticalStackLayout Spacing="0">
+						<!-- Header del calendario -->
+						<Frame BackgroundColor="#4A90E2"
+                               CornerRadius="15,15,0,0"
+                               Padding="15,12"
+                               HasShadow="False">
+							<Label Text="Fecha"
+                                   TextColor="White"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"/>
+						</Frame>
+
+						<!-- Días de la semana -->
+						<HorizontalStackLayout  Padding="15,20,15,10" Spacing="7">
+							<!--<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="*"/>
+							</Grid.ColumnDefinitions>-->
+
+							<Label  Text="Lunes" TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
+							<Label  Text="Martes" TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
+							<Label  Text="Miercoles" TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
+							<Label  Text="Jueves" TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
+							<Label  Text="Viernes" TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
+							<Label  Text="Sabado" TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
+							<Label  Text="Domingo" TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
+						</HorizontalStackLayout >
+
+						<!-- Contenedor para los días del mes -->
+						<Grid x:Name="CalendarioGrid" Padding="15,0,15,20">
+							<!-- Este Grid se llenará dinámicamente desde el código -->
+						</Grid>
+					</VerticalStackLayout>
+				</Frame>
+
+				<!-- Horarios Disponibles -->
+				<VerticalStackLayout Spacing="15">
+					<Label Text="Horas Disponibles"
+                           TextColor="#4A90E2"
+                           FontSize="16"
+                           FontAttributes="Bold"/>
+
+					<Label x:Name="NoAvailabilityLabel"
+						  Text="No hay horarios disponibles"
+						  TextColor="White"
+						  IsVisible="false"/>
+
+					<ScrollView Orientation="Horizontal">
+						<HorizontalStackLayout x:Name="AvailableHoursContainer" Spacing="15">
+							<!-- Los horarios disponibles se añadirán aquí dinámicamente -->
+						</HorizontalStackLayout>
+					</ScrollView>
+				</VerticalStackLayout>
+
+				<!-- Botón de Cita -->
+				<Button Text="Reservar Cita"
+                        BackgroundColor="#FF6F91"
+                        TextColor="White"
+                        FontSize="16"
+                        CornerRadius="25"
+                        HeightRequest="50"
+                        Margin="0,20,0,0"
+                        Clicked="OnMakeAppointmentClicked"/>
+
+			</VerticalStackLayout>
+		</ScrollView>
+	</Grid>
+</ContentPage>

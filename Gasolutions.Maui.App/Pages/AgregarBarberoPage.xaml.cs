@@ -36,6 +36,7 @@
                     ConfirmContraseña = ConfirmPasswordEntry.Text,
                     Telefono = TelefonoEntry.Text ?? "",
                     Direccion = DireccionEntry.Text ?? "",
+                    Especialidades = EspecialidadesEntry.Text ?? "",
                     Rol = "barbero" // Siempre barbero
                 };
 

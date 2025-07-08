@@ -80,6 +80,9 @@
 	  <MauiXaml Update="Pages\AgregarBarberoPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\BarberoDetailPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\BuscarPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

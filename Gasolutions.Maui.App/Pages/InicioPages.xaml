@@ -147,6 +147,79 @@
                             </HorizontalStackLayout>
                         </Frame>
 
+                        <!-- AQUÍ VA TU SECCIÓN DE BARBEROS -->
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="Barberos" 
+           TextColor="#E0F7FA" 
+           FontSize="22" 
+           FontAttributes="Bold" 
+           HorizontalOptions="Center"/>
+
+                            <CollectionView x:Name="BarberosCollectionView" 
+                    HeightRequest="200">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="15"/>
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Frame BackgroundColor="#90A4AE" 
+                       CornerRadius="15" 
+                       Padding="15" 
+                       HasShadow="False"
+                       HeightRequest="200"
+                       WidthRequest="140" >
+                                            <Frame.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
+                                            </Frame.GestureRecognizers>
+                                            <Grid RowSpacing="8">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="80"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <Frame Grid.Row="0" 
+                               BackgroundColor="White" 
+                               CornerRadius="40" 
+                               HeightRequest="80" 
+                               WidthRequest="80" 
+                               HorizontalOptions="Center" 
+                               Padding="0"
+                               IsClippedToBounds="True">
+                                                    <Image Source="{Binding ImagenPath}" 
+                                   HeightRequest="80" 
+                                   WidthRequest="80" 
+                                   Aspect="AspectFill"/>
+                                                </Frame>
+
+                                                <Label Grid.Row="1"
+                               Text="{Binding Nombre}"
+                               TextColor="#1E3A8A"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center"/>
+
+                                                <HorizontalStackLayout Grid.Row="2" 
+                                             HorizontalOptions="Center" 
+                                             Spacing="2">
+                                                    <Label Text="★★★★★" 
+                                   TextColor="Orange" 
+                                   FontSize="12"/>
+                                                </HorizontalStackLayout>
+                                                <Label Grid.Row="3"
+       Text="{Binding Visitas, StringFormat='Visitas: {0}'}"
+       TextColor="#6B7280"
+       FontSize="10"
+       HorizontalOptions="Center"/>
+                                            </Grid>
+                                        </Frame>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+
+                        <!-- Después van los botones de "Agendar Una Cita", etc. -->
                     </VerticalStackLayout>
 
                     <!-- BarberoView -->
@@ -249,7 +322,7 @@
                                 <Label Text="Ver Todas las Citas" TextColor="black" FontSize="20" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
-                        
+
                         <Label Text="Servicios" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
 
                         <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
