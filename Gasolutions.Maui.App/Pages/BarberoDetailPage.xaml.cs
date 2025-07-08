@@ -5,6 +5,7 @@
         private readonly UsuarioModels _barbero;
         private readonly DisponibilidadService _disponibilidadService;
         private readonly AuthService _authService;
+        private readonly ReservationService _reservationService;
         private DateTime? _diaSeleccionado;
         private List<DisponibilidadModel> _disponibilidades;
         private Button _botonSeleccionado;
@@ -15,6 +16,7 @@
             _barbero = barbero;
             _disponibilidadService = App.Current.Handler.MauiContext.Services.GetRequiredService<DisponibilidadService>();
             _authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
+            _reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             LoadBarberoData();
             ContarYMostrarVisita();
             LoadCalendario();
@@ -86,29 +88,27 @@
             CalendarioGrid.RowDefinitions.Clear();
             CalendarioGrid.ColumnDefinitions.Clear();
 
-            // Configurar columnas (7 días de la semana)
+            // Configurar columnas (7 días de la semana) con espaciado uniforme
             for (int i = 0; i < 7; i++)
             {
                 CalendarioGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             }
 
-            // Obtener el primer día del mes actual
             var today = DateTime.Today;
             var firstDayOfMonth = new DateTime(today.Year, today.Month, 1);
             var lastDayOfMonth = firstDayOfMonth.AddMonths(1).AddDays(-1);
 
-            // Obtener el día de la semana del primer día (0 = Domingo, 1 = Lunes, etc.)
-            var firstDayOfWeek = ((int)firstDayOfMonth.DayOfWeek + 6) % 7; // Ajustar para que Lunes sea 0
+            // Ajustar para que Lunes sea el primer día (0=Lunes, 6=Domingo)
+            var firstDayOfWeek = ((int)firstDayOfMonth.DayOfWeek + 6) % 7;
 
-            // Calcular cuántas filas necesitamos
             var totalDays = lastDayOfMonth.Day;
             var totalCells = firstDayOfWeek + totalDays;
             var rows = (int)Math.Ceiling(totalCells / 7.0);
 
-            // Crear las filas
+            // Crear las filas con altura ajustable para mejor distribución
             for (int i = 0; i < rows; i++)
             {
-                CalendarioGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Auto) });
+                CalendarioGrid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(45, GridUnitType.Absolute) });
             }
 
             // Llenar el calendario
@@ -118,57 +118,66 @@
                 var position = firstDayOfWeek + day - 1;
                 var row = position / 7;
                 var col = position % 7;
-
                 var isAvailable = diasDisponibles.Contains(currentDate);
                 var isToday = currentDate.Date == today.Date;
+
+                // Crear un Frame contenedor con mejor espaciado
+                var frame = new Frame
+                {
+                    Padding = new Thickness(3),
+                    BackgroundColor = Colors.Transparent,
+                    BorderColor = Colors.Transparent,
+                    HasShadow = false,
+                    IsClippedToBounds = true,
+                    Margin = new Thickness(2)
+                };
 
                 var button = new Button
                 {
                     Text = day.ToString(),
-                    FontSize = 14,
-                    CornerRadius = 20,
-                    WidthRequest = 40,
-                    HeightRequest = 40,
-                    Margin = new Thickness(2),
-                    IsEnabled = isAvailable && currentDate >= today // Solo días disponibles y futuros
+                    FontSize = 13,
+                    CornerRadius = 8, // Radio más pequeño para mejor ajuste
+                    WidthRequest = 35,
+                    HeightRequest = 32,
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center,
+                    IsEnabled = false,
+                    InputTransparent = true,
+                    Padding = new Thickness(0),
+                    FontAttributes = FontAttributes.Bold
                 };
 
-                // Estilo del botón según el estado
-                if (!button.IsEnabled)
+                // Estilo del botón - solo visual, sin funcionalidad
+                if (!isAvailable || currentDate < today)
                 {
-                    // Días no disponibles o pasados
                     button.BackgroundColor = Colors.Transparent;
                     button.TextColor = Color.FromArgb("#CCCCCC");
                     button.BorderWidth = 0;
+                    button.FontAttributes = FontAttributes.None;
                 }
                 else if (isToday)
                 {
-                    // Día actual
-                    button.BackgroundColor = Color.FromArgb("#FF6F91");
-                    button.TextColor = Colors.Black;
+                    button.BackgroundColor = Color.FromArgb("#0e2a36");
+                    button.TextColor = Colors.White;
                     button.BorderWidth = 0;
+                    button.FontAttributes = FontAttributes.Bold;
                 }
                 else
                 {
-                    // Días disponibles
                     button.BackgroundColor = Colors.Transparent;
                     button.TextColor = Colors.Black;
                     button.BorderWidth = 1;
                     button.BorderColor = Color.FromArgb("#EEEEEE");
+                    button.FontAttributes = FontAttributes.None;
                 }
 
-                // Evento click
-                if (button.IsEnabled)
-                {
-                    button.Pressed += (s, e) => OnDaySelected(currentDate, button);
-                }
-
-                Grid.SetRow(button, row);
-                Grid.SetColumn(button, col);
-                CalendarioGrid.Children.Add(button);
+                frame.Content = button;
+                Grid.SetRow(frame, row);
+                Grid.SetColumn(frame, col);
+                CalendarioGrid.Children.Add(frame);
             }
 
-            // Seleccionar el día actual por defecto si está disponible
+            // Mostrar horarios del día actual por defecto si está disponible
             if (diasDisponibles.Contains(today))
             {
                 _diaSeleccionado = today;
@@ -176,7 +185,6 @@
             }
             else
             {
-                // Seleccionar el primer día disponible
                 var primerDiaDisponible = diasDisponibles.Where(d => d >= today).OrderBy(d => d).FirstOrDefault();
                 if (primerDiaDisponible != default(DateTime))
                 {
@@ -185,7 +193,8 @@
                 }
             }
         }
-
+        // MÉTODO REMOVIDO - Ya no se necesita selección de días
+        /*
         private void OnDaySelected(DateTime fecha, Button button)
         {
             // Restaurar el estilo del botón anteriormente seleccionado
@@ -198,7 +207,7 @@
             }
 
             // Aplicar estilo al botón seleccionado
-            button.BackgroundColor = Color.FromArgb("#FF6F91");
+            button.BackgroundColor = Color.FromArgb("#0e2a36");
             button.TextColor = Colors.White;
             button.BorderWidth = 0;
 
@@ -206,6 +215,7 @@
             _diaSeleccionado = fecha;
             LoadHorasDisponiblesParaDia(fecha);
         }
+        */
 
         private void LoadHorasDisponiblesParaDia(DateTime dia)
         {
@@ -222,16 +232,18 @@
                 {
                     var frame = new Frame
                     {
-                        BackgroundColor = Color.FromArgb("#4A90E2"),
+                        BackgroundColor = Color.FromArgb("#90A4AE"),
                         CornerRadius = 5,
                         Padding = new Thickness(15, 8),
-                        HasShadow = false
+                        HasShadow = false,
+                        HeightRequest = 40
+
                     };
 
                     var label = new Label
                     {
                         Text = hora,
-                        TextColor = Colors.White,
+                        TextColor = Colors.Black,
                         FontSize = 14
                     };
 
@@ -246,10 +258,20 @@
 
         private async void ContarYMostrarVisita()
         {
-            var barberoActualizado = await _authService.GetUserByCedula(_barbero.Cedula);
-            if (barberoActualizado != null)
+            try
             {
-                BarberoVisitasLabel.Text = $"Visitas: {barberoActualizado.Visitas}";
+                var barberoCedula = AuthService.CurrentUser.Cedula;
+                // Obtener todas las citas
+                var todasLasCitas = await _reservationService.GetReservationsById(barberoCedula);
+
+                // Contar las citas donde el barbero sea el actual
+                int visitas = todasLasCitas.Count(c => c.BarberoId == _barbero.Cedula);
+
+                BarberoVisitasLabel.Text = $"Visitas: {visitas}";
+            }
+            catch (Exception ex)
+            {
+                BarberoVisitasLabel.Text = "Visitas: 0";
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"  
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Gasolutions.Maui.App.Pages.InicioPages"  
              xmlns:local="clr-namespace:Gasolutions.Maui.App.style">
     <ContentPage.Resources>
@@ -97,7 +97,7 @@
                             </HorizontalStackLayout>
                         </Frame>
 
-                        <Label Text="Disponibilidad del barbero" TextColor="White" FontSize="20" VerticalOptions="Center"/>
+                        <!--<Label Text="Disponibilidad del barbero" TextColor="White" FontSize="20" VerticalOptions="Center"/>
                         <VerticalStackLayout Spacing="5">
                             <Label Text="Seleccione el Barbero Para Ver Su Disponibilidad" TextColor="#B0BEC5" FontSize="16" />
                             <Frame CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#90A4AE" HeightRequest="45" IsClippedToBounds="True">
@@ -126,7 +126,7 @@
                                     </CollectionView.ItemTemplate>
                                 </CollectionView>
                             </VerticalStackLayout>
-                        </Frame>
+                        </Frame>-->
 
                         <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
@@ -147,79 +147,45 @@
                             </HorizontalStackLayout>
                         </Frame>
 
-                        <!-- AQUÍ VA TU SECCIÓN DE BARBEROS -->
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="Barberos" 
-           TextColor="#E0F7FA" 
-           FontSize="22" 
-           FontAttributes="Bold" 
-           HorizontalOptions="Center"/>
+                        <VerticalStackLayout Spacing="15" Padding="20">
+                            <Label Text="Barberos" TextColor="#E0F7FA" FontSize="22"  FontAttributes="Bold"  HorizontalOptions="Center"/>
 
-                            <CollectionView x:Name="BarberosCollectionView" 
-                    HeightRequest="200">
+                            <CollectionView x:Name="BarberosCollectionView"  HeightRequest="320">
                                 <CollectionView.ItemsLayout>
-                                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="15"/>
+                                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Frame BackgroundColor="#90A4AE" 
-                       CornerRadius="15" 
-                       Padding="15" 
-                       HasShadow="False"
-                       HeightRequest="200"
-                       WidthRequest="140" >
+                                        <Frame BackgroundColor="#90A4AE" CornerRadius="20" Padding="20"  HasShadow="True" HeightRequest="280" WidthRequest="200">
                                             <Frame.GestureRecognizers>
                                                 <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
                                             </Frame.GestureRecognizers>
-                                            <Grid RowSpacing="8">
+
+                                            <Grid RowSpacing="10">
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="80"/>
+                                                    <RowDefinition Height="150"/>
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
 
-                                                <Frame Grid.Row="0" 
-                               BackgroundColor="White" 
-                               CornerRadius="40" 
-                               HeightRequest="80" 
-                               WidthRequest="80" 
-                               HorizontalOptions="Center" 
-                               Padding="0"
-                               IsClippedToBounds="True">
-                                                    <Image Source="{Binding ImagenPath}" 
-                                   HeightRequest="80" 
-                                   WidthRequest="80" 
-                                   Aspect="AspectFill"/>
+                                                <Frame Grid.Row="0" BackgroundColor="#F0F0F0" CornerRadius="6"  HeightRequest="150"  WidthRequest="120"  HorizontalOptions="Center"  Padding="0" IsClippedToBounds="True">
+                                                    <Image Source="{Binding ImagenPath}"  HeightRequest="150"  WidthRequest="120"  Aspect="AspectFill"/>
+                                                    <Frame.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
+                                                    </Frame.GestureRecognizers>
                                                 </Frame>
-
-                                                <Label Grid.Row="1"
-                               Text="{Binding Nombre}"
-                               TextColor="#1E3A8A"
-                               FontSize="14"
-                               FontAttributes="Bold"
-                               HorizontalOptions="Center"/>
-
-                                                <HorizontalStackLayout Grid.Row="2" 
-                                             HorizontalOptions="Center" 
-                                             Spacing="2">
-                                                    <Label Text="★★★★★" 
-                                   TextColor="Orange" 
-                                   FontSize="12"/>
+                                                <Label Grid.Row="1" Text="{Binding Nombre}" TextColor="Black" FontSize="15" FontAttributes="Bold" HorizontalOptions="Center" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" MaxLines="2"/>
+                                                <HorizontalStackLayout Grid.Row="2"  HorizontalOptions="Center"  Spacing="1">
+                                                    <Label Text="★★★★★" TextColor="Black" FontSize="20"/>
                                                 </HorizontalStackLayout>
-                                                <Label Grid.Row="3"
-       Text="{Binding Visitas, StringFormat='Visitas: {0}'}"
-       TextColor="#6B7280"
-       FontSize="10"
-       HorizontalOptions="Center"/>
                                             </Grid>
                                         </Frame>
+
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
                         </VerticalStackLayout>
-
-                        <!-- Después van los botones de "Agendar Una Cita", etc. -->
                     </VerticalStackLayout>
 
                     <!-- BarberoView -->

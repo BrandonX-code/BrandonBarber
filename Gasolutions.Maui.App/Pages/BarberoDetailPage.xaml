@@ -34,7 +34,7 @@
 					</Grid.ColumnDefinitions>
 
 					<Frame Grid.Column="0"
-                           BackgroundColor="#E8F4FD"
+                           BackgroundColor="#90A4AE"
                            CornerRadius="10"
                            Padding="0"
                            HeightRequest="180"
@@ -54,7 +54,7 @@
                                FontAttributes="Bold"/>
 						<Label Text="★★★★★"
                                FontSize="14"
-                               TextColor="orange"/>
+                               TextColor="White"/>
 						<Label x:Name="BarberoVisitasLabel" TextColor="White" FontSize="14"/>
 					</VerticalStackLayout>
 				</Grid>
@@ -62,7 +62,7 @@
 				<!-- Descripción y Especialidades -->
 				<VerticalStackLayout Spacing="10">
 					<Label Text="Especialidades"
-						   TextColor="#4A90E2"
+						   TextColor="White"
 						   FontSize="16"
 						   FontAttributes="Bold"/>
 
@@ -84,8 +84,8 @@
                        HasShadow="False">
 					<VerticalStackLayout Spacing="0">
 						<!-- Header del calendario -->
-						<Frame BackgroundColor="#4A90E2"
-                               CornerRadius="15,15,0,0"
+						<Frame BackgroundColor="#0e2a36"
+                               CornerRadius="15"
                                Padding="15,12"
                                HasShadow="False">
 							<Label Text="Fecha"
@@ -107,13 +107,13 @@
 								<ColumnDefinition Width="*"/>
 							</Grid.ColumnDefinitions>-->
 
-							<Label  Text="Lunes" TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
-							<Label  Text="Martes" TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
-							<Label  Text="Miercoles" TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
-							<Label  Text="Jueves" TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
-							<Label  Text="Viernes" TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
-							<Label  Text="Sabado" TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
-							<Label  Text="Domingo" TextColor="Gray" FontSize="12" HorizontalOptions="Center"/>
+							<Label  Text="Lunes" TextColor="Black" FontSize="12" HorizontalOptions="Center"/>
+                            <Label  Text="Martes" TextColor="Black" FontSize="12" HorizontalOptions="Center"/>
+                            <Label  Text="Miercoles" TextColor="Black" FontSize="12" HorizontalOptions="Center"/>
+                            <Label  Text="Jueves" TextColor="Black" FontSize="12" HorizontalOptions="Center"/>
+                            <Label  Text="Viernes" TextColor="Black" FontSize="12" HorizontalOptions="Center"/>
+                            <Label  Text="Sabado" TextColor="Black" FontSize="12" HorizontalOptions="Center"/>
+                            <Label  Text="Domingo" TextColor="Black" FontSize="12" HorizontalOptions="Center"/>
 						</HorizontalStackLayout >
 
 						<!-- Contenedor para los días del mes -->
@@ -126,7 +126,7 @@
 				<!-- Horarios Disponibles -->
 				<VerticalStackLayout Spacing="15">
 					<Label Text="Horas Disponibles"
-                           TextColor="#4A90E2"
+                           TextColor="White"
                            FontSize="16"
                            FontAttributes="Bold"/>
 
@@ -143,16 +143,25 @@
 				</VerticalStackLayout>
 
 				<!-- Botón de Cita -->
-				<Button Text="Reservar Cita"
-                        BackgroundColor="#FF6F91"
-                        TextColor="White"
-                        FontSize="16"
-                        CornerRadius="25"
-                        HeightRequest="50"
-                        Margin="0,20,0,0"
-                        Clicked="OnMakeAppointmentClicked"/>
 
-			</VerticalStackLayout>
+                <Grid ColumnSpacing="15" Margin="0,20,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.ColumnSpan="2"
+            Text="Reservar Cita"
+            BackgroundColor="#FF6F91"
+            TextColor="Black"
+            FontSize="16"
+            CornerRadius="25"
+            HeightRequest="50"
+            HorizontalOptions="Center"
+            Clicked="OnMakeAppointmentClicked"/>
+                </Grid>
+
+            </VerticalStackLayout>
 		</ScrollView>
 	</Grid>
 </ContentPage>

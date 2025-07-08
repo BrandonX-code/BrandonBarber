@@ -5,6 +5,7 @@
         private readonly AuthService _authService;
         private readonly ServicioService _servicioService; // Inyecta este servicio
         private List<UsuarioModels> _todosLosBarberos;
+        private readonly ReservationService _reservationService;
         public int Visitas { get; set; }
         public List<UsuarioModels> TodosLosBarberos
         {
@@ -212,7 +213,7 @@
 
                     var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero").ToList() ?? new List<UsuarioModels>();
                     TodosLosBarberos = barberos;
-                    Picker.ItemsSource = TodosLosBarberos;
+                    //Picker.ItemsSource = TodosLosBarberos;
                 }
                 else
                 {
@@ -261,14 +262,14 @@
                     }))
                     .ToList();
 
-                DisponibilidadListView.ItemsSource = horariosDisponibles;
-                DisponibilidadListView.IsVisible = true;
-                NoDisponibilidadAlert.IsVisible = false;
+                //DisponibilidadListView.ItemsSource = horariosDisponibles;
+                //DisponibilidadListView.IsVisible = true;
+                //NoDisponibilidadAlert.IsVisible = false;
             }
             else
             {
-                DisponibilidadListView.IsVisible = false;
-                NoDisponibilidadAlert.IsVisible = true;
+                //DisponibilidadListView.IsVisible = false;
+                //NoDisponibilidadAlert.IsVisible = true;
             }
         }
         private async void CargarBarberos()
