@@ -6,7 +6,7 @@
         private readonly ServicioService _servicioService; // Inyecta este servicio
         private List<UsuarioModels> _todosLosBarberos;
         private readonly ReservationService _reservationService;
-        public int Visitas { get; set; }
+        private UsuarioModels _perfilData;
         public List<UsuarioModels> TodosLosBarberos
         {
             get => _todosLosBarberos;

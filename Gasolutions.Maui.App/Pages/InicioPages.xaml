@@ -34,28 +34,20 @@
                     <VerticalStackLayout x:Name="ClienteView" IsVisible="false" Padding="20" Spacing="20">
                         <Label Text="Panel de Cliente" FontSize="24" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center" />
 
-                        <VerticalStackLayout Spacing="15">
+                        <VerticalStackLayout Spacing="15" Padding="20">
                             <Label Text="Nuestros Servicios"  TextColor="#E0F7FA" 
                                        FontSize="22" 
                                        FontAttributes="Bold" 
                                        HorizontalOptions="Center"/>
 
-                            <CarouselView x:Name="ServiciosCarousel" 
-                                              HeightRequest="280" 
-                                              PeekAreaInsets="70"
-                                              Loop="False">
-                                <CarouselView.ItemsLayout>
-                                    <LinearItemsLayout Orientation="Horizontal"
-                                                         SnapPointsType="MandatorySingle"
-                                                         SnapPointsAlignment="Center"/>
-                                </CarouselView.ItemsLayout>
-                                <CarouselView.ItemTemplate>
+                            <CollectionView x:Name="ServiciosCarousel" 
+                                              HeightRequest="280">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Frame BackgroundColor="#90A4AE" 
-                                                   CornerRadius="10" 
-                                                   Margin="5" 
-                                                   HeightRequest="280"
-                                                   WidthRequest="180">
+                                        <Frame BackgroundColor="#90A4AE" CornerRadius="20" Padding="20"  HasShadow="True" HeightRequest="280" WidthRequest="200">
                                             <Grid RowSpacing="15">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="130"/>
@@ -83,8 +75,47 @@
                                             </Grid>
                                         </Frame>
                                     </DataTemplate>
-                                </CarouselView.ItemTemplate>
-                            </CarouselView>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Spacing="5" Padding="20">
+                            <Label Text="Barberos" TextColor="#E0F7FA" FontSize="22"  FontAttributes="Bold"  HorizontalOptions="Center"/>
+
+                            <CollectionView x:Name="BarberosCollectionView"  HeightRequest="320">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Frame BackgroundColor="#90A4AE" CornerRadius="20" Padding="20"  HasShadow="True" HeightRequest="280" WidthRequest="200">
+                                            <Frame.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
+                                            </Frame.GestureRecognizers>
+
+                                            <Grid RowSpacing="10">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="150"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <Frame Grid.Row="0" BackgroundColor="#F0F0F0" CornerRadius="6"  HeightRequest="150"  WidthRequest="120"  HorizontalOptions="Center"  Padding="0" IsClippedToBounds="True">
+                                                    <Image Source="{Binding ImagenPath}"  HeightRequest="150"  WidthRequest="120"  Aspect="AspectFill"/>
+                                                    <Frame.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
+                                                    </Frame.GestureRecognizers>
+                                                </Frame>
+                                                <Label Grid.Row="1" Text="{Binding Nombre}" TextColor="Black" FontSize="15" FontAttributes="Bold" HorizontalOptions="Center" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" MaxLines="2"/>
+                                                <HorizontalStackLayout Grid.Row="2"  HorizontalOptions="Center"  Spacing="1">
+                                                    <Label Text="★★★★★" TextColor="Black" FontSize="20"/>
+                                                </HorizontalStackLayout>
+                                            </Grid>
+                                        </Frame>
+
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
                         </VerticalStackLayout>
 
                         <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
@@ -146,46 +177,6 @@
                                 <Label Text="Galeria De Cortes" TextColor="Black" FontSize="25" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
-
-                        <VerticalStackLayout Spacing="15" Padding="20">
-                            <Label Text="Barberos" TextColor="#E0F7FA" FontSize="22"  FontAttributes="Bold"  HorizontalOptions="Center"/>
-
-                            <CollectionView x:Name="BarberosCollectionView"  HeightRequest="320">
-                                <CollectionView.ItemsLayout>
-                                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
-                                </CollectionView.ItemsLayout>
-                                <CollectionView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Frame BackgroundColor="#90A4AE" CornerRadius="20" Padding="20"  HasShadow="True" HeightRequest="280" WidthRequest="200">
-                                            <Frame.GestureRecognizers>
-                                                <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
-                                            </Frame.GestureRecognizers>
-
-                                            <Grid RowSpacing="10">
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="150"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                </Grid.RowDefinitions>
-
-                                                <Frame Grid.Row="0" BackgroundColor="#F0F0F0" CornerRadius="6"  HeightRequest="150"  WidthRequest="120"  HorizontalOptions="Center"  Padding="0" IsClippedToBounds="True">
-                                                    <Image Source="{Binding ImagenPath}"  HeightRequest="150"  WidthRequest="120"  Aspect="AspectFill"/>
-                                                    <Frame.GestureRecognizers>
-                                                        <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
-                                                    </Frame.GestureRecognizers>
-                                                </Frame>
-                                                <Label Grid.Row="1" Text="{Binding Nombre}" TextColor="Black" FontSize="15" FontAttributes="Bold" HorizontalOptions="Center" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" MaxLines="2"/>
-                                                <HorizontalStackLayout Grid.Row="2"  HorizontalOptions="Center"  Spacing="1">
-                                                    <Label Text="★★★★★" TextColor="Black" FontSize="20"/>
-                                                </HorizontalStackLayout>
-                                            </Grid>
-                                        </Frame>
-
-                                    </DataTemplate>
-                                </CollectionView.ItemTemplate>
-                            </CollectionView>
-                        </VerticalStackLayout>
                     </VerticalStackLayout>
 
                     <!-- BarberoView -->
