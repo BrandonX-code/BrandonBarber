@@ -23,6 +23,13 @@
             _authService = authService;
             _servicioService = servicioService;
             LoadUserInfo();
+
+            // Suscribirse al evento de calificación
+            MessagingCenter.Subscribe<CalificarBarberoPage, long>(this, "CalificacionEnviada", async (sender, barberoId) =>
+            {
+                // Recargar la lista de barberos para actualizar las calificaciones
+                await LoadBarberos();
+            });
         }
 
         protected override void OnAppearing()
@@ -213,7 +220,7 @@
 
                     var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero").ToList() ?? new List<UsuarioModels>();
                     TodosLosBarberos = barberos;
-                    //Picker.ItemsSource = TodosLosBarberos;
+                    BarberosCollectionView.ItemsSource = barberos;
                 }
                 else
                 {

@@ -14,6 +14,7 @@ namespace Barber.Maui.API.Data
         public DbSet<Disponibilidad> Disponibilidad { get; set; }
         public DbSet<ImagenGaleria> ImagenesGaleria { get; set; }
         public DbSet<ServicioModel> Servicios { get; set; }
+        public DbSet<Calificacion> Calificaciones { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -86,6 +86,9 @@
 	  <MauiXaml Update="Pages\BuscarPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\CalificarBarberoPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\DetalleImagenPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

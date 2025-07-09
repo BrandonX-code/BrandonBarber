@@ -20,7 +20,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Label x:Name="WelcomeLabel"  Grid.Column="0" FontSize="20" TextColor="#E0F7FA" FontAttributes="Bold" VerticalOptions="Center" LineBreakMode="TailTruncation" />
+            <Label x:Name="WelcomeLabel" MaxLines="2" Grid.Column="0" FontSize="20" TextColor="#E0F7FA" FontAttributes="Bold" VerticalOptions="Center" LineBreakMode="TailTruncation" />
             <ImageButton Grid.Column="1" Source="user.png" BackgroundColor="Transparent" HeightRequest="32" WidthRequest="32" VerticalOptions="Center" HorizontalOptions="End" Clicked="PerfilPage" />
         </Grid>
 
@@ -31,10 +31,10 @@
                 <VerticalStackLayout>
 
                     <!-- ClienteView -->
-                    <VerticalStackLayout x:Name="ClienteView" IsVisible="false" Padding="20" Spacing="20">
-                        <Label Text="Panel de Cliente" FontSize="24" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center" />
+                    <VerticalStackLayout x:Name="ClienteView" IsVisible="false" Padding="20" Spacing="10">
+                        <Label Text="Panel de Cliente" FontSize="30" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center" />
 
-                        <VerticalStackLayout Spacing="15" Padding="20">
+                        <VerticalStackLayout Spacing="15" Padding="0">
                             <Label Text="Nuestros Servicios"  TextColor="#E0F7FA" 
                                        FontSize="22" 
                                        FontAttributes="Bold" 
@@ -48,17 +48,20 @@
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <Frame BackgroundColor="#90A4AE" CornerRadius="20" Padding="20"  HasShadow="True" HeightRequest="280" WidthRequest="200">
-                                            <Grid RowSpacing="15">
+                                            <Grid RowSpacing="10">
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="130"/>
+                                                    <RowDefinition Height="150"/>
+                                                    <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
-
-                                                <Image Grid.Row="0"
-                                                           Source="{Binding Imagen}"
-                                                           Aspect="AspectFill"
-                                                           HeightRequest="130"/>
+                                                <Frame Grid.Row="0" BackgroundColor="#F0F0F0" CornerRadius="6"  HeightRequest="150"  WidthRequest="120"  HorizontalOptions="Center"  Padding="0" IsClippedToBounds="True">
+                                                    <Image Grid.Row="0"
+           Source="{Binding Imagen}"
+           Aspect="AspectFill"
+           HeightRequest="130"/>
+                                                </Frame>
+                                                
 
                                                 <Label Grid.Row="1"
                                                            Text="{Binding Nombre}"
@@ -78,7 +81,7 @@
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
                         </VerticalStackLayout>
-                        <VerticalStackLayout Spacing="5" Padding="20">
+                        <VerticalStackLayout Spacing="5" Padding="0">
                             <Label Text="Barberos" TextColor="#E0F7FA" FontSize="22"  FontAttributes="Bold"  HorizontalOptions="Center"/>
 
                             <CollectionView x:Name="BarberosCollectionView"  HeightRequest="320">
@@ -108,10 +111,10 @@
                                                 </Frame>
                                                 <Label Grid.Row="1" Text="{Binding Nombre}" TextColor="Black" FontSize="15" FontAttributes="Bold" HorizontalOptions="Center" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" MaxLines="2"/>
                                                 <HorizontalStackLayout Grid.Row="2"  HorizontalOptions="Center"  Spacing="1">
-                                                    <Label Text="★★★★★" TextColor="Black" FontSize="20"/>
+                                                    <Label Text="{Binding CalificacionPromedio, StringFormat='Calificación: {0:N1} ★'}" TextColor="Black" FontSize="16"/>
                                                 </HorizontalStackLayout>
                                             </Grid>
-                                        </Frame>
+                                        </Frame>    
 
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>

@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gasolutions.Maui.App.Pages.CalificarBarberoPage"
+             Title="Calificar Barbero"
+             BackgroundColor="#0E2A36">
+
+    <VerticalStackLayout Padding="20" Spacing="20">
+        <Label Text="Califica tu experiencia" 
+               TextColor="White" 
+               FontSize="24" 
+               HorizontalOptions="Center"/>
+
+        <HorizontalStackLayout x:Name="EstrellaStack" 
+                      Spacing="10" 
+                      HorizontalOptions="Center">
+            <ImageButton x:Name="Estrella1" 
+                        Source="star_empty.png"
+                        HeightRequest="40" 
+                        WidthRequest="40"
+                        Aspect="AspectFit"
+                        Clicked="OnEstrellaClicked"
+                        BackgroundColor="Transparent"/>
+            <ImageButton x:Name="Estrella2" 
+                        Source="star_empty.png"
+                        HeightRequest="40"
+                        WidthRequest="40"
+                        Aspect="AspectFit"
+                        Clicked="OnEstrellaClicked"
+                        BackgroundColor="Transparent"/>
+            <ImageButton x:Name="Estrella3" 
+                        Source="star_empty.png"
+                        HeightRequest="40"
+                        WidthRequest="40"
+                        Aspect="AspectFit"
+                        Clicked="OnEstrellaClicked"
+                        BackgroundColor="Transparent"/>
+            <ImageButton x:Name="Estrella4" 
+                        Source="star_empty.png"
+                        HeightRequest="40"
+                        WidthRequest="40"
+                        Aspect="AspectFit"
+                        Clicked="OnEstrellaClicked"
+                        BackgroundColor="Transparent"/>
+            <ImageButton x:Name="Estrella5" 
+                        Source="star_empty.png"
+                        HeightRequest="40"
+                        WidthRequest="40"
+                        Aspect="AspectFit"
+                        Clicked="OnEstrellaClicked"
+                        BackgroundColor="Transparent"/>
+        </HorizontalStackLayout>
+
+        <Editor x:Name="ComentarioEditor"
+                Placeholder="Escribe un comentario (opcional)"
+                HeightRequest="50" 
+                TextColor="White"
+                BackgroundColor="#90A4AE"
+                Margin="0,20"/>
+
+        <Button Text="Enviar Calificación"
+                BackgroundColor="#FF6F91"
+                TextColor="Black"
+                FontSize="16"
+                CornerRadius="25"
+                HeightRequest="50"
+                Clicked="OnEnviarCalificacionClicked"/>
+    </VerticalStackLayout>
+</ContentPage>

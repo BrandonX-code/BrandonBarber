@@ -38,9 +38,12 @@ namespace Gasolutions.Maui.App.Models
         public int Visitas { get; set; }
 
         public string Especialidades { get; set; }
-    }
 
-    // Clase para el login
+        public double CalificacionPromedio { get; set; }
+        public int TotalCalificaciones { get; set; }
+
+
+    }
     public class LoginRequest
     {
         [EmailAddress(ErrorMessage = "El correo electrónico no tiene un formato válido.")]

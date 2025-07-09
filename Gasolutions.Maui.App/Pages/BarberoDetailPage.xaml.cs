@@ -20,6 +20,14 @@
             LoadBarberoData();
             ContarYMostrarVisita();
             LoadCalendario();
+            CargarPromedioCalificacion();
+
+            // Suscribirse para refrescar cuando se envía una calificación
+            MessagingCenter.Subscribe<CalificarBarberoPage, long>(this, "CalificacionEnviada", async (sender, barberoId) =>
+            {
+                if (barberoId == _barbero.Cedula)
+                    await CargarPromedioCalificacion();
+            });
         }
 
         private void LoadBarberoData()
@@ -260,6 +268,36 @@
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
             await Navigation.PushAsync(new MainPage(reservationService, authService));
+        }
+
+        private void ActualizarCalificacionVisual()
+        {
+            var calificacion = _barbero.CalificacionPromedio;
+            var estrellas = "";
+            for (int i = 1; i <= 5; i++)
+            {
+                estrellas += i <= calificacion ? "★" : "☆";
+            }
+            CalificacionLabel.Text = estrellas;
+            PromedioLabel.Text = $"({calificacion:F1})";
+            
+            // Solo mostrar botón de calificar si el usuario actual es cliente
+            CalificarButton.IsVisible = AuthService.CurrentUser?.Rol?.ToLower() == "cliente";
+        }
+
+        private async void OnCalificarClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new CalificarBarberoPage(_barbero));
+        }
+
+        private async Task CargarPromedioCalificacion()
+        {
+            var calificacionService = Application.Current.Handler.MauiContext.Services.GetService<CalificacionService>();
+            var (promedio, total) = await calificacionService.ObtenerPromedioAsync(_barbero.Cedula);
+
+            // Actualiza el modelo y la UI
+            _barbero.CalificacionPromedio = promedio;
+            ActualizarCalificacionVisual();
         }
     }
 }

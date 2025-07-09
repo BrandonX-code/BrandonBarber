@@ -35,8 +35,20 @@
 
 					<VerticalStackLayout Grid.Column="1" Padding="15,0,0,0" Spacing="5">
 						<Label x:Name="BarberoName" FontSize="30" TextColor="white" FontAttributes="Bold"/>
-						<Label Text="★★★★★"  FontSize="14" TextColor="White"/>
+							<HorizontalStackLayout Spacing="2">
+								<Label x:Name="CalificacionLabel" Text="★★★★★" FontSize="20" TextColor="White"/>
+								<Label x:Name="PromedioLabel" Text="(0.0)" TextColor="White" FontSize="20"/>
+							</HorizontalStackLayout>
 						<Label x:Name="BarberoVisitasLabel" TextColor="White" FontSize="14"/>
+						<Button x:Name="CalificarButton" 
+								Text="Calificar Barbero" 
+								BackgroundColor="#FF6F91"
+								TextColor="Black"
+								FontSize="12"
+								CornerRadius="15"
+								HeightRequest="30"
+								Margin="0,5,0,0"
+								Clicked="OnCalificarClicked"/>
 					</VerticalStackLayout>
 				</Grid>
 
@@ -48,9 +60,9 @@
 
                 <Frame BackgroundColor="#90A4AE" CornerRadius="15" Padding="0" HasShadow="False">
                     <VerticalStackLayout Spacing="0">
-                        <Frame BackgroundColor="#0e2a36" CornerRadius="15" Padding="15,12" HasShadow="False">
-                            <Label Text="Fecha" TextColor="White" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
-                        </Frame>
+                        <!--<Frame BackgroundColor="#0e2a36" CornerRadius="15" Padding="15,12" HasShadow="False">-->
+                            <Label Text="Calendario De Disponibilidad" Padding="20" TextColor="Black" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        <!--</Frame>-->
 
                         <Grid Padding="15,20,15,10" ColumnSpacing="7">
                             <Grid.ColumnDefinitions>
