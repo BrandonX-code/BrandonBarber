@@ -6,6 +6,7 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <local:DisponibilidadColorConverter x:Key="DisponibilidadColorConverter" />
+            <local:LessThanConverter x:Key="LessThanConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -15,7 +16,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="20,30">
+        <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="20,20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -110,8 +111,42 @@
                                                     </Frame.GestureRecognizers>
                                                 </Frame>
                                                 <Label Grid.Row="1" Text="{Binding Nombre}" TextColor="Black" FontSize="15" FontAttributes="Bold" HorizontalOptions="Center" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" MaxLines="2"/>
-                                                <HorizontalStackLayout Grid.Row="2"  HorizontalOptions="Center"  Spacing="1">
-                                                    <Label Text="{Binding CalificacionPromedio, StringFormat='Calificación: {0:N1} ★'}" TextColor="Black" FontSize="16"/>
+                                                <HorizontalStackLayout Grid.Row="2" HorizontalOptions="Center" Spacing="1">
+                                                    <Image Source="starblackrellena.png" HeightRequest="20" WidthRequest="20">
+                                                        <Image.Triggers>
+                                                            <DataTrigger TargetType="Image" Binding="{Binding CalificacionPromedio}" Value="0">
+                                                                <Setter Property="Source" Value="starblacksinrelleno.png"/>
+                                                            </DataTrigger>
+                                                        </Image.Triggers>
+                                                    </Image>
+                                                    <Image Source="starblackrellena.png" HeightRequest="20" WidthRequest="20">
+                                                        <Image.Triggers>
+                                                            <DataTrigger TargetType="Image" Binding="{Binding CalificacionPromedio, Converter={StaticResource LessThanConverter}, ConverterParameter=2}" Value="True">
+                                                                <Setter Property="Source" Value="starblacksinrelleno.png"/>
+                                                            </DataTrigger>
+                                                        </Image.Triggers>
+                                                    </Image>
+                                                    <Image Source="starblackrellena.png" HeightRequest="20" WidthRequest="20">
+                                                        <Image.Triggers>
+                                                            <DataTrigger TargetType="Image" Binding="{Binding CalificacionPromedio, Converter={StaticResource LessThanConverter}, ConverterParameter=3}" Value="True">
+                                                                <Setter Property="Source" Value="starblacksinrelleno.png"/>
+                                                            </DataTrigger>
+                                                        </Image.Triggers>
+                                                    </Image>
+                                                    <Image Source="starblackrellena.png" HeightRequest="20" WidthRequest="20">
+                                                        <Image.Triggers>
+                                                            <DataTrigger TargetType="Image" Binding="{Binding CalificacionPromedio, Converter={StaticResource LessThanConverter}, ConverterParameter=4}" Value="True">
+                                                                <Setter Property="Source" Value="starblacksinrelleno.png"/>
+                                                            </DataTrigger>
+                                                        </Image.Triggers>
+                                                    </Image>
+                                                    <Image Source="starblackrellena.png" HeightRequest="20" WidthRequest="20">
+                                                        <Image.Triggers>
+                                                            <DataTrigger TargetType="Image" Binding="{Binding CalificacionPromedio, Converter={StaticResource LessThanConverter}, ConverterParameter=5}" Value="True">
+                                                                <Setter Property="Source" Value="starblacksinrelleno.png"/>
+                                                            </DataTrigger>
+                                                        </Image.Triggers>
+                                                    </Image>
                                                 </HorizontalStackLayout>
                                             </Grid>
                                         </Frame>    

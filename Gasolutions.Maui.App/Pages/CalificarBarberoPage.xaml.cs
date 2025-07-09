@@ -21,7 +21,6 @@ namespace Gasolutions.Maui.App.Pages
                 Estrella1, Estrella2, Estrella3, Estrella4, Estrella5
             };
 
-            // Cargar la calificación previa al aparecer la página
             this.Appearing += async (s, e) => await CargarCalificacionPrevia();
         }
 
@@ -55,7 +54,7 @@ namespace Gasolutions.Maui.App.Pages
         {
             if (_calificacionSeleccionada == 0)
             {
-                await DisplayAlert("Error", "Por favor selecciona una calificación", "OK");
+                await AppUtils.MostrarSnackbar("Por favor selecciona una calificación", Colors.Orange, Colors.White);
                 return;
             }
 
@@ -73,14 +72,14 @@ namespace Gasolutions.Maui.App.Pages
 
             if (exito)
             {
-                await DisplayAlert("Éxito", "¡Gracias por tu calificación!", "OK");
+                await AppUtils.MostrarSnackbar("¡Gracias por tu calificación!", Colors.Green, Colors.White);
                 // Notifica a la página anterior que debe refrescar el promedio
                 MessagingCenter.Send(this, "CalificacionEnviada", _barbero.Cedula);
                 await Navigation.PopAsync();
             }
             else
             {
-                await DisplayAlert("Error", "No se pudo enviar la calificación", "OK");
+                await AppUtils.MostrarSnackbar("No se pudo enviar la calificación", Colors.Red, Colors.White);
             }
         }
     }

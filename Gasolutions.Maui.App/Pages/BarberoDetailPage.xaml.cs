@@ -280,7 +280,7 @@
             }
             CalificacionLabel.Text = estrellas;
             PromedioLabel.Text = $"({calificacion:F1})";
-            
+
             // Solo mostrar botón de calificar si el usuario actual es cliente
             CalificarButton.IsVisible = AuthService.CurrentUser?.Rol?.ToLower() == "cliente";
         }
