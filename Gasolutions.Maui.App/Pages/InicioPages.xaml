@@ -117,48 +117,7 @@
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
                         </VerticalStackLayout>
-
-                        <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="MainPage" />
-                            </Frame.GestureRecognizers>
-                            <HorizontalStackLayout Spacing="10" HeightRequest="60">
-                                <Image Source="calendar.png" WidthRequest="30" HeightRequest="30" />
-                                <Label Text="Agendar Una Cita" TextColor="Black" FontSize="25" VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
-                        </Frame>
-
-                        <!--<Label Text="Disponibilidad del barbero" TextColor="White" FontSize="20" VerticalOptions="Center"/>
-                        <VerticalStackLayout Spacing="5">
-                            <Label Text="Seleccione el Barbero Para Ver Su Disponibilidad" TextColor="#B0BEC5" FontSize="16" />
-                            <Frame CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#90A4AE" HeightRequest="45" IsClippedToBounds="True">
-                                <Picker x:Name="Picker" SelectedIndexChanged="Picker_SelectedIndexChanged" TextColor="Black" ItemDisplayBinding="{Binding Nombre}" ></Picker>
-                            </Frame>
-                        </VerticalStackLayout>
-                        <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
-                            <VerticalStackLayout Spacing="15">
-                                <Frame x:Name="NoDisponibilidadAlert" BackgroundColor="#90A4AE"  CornerRadius="10" Padding="15" IsVisible="false">
-                                    <StackLayout Orientation="Horizontal" Spacing="15">
-                                        <Image Source="alert.png" WidthRequest="24" HeightRequest="24" VerticalOptions="Center" />
-                                        <Label Text="El barbero no ha configurado su disponibilidad para hoy." HorizontalOptions="FillAndExpand" TextColor="Black" FontSize="18" VerticalOptions="Center"/>
-                                    </StackLayout>
-                                </Frame>
-
-                                <CollectionView x:Name="DisponibilidadListView" IsVisible="false" HeightRequest="250">
-                                    <CollectionView.ItemTemplate>
-                                        <DataTemplate>
-                                            <Frame BackgroundColor="#2a3f48" CornerRadius="10" Padding="10" Margin="5">
-                                                <StackLayout>
-                                                    <Label Text="{Binding Hora}" TextColor="White" FontSize="20" FontAttributes="Bold" />
-                                                    <Label Text="{Binding Disponible}" TextColor="{Binding Disponible, Converter={StaticResource DisponibilidadColorConverter}}" FontSize="18" />
-                                                </StackLayout>
-                                            </Frame>
-                                        </DataTemplate>
-                                    </CollectionView.ItemTemplate>
-                                </CollectionView>
-                            </VerticalStackLayout>
-                        </Frame>-->
-
+                        
                         <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="BuscarCitas" />

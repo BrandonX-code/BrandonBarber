@@ -127,6 +127,7 @@ namespace Gasolutions.Maui.App.Pages
                 var detalles = $"Nombre: {barbero.Nombre}\n" +
                                $"Email: {barbero.Email}\n" +
                                $"Cédula: {barbero.Cedula}\n" +
+                               $"Especialidades: {barbero.Especialidades}\n" +
                                $"Rol: {barbero.Rol}";
 
                 await DisplayAlert("Detalles del Barbero", detalles, "OK");

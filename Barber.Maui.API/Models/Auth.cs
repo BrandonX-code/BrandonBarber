@@ -31,5 +31,8 @@ namespace Barber.Maui.API.Models
 
         [StringLength(300)]
         public string? ImagenPath { get; set; }
+
+        public string? Especialidades { get; set; }
+
     }
 }

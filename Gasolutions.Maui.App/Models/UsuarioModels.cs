@@ -57,7 +57,7 @@ namespace Gasolutions.Maui.App.Models
         public string Contraseña { get; set; }
         public string ConfirmContraseña { get; set; }
         public string Telefono { get; set; }
-        public string Direccion { get; set; }
+        public string Direccion { get; set; }   
         public string Rol { get; set; } // cliente, barbero, administrador
 
         public string Especialidades { get; set; }

@@ -27,33 +27,8 @@
             BarberoName.Text = _barbero.Nombre;
             BarberoImage.Source = !string.IsNullOrEmpty(_barbero.ImagenPath) ? _barbero.ImagenPath : "dotnet_bot.png";
 
-            // Mostrar especialidades
             if (!string.IsNullOrEmpty(_barbero.Especialidades))
             {
-                var especialidades = _barbero.Especialidades.Split(',').Select(e => e.Trim());
-                EspecialidadesContainer.Children.Clear();
-
-                foreach (var especialidad in especialidades)
-                {
-                    var frame = new Frame
-                    {
-                        BackgroundColor = Color.FromArgb("#4A90E2"),
-                        CornerRadius = 15,
-                        Padding = new Thickness(10, 5),
-                        Margin = new Thickness(0, 0, 8, 8)
-                    };
-
-                    var label = new Label
-                    {
-                        Text = especialidad,
-                        TextColor = Colors.White,
-                        FontSize = 12
-                    };
-
-                    frame.Content = label;
-                    EspecialidadesContainer.Children.Add(frame);
-                }
-
                 DescripcionLabel.Text = $"Barbero especializado en: {_barbero.Especialidades}";
             }
             else
