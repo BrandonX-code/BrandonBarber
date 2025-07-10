@@ -59,7 +59,7 @@
                                                 <Frame Grid.Row="0" BackgroundColor="#F0F0F0" CornerRadius="6"  HeightRequest="150"  WidthRequest="120"  HorizontalOptions="Center"  Padding="0" IsClippedToBounds="True">
                                                     <Image Grid.Row="0"
            Source="{Binding Imagen}"
-           Aspect="AspectFill"
+           Aspect="Fill"
            HeightRequest="130"/>
                                                 </Frame>
                                                 
