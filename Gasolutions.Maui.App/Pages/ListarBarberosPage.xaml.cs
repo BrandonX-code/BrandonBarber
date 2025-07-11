@@ -1,4 +1,5 @@
-﻿using Gasolutions.Maui.App.Models;
+﻿using Gasolutions.Maui.App.Mobal;
+using Gasolutions.Maui.App.Models;
 using Gasolutions.Maui.App.Services;
 using System.Collections.ObjectModel;
 
@@ -120,17 +121,25 @@ namespace Gasolutions.Maui.App.Pages
             EmptyStateFrame.IsVisible = !_barberosFiltrados.Any();
         }
 
+        //private async void OnVerDetallesClicked(object sender, EventArgs e)
+        //{
+        //    if (sender is Button button && button.CommandParameter is UsuarioModels barbero)
+        //    {
+        //        var detalles = $"Nombre: {barbero.Nombre}\n" +
+        //                       $"Email: {barbero.Email}\n" +
+        //                       $"Cédula: {barbero.Cedula}\n" +
+        //                       $"Especialidades: {barbero.Especialidades}\n" +
+        //                       $"Rol: {barbero.Rol}";
+
+        //        await DisplayAlert("Detalles del Barbero", detalles, "OK");
+        //    }
+        //}
         private async void OnVerDetallesClicked(object sender, EventArgs e)
         {
             if (sender is Button button && button.CommandParameter is UsuarioModels barbero)
             {
-                var detalles = $"Nombre: {barbero.Nombre}\n" +
-                               $"Email: {barbero.Email}\n" +
-                               $"Cédula: {barbero.Cedula}\n" +
-                               $"Especialidades: {barbero.Especialidades}\n" +
-                               $"Rol: {barbero.Rol}";
-
-                await DisplayAlert("Detalles del Barbero", detalles, "OK");
+                var detallesPage = new DetallesBarberoPage(barbero);
+                await Navigation.PushModalAsync(detallesPage);
             }
         }
         private async void OnEliminarBarberoClicked(object sender, EventArgs e)
