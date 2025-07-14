@@ -4,65 +4,78 @@
              x:Class="Gasolutions.Maui.App.Pages.CalificarBarberoPage"
              BackgroundColor="#0E2A36">
 
-    <VerticalStackLayout Padding="20" Spacing="20">
+    <VerticalStackLayout Padding="30,40" Spacing="25">
+
         <Label Text="Califica tu experiencia" 
                TextColor="White" 
-               FontSize="24" 
-               HorizontalOptions="Center"/>
+               FontSize="28" 
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               Margin="0,0,0,10"/>
 
         <HorizontalStackLayout x:Name="EstrellaStack" 
-                      Spacing="10" 
-                      HorizontalOptions="Center">
+                               Spacing="15" 
+                               HorizontalOptions="Center">
             <ImageButton x:Name="Estrella1" 
-                        Source="star_empty.png"
-                        HeightRequest="40" 
-                        WidthRequest="40"
-                        Aspect="AspectFit"
-                        Clicked="OnEstrellaClicked"
-                        BackgroundColor="Transparent"/>
+                         Source="star_empty.png"
+                         HeightRequest="48" 
+                         WidthRequest="48"
+                         Aspect="AspectFit"
+                         Clicked="OnEstrellaClicked"
+                         BackgroundColor="Transparent"
+                         Shadow="5"/>
             <ImageButton x:Name="Estrella2" 
-                        Source="star_empty.png"
-                        HeightRequest="40"
-                        WidthRequest="40"
-                        Aspect="AspectFit"
-                        Clicked="OnEstrellaClicked"
-                        BackgroundColor="Transparent"/>
+                         Source="star_empty.png"
+                         HeightRequest="48" 
+                         WidthRequest="48"
+                         Aspect="AspectFit"
+                         Clicked="OnEstrellaClicked"
+                         BackgroundColor="Transparent"
+                         Shadow="5"/>
             <ImageButton x:Name="Estrella3" 
-                        Source="star_empty.png"
-                        HeightRequest="40"
-                        WidthRequest="40"
-                        Aspect="AspectFit"
-                        Clicked="OnEstrellaClicked"
-                        BackgroundColor="Transparent"/>
+                         Source="star_empty.png"
+                         HeightRequest="48" 
+                         WidthRequest="48"
+                         Aspect="AspectFit"
+                         Clicked="OnEstrellaClicked"
+                         BackgroundColor="Transparent"
+                         Shadow="5"/>
             <ImageButton x:Name="Estrella4" 
-                        Source="star_empty.png"
-                        HeightRequest="40"
-                        WidthRequest="40"
-                        Aspect="AspectFit"
-                        Clicked="OnEstrellaClicked"
-                        BackgroundColor="Transparent"/>
+                         Source="star_empty.png"
+                         HeightRequest="48" 
+                         WidthRequest="48"
+                         Aspect="AspectFit"
+                         Clicked="OnEstrellaClicked"
+                         BackgroundColor="Transparent"
+                         Shadow="5"/>
             <ImageButton x:Name="Estrella5" 
-                        Source="star_empty.png"
-                        HeightRequest="40"
-                        WidthRequest="40"
-                        Aspect="AspectFit"
-                        Clicked="OnEstrellaClicked"
-                        BackgroundColor="Transparent"/>
+                         Source="star_empty.png"
+                         HeightRequest="48" 
+                         WidthRequest="48"
+                         Aspect="AspectFit"
+                         Clicked="OnEstrellaClicked"
+                         BackgroundColor="Transparent"/>
         </HorizontalStackLayout>
 
-        <Editor x:Name="ComentarioEditor"
-                Placeholder="Escribe un comentario (opcional)"
-                HeightRequest="50" 
-                TextColor="White"
-                BackgroundColor="#90A4AE"
-                Margin="0,20"/>
+        <Frame BackgroundColor="#90A4AE"
+               CornerRadius="12"
+               Padding="10"
+               HasShadow="True"
+               Margin="0,20,0,0">
+            <Editor x:Name="ComentarioEditor"
+                    Placeholder="Escribe un comentario (opcional)"
+                    HeightRequest="80" 
+                    TextColor="White"
+                    BackgroundColor="Transparent"/>
+        </Frame>
 
         <Button Text="Enviar Calificación"
                 BackgroundColor="#FF6F91"
                 TextColor="Black"
-                FontSize="16"
-                CornerRadius="25"
-                HeightRequest="50"
+                FontSize="18"
+                FontAttributes="Bold"
+                CornerRadius="30"
+                HeightRequest="55"
                 Clicked="OnEnviarCalificacionClicked"/>
     </VerticalStackLayout>
 </ContentPage>

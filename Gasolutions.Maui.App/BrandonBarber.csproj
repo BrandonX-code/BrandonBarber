@@ -77,6 +77,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Mobal\DetalleClientePage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Mobal\DetallesBarberoPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

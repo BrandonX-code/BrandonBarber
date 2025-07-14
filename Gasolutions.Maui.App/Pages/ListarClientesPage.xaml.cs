@@ -1,4 +1,5 @@
-﻿using Gasolutions.Maui.App.Models;
+﻿using Gasolutions.Maui.App.Mobal;
+using Gasolutions.Maui.App.Models;
 using Gasolutions.Maui.App.Services;
 using System.Collections.ObjectModel;
 namespace Gasolutions.Maui.App.Pages
@@ -124,14 +125,10 @@ namespace Gasolutions.Maui.App.Pages
 
         private async void OnVerDetallesClicked(object sender, EventArgs e)
         {
-            if (sender is Button button && button.CommandParameter is UsuarioModels cliente)
+            if (sender is Button button && button.CommandParameter is UsuarioModels barbero)
             {
-                var detalles = $"Nombre: {cliente.Nombre}\n" +
-                              $"Email: {cliente.Email}\n" +
-                              $"Cédula: {cliente.Cedula}\n" +
-                              $"Rol: {cliente.Rol}";
-
-                await DisplayAlert("Detalles del Cliente", detalles, "OK");
+                var detallesPage = new DetalleClientePage(barbero);
+                await Navigation.PushModalAsync(detallesPage);
             }
         }
 

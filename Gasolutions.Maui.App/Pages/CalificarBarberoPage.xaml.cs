@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Gasolutions.Maui.App.Pages
+﻿namespace Gasolutions.Maui.App.Pages
 {
     public partial class CalificarBarberoPage : ContentPage
     {
@@ -42,7 +36,8 @@ namespace Gasolutions.Maui.App.Pages
             var estrella = sender as ImageButton;
             var index = _estrellas.IndexOf(estrella) + 1;
             _calificacionSeleccionada = index;
-
+            estrella.ScaleTo(1.2, 100, Easing.CubicOut);
+            estrella.ScaleTo(1.0, 100, Easing.CubicIn);
             // Actualizar visualización de estrellas
             for (int i = 0; i < _estrellas.Count; i++)
             {

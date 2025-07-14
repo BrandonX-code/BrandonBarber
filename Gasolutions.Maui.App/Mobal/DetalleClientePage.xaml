@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Gasolutions.Maui.App.Mobal.DetallesBarberoPage"
+             x:Class="Gasolutions.Maui.App.Mobal.DetalleClientePage"
              BackgroundColor="#90A4AE">
 
     <ContentPage.Content>
@@ -31,7 +31,7 @@
                                 <StackLayout Grid.Column="0" 
                                        VerticalOptions="Center" 
                                        Margin="20,0">
-                                    <Label Text="Información del Barbero"
+                                    <Label Text="Información del Cliente"
                                        FontSize="18"
                                        FontAttributes="Bold"
                                        TextColor="White" />
@@ -59,7 +59,7 @@
                        HasShadow="True"
                        Padding="2">
                                 <Grid>
-                                    <!-- Imagen del barbero -->
+                                    <!-- Imagen del Cliente -->
                                     <Image Source="{Binding ImagenPath}"
                                Aspect="AspectFill"
                                WidthRequest="92"
@@ -161,22 +161,6 @@
                                  Margin="0,5,0,0" />
                                 </StackLayout>
 
-                                <!-- Especialidades -->
-                                <StackLayout>
-                                    <Label Text="Especialidades"
-                               FontSize="12"
-                               TextColor="#7F8C8D"
-                               FontAttributes="Bold" />
-                                    <Frame BackgroundColor="#E8F6F3"
-                               BorderColor="#1ABC9C"
-                               CornerRadius="10"
-                               Padding="10"
-                               Margin="0,5,0,0">
-                                        <Label Text="{Binding Especialidades}"
-                                   FontSize="14"
-                                   TextColor="#16A085" />
-                                    </Frame>
-                                </StackLayout>
 
                                 <!-- Rol -->
                                 <StackLayout>
@@ -192,24 +176,6 @@
                                         <Label Text="{Binding Rol}"
                                    FontSize="14"
                                    TextColor="#E67E22"
-                                   FontAttributes="Bold" />
-                                    </Frame>
-                                </StackLayout>
-
-                                <!-- Calificaciones -->
-                                <StackLayout>
-                                    <Label Text="Calificaciones"
-                               FontSize="12"
-                               TextColor="#7F8C8D"
-                               FontAttributes="Bold" />
-                                    <Frame BackgroundColor="#FFF3E0"
-                               BorderColor="#FF9800"
-                               CornerRadius="10"
-                               Padding="10"
-                               Margin="0,5,0,0">
-                                        <Label Text="{Binding CalificacionTexto}"
-                                   FontSize="14"
-                                   TextColor="#FF6F00"
                                    FontAttributes="Bold" />
                                     </Frame>
                                 </StackLayout>
@@ -232,6 +198,6 @@
                 </Frame>
             </Grid>
         </ScrollView>
-        
+
     </ContentPage.Content>
 </ContentPage>
