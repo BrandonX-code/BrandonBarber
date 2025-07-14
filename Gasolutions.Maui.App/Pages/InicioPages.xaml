@@ -57,13 +57,12 @@
                                                     <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
                                                 <Frame Grid.Row="0" BackgroundColor="#F0F0F0" CornerRadius="6"  HeightRequest="150"  WidthRequest="120"  HorizontalOptions="Center"  Padding="0" IsClippedToBounds="True">
-                                                    <Image Grid.Row="0"
-           Source="{Binding Imagen}"
-           Aspect="Fill"
-           HeightRequest="130"/>
+                                                    <Image Grid.Row="0" Source="{Binding Imagen}" Aspect="AspectFill" HeightRequest="150" WidthRequest="120">
+                                                        <Image.Clip>
+                                                            <RoundRectangleGeometry CornerRadius="6" Rect="0,0,125,150"/>
+                                                        </Image.Clip>
+                                                    </Image>
                                                 </Frame>
-                                                
-
                                                 <Label Grid.Row="1"
                                                            Text="{Binding Nombre}"
                                                            TextColor="Black"

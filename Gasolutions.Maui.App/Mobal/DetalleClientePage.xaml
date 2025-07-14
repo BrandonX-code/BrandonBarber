@@ -51,37 +51,36 @@
                         <StackLayout Padding="25" Spacing="20">
 
                             <!-- Avatar con imagen -->
-                            <Frame BackgroundColor="#E8E8E8"
-                       CornerRadius="50"
-                       WidthRequest="100"
-                       HeightRequest="100"
-                       HorizontalOptions="Center"
-                       HasShadow="True"
-                       Padding="2">
+                            <Border BackgroundColor="#E8E8E8"
+        StrokeShape="RoundRectangle 50"
+        WidthRequest="100"
+        HeightRequest="100"
+        HorizontalOptions="Center">
                                 <Grid>
                                     <!-- Imagen del Cliente -->
-                                    <Image Source="{Binding ImagenPath}"
-                               Aspect="AspectFill"
-                               WidthRequest="92"
-                               HeightRequest="96"
-                               IsVisible="{Binding TieneImagen}" />
+                                    <Border StrokeShape="RoundRectangle 50"
+                WidthRequest="100"
+                HeightRequest="100"
+                IsVisible="{Binding TieneImagen}">
+                                        <Image Source="{Binding ImagenPath}"
+                   Aspect="AspectFill" />
+                                    </Border>
 
                                     <!-- Imagen por defecto si no hay foto -->
-                                    <Frame BackgroundColor="#3498DB"
-                               CornerRadius="48"
-                               WidthRequest="96"
-                               HeightRequest="96"
-                               Padding="0"
-                               IsVisible="{Binding NoTieneImagen}">
+                                    <Border BackgroundColor="#3498DB"
+                StrokeShape="RoundRectangle 50"
+                WidthRequest="100"
+                HeightRequest="100"
+                IsVisible="{Binding NoTieneImagen}">
                                         <Label Text="{Binding InicialNombre}"
-                                   FontSize="32"
-                                   FontAttributes="Bold"
-                                   TextColor="White"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center" />
-                                    </Frame>
+                   FontSize="32"
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center" />
+                                    </Border>
                                 </Grid>
-                            </Frame>
+                            </Border>
 
                             <!-- Información -->
                             <StackLayout Spacing="15">
