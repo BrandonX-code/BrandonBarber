@@ -202,7 +202,7 @@ namespace Gasolutions.Maui.App.Pages
             };
 
             // Construir la URL completa correctamente
-            var imageUrl = $"{_galeriaService.BaseUrl.TrimEnd('/')}{imagen.RutaArchivo}";
+            var imageUrl = $"{imagen.RutaArchivo}";
 
             Debug.WriteLine($"🔗 URL final de imagen: {imageUrl}");
 

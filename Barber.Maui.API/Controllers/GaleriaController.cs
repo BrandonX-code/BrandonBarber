@@ -2,6 +2,8 @@
 using Barber.Maui.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 namespace Barber.Maui.API.Controllers
 {
@@ -10,13 +12,21 @@ namespace Barber.Maui.API.Controllers
     public class GaleriaController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly Cloudinary _cloudinary;
 
-        public GaleriaController(AppDbContext context)
+        public GaleriaController(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
+            
+            // Configurar Cloudinary
+            var account = new Account(
+                configuration["Cloudinary:CloudName"],
+                configuration["Cloudinary:ApiKey"],
+                configuration["Cloudinary:ApiSecret"]
+            );
+            _cloudinary = new Cloudinary(account);
         }
 
-        // Updated route to avoid conflict
         [HttpGet("barbero/{idbarbero}")]
         public async Task<ActionResult<IEnumerable<ImagenGaleria>>> ObtenerImagenes(long idbarbero)
         {
@@ -27,7 +37,6 @@ namespace Barber.Maui.API.Controllers
 
             return Ok(imagenes);
         }
-
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ImagenGaleria>> ObtenerImagenPorId(int id)
@@ -51,7 +60,7 @@ namespace Barber.Maui.API.Controllers
         }
 
         [HttpPost("addimg")]
-        public async Task<ActionResult<ImagenGaleria>> SubirImagen(IFormFile imagen,[FromForm] string descripcion, [FromForm] long idbarbero)
+        public async Task<ActionResult<ImagenGaleria>> SubirImagen(IFormFile imagen, [FromForm] string descripcion, [FromForm] long idbarbero)
         {
             if (imagen == null || imagen.Length == 0)
             {
@@ -73,33 +82,21 @@ namespace Barber.Maui.API.Controllers
 
             try
             {
-                // Crear directorio si no existe
-                var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "galeria");
-                if (!Directory.Exists(uploadsPath))
+                // Subir imagen a Cloudinary
+                var uploadResult = await SubirImagenACloudinary(imagen, idbarbero);
+
+                if (uploadResult == null)
                 {
-                    Directory.CreateDirectory(uploadsPath);
+                    return StatusCode(500, new { message = "Error al subir imagen a Cloudinary" });
                 }
-
-                // Generar nombre único para el archivo
-                var extension = Path.GetExtension(imagen.FileName);
-                var nombreArchivo = $"corte_{DateTime.UtcNow.Ticks}.jpg";
-                var rutaCompleta = Path.Combine(uploadsPath, nombreArchivo);
-
-                // Guardar archivo físicamente
-                using (var stream = new FileStream(rutaCompleta, FileMode.Create))
-                {
-                    await imagen.CopyToAsync(stream);
-                }
-
-                var rutaRelativa = $"/uploads/galeria/{nombreArchivo}";
 
                 // Crear registro en base de datos
                 var nuevaImagen = new ImagenGaleria
                 {
-                    NombreArchivo = nombreArchivo,
-                    RutaArchivo = rutaRelativa,
-                    Descripcion = string.IsNullOrEmpty(descripcion) ? null : descripcion, // Asegurar que vacío sea null
-                    TipoImagen = extension.Replace(".", ""),
+                    NombreArchivo = uploadResult.PublicId,
+                    RutaArchivo = uploadResult.SecureUrl.ToString(), // URL pública de Cloudinary
+                    Descripcion = string.IsNullOrEmpty(descripcion) ? null : descripcion,
+                    TipoImagen = Path.GetExtension(imagen.FileName).Replace(".", ""),
                     TamanoBytes = imagen.Length,
                     FechaCreacion = DateTime.UtcNow,
                     Activo = true,
@@ -116,7 +113,6 @@ namespace Barber.Maui.API.Controllers
                 return StatusCode(500, new { message = "Error al guardar la imagen.", error = ex.Message });
             }
         }
-
 
         [HttpPut("{id}")]
         public async Task<IActionResult> ActualizarImagen(int id, [FromBody] ActualizarImagenRequest request)
@@ -154,18 +150,12 @@ namespace Barber.Maui.API.Controllers
                     return NotFound();
                 }
 
-                // CAMBIO: Eliminación física del registro en la base de datos
+                // Eliminar de Cloudinary
+                await EliminarImagenDeCloudinary(imagen.NombreArchivo);
+
+                // Eliminar registro de base de datos
                 _context.ImagenesGaleria.Remove(imagen);
                 await _context.SaveChangesAsync();
-
-                // Eliminar archivo físico
-                var rutaFisica = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",
-                    imagen.RutaArchivo.TrimStart('/'));
-
-                if (System.IO.File.Exists(rutaFisica))
-                {
-                    System.IO.File.Delete(rutaFisica);
-                }
 
                 return NoContent();
             }
@@ -175,40 +165,61 @@ namespace Barber.Maui.API.Controllers
             }
         }
 
-        [HttpGet("archivo/{nombreArchivo}")]
-        public async Task<IActionResult> ObtenerArchivoImagen(string nombreArchivo)
+        // NUEVO: Ya no necesitas este endpoint porque Cloudinary proporciona URLs directas
+        // [HttpGet("archivo/{nombreArchivo}")] - ELIMINADO
+
+        #region Métodos privados para Cloudinary
+
+        private async Task<ImageUploadResult?> SubirImagenACloudinary(IFormFile imagen, long barberoId)
         {
             try
             {
-                var rutaArchivo = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot",
-                    "uploads", "galeria", nombreArchivo);
-
-                if (!System.IO.File.Exists(rutaArchivo))
+                using var stream = imagen.OpenReadStream();
+                
+                var uploadParams = new ImageUploadParams()
                 {
-                    return NotFound();
-                }
-
-                var tipoContenido = nombreArchivo.ToLower() switch
-                {
-                    var name when name.EndsWith(".jpg") || name.EndsWith(".jpeg") => "image/jpeg",
-                    var name when name.EndsWith(".png") => "image/png",
-                    var name when name.EndsWith(".gif") => "image/gif",
-                    var name when name.EndsWith(".bmp") => "image/bmp",
-                    var name when name.EndsWith(".webp") => "image/webp",
-                    _ => "application/octet-stream"
+                    File = new FileDescription(imagen.FileName, stream),
+                    Folder = "galeria_barberos", // Carpeta en Cloudinary
+                    PublicId = $"barbero_{barberoId}_corte_{DateTime.UtcNow.Ticks}",
+                    Transformation = new Transformation()
+                        .Width(800) // Redimensionar para optimizar
+                        .Height(800)
+                        .Crop("limit")
+                        .Quality("auto") // Optimización automática
                 };
 
-                var bytes = await System.IO.File.ReadAllBytesAsync(rutaArchivo);
-                return File(bytes, tipoContenido);
+                var result = await _cloudinary.UploadAsync(uploadParams);
+                
+                return result.StatusCode == System.Net.HttpStatusCode.OK ? result : null;
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Error al obtener archivo", error = ex.Message });
+                // Log error
+                Console.WriteLine($"Error subiendo a Cloudinary: {ex.Message}");
+                return null;
             }
         }
+
+        private async Task<bool> EliminarImagenDeCloudinary(string publicId)
+        {
+            try
+            {
+                var deleteParams = new DeletionParams(publicId);
+                var result = await _cloudinary.DestroyAsync(deleteParams);
+                
+                return result.StatusCode == System.Net.HttpStatusCode.OK;
+            }
+            catch (Exception ex)
+            {
+                // Log error
+                Console.WriteLine($"Error eliminando de Cloudinary: {ex.Message}");
+                return false;
+            }
+        }
+
+        #endregion
     }
 
-    // Clase para las solicitudes de actualización
     public class ActualizarImagenRequest
     {
         public string? Descripcion { get; set; }

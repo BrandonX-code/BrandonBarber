@@ -19,7 +19,7 @@ namespace Gasolutions.Maui.App.Pages
             _imagen = imagen;
             _baseUrl = baseUrl;
 
-            _imageUrl = $"{_baseUrl.TrimEnd('/')}{imagen.RutaArchivo}";
+            _imageUrl = imagen.RutaArchivo;
             DetalleImagen.Source = ImageSource.FromUri(new Uri(_imageUrl));
 
             // Mostrar botón de editar solo para barberos

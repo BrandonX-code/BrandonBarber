@@ -2,9 +2,8 @@
 using Barber.Maui.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.IO;
-using System.Threading.Tasks;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 
 namespace Barber.Maui.API.Controllers
 {
@@ -13,12 +12,17 @@ namespace Barber.Maui.API.Controllers
     public class UsuarioPerfilesController : ControllerBase
     {
         private readonly AppDbContext _context;
-        private readonly IWebHostEnvironment _env;
+        private readonly Cloudinary _cloudinary;
 
-        public UsuarioPerfilesController(AppDbContext context, IWebHostEnvironment env)
+        public UsuarioPerfilesController(AppDbContext context, IConfiguration configuration)
         {
             _context = context;
-            _env = env;
+            var account = new Account(
+                configuration["Cloudinary:CloudName"],
+                configuration["Cloudinary:ApiKey"],
+                configuration["Cloudinary:ApiSecret"]
+            );
+            _cloudinary = new Cloudinary(account);
         }
 
         [HttpGet]
@@ -30,31 +34,18 @@ namespace Barber.Maui.API.Controllers
         [HttpGet("{cedula}")]
         public async Task<ActionResult<Auth>> GetAuthPorCedula(long cedula)
         {
-            var Auth = await _context.UsuarioPerfiles
-                .FirstOrDefaultAsync(p => p.Cedula == cedula);
-
-            if (Auth == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(Auth);
+            var auth = await _context.UsuarioPerfiles.FirstOrDefaultAsync(p => p.Cedula == cedula);
+            return auth == null ? NotFound() : Ok(auth);
         }
 
         [HttpPost]
         public async Task<ActionResult<Auth>> CrearAuth([FromBody] Auth nuevoAuth)
         {
             if (nuevoAuth == null || string.IsNullOrWhiteSpace(nuevoAuth.Nombre))
-            {
                 return BadRequest(new { message = "Error: Datos inválidos en la solicitud." });
-            }
 
-            // Verificar si ya existe un Auth con esa cédula
-            bool existeAuth = await _context.UsuarioPerfiles.AnyAsync(p => p.Cedula == nuevoAuth.Cedula);
-            if (existeAuth)
-            {
+            if (await _context.UsuarioPerfiles.AnyAsync(p => p.Cedula == nuevoAuth.Cedula))
                 return Conflict(new { message = "Ya existe un Auth con esta cédula." });
-            }
 
             try
             {
@@ -69,25 +60,25 @@ namespace Barber.Maui.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> ActualizarAuth(long id, [FromBody] Auth Auth)
+        public async Task<IActionResult> ActualizarAuth(long id, [FromBody] Auth authUpdate)
         {
-            if (id != Auth.Cedula)
-            {
-                return BadRequest();
-            }
-            var auth = await _context.UsuarioPerfiles.FirstOrDefaultAsync(u => u.Cedula == id);
+            if (id != authUpdate.Cedula) return BadRequest();
 
-            //_context.Entry(Auth).State = EntityState.Modified;
-            auth.Nombre = Auth.Nombre;
-            auth.Email = Auth.Email;
-            auth.Direccion = Auth.Direccion;
-            auth.Telefono = Auth.Telefono;
-            auth.Contraseña = Auth.Contraseña;
-            auth.Rol = Auth.Rol;
-            auth.ImagenPath = Auth.ImagenPath;
+            var auth = await _context.UsuarioPerfiles.FirstOrDefaultAsync(u => u.Cedula == id);
+            if (auth == null) return NotFound();
+
+            auth.Nombre = authUpdate.Nombre;
+            auth.Email = authUpdate.Email;
+            auth.Direccion = authUpdate.Direccion;
+            auth.Telefono = authUpdate.Telefono;
+            auth.Contraseña = authUpdate.Contraseña;
+            auth.Rol = authUpdate.Rol;
+            auth.ImagenPath = authUpdate.ImagenPath;
+
             try
             {
                 await _context.SaveChangesAsync();
+                return NoContent();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -95,60 +86,59 @@ namespace Barber.Maui.API.Controllers
                 {
                     return NotFound();
                 }
-                else
-                {
-                    throw;
-                }
+                throw;
             }
 
-            return NoContent();
         }
 
         [HttpPost("{id}/imagen")]
-        public async Task<IActionResult> SubirImagenAuth(long id, IFormFile image)
+        public async Task<IActionResult> SubirImagenAuth(long id, IFormFile imagen)
         {
-            var Auth = await _context.UsuarioPerfiles.FindAsync(id);
-            if (Auth == null)
-            {
-                return NotFound();
-            }
+            var auth = await _context.UsuarioPerfiles.FindAsync(id);
+            if (auth == null) return NotFound();
 
             try
             {
-                // Crear directorio para imágenes si no existe
-                var uploadsFolder = Path.Combine(_env.WebRootPath, "uploads", "perfiles");
-                if (!Directory.Exists(uploadsFolder))
-                {
-                    Directory.CreateDirectory(uploadsFolder);
-                }
+                var resultado = await SubirImagenACloudinary(imagen, id);
+                if (resultado == null)
+                    return StatusCode(500, new { message = "Error al subir imagen a Cloudinary" });
 
-                // Generar nombre único para la imagen
-                var uniqueFileName = $"{id}_{Guid.NewGuid()}{Path.GetExtension(image.FileName)}";
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                // Guardar la imagen en el servidor
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    await image.CopyToAsync(fileStream);
-                }
-
-                // Actualizar la ruta de la imagen en la base de datos
-                var baseUrl = $"{Request.Scheme}://{Request.Host.Value}";
-                Auth.ImagenPath = $"{baseUrl}/uploads/perfiles/{uniqueFileName}";
-                _context.Entry(Auth).State = EntityState.Modified;
+                auth.ImagenPath = resultado.SecureUrl.ToString();
+                _context.Entry(auth).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                return Ok(new { url = Auth.ImagenPath });
+                return Ok(new { url = auth.ImagenPath });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Error al guardar la imagen.", error = ex.Message });
+                return StatusCode(500, new { message = "Error al subir imagen", error = ex.Message });
             }
         }
 
-        private bool AuthExists(long id)
+        private async Task<ImageUploadResult?> SubirImagenACloudinary(IFormFile imagen, long userId)
         {
-            return _context.UsuarioPerfiles.Any(e => e.Cedula == id);
+            try
+            {
+                using var stream = imagen.OpenReadStream();
+                var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(imagen.FileName, stream),
+                    Folder = "perfiles_usuarios",
+                    PublicId = $"perfil_{userId}_{DateTime.UtcNow.Ticks}",
+                    Transformation = new Transformation()
+                        .Width(500).Height(500).Crop("limit").Quality("auto")
+                };
+
+                var result = await _cloudinary.UploadAsync(uploadParams);
+                return result.StatusCode == System.Net.HttpStatusCode.OK ? result : null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error subiendo imagen a Cloudinary: {ex.Message}");
+                return null;
+            }
         }
+
+        private bool AuthExists(long id) => _context.UsuarioPerfiles.Any(e => e.Cedula == id);
     }
 }
