@@ -94,7 +94,7 @@
 
                 if (perfilGuardado && _imagenModificada && !_perfilData.ImagenPath.StartsWith("http"))
                 {
-                    imagenActualizada = await _perfilService.UpdateProfileImage(_perfilData.Id, _perfilData.ImagenPath);
+                    imagenActualizada = await _perfilService.UpdateProfileImage(_perfilData.Cedula, _perfilData.ImagenPath);
 
                     if (imagenActualizada)
                     {

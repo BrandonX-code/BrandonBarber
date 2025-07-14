@@ -73,7 +73,6 @@ namespace Barber.Maui.API.Controllers
             auth.Telefono = authUpdate.Telefono;
             auth.Contraseña = authUpdate.Contraseña;
             auth.Rol = authUpdate.Rol;
-            auth.ImagenPath = authUpdate.ImagenPath;
 
             try
             {
@@ -94,7 +93,9 @@ namespace Barber.Maui.API.Controllers
         [HttpPost("{id}/imagen")]
         public async Task<IActionResult> SubirImagenAuth(long id, IFormFile imagen)
         {
-            var auth = await _context.UsuarioPerfiles.FindAsync(id);
+            if (id  == 0 ) return BadRequest();
+
+            var auth = await _context.UsuarioPerfiles.FirstOrDefaultAsync(u => u.Cedula == id);
             if (auth == null) return NotFound();
 
             try

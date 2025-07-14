@@ -97,10 +97,19 @@ namespace Gasolutions.Maui.App.Services
             try
             {
                 // Para subir una imagen, necesitaremos leer el archivo y enviarlo como MultipartFormDataContent
-                var imageBytes = File.ReadAllBytes(imagePath);
+                using var content = new MultipartFormDataContent();
 
-                var content = new MultipartFormDataContent();
-                content.Add(new ByteArrayContent(imageBytes), "image", Path.GetFileName(imagePath));
+                // Leer el archivo de imagen
+                var fileBytes = await File.ReadAllBytesAsync(imagePath);
+                var fileContent = new ByteArrayContent(fileBytes);
+
+                // Obtener información del archivo
+                var fileInfo = new FileInfo(imagePath);
+                string fileName = fileInfo.Name;
+                string mimeType = GetMimeType(fileInfo.Extension);
+
+                fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(mimeType);
+                content.Add(fileContent, "imagen", fileName);
 
                 var response = await _httpClient.PostAsync($"api/perfiles/{userId}/imagen", content);
 
@@ -117,5 +126,19 @@ namespace Gasolutions.Maui.App.Services
                 return false;
             }
         }
+
+        private string GetMimeType(string extension)
+        {
+            return extension.ToLower() switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                ".bmp" => "image/bmp",
+                ".webp" => "image/webp",
+                _ => "application/octet-stream"
+            };
+        }
+
     }
 }
