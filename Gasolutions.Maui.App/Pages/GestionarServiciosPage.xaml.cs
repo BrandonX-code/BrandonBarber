@@ -37,8 +37,8 @@ namespace Gasolutions.Maui.App.Pages
                 await DisplayAlert("Validación", "Todos los campos son obligatorios.", "OK");
                 return;
             }
-
-            if (!decimal.TryParse(PrecioEntry.Text, out decimal precio))
+            string precioTexto = PrecioEntry.Text?.Replace("$", "").Replace(",", "");
+            if (!decimal.TryParse(precioTexto, out decimal precio))
             {
                 await DisplayAlert("Validación", "El precio debe ser un número válido.", "OK");
                 return;
@@ -130,7 +130,8 @@ namespace Gasolutions.Maui.App.Pages
         {
             if (_servicioEditando == null) return;
 
-            if (!decimal.TryParse(PrecioEntry.Text, out decimal precio))
+            string precioTexto = PrecioEntry.Text?.Replace("$", "").Replace(",", "");
+            if (!decimal.TryParse(precioTexto, out decimal precio))
             {
                 await DisplayAlert("Validación", "El precio debe ser un número válido.", "OK");
                 return;
@@ -166,6 +167,7 @@ namespace Gasolutions.Maui.App.Pages
                 await DisplayAlert("Error", "No se pudo editar el servicio: " + ex.Message, "OK");
             }
         }
+
 
         private async void OnEliminarBtnClicked(object sender, EventArgs e)
         {

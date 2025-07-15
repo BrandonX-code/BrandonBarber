@@ -82,45 +82,43 @@ public class ServicioService
     {
         using var formData = new MultipartFormDataContent();
 
-
-        if (!string.IsNullOrEmpty(servicio.Nombre))
-            formData.Add(new StringContent(servicio.Nombre), nameof(ServicioModel.Nombre));
-
+        formData.Add(new StringContent(servicio.Nombre), nameof(ServicioModel.Nombre));
         formData.Add(new StringContent(servicio.Precio.ToString()), nameof(ServicioModel.Precio));
-        formData.Add(new StringContent(servicio.Imagen.ToString()), nameof(ServicioModel.Imagen));
 
-        // Leer el archivo de imagen
-        var fileBytes = await File.ReadAllBytesAsync(servicio.Imagen);
-        var fileContent = new ByteArrayContent(fileBytes);
+        bool esUrl = Uri.TryCreate(servicio.Imagen, UriKind.Absolute, out var uri) &&
+                     (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
 
-        // Obtener información del archivo
-        var fileInfo = new FileInfo(servicio.Imagen);
-        string fileName = fileInfo.Name;
-        string mimeType = GetMimeType(fileInfo.Extension);
-
-        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(mimeType);
-        formData.Add(fileContent, "imagenFile", fileName);
-
-        try
+        if (esUrl)
         {
-            var response = await _httpClient.PutAsync($"api/servicios/{servicio.Id}", formData);
-
-            // Debug: Mostrar detalles del error
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync();
-                System.Diagnostics.Debug.WriteLine($"Error {response.StatusCode}: {errorContent}");
-                throw new HttpRequestException($"Error {response.StatusCode}: {errorContent}");
-            }
-
-            response.EnsureSuccessStatusCode();
+            formData.Add(new StringContent(servicio.Imagen), nameof(ServicioModel.Imagen));
         }
-        catch (Exception ex)
+        else
         {
-            System.Diagnostics.Debug.WriteLine($"Excepción en EditarServicioAsync: {ex.Message}");
-            throw;
+            if (!File.Exists(servicio.Imagen))
+                throw new IOException($"Archivo no encontrado: {servicio.Imagen}");
+
+            var fileBytes = await File.ReadAllBytesAsync(servicio.Imagen);
+            var fileContent = new ByteArrayContent(fileBytes);
+
+            var fileInfo = new FileInfo(servicio.Imagen);
+            var mimeType = GetMimeType(fileInfo.Extension);
+
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(mimeType);
+
+            formData.Add(fileContent, "imagenFile", fileInfo.Name);
+            formData.Add(new StringContent(fileInfo.Name), nameof(ServicioModel.Imagen));
+        }
+
+        var response = await _httpClient.PutAsync($"api/servicios/{servicio.Id}", formData);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            System.Diagnostics.Debug.WriteLine($"Error {response.StatusCode}: {errorContent}");
+            throw new HttpRequestException($"Error {response.StatusCode}: {errorContent}");
         }
     }
+
 
     public async Task EliminarServicioAsync(int id)
     {
