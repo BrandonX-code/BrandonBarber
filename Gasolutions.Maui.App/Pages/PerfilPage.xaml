@@ -25,16 +25,14 @@
             <!--<Border WidthRequest="120" HeightRequest="150" BackgroundColor="#90A4AE" Padding="5"  StrokeShape="RoundRectangle 10">
                 <Image  Aspect="AspectFill" />
             </Border>-->
-            <Frame Grid.Column="0"
-       BackgroundColor="#90A4AE"
-       CornerRadius="10"
-       Padding="0"
-       HeightRequest="180"
-       WidthRequest="150"
-       IsClippedToBounds="True">
-                <Image x:Name="PerfilImage"
-           Aspect="AspectFill"/>
-            </Frame>
+            <Border Grid.Column="0"  BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" HeightRequest="180" WidthRequest="150">
+                <Image x:Name="PerfilImage" Aspect="AspectFill">
+                    <Image.Clip>
+                        <RoundRectangleGeometry CornerRadius="10" Rect="0,0,150,180" />
+                    </Image.Clip>
+                </Image>
+            </Border>
+
             <Label x:Name="NombreLabel" Text="xxx" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
             <Label x:Name="TelefonoLabel" Text="###" FontSize="16" TextColor="White" HorizontalOptions="Center" />
             <Button Text="Editar Perfil" BackgroundColor="#FF6F91" TextColor="Black" Clicked="OnEditarPerfilClicked"/>

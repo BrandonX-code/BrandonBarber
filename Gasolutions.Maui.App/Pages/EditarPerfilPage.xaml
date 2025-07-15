@@ -37,38 +37,43 @@
 
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Spacing="20" Margin="0,10">
-                <Frame Grid.Column="0" BackgroundColor="#90A4AE" CornerRadius="10" Padding="0" HeightRequest="140" WidthRequest="110" IsClippedToBounds="True"> 
-                    <Image x:Name="PerfilImage" Aspect="AspectFill"/>
-                </Frame>
+                <Border Grid.Column="0" BackgroundColor="#90A4AE" StrokeShape="10" Padding="0" HeightRequest="140" WidthRequest="110">
+                    <Image x:Name="PerfilImage" Aspect="AspectFill">
+                        <Image.Clip>
+                            <RoundRectangleGeometry CornerRadius="10" Rect="0,0,110,140" />
+                        </Image.Clip>
+                    </Image>
+                </Border>
+
 
                 <Button Text="Cambiar imagen"  Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#bfbfbf" TextColor="Black" Clicked="OnCambiarImagenClicked" HorizontalOptions="Center" WidthRequest="200"/>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Nombre completo" Style="{StaticResource ProfileLabelStyle}" />
-                    <Frame CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#E0F7FA">
+                    <Border StrokeShape="10" Padding="0" BackgroundColor="#E0F7FA">
                         <Entry x:Name="NombreEntry" Text="xxx" Style="{StaticResource ProfileEntryStyle}" Placeholder="Nombre completo" />
-                    </Frame>
+                    </Border>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Telefono" Style="{StaticResource ProfileLabelStyle}" />
-                    <Frame CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#E0F7FA">
+                    <Border StrokeShape="10" Padding="0"  BackgroundColor="#E0F7FA">
                         <Entry x:Name="TelefonoEntry"  Text="###" Style="{StaticResource ProfileEntryStyle}"  Placeholder="Numero de telefono" Keyboard="Telephone" />
-                    </Frame>
+                    </Border>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Correo electronico" Style="{StaticResource ProfileLabelStyle}" />
-                    <Frame CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#E0F7FA">
+                    <Border StrokeShape="10" Padding="0"  BackgroundColor="#E0F7FA">
                         <Entry x:Name="EmailEntry"  Style="{StaticResource ProfileEntryStyle}"  Placeholder="Correo electronico" Keyboard="Email" />
-                    </Frame>
+                    </Border>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Direccion" Style="{StaticResource ProfileLabelStyle}" />
-                    <Frame CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#E0F7FA">
+                    <Border StrokeShape="10" Padding="0" BackgroundColor="#E0F7FA">
                         <Entry x:Name="DireccionEntry" Style="{StaticResource ProfileEntryStyle}" Placeholder="Direccion" />
-                    </Frame>
+                    </Border>
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
