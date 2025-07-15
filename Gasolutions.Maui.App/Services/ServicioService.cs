@@ -1,4 +1,6 @@
-﻿public class ServicioService
+﻿using System.Text.Json;
+
+public class ServicioService
 {
     private readonly HttpClient _httpClient;
 
@@ -12,28 +14,140 @@
         var response = await _httpClient.GetAsync("api/servicios");
         response.EnsureSuccessStatusCode();
         var json = await response.Content.ReadAsStringAsync();
-        return System.Text.Json.JsonSerializer.Deserialize<List<ServicioModel>>(json, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        return JsonSerializer.Deserialize<List<ServicioModel>>(json, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
     }
 
     public async Task CrearServicioAsync(ServicioModel servicio)
     {
-        var json = System.Text.Json.JsonSerializer.Serialize(servicio);
-        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-        var response = await _httpClient.PostAsync("api/servicios", content);
-        response.EnsureSuccessStatusCode();
+        using var formData = new MultipartFormDataContent();
+
+        // Agregar propiedades del servicio (deben coincidir exactamente con ServicioModel)
+        if (!string.IsNullOrEmpty(servicio.Nombre))
+            formData.Add(new StringContent(servicio.Nombre), nameof(ServicioModel.Nombre));
+
+        formData.Add(new StringContent(servicio.Precio.ToString()), nameof(ServicioModel.Precio));
+        formData.Add(new StringContent(servicio.Imagen.ToString()), nameof(ServicioModel.Imagen));
+        formData.Add(new StringContent(servicio.Id.ToString()), nameof(ServicioModel.Id));
+
+        // Leer el archivo de imagen
+        var fileBytes = await File.ReadAllBytesAsync(servicio.Imagen);
+        var fileContent = new ByteArrayContent(fileBytes);
+
+        // Obtener información del archivo
+        var fileInfo = new FileInfo(servicio.Imagen);
+        string fileName = fileInfo.Name;
+        string mimeType = GetMimeType(fileInfo.Extension);
+
+        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(mimeType);
+        formData.Add(fileContent, "imageFile", fileName);
+
+        try
+        {
+            var response = await _httpClient.PostAsync("api/servicios", formData);
+
+            // Debug: Mostrar detalles del error
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"Error {response.StatusCode}: {errorContent}");
+                throw new HttpRequestException($"Error {response.StatusCode}: {errorContent}");
+            }
+
+            response.EnsureSuccessStatusCode();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Excepción en CrearServicioAsync: {ex.Message}");
+            throw;
+        }
+    }
+
+    private string GetMimeType(string extension)
+    {
+        return extension.ToLower() switch
+        {
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
+            ".gif" => "image/gif",
+            ".bmp" => "image/bmp",
+            ".webp" => "image/webp",
+            _ => "application/octet-stream"
+        };
     }
 
     public async Task EditarServicioAsync(ServicioModel servicio)
     {
-        var json = System.Text.Json.JsonSerializer.Serialize(servicio);
-        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
-        var response = await _httpClient.PutAsync($"api/servicios/{servicio.Id}", content);
-        response.EnsureSuccessStatusCode();
+        using var formData = new MultipartFormDataContent();
+
+
+        if (!string.IsNullOrEmpty(servicio.Nombre))
+            formData.Add(new StringContent(servicio.Nombre), nameof(ServicioModel.Nombre));
+
+        formData.Add(new StringContent(servicio.Precio.ToString()), nameof(ServicioModel.Precio));
+        formData.Add(new StringContent(servicio.Imagen.ToString()), nameof(ServicioModel.Imagen));
+
+        // Leer el archivo de imagen
+        var fileBytes = await File.ReadAllBytesAsync(servicio.Imagen);
+        var fileContent = new ByteArrayContent(fileBytes);
+
+        // Obtener información del archivo
+        var fileInfo = new FileInfo(servicio.Imagen);
+        string fileName = fileInfo.Name;
+        string mimeType = GetMimeType(fileInfo.Extension);
+
+        fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(mimeType);
+        formData.Add(fileContent, "imagenFile", fileName);
+
+        try
+        {
+            var response = await _httpClient.PutAsync($"api/servicios/{servicio.Id}", formData);
+
+            // Debug: Mostrar detalles del error
+            if (!response.IsSuccessStatusCode)
+            {
+                var errorContent = await response.Content.ReadAsStringAsync();
+                System.Diagnostics.Debug.WriteLine($"Error {response.StatusCode}: {errorContent}");
+                throw new HttpRequestException($"Error {response.StatusCode}: {errorContent}");
+            }
+
+            response.EnsureSuccessStatusCode();
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Excepción en EditarServicioAsync: {ex.Message}");
+            throw;
+        }
     }
 
     public async Task EliminarServicioAsync(int id)
     {
         var response = await _httpClient.DeleteAsync($"api/servicios/{id}");
         response.EnsureSuccessStatusCode();
+    }
+
+    // Método helper para convertir Stream a byte array (útil para MAUI)
+    public static async Task<byte[]> StreamToByteArrayAsync(Stream stream)
+    {
+        using var memoryStream = new MemoryStream();
+        await stream.CopyToAsync(memoryStream);
+        return memoryStream.ToArray();
+    }
+
+    // Método helper para detectar el tipo de contenido
+    private static string GetContentType(string fileName)
+    {
+        var extension = Path.GetExtension(fileName).ToLowerInvariant();
+        return extension switch
+        {
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
+            ".gif" => "image/gif",
+            ".bmp" => "image/bmp",
+            ".webp" => "image/webp",
+            _ => "image/jpeg" // Por defecto
+        };
     }
 }

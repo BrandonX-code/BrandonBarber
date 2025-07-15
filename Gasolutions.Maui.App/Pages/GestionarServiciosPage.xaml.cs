@@ -72,6 +72,32 @@ namespace Gasolutions.Maui.App.Pages
                 await DisplayAlert("Error", "No se pudo agregar el servicio: " + ex.Message, "OK");
             }
         }
+        bool _isUpdatingText = false;
+
+        private void OnPrecioEntryTextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (_isUpdatingText || sender is not Entry entry) return;
+
+            string raw = e.NewTextValue?.Replace("$", "").Replace(",", "") ?? "";
+
+            if (decimal.TryParse(raw, out decimal valor))
+            {
+                string formatted = string.Format("${0:N0}", valor);
+
+                if (entry.Text != formatted)
+                {
+                    _isUpdatingText = true;
+
+                    entry.Dispatcher.Dispatch(() =>
+                    {
+                        entry.Text = formatted;
+                        entry.CursorPosition = formatted.Length;
+                        _isUpdatingText = false;
+                    });
+                }
+            }
+        }
+
 
         private void OnEditarBtnClicked(object sender, EventArgs e)
         {

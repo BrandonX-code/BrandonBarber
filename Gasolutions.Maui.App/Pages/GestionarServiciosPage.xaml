@@ -10,7 +10,7 @@
             <Border StrokeThickness="0" Background="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
                 <VerticalStackLayout Spacing="10">
                     <Entry x:Name="NombreEntry" Placeholder="Nombre del Servicio" />
-                    <Entry x:Name="PrecioEntry" Placeholder="Precio" Keyboard="Numeric" />
+                    <Entry x:Name="PrecioEntry" Placeholder="Precio" Keyboard="Numeric" TextChanged="OnPrecioEntryTextChanged"/>
                     <Image x:Name="PreviewImage" HeightRequest="100" WidthRequest="100" Aspect="AspectFill" IsVisible="False"/>
                     <Button Text="Seleccionar Imagen" Clicked="OnSeleccionarImagen" BackgroundColor="#0E2A36" TextColor="White"/>
 
