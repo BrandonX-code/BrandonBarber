@@ -37,7 +37,7 @@
         <Grid>
             <VerticalStackLayout Spacing="20" VerticalOptions="CenterAndExpand">
                 <Image Source="gentlemen.png" WidthRequest="230" HeightRequest="230" HorizontalOptions="Center" />
-                <Label Text="Barber Shop" FontSize="28" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+                <Label Text="Caballeros Y Estilo" FontSize="28" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
 
                 <Label Text="Ingresa tus credenciales" FontSize="14" TextColor="#B0BEC5" HorizontalOptions="Center" />
 

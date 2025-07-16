@@ -38,17 +38,27 @@ public class CitasController : ControllerBase
     }
 
 
-    [HttpGet("by-date/{fecha}")]
-    public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorFecha(DateTime fecha)
+    [HttpGet("by-date/{fecha}&{idBarberia}")]
+    public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorFecha(DateTime fecha, int idbarberia)
     {
-        var citas = await _context.Citas
-            .Where(c => c.Fecha.Date == fecha.Date)
+        // Obtener barberos con cédula y nombre
+        var barberos = await _context.UsuarioPerfiles
+            .Where(b => b.IdBarberia == idbarberia && b.Rol == "barbero")
+            .Select(b => new { b.Cedula, b.Nombre })
             .ToListAsync();
 
+        var barberoIds = barberos.Select(b => b.Cedula).ToList();
+        var barberoDict = barberos.ToDictionary(b => b.Cedula, b => b.Nombre);
+
+        var citas = await _context.Citas
+            .Where(c => c.Fecha.Date == fecha.Date && barberoIds.Contains(c.BarberoId))
+            .OrderBy(c => c.Fecha)
+            .ToListAsync();
+
+        // Llenar la propiedad NombreBarbero
         foreach (var cita in citas)
         {
-            Auth barbero = _context.UsuarioPerfiles.Where(b => b.Cedula == cita.BarberoId).FirstOrDefault();
-            cita.BarberoNombre = barbero.Nombre;
+            cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
         }
 
         return Ok(citas);

@@ -283,7 +283,8 @@
         {
             try
             {
-                var response = await _authService._BaseClient.GetAsync("api/auth");
+                var usuario = AuthService.CurrentUser;
+                var response = await _authService._BaseClient.GetAsync($"api/auth/{usuario.IdBarberia}");
 
                 if (response.IsSuccessStatusCode)
                 {

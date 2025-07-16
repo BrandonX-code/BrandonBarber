@@ -13,6 +13,7 @@ namespace Barber.Maui.API.Models
         public string Rol { get; set; }
         public string? ImagenPath { get; set; }
         public string? Especialidades { get; set; }
+        public int? IdBarberia { get; set; }
 
         // Add the missing properties to fix the error
         public double CalificacionPromedio { get; set; }

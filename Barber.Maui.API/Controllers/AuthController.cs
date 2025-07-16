@@ -92,6 +92,7 @@ namespace Barber.Maui.API.Controllers
                     usuario.Nombre,
                     usuario.Email,
                     usuario.Rol,
+                    usuario.IdBarberia
                     // No incluir la contraseña
                 },
                 Token = "token-placeholder" // Aquí deberías generar un token JWT real

@@ -41,6 +41,7 @@ namespace Gasolutions.Maui.App.Models
 
         public double CalificacionPromedio { get; set; }
         public int TotalCalificaciones { get; set; }
+        public int? IdBarberia { get; set; }
 
 
     }
@@ -62,10 +63,10 @@ namespace Gasolutions.Maui.App.Models
         public string Telefono { get; set; }
         public string Direccion { get; set; }   
         public string Rol { get; set; } // cliente, barbero, administrador
-
+        public int? IdBarberia { get; set; }
         public string Especialidades { get; set; }
     }
-
+        
     // Clase para la respuesta de autenticación
     public class AuthResponse
     {
