@@ -27,9 +27,14 @@ namespace Barber.Maui.API.Controllers
             _cloudinary = new Cloudinary(account);
         }
 
-        [HttpGet("barbero/{idbarbero}")]
-        public async Task<ActionResult<IEnumerable<ImagenGaleria>>> ObtenerImagenes(long idbarbero)
+        [HttpGet("barbero/{idbarbero}&{idBarberia}")]
+        public async Task<ActionResult<IEnumerable<ImagenGaleria>>> ObtenerImagenes(long idbarbero, int idbarberia)
         {
+            var barberos = await _context.UsuarioPerfiles
+            .Where(b => b.IdBarberia == idbarberia && b.Rol == "barbero")
+            .Select(b => new { b.Cedula, b.Nombre })
+            .ToListAsync();
+
             var imagenes = await _context.ImagenesGaleria
                 .Where(i => i.Activo && i.BarberoId == idbarbero)
                 .OrderByDescending(i => i.FechaCreacion)

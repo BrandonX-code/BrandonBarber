@@ -46,6 +46,7 @@
         {
             try
             {
+                var admin = AuthService.CurrentUser;
                 var servicios = await _servicioService.GetServiciosAsync();
                 ServiciosCarousel.ItemsSource = servicios;
             }
@@ -218,7 +219,8 @@
                     var usuarios = System.Text.Json.JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent,
                         new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero").ToList() ?? new List<UsuarioModels>();
+                    var admin = AuthService.CurrentUser;
+                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero" && u.IdBarberia == admin.IdBarberia).ToList() ?? new List<UsuarioModels>();
                     TodosLosBarberos = barberos;
                     BarberosCollectionView.ItemsSource = barberos;
                 }
@@ -283,8 +285,8 @@
         {
             try
             {
-                var usuario = AuthService.CurrentUser;
-                var response = await _authService._BaseClient.GetAsync($"api/auth/{usuario.IdBarberia}");
+                var usuario = AuthService.CurrentUser.IdBarberia ?? 0;
+                var response = await _authService._BaseClient.GetAsync($"api/auth/barberos/{usuario}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -292,9 +294,10 @@
                     var usuarios = System.Text.Json.JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent,
                         new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero").ToList() ?? new List<UsuarioModels>();
+                    var admin = AuthService.CurrentUser;
+                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero" && u.IdBarberia == admin.IdBarberia).ToList() ?? new List<UsuarioModels>();
                     BarberosCollectionView.ItemsSource = barberos;
-                }
+                }   
                 else
                 {
                     await DisplayAlert("Error", "No se pudieron cargar los barberos", "OK");

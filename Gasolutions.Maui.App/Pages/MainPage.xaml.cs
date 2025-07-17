@@ -44,10 +44,18 @@ namespace Gasolutions.Maui.App
 
         private async Task CargarBarberosAsync()
         {
-            var barberos = await _authService.ObtenerBarberos();
+            if (AuthService.CurrentUser == null)
+            {
+                Debug.WriteLine("❌ Usuario no autenticado.");
+                return;
+            }
+
+            int? idBarberia = AuthService.CurrentUser.IdBarberia;
+            var barberos = await _authService.ObtenerBarberos(idBarberia);
             BarberoPicker.ItemsSource = barberos;
             BarberoPicker.SelectedIndex = -1;
         }
+
 
         private async void OnCedulaEntryTextChanged(object sender, TextChangedEventArgs e)
         {

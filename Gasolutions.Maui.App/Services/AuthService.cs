@@ -224,11 +224,11 @@ namespace Gasolutions.Maui.App.Services
 
             return true;
         }
-        public async Task<List<UsuarioModels>> ObtenerBarberos()
+        public async Task<List<UsuarioModels>> ObtenerBarberos(int? idBarberia)
         {
             try
             {
-                var response = await _BaseClient.GetAsync("api/auth/barberos");
+                var response = await _BaseClient.GetAsync($"api/auth/barberos/{idBarberia}");
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();

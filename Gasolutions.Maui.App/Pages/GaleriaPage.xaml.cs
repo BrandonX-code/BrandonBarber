@@ -83,7 +83,8 @@ namespace Gasolutions.Maui.App.Pages
                     var usuarios = System.Text.Json.JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent,
                         new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero").ToList() ?? new List<UsuarioModels>();
+                    var admin = AuthService.CurrentUser;
+                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero" && u.IdBarberia == admin.IdBarberia).ToList() ?? new List<UsuarioModels>();
                     TodosLosBarberos = barberos;
                     Picker.ItemsSource = TodosLosBarberos;
                 }
