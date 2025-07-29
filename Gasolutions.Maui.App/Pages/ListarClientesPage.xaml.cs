@@ -63,12 +63,13 @@ namespace Gasolutions.Maui.App.Pages
                         new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                     // Filtrar solo los clientes
-                    var clientes = usuarios?.Where(u => u.Rol.ToLower() == "cliente").ToList() ?? new List<UsuarioModels>();
+                    var admin = AuthService.CurrentUser;
+                    var clientes = usuarios?.Where(u => u.Rol.ToLower() == "clente" && u.IdBarberia == admin.IdBarberia).ToList() ?? new List<UsuarioModels>();
 
                     _todosLosClientes.Clear();
                     _clientesFiltrados.Clear();
 
-                    foreach (var cliente in clientes)
+                    foreach (var cliente in clientes) 
                     {
                         _todosLosClientes.Add(cliente);
                         _clientesFiltrados.Add(cliente);

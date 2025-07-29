@@ -121,7 +121,6 @@ namespace Barber.Maui.API.Controllers
         {
             var Barberos = await _context.UsuarioPerfiles
                 .Where(b => b.IdBarberia == idbarberia && b.Rol == "barbero")
-                .Select(b => new { b.Cedula, b.Nombre })
                 .ToListAsync();
             return Ok(Barberos);
         }

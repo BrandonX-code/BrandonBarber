@@ -31,24 +31,26 @@
                 </VerticalStackLayout>
             </Border>
 
-
-            <CollectionView x:Name="ServiciosListView" SelectionMode="Single" SelectionChanged="OnServicioSeleccionado">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="10" Margin="5">
-                            <Grid ColumnDefinitions="80,*,Auto,Auto" VerticalOptions="Center">
-                                <Image Source="{Binding Imagen}" HeightRequest="60" WidthRequest="60" Grid.Column="0"/>
-                                <VerticalStackLayout Grid.Column="1" Spacing="2">
-                                    <Label Text="{Binding Nombre}" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
-                                    <Label Text="{Binding Precio, StringFormat='${0:N0}'}" TextColor="Black" FontSize="16"/>
-                                </VerticalStackLayout>
-                                <Button ImageSource="editar.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Clicked="OnEditarBtnClicked" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="White" Padding="5,0"/>
-                                <Button ImageSource="delete.png" HeightRequest="20" WidthRequest="20" Grid.Column="3" Clicked="OnEliminarBtnClicked" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="White" Padding="5,0"/>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+            <ScrollView HeightRequest="400">
+                <CollectionView x:Name="ServiciosListView" SelectionMode="Single" SelectionChanged="OnServicioSeleccionado">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="10" Margin="5">
+                                <Grid ColumnDefinitions="80,*,Auto,Auto" VerticalOptions="Center">
+                                    <Image Source="{Binding Imagen}" HeightRequest="60" WidthRequest="60" Grid.Column="0"/>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                        <Label Text="{Binding Nombre}" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                                        <Label Text="{Binding Precio, StringFormat='${0:N0}'}" TextColor="Black" FontSize="16"/>
+                                    </VerticalStackLayout>
+                                    <Button ImageSource="editar.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Clicked="OnEditarBtnClicked" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="White" Padding="5,0"/>
+                                    <Button ImageSource="delete.png" HeightRequest="20" WidthRequest="20" Grid.Column="3" Clicked="OnEliminarBtnClicked" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="White" Padding="5,0"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+            
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

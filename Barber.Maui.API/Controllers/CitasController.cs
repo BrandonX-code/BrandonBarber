@@ -14,10 +14,20 @@ public class CitasController : ControllerBase
         _context = context;
     }
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Cita>>> GetCitas()
+    [HttpGet("Barberos/{idbarberia}")]
+    public async Task<ActionResult<IEnumerable<Cita>>> GetCitas(int idbarberia)
     {
-        return await _context.Citas.ToListAsync();
+        var barberos = await _context.UsuarioPerfiles
+            .Where(b => b.IdBarberia == idbarberia)
+            .Select(b => new { b.Cedula, b.Nombre })
+            .ToListAsync();
+        var barberoIds = barberos.Select(b => b.Cedula).ToList();
+        var citas = await _context.Citas
+
+            .Where(c => barberoIds.Contains(c.BarberoId))
+            .OrderBy(c => c.Fecha)
+            .ToListAsync();
+        return Ok(citas);
     }
 
 

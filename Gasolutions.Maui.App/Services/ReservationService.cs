@@ -21,7 +21,8 @@ namespace Gasolutions.Maui.App.Services
         {
             try
             {
-                var response = await _httpClient.GetAsync($"{_httpClient.BaseAddress}api/citas");
+                var admin = AuthService.CurrentUser;
+                var response = await _httpClient.GetAsync($"{_httpClient.BaseAddress}api/citas/barberos/{admin.IdBarberia}");
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
