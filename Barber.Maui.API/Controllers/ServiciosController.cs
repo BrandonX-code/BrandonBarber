@@ -25,10 +25,10 @@ namespace Barber.Maui.API.Controllers
             _cloudinary = new Cloudinary(account);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<ServicioModel>>> GetServicios()
+        [HttpGet("{idbarberia}")]
+        public async Task<ActionResult<IEnumerable<ServicioModel>>> GetServicios(int idbarberia)
         {
-            return await _context.Servicios.ToListAsync();
+            return await _context.Servicios.Where(s => s.IdBarberia == idbarberia).ToListAsync();
         }
 
         [HttpPost]

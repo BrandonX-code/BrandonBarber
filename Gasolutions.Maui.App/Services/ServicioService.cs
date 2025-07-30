@@ -11,7 +11,8 @@ public class ServicioService
 
     public async Task<List<ServicioModel>> GetServiciosAsync()
     {
-        var response = await _httpClient.GetAsync("api/servicios");
+        var admin = AuthService.CurrentUser;
+        var response = await _httpClient.GetAsync($"api/servicios/{admin.IdBarberia}");
         response.EnsureSuccessStatusCode();
         var json = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<List<ServicioModel>>(json, new JsonSerializerOptions
