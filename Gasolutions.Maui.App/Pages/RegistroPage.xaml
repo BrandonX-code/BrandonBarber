@@ -28,6 +28,22 @@
                 <Setter Property="HeightRequest" Value="45" />
                 <Setter Property="FontSize" Value="16" />
             </Style>
+            <Style x:Key="BarberiaCardStyle" TargetType="Frame">
+                <Setter Property="CornerRadius" Value="10" />
+                <Setter Property="BackgroundColor" Value="#1E3A49" />
+                <Setter Property="Padding" Value="15" />
+                <Setter Property="Margin" Value="0,0,0,10" />
+                <Setter Property="HasShadow" Value="True" />
+            </Style>
+
+            <Style x:Key="SearchBarStyle" TargetType="SearchBar">
+                <Setter Property="BackgroundColor" Value="#E0F7FA" />
+                <Setter Property="TextColor" Value="#0E2A36" />
+                <Setter Property="PlaceholderColor" Value="#90A4AE" />
+                <Setter Property="HeightRequest" Value="45" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="CancelButtonColor" Value="#FF6F91" />
+            </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -35,7 +51,30 @@
         <ScrollView>
             <VerticalStackLayout Spacing="20" Padding="0,20">
                 <Label Text="Crear Cuenta de Cliente"  FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" Margin="0,0,0,20" />
+                <VerticalStackLayout Spacing="5">
+                    <Label Text="Seleccionar Barbería" TextColor="White" FontSize="16" />
 
+                    <Frame Style="{StaticResource BarberiaCardStyle}" CornerRadius="10" Padding="15" Margin="0,0,0,10">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="OnSelectBarberiaTapped" />
+                        </Frame.GestureRecognizers>
+                        <HorizontalStackLayout Spacing="5" HeightRequest="30">
+                            <Image Source="barber.png" WidthRequest="30" HeightRequest="30" />
+                            <Label x:Name="SelectedBarberiaPlaceholder" Text="Seleccionar Barbería" TextColor="White" FontSize="16" VerticalOptions="Center"/>
+                        </HorizontalStackLayout>
+                    </Frame>
+
+                    <!-- Frame para mostrar la barbería seleccionada (inicialmente oculto) -->
+                    <Frame x:Name="SelectedBarberiaFrame"  CornerRadius="10" BackgroundColor="#1E3A49" Padding="15" IsVisible="False">
+                        <VerticalStackLayout>
+                            <Label Text="Barbería seleccionada:"  TextColor="#FF6F91"  FontSize="14"  FontAttributes="Bold"/>
+                            <Label x:Name="SelectedBarberiaName"  Text="Nombre"   TextColor="White"  FontSize="16"/>
+                            <Label x:Name="SelectedBarberiaEmail"  Text="Nombre"   TextColor="White"  FontSize="16"/>
+                            <Label x:Name="SelectedBarberiaTelefono"  Text="Nombre"   TextColor="White"  FontSize="16"/>
+                            <Label x:Name="SelectedBarberiaAddress"  Text="Dirección" TextColor="#A0A0A0" FontSize="14"/>
+                        </VerticalStackLayout>
+                    </Frame>
+                </VerticalStackLayout>
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Nombre completo" TextColor="White" FontSize="16" />
                     <Frame CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#E0F7FA" HeightRequest="45" IsClippedToBounds="True">

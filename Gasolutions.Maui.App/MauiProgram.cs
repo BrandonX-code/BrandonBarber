@@ -56,6 +56,7 @@ namespace Gasolutions.Maui.App
             builder.Services.AddSingleton<GaleriaService>();
             builder.Services.AddSingleton<ServicioService>();
             builder.Services.AddSingleton<CalificacionService>();
+            builder.Services.AddSingleton<BarberiaService>();
             // Registrar páginas
             builder.Services.AddSingleton<LoginPage>();
             builder.Services.AddTransient<RegistroPage>();
@@ -63,6 +64,7 @@ namespace Gasolutions.Maui.App
             builder.Services.AddSingleton<ListaCitas>();
             builder.Services.AddSingleton<PerfilPage>();
             builder.Services.AddSingleton<GaleriaPage>();
+            builder.Services.AddSingleton<SeleccionBarberiaPage>();
 
             builder.UseMauiApp<App>().UseMauiCommunityToolkit();
 

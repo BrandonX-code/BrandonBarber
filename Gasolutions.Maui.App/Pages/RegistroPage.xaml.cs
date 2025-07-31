@@ -1,21 +1,88 @@
-﻿using Gasolutions.Maui.App.Models;
-using Gasolutions.Maui.App.Services;
-using System.Text.RegularExpressions;
-
-namespace Gasolutions.Maui.App.Pages
+﻿namespace Gasolutions.Maui.App.Pages
 {
     public partial class RegistroPage : ContentPage
     {
         private readonly AuthService _authService;
+        private readonly BarberiaService _barberiaService;
+        private Barberia _selectedBarberia;
+        private List<Barberia> _allBarberias;
+        public ObservableCollection<Barberia> Barberias { get; } = new ObservableCollection<Barberia>();
 
         public RegistroPage()
         {
             InitializeComponent();
             _authService = Application.Current.Handler.MauiContext.Services.GetService<AuthService>();
+            _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
+
+            // Cargar barberías
+            LoadBarberias();
+        }
+        private async void LoadBarberias()
+        {
+            try
+            {
+                // Mostrar indicador de carga
+                _allBarberias = await _barberiaService.GetBarberiasAsync();
+
+                // Mostrar todas inicialmente
+                UpdateBarberiaList(string.Empty);
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Error cargando barberías: {ex.Message}", "OK");
+            }
         }
 
+        private void UpdateBarberiaList(string searchText)
+        {
+            Barberias.Clear();
+
+            var filtered = _allBarberias.AsEnumerable();
+
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                filtered = filtered.Where(b =>
+                    (b.Nombre?.Contains(searchText, StringComparison.OrdinalIgnoreCase) == true ||
+                    (b.Direccion?.Contains(searchText, StringComparison.OrdinalIgnoreCase) == true)));
+            }
+
+            foreach (var barberia in filtered)
+            {
+                Barberias.Add(barberia);
+            }
+        }
+        private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateBarberiaList(e.NewTextValue);
+        }
+        private async void OnSelectBarberiaTapped(object sender, EventArgs e)
+        {
+            // Crea la instancia de la página de selección
+            var selectionPage = new SeleccionBarberiaPage();
+
+            // Suscribe el evento ANTES de navegar
+            selectionPage.BarberiaSeleccionada += (s, barberia) =>
+            {
+                _selectedBarberia = barberia;
+                SelectedBarberiaFrame.IsVisible = true;
+                SelectedBarberiaName.Text = barberia.Nombre;
+                SelectedBarberiaEmail.Text = barberia.Email;
+                SelectedBarberiaTelefono.Text = barberia.Telefono;
+                SelectedBarberiaAddress.Text = barberia.Direccion;
+                SelectedBarberiaPlaceholder.IsVisible = false;
+            };
+
+            // Navega a la MISMA instancia a la que te suscribiste
+            await Navigation.PushAsync(selectionPage); // Cambiado a PushAsync
+        }
         private async void OnRegistrarClicked(object sender, EventArgs e)
         {
+            // Validar que se haya seleccionado una barbería
+            if (_selectedBarberia == null)
+            {
+                await DisplayAlert("Error", "Debe seleccionar una barbería", "OK");
+                return;
+            }
             if (!ValidarFormulario())
             {
                 return;
@@ -39,6 +106,7 @@ namespace Gasolutions.Maui.App.Pages
                     ConfirmContraseña = ConfirmPasswordEntry.Text,
                     Telefono = TelefonoEntry.Text,
                     Direccion = DireccionEntry.Text,
+                    IdBarberia = _selectedBarberia.Idbarberia,
                     Rol = "cliente" // Siempre cliente en registro público
                 };
 

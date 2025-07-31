@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Gasolutions.Maui.App.Pages.SeleccionBarberiaPage"
+             BackgroundColor="#0E2A36"
+             Title="Seleccionar Barbería">
+    <Grid Padding="20" RowDefinitions="Auto, *">
+
+        <!-- Barra de búsqueda -->
+        <Frame Grid.Row="0" 
+               BackgroundColor="#1E3A49" 
+               CornerRadius="25" 
+               Padding="15,10" 
+               Margin="0,0,0,15"
+               HasShadow="True">
+            <Grid ColumnDefinitions="*, Auto">
+                <Entry x:Name="SearchEntry"
+                       Grid.Column="0"
+                       Placeholder="Buscar por nombre o dirección..."
+                       PlaceholderColor="#A0A0A0"
+                       TextColor="White"
+                       BackgroundColor="Transparent"
+                       Text="{Binding SearchText}"
+                       FontSize="16" />
+                <Button Grid.Column="1"
+                        Text="✕"
+                        BackgroundColor="Transparent"
+                        TextColor="#A0A0A0"
+                        FontSize="16"
+                        WidthRequest="30"
+                        HeightRequest="30"
+                        Command="{Binding ClearSearchCommand}"
+                        IsVisible="{Binding HasSearchText}" />
+            </Grid>
+        </Frame>
+
+        <!-- Lista de barberías -->
+        <RefreshView Grid.Row="1"
+                     Command="{Binding LoadBarberiasCommand}"
+                     IsRefreshing="{Binding IsBusy}">
+            <CollectionView ItemsSource="{Binding FilteredBarberias}"
+                            SelectionMode="None"
+                            EmptyView="No hay barberías disponibles">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10"
+                               Margin="0,0,0,10"
+                               BackgroundColor="#1E3A49"
+                               CornerRadius="10"
+                               HeightRequest="110">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnBarberiaTapped" />
+                            </Frame.GestureRecognizers>
+                            <Grid ColumnDefinitions="60, *" ColumnSpacing="10">
+                                <!-- Imagen con caché y placeholder -->
+                                <Image Source="picture.png"
+                                       WidthRequest="60"
+                                       HeightRequest="60"
+                                       Aspect="AspectFill">
+                                </Image>
+                                <VerticalStackLayout Grid.Column="1"
+                                                     VerticalOptions="Center">
+                                    <Label Text="{Binding Nombre}" 
+                                           FontSize="16" 
+                                           FontAttributes="Bold" 
+                                           TextColor="White"
+                                           LineBreakMode="TailTruncation" />
+
+                                    <Label Text="{Binding Email}" 
+                                           FontSize="16" 
+                                           FontAttributes="Bold" 
+                                           TextColor="White"
+                                           LineBreakMode="TailTruncation" />
+
+                                    <Label Text="{Binding Telefono}" 
+                                           FontSize="16" 
+                                           FontAttributes="Bold" 
+                                           TextColor="White"
+                                           LineBreakMode="TailTruncation" />
+                                    
+                                    <Label Text="{Binding Direccion}" 
+                                           FontSize="14" 
+                                           TextColor="#A0A0A0"
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="1" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <ActivityIndicator Grid.Row="1"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           Color="White"/>
+    </Grid>
+</ContentPage>
