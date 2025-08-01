@@ -69,7 +69,7 @@
                 SelectedBarberiaEmail.Text = barberia.Email;
                 SelectedBarberiaTelefono.Text = barberia.Telefono;
                 SelectedBarberiaAddress.Text = barberia.Direccion;
-                SelectedBarberiaPlaceholder.IsVisible = false;
+                SelectedBarberiaImage.Source = barberia.LogoUrl ?? "picture.png";
             };
 
             // Navega a la MISMA instancia a la que te suscribiste

@@ -287,6 +287,15 @@
                                 <Label Text="Gestinar Servicios" TextColor="black" FontSize="20" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
+                        <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="GestionDeBarberias" />
+                            </Frame.GestureRecognizers>
+                            <HorizontalStackLayout Spacing="10" HeightRequest="60">
+                                <Image Source="man.png" WidthRequest="40" HeightRequest="40" />
+                                <Label Text="Gestinar Barberias" TextColor="black" FontSize="20" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Frame>
 
                     </VerticalStackLayout>
 

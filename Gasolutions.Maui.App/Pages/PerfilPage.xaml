@@ -32,6 +32,7 @@
                     </Image.Clip>
                 </Image>
             </Border>
+            
 
             <Label x:Name="NombreLabel" Text="xxx" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
             <Label x:Name="TelefonoLabel" Text="###" FontSize="16" TextColor="White" HorizontalOptions="Center" />

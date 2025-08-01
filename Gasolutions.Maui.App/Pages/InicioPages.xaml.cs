@@ -128,6 +128,13 @@
             var serviciosService = App.Current.Handler.MauiContext.Services.GetRequiredService<ServicioService>();
             await Navigation.PushAsync(new GestionarServiciosPage(serviciosService));
         }
+        private async void GestionDeBarberias(object sender, EventArgs e)
+        {
+            var idAdministrador = App.Current.Handler.MauiContext.Services.GetRequiredService<BarberiaService>();
+            // En tu página de administrador, navegar a:
+            var gestionPage = new GestionBarberiasPage();
+            await Navigation.PushAsync(gestionPage);
+        }
 
         private async void OnBuscarClicked(object sender, EventArgs e)
         {

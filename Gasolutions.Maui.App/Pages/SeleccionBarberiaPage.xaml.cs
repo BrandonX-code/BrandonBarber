@@ -19,7 +19,7 @@ namespace Gasolutions.Maui.App.Pages
             {
                 _barberias = value;
                 OnPropertyChanged();
-                FilterBarberias(); // Aplicar filtro cuando cambie la lista
+                FilterBarberias();
             }
         }
 
@@ -31,6 +31,8 @@ namespace Gasolutions.Maui.App.Pages
             {
                 _filteredBarberias = value;
                 OnPropertyChanged();
+                OnPropertyChanged(nameof(HasResults));
+                OnPropertyChanged(nameof(EmptyMessage));
             }
         }
 
@@ -43,15 +45,9 @@ namespace Gasolutions.Maui.App.Pages
                 _searchText = value;
                 OnPropertyChanged();
                 OnPropertyChanged(nameof(HasSearchText));
-                FilterBarberias(); // Filtrar cada vez que cambie el texto
+                FilterBarberias();
             }
         }
-
-        public bool HasSearchText => !string.IsNullOrWhiteSpace(SearchText);
-
-        public event EventHandler<Barberia> BarberiaSeleccionada;
-        public ICommand LoadBarberiasCommand { get; }
-        public ICommand ClearSearchCommand { get; }
 
         private bool _isBusy;
         public bool IsBusy
@@ -64,41 +60,73 @@ namespace Gasolutions.Maui.App.Pages
             }
         }
 
+        // Propiedades para mejorar la UI
+        public bool HasSearchText => !string.IsNullOrWhiteSpace(SearchText);
+        public bool HasResults => FilteredBarberias?.Count > 0;
+        public string EmptyMessage => string.IsNullOrWhiteSpace(SearchText)
+            ? "No hay barberías registradas"
+            : $"No se encontraron barberías que coincidan con '{SearchText}'";
+
+        public event EventHandler<Barberia> BarberiaSeleccionada;
+        public ICommand LoadBarberiasCommand { get; }
+        public ICommand ClearSearchCommand { get; }
+        public ICommand RefreshCommand { get; }
+
         public SeleccionBarberiaPage()
         {
             InitializeComponent();
             _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
             BindingContext = this;
+
             LoadBarberiasCommand = new Command(async () => await LoadBarberias());
             ClearSearchCommand = new Command(ClearSearch);
+            RefreshCommand = new Command(async () => await LoadBarberias());
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            await LoadBarberias();
+            if (!FilteredBarberias.Any())
+            {
+                await LoadBarberias();
+            }
         }
 
         private async Task LoadBarberias()
         {
+            if (IsBusy) return;
+
             IsBusy = true;
             try
             {
                 var barberias = await _barberiaService.GetBarberiasAsync();
+
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     Barberias.Clear();
-                    foreach (var barberia in barberias)
+
+                    if (barberias?.Any() == true)
                     {
-                        Barberias.Add(barberia);
+                        foreach (var barberia in barberias)
+                        {
+                            // Asegurar que la URL del logo esté correcta
+                            if (string.IsNullOrWhiteSpace(barberia.LogoUrl))
+                            {
+                                barberia.LogoUrl = "picture.png"; // Imagen por defecto
+                            }
+                            Barberias.Add(barberia);
+                        }
                     }
-                    // Asegurar que FilteredBarberias se actualice después de cargar
+
                     FilterBarberias();
                 });
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error cargando barberías: {ex.Message}", "OK");
+                MainThread.BeginInvokeOnMainThread(async () =>
+                {
+                    await AppUtils.MostrarSnackbar($"Error cargando barberías: {ex.Message}", Colors.Red, Colors.White);
+                });
             }
             finally
             {
@@ -108,35 +136,51 @@ namespace Gasolutions.Maui.App.Pages
 
         private void FilterBarberias()
         {
-            MainThread.BeginInvokeOnMainThread(() =>
+            try
             {
-                if (string.IsNullOrWhiteSpace(SearchText))
+                MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    // Si no hay texto de búsqueda, mostrar todas las barberías
-                    FilteredBarberias.Clear();
-                    foreach (var barberia in Barberias)
-                    {
-                        FilteredBarberias.Add(barberia);
-                    }
-                }
-                else
-                {
-                    // Filtrar por nombre o dirección (sin distinguir mayúsculas/minúsculas)
-                    var searchLower = SearchText.ToLowerInvariant();
-                    var filtered = Barberias.Where(b =>
-                        (b.Nombre?.ToLowerInvariant().Contains(searchLower) ?? false) ||
-                        (b.Email?.ToLowerInvariant().Contains(searchLower) ?? false) ||
-                        (b.Telefono?.ToLowerInvariant().Contains(searchLower) ?? false) ||
-                        (b.Direccion?.ToLowerInvariant().Contains(searchLower) ?? false)
-                    ).ToList();
+                    var sourceList = Barberias?.ToList() ?? new List<Barberia>();
 
-                    FilteredBarberias.Clear();
-                    foreach (var barberia in filtered)
+                    if (string.IsNullOrWhiteSpace(SearchText))
                     {
-                        FilteredBarberias.Add(barberia);
+                        // Mostrar todas las barberías
+                        UpdateFilteredList(sourceList);
                     }
-                }
-            });
+                    else
+                    {
+                        // Filtrar por múltiples campos
+                        var searchLower = SearchText.Trim().ToLowerInvariant();
+                        var filtered = sourceList.Where(b =>
+                            ContainsIgnoreCase(b.Nombre, searchLower) ||
+                            ContainsIgnoreCase(b.Email, searchLower) ||
+                            ContainsIgnoreCase(b.Telefono, searchLower) ||
+                            ContainsIgnoreCase(b.Direccion, searchLower)
+                        ).ToList();
+
+                        UpdateFilteredList(filtered);
+                    }
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error filtering barberias: {ex.Message}");
+            }
+        }
+
+        private void UpdateFilteredList(List<Barberia> newList)
+        {
+            FilteredBarberias.Clear();
+            foreach (var barberia in newList)
+            {
+                FilteredBarberias.Add(barberia);
+            }
+        }
+
+        private static bool ContainsIgnoreCase(string source, string search)
+        {
+            return !string.IsNullOrEmpty(source) &&
+                   source.ToLowerInvariant().Contains(search);
         }
 
         private void ClearSearch()
@@ -144,14 +188,25 @@ namespace Gasolutions.Maui.App.Pages
             SearchText = string.Empty;
         }
 
-        private void OnBarberiaTapped(object sender, EventArgs e)
+        private async void OnBarberiaTapped(object sender, EventArgs e)
         {
-            if (sender is Frame frame && frame.BindingContext is Barberia selectedBarberia)
+            try
             {
-                // 1. Dispara el evento
-                BarberiaSeleccionada?.Invoke(this, selectedBarberia);
-                // 2. Cierra la página CORRECTAMENTE
-                Navigation.PopAsync(); // Cambiado a PopAsync (no modal)
+                if (sender is Frame frame && frame.BindingContext is Barberia selectedBarberia)
+                {
+                    // Feedback visual (opcional)
+                    frame.BackgroundColor = Colors.LightGray;
+                    await Task.Delay(100);
+                    frame.BackgroundColor = Color.FromArgb("#1E3A49");
+
+                    // Disparar evento y cerrar página
+                    BarberiaSeleccionada?.Invoke(this, selectedBarberia);
+                    await Navigation.PopAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                await AppUtils.MostrarSnackbar($"Error seleccionando barbería: {ex.Message}", Colors.Red, Colors.White);
             }
         }
 

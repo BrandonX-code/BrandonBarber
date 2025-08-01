@@ -41,6 +41,18 @@ namespace Barber.Maui.API.Controllers
                 .ToListAsync();
         }
 
+        // GET: api/barberias/administrador/{idAdministrador}
+        [HttpGet("administrador/{idAdministrador}")]
+        public async Task<ActionResult<IEnumerable<Barberia>>> GetBarberiasByAdministrador(long idAdministrador)
+        {
+            var barberias = await _context.Barberias
+                .Where(b => b.Idadministrador == idAdministrador)
+                .Select(b => BarberiaToDto(b))
+                .ToListAsync();
+
+            return Ok(barberias);
+        }
+
         // GET: api/barberias/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Barberia>> GetBarberia(int id)
@@ -226,15 +238,38 @@ namespace Barber.Maui.API.Controllers
             {
                 // Extraer public_id de la URL
                 var uri = new Uri(imageUrl);
-                var publicId = Path.GetFileNameWithoutExtension(uri.AbsolutePath)
-                    .Replace("barberias/logos/", "");
+                var segments = uri.AbsolutePath.Split('/');
+                var publicId = string.Empty;
+
+                // Buscar el segmento que contiene "barberia_"
+                for (int i = 0; i < segments.Length; i++)
+                {
+                    if (segments[i].StartsWith("barberia_") || segments[i] == "logos")
+                    {
+                        if (i + 1 < segments.Length)
+                        {
+                            publicId = $"barberias/logos/{Path.GetFileNameWithoutExtension(segments[i + 1])}";
+                        }
+                        break;
+                    }
+                }
+
+                // Si no encontramos el patrón esperado, usar método alternativo
+                if (string.IsNullOrEmpty(publicId))
+                {
+                    var fileName = Path.GetFileNameWithoutExtension(uri.AbsolutePath);
+                    publicId = $"barberias/logos/{fileName}";
+                }
 
                 var deleteParams = new DeletionParams(publicId);
-                await _cloudinary.DestroyAsync(deleteParams);
+                var result = await _cloudinary.DestroyAsync(deleteParams);
+
+                Console.WriteLine($"🔹 Eliminando imagen de Cloudinary: {publicId} - Resultado: {result.Result}");
             }
-            catch
+            catch (Exception ex)
             {
-                // Ignorar errores al eliminar
+                Console.WriteLine($"❌ Error al eliminar imagen de Cloudinary: {ex.Message}");
+                // No fallar la operación si no se puede eliminar la imagen
             }
         }
 

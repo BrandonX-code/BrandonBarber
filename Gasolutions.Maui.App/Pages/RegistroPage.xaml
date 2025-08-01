@@ -65,15 +65,22 @@
                     </Frame>
 
                     <!-- Frame para mostrar la barbería seleccionada (inicialmente oculto) -->
-                    <Frame x:Name="SelectedBarberiaFrame"  CornerRadius="10" BackgroundColor="#1E3A49" Padding="15" IsVisible="False">
-                        <VerticalStackLayout>
-                            <Label Text="Barbería seleccionada:"  TextColor="#FF6F91"  FontSize="14"  FontAttributes="Bold"/>
-                            <Label x:Name="SelectedBarberiaName"  Text="Nombre"   TextColor="White"  FontSize="16"/>
-                            <Label x:Name="SelectedBarberiaEmail"  Text="Nombre"   TextColor="White"  FontSize="16"/>
-                            <Label x:Name="SelectedBarberiaTelefono"  Text="Nombre"   TextColor="White"  FontSize="16"/>
-                            <Label x:Name="SelectedBarberiaAddress"  Text="Dirección" TextColor="#A0A0A0" FontSize="14"/>
-                        </VerticalStackLayout>
+                    <Frame x:Name="SelectedBarberiaFrame" CornerRadius="10" BackgroundColor="#1E3A49" Padding="15" IsVisible="False">
+                        <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
+                            <Border WidthRequest="80" HeightRequest="80" StrokeShape="RoundRectangle 50" VerticalOptions="Center" HorizontalOptions="Center">
+                                <Image x:Name="SelectedBarberiaImage" Aspect="AspectFill"/>
+                            </Border>
+
+                            <VerticalStackLayout Spacing="5" VerticalOptions="Center" HorizontalOptions="StartAndExpand">
+                                <Label Text="Barbería seleccionada:" TextColor="#FF6F91" FontSize="14" FontAttributes="Bold"/>
+                                <Label x:Name="SelectedBarberiaName" Text="Nombre" TextColor="White" FontSize="16"/>
+                                <Label x:Name="SelectedBarberiaEmail" Text="Correo" TextColor="White" FontSize="16"/>
+                                <Label x:Name="SelectedBarberiaTelefono" Text="Teléfono" TextColor="White" FontSize="16"/>
+                                <Label x:Name="SelectedBarberiaAddress" Text="Dirección" TextColor="#A0A0A0" FontSize="14"/>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
                     </Frame>
+
                 </VerticalStackLayout>
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Nombre completo" TextColor="White" FontSize="16" />
