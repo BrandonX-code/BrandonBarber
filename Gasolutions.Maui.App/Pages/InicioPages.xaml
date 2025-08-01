@@ -292,7 +292,7 @@
                                 <TapGestureRecognizer Tapped="GestionDeBarberias" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
-                                <Image Source="man.png" WidthRequest="40" HeightRequest="40" />
+                                <Image Source="barberias.png" WidthRequest="40" HeightRequest="40" />
                                 <Label Text="Gestinar Barberias" TextColor="black" FontSize="20" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
