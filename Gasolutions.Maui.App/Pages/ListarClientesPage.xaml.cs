@@ -54,7 +54,7 @@ namespace Gasolutions.Maui.App.Pages
                 ContentContainer.IsVisible = false;
 
                 // Llamar a la API para obtener todos los usuarios
-                var response = await _authService._BaseClient.GetAsync("api/auth");
+                var response = await _authService._BaseClient.GetAsync($"api/auth/cliente/{AuthService.CurrentUser.IdBarberia}");
 
                 if (response.IsSuccessStatusCode)
                 {
@@ -64,7 +64,7 @@ namespace Gasolutions.Maui.App.Pages
 
                     // Filtrar solo los clientes
                     var admin = AuthService.CurrentUser;
-                    var clientes = usuarios?.Where(u => u.Rol.ToLower() == "clente" && u.IdBarberia == admin.IdBarberia).ToList() ?? new List<UsuarioModels>();
+                    var clientes = usuarios?.Where(u => u.Rol.ToLower() == "cliente" && u.IdBarberia == admin.IdBarberia).ToList() ?? new List<UsuarioModels>();
 
                     _todosLosClientes.Clear();
                     _clientesFiltrados.Clear();

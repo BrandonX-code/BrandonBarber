@@ -5,7 +5,11 @@
 	<ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20" BackgroundColor="#0E2A36">
             <Label Text="Gestión de Servicios" FontSize="24" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center"/>
-
+            <VerticalStackLayout x:Name="PickerSection" Grid.Row="0"  Spacing="5"  IsVisible="False">
+                <Frame BackgroundColor="#90A4AE" Padding="15" CornerRadius="10" HasShadow="True" BorderColor="Black" HeightRequest="100">
+                    <Picker x:Name="Picker" SelectedIndexChanged="Picker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}" Title="Seleccionar Barberia" TitleColor="Black" Style="{StaticResource EntryStyle}"  VerticalOptions="Center" />
+                </Frame>
+            </VerticalStackLayout>
             <!-- Formulario de Servicio -->
             <Border StrokeThickness="0" Background="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
                 <VerticalStackLayout Spacing="10">

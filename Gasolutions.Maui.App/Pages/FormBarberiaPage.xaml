@@ -120,7 +120,7 @@
 
             <Label x:Name="ErrorLabel" TextColor="#ff0000" FontSize="14" HorizontalOptions="Center" IsVisible="False"/>
 
-            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" Color="{StaticResource TextPrimary}" Scale="1.5"/>
+            <!--<ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" Color="{StaticResource TextPrimary}" Scale="1.5"/>-->
         </StackLayout>
     </ScrollView>
 </ContentPage>

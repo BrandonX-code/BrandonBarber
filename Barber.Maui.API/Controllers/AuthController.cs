@@ -20,6 +20,12 @@ namespace Barber.Maui.API.Controllers
         {
             return await _context.UsuarioPerfiles.ToListAsync();
         }
+        [HttpGet("cliente/{idbarberia}")]
+        public async Task<ActionResult<IEnumerable<Auth>>> GetClientePorBarberia(int idbarberia)
+        {
+            return await _context.UsuarioPerfiles.Where(c=> idbarberia == c.IdBarberia && c.Rol.Equals("cliente")).ToListAsync();
+
+        }
         [HttpGet("{cedula}")]
         public async Task<ActionResult<IEnumerable<Auth>>> GetAuthPorCedula(long cedula)
         {

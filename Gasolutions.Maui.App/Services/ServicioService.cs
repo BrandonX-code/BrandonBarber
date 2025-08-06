@@ -20,6 +20,16 @@ public class ServicioService
             PropertyNameCaseInsensitive = true
         });
     }
+    public async Task<List<ServicioModel>> GetServiciosByBarberiaAsync(int idBarberia)
+    {
+        var response = await _httpClient.GetAsync($"api/servicios/{idBarberia}");
+        response.EnsureSuccessStatusCode();
+        var json = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<List<ServicioModel>>(json, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        });
+    }
 
     public async Task CrearServicioAsync(ServicioModel servicio)
     {
@@ -32,6 +42,9 @@ public class ServicioService
         formData.Add(new StringContent(servicio.Precio.ToString()), nameof(ServicioModel.Precio));
         formData.Add(new StringContent(servicio.Imagen.ToString()), nameof(ServicioModel.Imagen));
         formData.Add(new StringContent(servicio.Id.ToString()), nameof(ServicioModel.Id));
+
+        // Agregar el IdBarberia seleccionado
+        formData.Add(new StringContent(servicio.IdBarberia.ToString()), nameof(ServicioModel.IdBarberia));
 
         // Leer el archivo de imagen
         var fileBytes = await File.ReadAllBytesAsync(servicio.Imagen);
@@ -110,7 +123,7 @@ public class ServicioService
             formData.Add(new StringContent(fileInfo.Name), nameof(ServicioModel.Imagen));
         }
 
-        var response = await _httpClient.PutAsync($"api/servicios/{servicio.Id}", formData);
+        var response = await _httpClient.PutAsync($"api/servicios/{servicio.IdBarberia}", formData);
 
         if (!response.IsSuccessStatusCode)
         {

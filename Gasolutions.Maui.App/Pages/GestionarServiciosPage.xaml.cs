@@ -9,19 +9,58 @@ namespace Gasolutions.Maui.App.Pages
         private readonly ServicioService _servicioService;
         private ServicioModel _servicioEditando;
         private FileResult _imagenSeleccionada;
+        private readonly BarberiaService _barberiaService;
+        private List<Barberia> _barberias;
+        private int _barberiaSeleccionadaId; // Agregar esta variable para mantener el ID de la barbería seleccionada
 
         public GestionarServiciosPage(ServicioService servicioService)
         {
             InitializeComponent();
             _servicioService = servicioService;
-            CargarServicios();
+            _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
+
+            CargarBarberias();
         }
 
-        private async void CargarServicios()
+        private async void CargarBarberias()
         {
             try
             {
-                var servicios = await _servicioService.GetServiciosAsync();
+                long idAdministrador = AuthService.CurrentUser.Cedula;
+                _barberias = await _barberiaService.GetBarberiasByAdministradorAsync(idAdministrador);
+
+                Picker.ItemsSource = _barberias;
+                Picker.ItemDisplayBinding = new Binding("Nombre");
+                PickerSection.IsVisible = _barberias.Any();
+
+                if (_barberias.Any())
+                {
+                    Picker.SelectedIndex = 0; // Dispara Picker_SelectedIndexChanged
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", "No se pudieron cargar las barberías: " + ex.Message, "OK");
+            }
+        }
+
+        private async void Picker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var picker = (Picker)sender;
+            int selectedIndex = picker.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                var barberiaSeleccionada = (Barberia)picker.SelectedItem;
+                _barberiaSeleccionadaId = barberiaSeleccionada.Idbarberia; // Guardar el ID
+                await CargarServicios(barberiaSeleccionada.Idbarberia);
+            }
+        }
+
+        private async Task CargarServicios(int idBarberia)
+        {
+            try
+            {
+                var servicios = await _servicioService.GetServiciosByBarberiaAsync(idBarberia);
                 ServiciosListView.ItemsSource = servicios;
             }
             catch (Exception ex)
@@ -37,6 +76,14 @@ namespace Gasolutions.Maui.App.Pages
                 await DisplayAlert("Validación", "Todos los campos son obligatorios.", "OK");
                 return;
             }
+
+            // Verificar que hay una barbería seleccionada
+            if (_barberiaSeleccionadaId == 0)
+            {
+                await DisplayAlert("Validación", "Debe seleccionar una barbería.", "OK");
+                return;
+            }
+
             string precioTexto = PrecioEntry.Text?.Replace("$", "").Replace(",", "");
             if (!decimal.TryParse(precioTexto, out decimal precio))
             {
@@ -58,20 +105,22 @@ namespace Gasolutions.Maui.App.Pages
             {
                 Nombre = NombreEntry.Text,
                 Imagen = localPath, // Guarda la ruta local
-                Precio = precio
+                Precio = precio,
+                IdBarberia = _barberiaSeleccionadaId // Usar la barbería seleccionada
             };
 
             try
             {
                 await _servicioService.CrearServicioAsync(nuevoServicio);
                 LimpiarFormulario();
-                CargarServicios();
+                await CargarServicios(_barberiaSeleccionadaId); // Pasar el ID de la barbería
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Error", "No se pudo agregar el servicio: " + ex.Message, "OK");
             }
         }
+
         bool _isUpdatingText = false;
 
         private void OnPrecioEntryTextChanged(object sender, TextChangedEventArgs e)
@@ -97,7 +146,6 @@ namespace Gasolutions.Maui.App.Pages
                 }
             }
         }
-
 
         private void OnEditarBtnClicked(object sender, EventArgs e)
         {
@@ -160,14 +208,13 @@ namespace Gasolutions.Maui.App.Pages
             {
                 await _servicioService.EditarServicioAsync(_servicioEditando);
                 LimpiarFormulario();
-                CargarServicios();
+                await CargarServicios(_barberiaSeleccionadaId); // Pasar el ID de la barbería
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Error", "No se pudo editar el servicio: " + ex.Message, "OK");
             }
         }
-
 
         private async void OnEliminarBtnClicked(object sender, EventArgs e)
         {
@@ -180,7 +227,7 @@ namespace Gasolutions.Maui.App.Pages
             try
             {
                 await _servicioService.EliminarServicioAsync(servicio.Id);
-                CargarServicios();
+                await CargarServicios(_barberiaSeleccionadaId); // Pasar el ID de la barbería
             }
             catch (Exception ex)
             {

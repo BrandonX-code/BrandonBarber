@@ -51,7 +51,7 @@ namespace Barber.Maui.API.Controllers
             {
                 _context.Servicios.Add(servicio);
                 await _context.SaveChangesAsync();
-                return CreatedAtAction(nameof(GetServicios), new { id = servicio.Id }, servicio);
+                return CreatedAtAction(nameof(GetServicios), new { idbarberia = servicio.IdBarberia }, servicio);
             }
             catch (Exception ex)
             {
