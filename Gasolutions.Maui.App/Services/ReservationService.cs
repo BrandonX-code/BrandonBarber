@@ -69,10 +69,10 @@ namespace Gasolutions.Maui.App.Services
             //}
         }
 
-        public async Task<List<CitaModel>> GetReservations(DateTime fecha)
+        public async Task<List<CitaModel>> GetReservations(DateTime fecha, int idBarberia)
         {
-            var admin = AuthService.CurrentUser;
-            string url = $"{_httpClient.BaseAddress}api/citas/by-date/{fecha:yyyy-MM-dd}&{admin.IdBarberia}";
+            //var admin = AuthService.CurrentUser;
+            string url = $"{_httpClient.BaseAddress}api/citas/by-date/{fecha:yyyy-MM-dd}&{idBarberia}";
 
             try
             {

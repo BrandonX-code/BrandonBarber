@@ -158,7 +158,7 @@ namespace Gasolutions.Maui.App
 
                 Console.WriteLine($"Fecha y hora seleccionada: {fechaSeleccionada:yyyy-MM-dd HH:mm:ss}");
 
-                var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date);
+                var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date, 0);
                 Console.WriteLine($"Citas encontradas para el día {FechaPicker.Date:yyyy-MM-dd}: {citasDelDia?.Count ?? 0}");
 
                 var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? new List<CitaModel>();

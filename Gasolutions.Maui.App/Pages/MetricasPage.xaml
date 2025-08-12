@@ -15,8 +15,22 @@
 						</Label.Shadow>
 					</Label>
 				</Grid>
-
-				<Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16"  RowSpacing="16">
+                <VerticalStackLayout x:Name="PickerSection" Spacing="5" IsVisible="False">
+                    <Frame BackgroundColor="#90A4AE" 
+                           Padding="15" 
+                           CornerRadius="10" 
+                           HasShadow="True" 
+                           BorderColor="Black" 
+                           HeightRequest="100">
+                        <Picker x:Name="BarberiaPicker" 
+                                SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" 
+                                ItemDisplayBinding="{Binding Nombre}" 
+                                Title="Seleccionar Barbería" 
+                                TitleColor="Black"
+                                VerticalOptions="Center" />
+                    </Frame>
+                </VerticalStackLayout>
+                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16"  RowSpacing="16">
                     <Frame Grid.Column="0" Grid.Row="0" BackgroundColor="#90A4AE" CornerRadius="12" Padding="16">
 						<VerticalStackLayout>
                             <Label Text="Total Citas" TextColor="Black" FontSize="16"/>

@@ -31,7 +31,7 @@
 
                 if (user.Rol?.ToLower() == "admin" || user.Rol?.ToLower() == "administrador")
                 {
-                    listaReservas = await _reservationService.GetReservations(datePicker.Date);
+                    listaReservas = await _reservationService.GetReservations(datePicker.Date, 0);
                 }
                 else if (user.Rol?.ToLower() == "barbero")
                 {
