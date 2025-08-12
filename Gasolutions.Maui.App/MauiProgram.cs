@@ -3,6 +3,7 @@ using Gasolutions.Maui.App.Pages;
 using Gasolutions.Maui.App.Services;
 using Microcharts.Maui;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Platform;
 
 namespace Gasolutions.Maui.App
 {
@@ -26,6 +27,16 @@ namespace Gasolutions.Maui.App
                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
            });
+
+
+        #if ANDROID
+                    Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (h, v) =>
+                    {
+                        h.PlatformView.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(Colors.Transparent.ToPlatform());
+                    });
+
+                    // Update the problematic line
+        #endif
 
             string apiBaseUrl;
             if (DeviceInfo.Platform == DevicePlatform.Android)

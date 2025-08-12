@@ -16,7 +16,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="20,20">
+        <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="20,0,20,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />

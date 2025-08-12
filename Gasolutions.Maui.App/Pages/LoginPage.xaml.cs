@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace Gasolutions.Maui.App.Pages
 {
     public partial class LoginPage : ContentPage
