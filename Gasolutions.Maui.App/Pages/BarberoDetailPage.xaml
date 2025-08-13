@@ -4,22 +4,12 @@
              BackgroundColor="#0E2A36">
 
 	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
-		</Grid.RowDefinitions>
-
-		<Grid Grid.Row="0" Padding="20,40,20,20">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="Auto"/>
-			</Grid.ColumnDefinitions>
-
-			<Image Grid.Column="2" Source="menu.png" HeightRequest="24" WidthRequest="24"/>
-		</Grid>
-
-		<ScrollView Grid.Row="1">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <ScrollView Grid.Row="1">
 			<VerticalStackLayout Padding="20" Spacing="20">
 
 				<Grid>

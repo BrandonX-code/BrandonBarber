@@ -96,19 +96,27 @@
                 <StackLayout Spacing="15">
                     <StackLayout>
                         <Label Text="Nombre de la Barbería *" Style="{StaticResource FieldLabelStyle}"/>
-                        <Entry Text="{Binding Nombre}" Placeholder="Ingresa el nombre" Style="{StaticResource RequiredEntryStyle}"/>
+                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                            <Entry Text="{Binding Nombre}" Placeholder="Ingresa el nombre" Style="{StaticResource RequiredEntryStyle}" TextColor="Black"/>
+                        </Border>
                     </StackLayout>
                     <StackLayout>
                         <Label Text="Teléfono *" Style="{StaticResource FieldLabelStyle}"/>
-                        <Entry Text="{Binding Telefono}" Placeholder="Ej: +57 300 123 4567" Style="{StaticResource RequiredEntryStyle}" Keyboard="Telephone"/>
+                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                            <Entry Text="{Binding Telefono}" Placeholder="Ej: 300 123 4567" Style="{StaticResource RequiredEntryStyle}" Keyboard="Telephone" TextColor="Black"/>
+                        </Border>
                     </StackLayout>
                     <StackLayout>
                         <Label Text="Dirección *" Style="{StaticResource FieldLabelStyle}"/>
-                        <Entry Text="{Binding Direccion}" Placeholder="Ingresa la dirección completa" Style="{StaticResource RequiredEntryStyle}"/>
+                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                            <Entry Text="{Binding Direccion}" Placeholder="Ingresa la dirección completa" Style="{StaticResource RequiredEntryStyle}" TextColor="Black"/>
+                        </Border>
                     </StackLayout>
                     <StackLayout>
                         <Label Text="Email" Style="{StaticResource FieldLabelStyle}"/>
-                        <Entry Text="{Binding Email}" Placeholder="contacto@barberia.com" Style="{StaticResource FormEntryStyle}" Keyboard="Email"/>
+                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                            <Entry Text="{Binding Email}" Placeholder="contacto@barberia.com" Style="{StaticResource FormEntryStyle}" Keyboard="Email" TextColor="Black"/>
+                        </Border>
                     </StackLayout>
                 </StackLayout>
             </Frame>

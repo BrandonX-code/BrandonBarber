@@ -2,20 +2,27 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Gasolutions.Maui.App.Pages.GestionarServiciosPage">
-	<ScrollView>
+    <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="20" BackgroundColor="#0E2A36">
             <Label Text="Gestión de Servicios" FontSize="24" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center"/>
             <VerticalStackLayout x:Name="PickerSection" Grid.Row="0"  Spacing="5"  IsVisible="False">
-                <Frame BackgroundColor="#90A4AE" Padding="15" CornerRadius="10" HasShadow="True" BorderColor="Black" HeightRequest="100">
-                    <Picker x:Name="Picker" SelectedIndexChanged="Picker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}" Title="Seleccionar Barberia" TitleColor="Black" Style="{StaticResource EntryStyle}"  VerticalOptions="Center" />
-                </Frame>
+                <Border BackgroundColor="#90A4AE" Padding="15" StrokeShape="RoundRectangle 10" StrokeThickness="0" HeightRequest="100">
+                    <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                        <Picker x:Name="Picker" SelectedIndexChanged="Picker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}" Title="Seleccionar Barberia" TitleColor="Black" TextColor="Black" VerticalOptions="Center" />
+                    </Border>
+                </Border>
             </VerticalStackLayout>
             <!-- Formulario de Servicio -->
             <Border StrokeThickness="0" Background="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
                 <VerticalStackLayout Spacing="10">
-                    <Entry x:Name="NombreEntry" Placeholder="Nombre del Servicio" TextColor="Black"/>
-                    <Entry x:Name="PrecioEntry" Placeholder="Precio" Keyboard="Numeric" TextColor="Black" TextChanged="OnPrecioEntryTextChanged"/>
+                    <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                        <Entry x:Name="NombreEntry" Placeholder="Nombre del Servicio" TextColor="Black"/>
+                    </Border>
+                    <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                        <Entry x:Name="PrecioEntry" Placeholder="Precio" Keyboard="Numeric" TextColor="Black" TextChanged="OnPrecioEntryTextChanged"/>
+                    </Border>
                     <Image x:Name="PreviewImage" HeightRequest="100" WidthRequest="100" Aspect="AspectFill" IsVisible="False"/>
+
                     <Button Text="Seleccionar Imagen" Clicked="OnSeleccionarImagen" BackgroundColor="#0E2A36" TextColor="White"/>
 
                     <Grid ColumnDefinitions="Auto, *, Auto">
@@ -54,7 +61,7 @@
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </ScrollView>
-            
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
