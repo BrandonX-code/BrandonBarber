@@ -5,12 +5,59 @@
         public ObservableCollection<CitaModel> CitasFiltradas { get; set; } = new();
         private readonly ReservationService _reservationService;
         public DateTime FechaSeleccionada = DateTime.Now;
+        private readonly BarberiaService _barberiaService;
+        private List<Barberia> _barberias;
+        private int? _barberiaSeleccionadaId = null;
         public ListaCitas(ReservationService reservationService)
         {
             InitializeComponent();
             BindingContext = this;
             ResultadosCollection.ItemsSource = CitasFiltradas;
             _reservationService = reservationService;
+            _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
+
+            CargarBarberias();
+        }
+        private async void CargarBarberias()
+        {
+            try
+            {
+                var user = AuthService.CurrentUser;
+
+                // Solo mostrar picker si es administrador
+                if (user?.Rol?.ToLower() == "admin" || user?.Rol?.ToLower() == "administrador")
+                {
+                    long idAdministrador = user.Cedula;
+                    _barberias = await _barberiaService.GetBarberiasByAdministradorAsync(idAdministrador);
+
+                    BarberiaPicker.ItemsSource = _barberias;
+                    PickerSection.IsVisible = _barberias.Any();
+                }
+                else
+                {
+                    // Si es barbero, usar su barbería automáticamente
+                    _barberiaSeleccionadaId = user?.IdBarberia;
+                    PickerSection.IsVisible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", "No se pudieron cargar las barberías: " + ex.Message, "OK");
+            }
+        }
+
+        private void BarberiaPicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var picker = (Picker)sender;
+            int selectedIndex = picker.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                var barberiaSeleccionada = (Barberia)picker.SelectedItem;
+                _barberiaSeleccionadaId = barberiaSeleccionada.Idbarberia;
+
+                // Limpiar citas actuales cuando cambie de barbería
+                CitasFiltradas.Clear();
+            }
         }
 
         private async void RecuperarCitasPorFecha(object sender, EventArgs e)
@@ -27,11 +74,17 @@
                     return;
                 }
 
-                List<CitaModel> listaReservas = new();
+                // Validar que haya una barbería seleccionada para administradores
+                if ((user.Rol?.ToLower() == "admin" || user.Rol?.ToLower() == "administrador") && _barberiaSeleccionadaId == null)
+                {
+                    await AppUtils.MostrarSnackbar("Debe seleccionar una barbería.", Colors.DarkRed, Colors.White);
+                    return;
+                }
 
+                List<CitaModel> listaReservas = new();
                 if (user.Rol?.ToLower() == "admin" || user.Rol?.ToLower() == "administrador")
                 {
-                    listaReservas = await _reservationService.GetReservations(datePicker.Date, 0);
+                    listaReservas = await _reservationService.GetReservations(datePicker.Date, _barberiaSeleccionadaId.Value);
                 }
                 else if (user.Rol?.ToLower() == "barbero")
                 {

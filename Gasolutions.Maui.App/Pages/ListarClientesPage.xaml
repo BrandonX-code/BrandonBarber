@@ -8,10 +8,26 @@
             <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" IsVisible="True" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" />
 
             <ScrollView x:Name="ContentContainer" IsVisible="False">
-                <VerticalStackLayout Spacing="5">
+                <VerticalStackLayout Spacing="10">
                     <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="20,30,20,10">
                         <Label Grid.Column="1" Text="Lista de Clientes" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" />
                     </Grid>
+                    <!-- Selector de Barbería -->
+                    <VerticalStackLayout x:Name="PickerSection" Spacing="10" IsVisible="False">
+                        <Label Text="Seleccionar Barbería" TextColor="White" FontSize="16" />
+                        <Frame CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#90A4AE" HeightRequest="45" IsClippedToBounds="True">
+                            <Picker x:Name="BarberiaPicker" 
+                SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" 
+                ItemDisplayBinding="{Binding Nombre}" 
+                Title="Seleccionar Barbería" 
+                TitleColor="Gray" 
+                TextColor="Black" 
+                FontSize="16" 
+                HeightRequest="45" 
+                VerticalOptions="Center" 
+                Margin="10,0" />
+                        </Frame>
+                    </VerticalStackLayout>
                     <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="5" HasShadow="False">
                         <SearchBar x:Name="SearchBar" Placeholder="Buscar cliente por nombre o email..." PlaceholderColor="Black" TextColor="Black" BackgroundColor="#90A4AE" TextChanged="OnSearchTextChanged" />
                     </Frame>

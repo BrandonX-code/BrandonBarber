@@ -28,7 +28,21 @@
         <ScrollView>
             <VerticalStackLayout Spacing="20" Padding="0,20">
                 <Label Text="Agregar Nuevo Barbero" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" Margin="0,0,0,20" />
-
+                <VerticalStackLayout x:Name="PickerSection" Spacing="5" IsVisible="False">
+                    <Label Text="Seleccionar Barbería *" TextColor="White" FontSize="16" />
+                    <Frame CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#E0F7FA" HeightRequest="45" IsClippedToBounds="True">
+                        <Picker x:Name="BarberiaPicker" 
+                SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" 
+                ItemDisplayBinding="{Binding Nombre}" 
+                Title="Seleccionar Barbería" 
+                TitleColor="Black" 
+                TextColor="Black" 
+                FontSize="16" 
+                HeightRequest="45" 
+                VerticalOptions="Center" 
+                Margin="10,0" />
+                    </Frame>
+                </VerticalStackLayout>
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Nombre completo *" TextColor="White" FontSize="16" />
                     <Frame CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#E0F7FA" HeightRequest="45" IsClippedToBounds="True">

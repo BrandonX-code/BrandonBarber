@@ -3,11 +3,42 @@
     public partial class AgregarBarberoPage : ContentPage
     {
         private readonly AuthService _authService;
-
+        private readonly BarberiaService _barberiaService;
+        private List<Barberia> _barberias;
+        private int _barberiaSeleccionadaId;
         public AgregarBarberoPage()
         {
             InitializeComponent();
             _authService = Application.Current.Handler.MauiContext.Services.GetService<AuthService>();
+            _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
+
+            CargarBarberias();
+        }
+        private async void CargarBarberias()
+        {
+            try
+            {
+                long idAdministrador = AuthService.CurrentUser.Cedula;
+                _barberias = await _barberiaService.GetBarberiasByAdministradorAsync(idAdministrador);
+
+                BarberiaPicker.ItemsSource = _barberias;
+                PickerSection.IsVisible = _barberias.Any();
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", "No se pudieron cargar las barberías: " + ex.Message, "OK");
+            }
+        }
+
+        private void BarberiaPicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var picker = (Picker)sender;
+            int selectedIndex = picker.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                var barberiaSeleccionada = (Barberia)picker.SelectedItem;
+                _barberiaSeleccionadaId = barberiaSeleccionada.Idbarberia;
+            }
         }
 
         private async void OnAgregarBarberoClicked(object sender, EventArgs e)
@@ -37,7 +68,8 @@
                     Telefono = TelefonoEntry.Text ?? "",
                     Direccion = DireccionEntry.Text ?? "",
                     Especialidades = EspecialidadesEntry.Text ?? "",
-                    Rol = "barbero" // Siempre barbero
+                    Rol = "barbero", // Siempre barbero
+                    IdBarberia = _barberiaSeleccionadaId
                 };
 
                 var response = await _authService.Register(registroRequest);
@@ -78,6 +110,12 @@
             ExperienciaEntry.Text = "";
             PasswordEntry.Text = "";
             ConfirmPasswordEntry.Text = "";
+            // Agregar al final del método, antes del cierre
+            _barberiaSeleccionadaId = 0;
+            if (BarberiaPicker != null && _barberias?.Any() == true)
+            {
+                BarberiaPicker.SelectedIndex = -1;
+            }
             //ActivoSwitch.IsToggled = true;
         }
 
@@ -139,7 +177,13 @@
                 ErrorLabel.IsVisible = true;
                 return false;
             }
-
+            // Validar barbería seleccionada (agregar después de las validaciones existentes y antes del return true)
+            if (_barberiaSeleccionadaId == 0)
+            {
+                ErrorLabel.Text = "Debe seleccionar una barbería";
+                ErrorLabel.IsVisible = true;
+                return false;
+            }
             return true;
         }
 

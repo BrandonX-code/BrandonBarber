@@ -10,6 +10,9 @@ namespace Gasolutions.Maui.App.Pages
         public readonly AuthService _authService;
         private ObservableCollection<UsuarioModels> _todosLosBarberos;
         private ObservableCollection<UsuarioModels> _barberosFiltrados;
+        private readonly BarberiaService _barberiaService;
+        private List<Barberia> _barberias;
+        private int? _barberiaSeleccionadaId = null; // null = todas las barberías
         public Command RefreshCommand { get; }
         public ObservableCollection<UsuarioModels> BarberosFiltrados
         {
@@ -25,12 +28,45 @@ namespace Gasolutions.Maui.App.Pages
         {
             InitializeComponent();
             _authService = authService;
+            _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
             _todosLosBarberos = new ObservableCollection<UsuarioModels>();
             _barberosFiltrados = new ObservableCollection<UsuarioModels>();
             RefreshCommand = new Command(async () => await RefreshBarberoList());
             BindingContext = this;
+
+            CargarBarberias();
             _ = LoadBarberos();
         }
+        private async void CargarBarberias()
+        {
+            try
+            {
+                long idAdministrador = AuthService.CurrentUser.Cedula;
+                _barberias = await _barberiaService.GetBarberiasByAdministradorAsync(idAdministrador);
+
+                BarberiaPicker.ItemsSource = _barberias;
+                PickerSection.IsVisible = _barberias.Any();
+
+                // No seleccionar nada por defecto, quedará vacío
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", "No se pudieron cargar las barberías: " + ex.Message, "OK");
+            }
+        }
+
+        private async void BarberiaPicker_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var picker = (Picker)sender;
+            int selectedIndex = picker.SelectedIndex;
+            if (selectedIndex != -1)
+            {
+                var barberiaSeleccionada = (Barberia)picker.SelectedItem;
+                _barberiaSeleccionadaId = barberiaSeleccionada.Idbarberia;
+                await LoadBarberos();
+            }
+        }
+
         private async Task RefreshBarberoList()
         {
             if (BarberoRefreshView.IsRefreshing)
@@ -62,8 +98,17 @@ namespace Gasolutions.Maui.App.Pages
                         new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                     var admin = AuthService.CurrentUser;
-                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero" && u.IdBarberia == admin.IdBarberia ).ToList() ?? new List<UsuarioModels>();
+                    // Si no hay barbería seleccionada, no mostrar barberos
+                    if (_barberiaSeleccionadaId == null)
+                    {
+                        _todosLosBarberos.Clear();
+                        _barberosFiltrados.Clear();
+                        UpdateStats();
+                        EmptyStateFrame.IsVisible = true;
+                        return;
+                    }
 
+                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero" && u.IdBarberia == _barberiaSeleccionadaId).ToList() ?? new List<UsuarioModels>();
                     _todosLosBarberos.Clear();
                     _barberosFiltrados.Clear();
 

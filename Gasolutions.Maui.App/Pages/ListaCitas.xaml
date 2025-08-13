@@ -5,15 +5,29 @@
              BackgroundColor="#0E2A36">
 
     <AbsoluteLayout>
-        <!--<Image Source="fondobarber.jpg" Opacity="0.90" Aspect="AspectFill" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />-->
-
         <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <Grid RowDefinitions="Auto, Auto, *" Padding="20">
                 <VerticalStackLayout Spacing="15">
                     <Frame BackgroundColor="#0E2A36" CornerRadius="10" Padding="15" HasShadow="True">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Citas Agendadas" TextColor="White" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center" />
-
+                            <!-- Selector de Barbería -->
+                            <VerticalStackLayout x:Name="PickerSection" Spacing="10" IsVisible="False">
+                                <Label Text="Seleccionar Barbería" TextColor="White" FontSize="16" />
+                                <Frame CornerRadius="12" Padding="3" HasShadow="True" BackgroundColor="#90A4AE" WidthRequest="260" HorizontalOptions="Center">
+                                    <Picker x:Name="BarberiaPicker" 
+                SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" 
+                ItemDisplayBinding="{Binding Nombre}" 
+                Title="Seleccionar Barbería" 
+                TitleColor="Gray" 
+                TextColor="Black" 
+                FontSize="16" 
+                FontAttributes="Bold" 
+                HeightRequest="45" 
+                VerticalOptions="Center" 
+                Margin="10,0" />
+                                </Frame>
+                            </VerticalStackLayout>
                             <Frame CornerRadius="12" Padding="3" HasShadow="True" BackgroundColor="#90A4AE" WidthRequest="260" HorizontalOptions="Center">
                                 <DatePicker x:Name="datePicker" Date="{Binding FechaSeleccionada, Mode=TwoWay}" Format="dd/MM/yyyy" TextColor="Black" WidthRequest="250" FontSize="20" FontAttributes="Bold" HeightRequest="65" />
                             </Frame>
