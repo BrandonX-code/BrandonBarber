@@ -133,12 +133,12 @@ namespace Gasolutions.Maui.App
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(TelefonoEntry.Text) || !TelefonoEntry.Text.All(char.IsDigit) || TelefonoEntry.Text.Length != 10)
-                {
-                    MostrarLoader(false);
-                    await AppUtils.MostrarSnackbar("El Teléfono debe contener 10 dígitos numéricos.", Colors.Orange, Colors.White);
-                    return;
-                }
+                //if (string.IsNullOrWhiteSpace(TelefonoEntry.Text) || !TelefonoEntry.Text.All(char.IsDigit) || TelefonoEntry.Text.Length != 10)
+                //{
+                //    MostrarLoader(false);
+                //    await AppUtils.MostrarSnackbar("El Teléfono debe contener 10 dígitos numéricos.", Colors.Orange, Colors.White);
+                //    return;
+                //}
 
 
                 DateTime fechaSeleccionada = FechaPicker.Date.Add(HoraPicker.Time);
@@ -158,7 +158,8 @@ namespace Gasolutions.Maui.App
 
                 Console.WriteLine($"Fecha y hora seleccionada: {fechaSeleccionada:yyyy-MM-dd HH:mm:ss}");
 
-                var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date, 0);
+                int idBarberia = AuthService.CurrentUser.IdBarberia ?? 0;
+                var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date, idBarberia);
                 Console.WriteLine($"Citas encontradas para el día {FechaPicker.Date:yyyy-MM-dd}: {citasDelDia?.Count ?? 0}");
 
                 var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? new List<CitaModel>();

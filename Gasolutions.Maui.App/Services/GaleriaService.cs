@@ -78,11 +78,11 @@ namespace Gasolutions.Maui.App.Services
             }
         }
 
-        public async Task<List<ImagenGaleriaModel>> ObtenerImagenes(long idbarbero)
+        public async Task<List<ImagenGaleriaModel>> ObtenerImagenes(long idbarbero, int idBarberia)
         {
             try
             {
-                var response = await _httpClient.GetAsync($"api/galeria/barbero/{idbarbero}");
+                var response = await _httpClient.GetAsync($"api/galeria/barbero/{idbarbero}&{idBarberia}");
 
                 if (!response.IsSuccessStatusCode)
                 {

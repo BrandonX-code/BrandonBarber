@@ -128,8 +128,10 @@ namespace Gasolutions.Maui.App.Pages
                 }
 
                 // Obtener imágenes desde la API
-                long cedulaBarbero = barberoId == 0 ? AuthService.CurrentUser.Cedula : barberoId;
-                imagenes = await _galeriaService.ObtenerImagenes(cedulaBarbero);
+                var usuarioActual = AuthService.CurrentUser;
+                long cedulaBarbero = barberoId == 0 ? usuarioActual.Cedula : barberoId;
+                int idBarberia = usuarioActual.IdBarberia ?? 0;
+                imagenes = await _galeriaService.ObtenerImagenes(cedulaBarbero, idBarberia);
 
                 Debug.WriteLine($"📷 Se obtuvieron {imagenes.Count} imágenes de la API");
 
@@ -480,8 +482,10 @@ namespace Gasolutions.Maui.App.Pages
             try
             {
                 Debug.WriteLine("🔄 Recargando galería...");
-                long barberoId = AuthService.CurrentUser.Cedula;
-                imagenes = await _galeriaService.ObtenerImagenes(barberoId);
+                var usuarioActual = AuthService.CurrentUser;
+                long barberoId = usuarioActual.Cedula;
+                int idBarberia = usuarioActual.IdBarberia ?? 0;
+                imagenes = await _galeriaService.ObtenerImagenes(barberoId, idBarberia);
                 UpdateGaleriaUI();
             }
             catch (Exception ex)
