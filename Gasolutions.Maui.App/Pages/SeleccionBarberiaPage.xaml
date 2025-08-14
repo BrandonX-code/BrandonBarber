@@ -76,7 +76,7 @@
                                     <Image Source="{Binding LogoUrl, TargetNullValue='picture.png'}" Aspect="AspectFill">
                                     </Image>
                                 </Border>
-                                <StackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
+                                <StackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
 
                                     <Label Text="{Binding Nombre}" Style="{StaticResource TitleLabelStyle}" />
 

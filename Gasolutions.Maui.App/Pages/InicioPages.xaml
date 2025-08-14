@@ -16,7 +16,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="20,0,20,10">
+        <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="20,5,20,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -33,13 +33,13 @@
 
                     <!-- ClienteView -->
                     <VerticalStackLayout x:Name="ClienteView" IsVisible="false" Padding="20" Spacing="10">
-                        <Label Text="Panel de Cliente" FontSize="30" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center" />
+                        <!--<Label Text="Panel de Cliente" FontSize="30" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center" />-->
 
-                        <VerticalStackLayout Spacing="15" Padding="0">
-                            <Label Text="Nuestros Servicios"  TextColor="#E0F7FA" 
+                        <VerticalStackLayout Padding="0">
+                            <Label Text="Servicios"  TextColor="#E0F7FA" 
                                        FontSize="22" 
                                        FontAttributes="Bold" 
-                                       HorizontalOptions="Center"/>
+                                       HorizontalOptions="Start"/>
 
                             <CollectionView x:Name="ServiciosCarousel" 
                                               HeightRequest="280">
@@ -48,16 +48,16 @@
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Frame BackgroundColor="#90A4AE" CornerRadius="20" Padding="20"  HasShadow="True" HeightRequest="280" WidthRequest="200">
+                                        <!--<Frame BackgroundColor="#90A4AE" CornerRadius="20" Padding="10"  HasShadow="True" HeightRequest="220" WidthRequest="170">
                                             <Grid RowSpacing="10">
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="150"/>
+                                                    <RowDefinition Height="135"/>
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
-                                                <Frame Grid.Row="0" BackgroundColor="#F0F0F0" CornerRadius="6"  HeightRequest="150"  WidthRequest="120"  HorizontalOptions="Center"  Padding="0" IsClippedToBounds="True">
-                                                    <Image Grid.Row="0" Source="{Binding Imagen}" Aspect="AspectFill" HeightRequest="150" WidthRequest="120">
+                                                <Frame Grid.Row="0" BackgroundColor="#F0F0F0" CornerRadius="6"  HeightRequest="140"  WidthRequest="110"  HorizontalOptions="Center"  Padding="0" IsClippedToBounds="True">
+                                                    <Image Grid.Row="0" Source="{Binding Imagen}" Aspect="AspectFill" HeightRequest="140" WidthRequest="110">
                                                         <Image.Clip>
                                                             <RoundRectangleGeometry CornerRadius="6" Rect="0,0,125,150"/>
                                                         </Image.Clip>
@@ -76,13 +76,38 @@
                                                            FontSize="16"
                                                            HorizontalOptions="Center"/>
                                             </Grid>
+                                        </Frame>-->
+                                        <Frame CornerRadius="20"  BackgroundColor="#90A4AE" Padding="-1" HeightRequest="220" WidthRequest="170" HasShadow="True">
+
+                                            <Grid RowSpacing="0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*" />
+                                                    <RowDefinition Height="50" />
+                                                </Grid.RowDefinitions>
+
+                                                <!-- Imagen centrada -->
+                                                <Frame Grid.Row="0" BackgroundColor="White" CornerRadius="6"  HeightRequest="175"  WidthRequest="175"  HorizontalOptions="Center"  Padding="0" IsClippedToBounds="True">
+                                                    <Image Grid.Row="0" Source="{Binding Imagen}" Aspect="AspectFill" HeightRequest="175" WidthRequest="175">
+                                                        <Image.Clip>
+                                                            <RoundRectangleGeometry CornerRadius="6" Rect="0,0,175,175"/>
+                                                        </Image.Clip>
+                                                    </Image>
+                                                </Frame>
+
+                                                <!-- Sección blanca inferior con texto -->
+                                                <StackLayout Grid.Row="1" BackgroundColor="#90A4AE" Padding="3" HorizontalOptions="Fill" VerticalOptions="Center">
+                                                    <Label Text="{Binding Nombre}" FontAttributes="Bold" FontSize="16" TextColor="Black" HorizontalOptions="Center"/>
+                                                    <Label Grid.Row="2"  Text="{Binding Precio, StringFormat='${0:N0}'}" TextColor="Black" FontSize="16" HorizontalOptions="Center"/>
+
+                                                </StackLayout>
+                                            </Grid>
                                         </Frame>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
                         </VerticalStackLayout>
                         <VerticalStackLayout Spacing="5" Padding="0">
-                            <Label Text="Barberos" TextColor="#E0F7FA" FontSize="22"  FontAttributes="Bold"  HorizontalOptions="Center"/>
+                            <Label Text="Barberos" TextColor="#E0F7FA" FontSize="22"  FontAttributes="Bold"  HorizontalOptions="Start"/>
 
                             <CollectionView x:Name="BarberosCollectionView"  HeightRequest="320">
                                 <CollectionView.ItemsLayout>
@@ -90,27 +115,27 @@
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Frame BackgroundColor="#90A4AE" CornerRadius="20" Padding="20"  HasShadow="True" HeightRequest="280" WidthRequest="200">
+                                        <Frame BackgroundColor="#90A4AE" CornerRadius="20" Padding="20"  HasShadow="True" HeightRequest="300" WidthRequest="180">
                                             <Frame.GestureRecognizers>
                                                 <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
                                             </Frame.GestureRecognizers>
 
                                             <Grid RowSpacing="10">
                                                 <Grid.RowDefinitions>
-                                                    <RowDefinition Height="150"/>
+                                                    <RowDefinition Height="170"/>
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
                                                     <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
 
-                                                <Frame Grid.Row="0" BackgroundColor="#F0F0F0" CornerRadius="6"  HeightRequest="150"  WidthRequest="120"  HorizontalOptions="Center"  Padding="0" IsClippedToBounds="True">
-                                                    <Image Source="{Binding ImagenPath}"  HeightRequest="150"  WidthRequest="120"  Aspect="AspectFill"/>
+                                                <Frame Grid.Row="0" BackgroundColor="#F0F0F0" CornerRadius="6"  HeightRequest="170"  WidthRequest="140"  HorizontalOptions="Center"  Padding="0" IsClippedToBounds="True">
+                                                    <Image Source="{Binding ImagenPath}"  HeightRequest="170"  WidthRequest="140"  Aspect="AspectFill"/>
                                                     <Frame.GestureRecognizers>
                                                         <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
                                                     </Frame.GestureRecognizers>
                                                 </Frame>
-                                                <Label Grid.Row="1" Text="{Binding Nombre}" TextColor="Black" FontSize="15" FontAttributes="Bold" HorizontalOptions="Center" HorizontalTextAlignment="Center" LineBreakMode="WordWrap" MaxLines="2"/>
-                                                <HorizontalStackLayout Grid.Row="2" HorizontalOptions="Center" Spacing="1">
+                                                <Label Grid.Row="1" Text="{Binding Nombre}" TextColor="Black" FontSize="15" FontAttributes="Bold" HorizontalOptions="Start" HorizontalTextAlignment="Start" LineBreakMode="WordWrap" MaxLines="1"/>
+                                                <HorizontalStackLayout Grid.Row="2" HorizontalOptions="Start" Spacing="1">
                                                     <Image Source="starblackrellena.png" HeightRequest="20" WidthRequest="20">
                                                         <Image.Triggers>
                                                             <DataTrigger TargetType="Image" Binding="{Binding CalificacionPromedio}" Value="0">
@@ -147,14 +172,16 @@
                                                         </Image.Triggers>
                                                     </Image>
                                                 </HorizontalStackLayout>
+                                                <Label Grid.Row="3" Text="⟶"  FontSize="30" TextColor="Black" HorizontalOptions="End" Margin="0,-15,0,0"/>
+
                                             </Grid>
-                                        </Frame>    
+                                        </Frame>
 
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
                         </VerticalStackLayout>
-                        
+
                         <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="BuscarCitas" />
@@ -184,7 +211,7 @@
                                 <TapGestureRecognizer Tapped="CitasList" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
-                                <Image Source="history.png" WidthRequest="24" HeightRequest="24" />
+                                <Image Source="history.png" WidthRequest="30" HeightRequest="30" />
                                 <Label Text="Tus Citas" TextColor="Black" FontSize="25" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
@@ -194,7 +221,7 @@
                                 <TapGestureRecognizer Tapped="GestionarDisponibilidad" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
-                                <Image Source="calendar.png" WidthRequest="24" HeightRequest="24" />
+                                <Image Source="calendar.png" WidthRequest="30" HeightRequest="30" />
                                 <Label Text="Gestionar Disponibilidad" TextColor="Black" FontSize="25" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
@@ -203,7 +230,7 @@
                                 <TapGestureRecognizer Tapped="AddGaleri" />
                             </Frame.GestureRecognizers>
                             <HorizontalStackLayout Spacing="10" HeightRequest="60">
-                                <Image Source="galeribarber.png" WidthRequest="24" HeightRequest="24" />
+                                <Image Source="galeribarber.png" WidthRequest="30" HeightRequest="30" />
                                 <Label Text="Agregar Corte" TextColor="Black" FontSize="25" VerticalOptions="Center"/>
                             </HorizontalStackLayout>
                         </Frame>
@@ -212,7 +239,7 @@
 
                     <!-- AdminView -->
                     <VerticalStackLayout x:Name="AdminView" IsVisible="false" Padding="20" Spacing="17">
-                        <Label Text="Panel de Administrador" FontSize="24" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
+                        <!--<Label Text="Panel de Administrador" FontSize="24" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />-->
 
                         <!-- Nueva sección de Métricas -->
                         <Label Text="Métricas y Estadísticas" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />

@@ -329,9 +329,15 @@
         {
             if (sender is Frame frame && frame.BindingContext is UsuarioModels barbero)
             {
+                // Animación de toque
+                await frame.ScaleTo(0.95, 100, Easing.CubicIn);
+                await frame.ScaleTo(1, 100, Easing.CubicOut);
+
+                // Navegación a la página de detalle
                 await Navigation.PushAsync(new BarberoDetailPage(barbero));
             }
         }
+
 
 
     }
