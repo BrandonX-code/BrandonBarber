@@ -88,23 +88,30 @@ namespace Gasolutions.Maui.App.Pages
             try
             {
                 var fechaActual = DateTime.Now;
-                List<CitaModel> citasDelDia = new List<CitaModel>(); // Initialize the variable
+                List<CitaModel> citasDelMes = new List<CitaModel>();
+                int mes = fechaActual.Month;
+                int anio = fechaActual.Year;
 
-                // Obtener citas según si hay barbería seleccionada o no
+                // Obtener citas del mes actual para estadísticas generales
                 if (_barberiaSeleccionadaId > 0)
                 {
-                    // Filtrar por barbería específica
-                    citasDelDia = await _reservationService.GetReservations(fechaActual, _barberiaSeleccionadaId);
+                    var todasCitas = await _reservationService.GetReservations(fechaActual, _barberiaSeleccionadaId);
+                    citasDelMes = todasCitas.Where(c => c.Fecha.Month == mes && c.Fecha.Year == anio).ToList();
+                }
+                else
+                {
+                    var todasCitas = await _reservationService.GetAllReservations();
+                    citasDelMes = todasCitas.Where(c => c.Fecha.Month == mes && c.Fecha.Year == anio).ToList();
                 }
 
-
-                // Actualizar estadísticas generales
-                TotalCitasLabel.Text = citasDelDia.Count.ToString();
-                var tasaAsistencia = citasDelDia.Count > 0
-                    ? (double)citasDelDia.Count(c => c.Estado == "Completada") / citasDelDia.Count * 100
+                // Actualizar estadísticas generales (del mes actual)
+                TotalCitasLabel.Text = citasDelMes.Count.ToString();
+                var tasaAsistencia = citasDelMes.Count > 0
+                    ? (double)citasDelMes.Count(c => c.Estado == "Completada") / citasDelMes.Count * 100
                     : 0;
                 TasaAsistenciaLabel.Text = $"{tasaAsistencia:F1}%";
 
+                // Los gráficos y rankings SIEMPRE muestran datos históricos (últimos 6 meses)
                 await Task.WhenAll(
                     CargarGraficoAsistencia(),
                     CargarRankingBarberos(),

@@ -23,7 +23,7 @@
                 <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16"  RowSpacing="16">
                     <Frame Grid.Column="0" Grid.Row="0" BackgroundColor="#90A4AE" CornerRadius="12" Padding="16">
 						<VerticalStackLayout>
-                            <Label Text="Total Citas" TextColor="Black" FontSize="16"/>
+                            <Label Text="Total Citas Hoy" TextColor="Black" FontSize="16"/>
 							<Label x:Name="TotalCitasLabel" Text="0" TextColor="Black" FontSize="24" FontAttributes="Bold"/>
 						</VerticalStackLayout>
 					</Frame>

@@ -6,7 +6,6 @@
 
     <ContentPage.Resources>
         <ResourceDictionary>
-            <!-- Colores -->
             <Color x:Key="PrimaryBackground">#0E2A36</Color>
             <Color x:Key="SecondaryBackground">#1E3A49</Color>
             <Color x:Key="TertiaryBackground">#2E4A59</Color>
@@ -14,12 +13,10 @@
             <Color x:Key="TextSecondary">#A0A0A0</Color>
             <Color x:Key="AccentColor">#FF6F91</Color>
 
-            <!-- Estilos -->
-            <Style x:Key="SearchFrameStyle" TargetType="Frame">
+            <Style x:Key="SearchFrameStyle" TargetType="Border">
                 <Setter Property="BackgroundColor" Value="{StaticResource SecondaryBackground}"/>
-                <Setter Property="CornerRadius" Value="25"/>
+                <Setter Property="StrokeShape" Value="25"/>
                 <Setter Property="Padding" Value="15,10"/>
-                <Setter Property="HasShadow" Value="True"/>
             </Style>
 
             <Style x:Key="SearchEntryStyle" TargetType="Entry">
@@ -29,11 +26,10 @@
                 <Setter Property="FontSize" Value="16"/>
             </Style>
 
-            <Style x:Key="BarberiaFrameStyle" TargetType="Frame">
+            <Style x:Key="BarberiaFrameStyle" TargetType="Border">
                 <Setter Property="BackgroundColor" Value="{StaticResource SecondaryBackground}"/>
-                <Setter Property="CornerRadius" Value="15"/>
+                <Setter Property="StrokeShape" Value="25"/>
                 <Setter Property="Padding" Value="15"/>
-                <Setter Property="HasShadow" Value="True"/>
                 <Setter Property="HeightRequest" Value="120"/>
             </Style>
 
@@ -59,114 +55,42 @@
     </ContentPage.Resources>
 
     <Grid Padding="20" RowDefinitions="Auto, *">
-
-        <!-- Barra de búsqueda -->
-        <Frame Grid.Row="0" 
-               Style="{StaticResource SearchFrameStyle}"
-               Margin="0,0,0,15">
+        <Border Grid.Row="0"  Style="{StaticResource SearchFrameStyle}" Margin="0,0,0,15">
             <Grid ColumnDefinitions="*, Auto">
-                <Entry x:Name="SearchEntry"
-                       Grid.Column="0"
-                       Placeholder="Buscar barbería..."
-                       Style="{StaticResource SearchEntryStyle}"
-                       Text="{Binding SearchText}" />
-                <Button Grid.Column="1"
-                        Text="✕"
-                        BackgroundColor="Transparent"
-                        TextColor="{StaticResource TextSecondary}"
-                        FontSize="18"
-                        WidthRequest="35"
-                        HeightRequest="35"
-                        Command="{Binding ClearSearchCommand}"
-                        IsVisible="{Binding HasSearchText}" />
+                <Entry x:Name="SearchEntry" Grid.Column="0" Placeholder="Buscar barberías" Style="{StaticResource SearchEntryStyle}" Text="{Binding SearchText}" />
+                <Button Grid.Column="1" Text="✕" BackgroundColor="Transparent" TextColor="{StaticResource TextSecondary}" FontSize="18" WidthRequest="35" HeightRequest="35" Command="{Binding ClearSearchCommand}" IsVisible="{Binding HasSearchText}" />
             </Grid>
-        </Frame>
-        
-        <!-- Lista de barberías -->
-        <RefreshView Grid.Row="1"
-                     Command="{Binding RefreshCommand}"
-                     RefreshColor="{StaticResource AccentColor}"
-                     IsRefreshing="{Binding IsBusy}">
-            <CollectionView ItemsSource="{Binding FilteredBarberias}"
-                            SelectionMode="None"
-                            EmptyView="{Binding EmptyMessage}">
+        </Border>
+
+        <Grid Grid.Row="1">
+            <CollectionView ItemsSource="{Binding FilteredBarberias}" SelectionMode="None" EmptyView="{Binding EmptyMessage}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Frame Style="{StaticResource BarberiaFrameStyle}"
-                               Margin="0,0,0,10">
-                            <Frame.GestureRecognizers>
+                        <Border Style="{StaticResource BarberiaFrameStyle}"  Margin="0,0,0,10">
+                            <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="OnBarberiaTapped" />
-                            </Frame.GestureRecognizers>
+                            </Border.GestureRecognizers>
 
                             <Grid ColumnDefinitions="80, *" ColumnSpacing="15">
-
-                                <!-- Logo de la barbería -->
                                 <Border WidthRequest="80" HeightRequest="80" StrokeShape="RoundRectangle 50" BackgroundColor="{StaticResource TertiaryBackground}" VerticalOptions="Center" HorizontalOptions="Center">
                                     <Image Source="{Binding LogoUrl, TargetNullValue='picture.png'}" Aspect="AspectFill">
                                     </Image>
                                 </Border>
+                                <StackLayout Grid.Column="1" Spacing="4" VerticalOptions="Center">
 
-                                <!-- Información de la barbería -->
-                                <StackLayout Grid.Column="1"
-                                           Spacing="4"
-                                           VerticalOptions="Center">
+                                    <Label Text="{Binding Nombre}" Style="{StaticResource TitleLabelStyle}" />
 
-                                    <!-- Nombre -->
-                                    <Label Text="{Binding Nombre}" 
-                                           Style="{StaticResource TitleLabelStyle}" />
+                                    <Label Text="{Binding Direccion}"   Style="{StaticResource InfoLabelStyle}" MaxLines="1" />
 
-                                    <!-- Dirección -->
-                                    <Label Text="{Binding Direccion}" 
-                                           Style="{StaticResource InfoLabelStyle}"
-                                           MaxLines="1" />
+                                    <Label Text="{Binding Telefono}"  Style="{StaticResource ContactLabelStyle}" />
 
-                                    <!-- Teléfono -->
-                                    <Label Text="{Binding Telefono}" 
-                                           Style="{StaticResource ContactLabelStyle}" />
-
-                                    <!-- Email -->
-                                    <Label Text="{Binding Email}" 
-                                           Style="{StaticResource ContactLabelStyle}"
-                                           MaxLines="1" />
+                                    <Label Text="{Binding Email}" Style="{StaticResource ContactLabelStyle}" MaxLines="1" />
                                 </StackLayout>
                             </Grid>
-                        </Frame>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
-
-                <!-- Vista cuando no hay resultados -->
-                <CollectionView.EmptyViewTemplate>
-                    <DataTemplate>
-                        <StackLayout Padding="20">
-                            <Label Text="🔍" 
-                                   FontSize="48" 
-                                   HorizontalOptions="Center"
-                                   TextColor="{StaticResource TextSecondary}"/>
-                            <Label Text="{Binding EmptyMessage}" 
-                                   FontSize="16" 
-                                   TextColor="{StaticResource TextSecondary}"
-                                   HorizontalOptions="Center"
-                                   HorizontalTextAlignment="Center"/>
-                            <Button Text="Actualizar" 
-                                    Command="{Binding RefreshCommand}"
-                                    BackgroundColor="{StaticResource AccentColor}"
-                                    TextColor="{StaticResource TextPrimary}"
-                                    CornerRadius="20"
-                                    Margin="0,20,0,0"
-                                    HorizontalOptions="Center"/>
-                        </StackLayout>
-                    </DataTemplate>
-                </CollectionView.EmptyViewTemplate>
             </CollectionView>
-        </RefreshView>
-
-        <!-- Indicador de carga -->
-        <ActivityIndicator Grid.Row="1"
-                         IsRunning="{Binding IsBusy}"
-                         IsVisible="{Binding IsBusy}"
-                         Color="{StaticResource AccentColor}"
-                         Scale="1.5"
-                         VerticalOptions="Center"
-                         HorizontalOptions="Center"/>
+        </Grid>
     </Grid>
 </ContentPage>

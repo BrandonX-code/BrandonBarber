@@ -1,9 +1,4 @@
-﻿using Gasolutions.Maui.App.Models;
-using Gasolutions.Maui.App.Services;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
+﻿using System.Runtime.CompilerServices;
 
 namespace Gasolutions.Maui.App.Pages
 {
@@ -11,7 +6,7 @@ namespace Gasolutions.Maui.App.Pages
     {
         private readonly BarberiaService _barberiaService;
 
-        private ObservableCollection<Barberia> _barberias = new();
+        private ObservableCollection<Barberia> _barberias = new ObservableCollection<Barberia>();
         public ObservableCollection<Barberia> Barberias
         {
             get => _barberias;
@@ -23,7 +18,7 @@ namespace Gasolutions.Maui.App.Pages
             }
         }
 
-        private ObservableCollection<Barberia> _filteredBarberias = new();
+        private ObservableCollection<Barberia> _filteredBarberias = new ObservableCollection<Barberia>();
         public ObservableCollection<Barberia> FilteredBarberias
         {
             get => _filteredBarberias;
@@ -48,41 +43,23 @@ namespace Gasolutions.Maui.App.Pages
                 FilterBarberias();
             }
         }
-
-        private bool _isBusy;
-        public bool IsBusy
-        {
-            get => _isBusy;
-            set
-            {
-                _isBusy = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // Propiedades para mejorar la UI
         public bool HasSearchText => !string.IsNullOrWhiteSpace(SearchText);
         public bool HasResults => FilteredBarberias?.Count > 0;
         public string EmptyMessage => string.IsNullOrWhiteSpace(SearchText)
             ? "No hay barberías registradas"
             : $"No se encontraron barberías que coincidan con '{SearchText}'";
 
-        public event EventHandler<Barberia> BarberiaSeleccionada;
-        public ICommand LoadBarberiasCommand { get; }
-        public ICommand ClearSearchCommand { get; }
-        public ICommand RefreshCommand { get; }
+        public event EventHandler<Barberia>? BarberiaSeleccionada;
+        public Command ClearSearchCommand { get; }
 
         public SeleccionBarberiaPage()
         {
             InitializeComponent();
-            _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
+            _barberiaService = Application.Current!.Handler.MauiContext!.Services.GetService<BarberiaService>()!;
             BindingContext = this;
-
-            LoadBarberiasCommand = new Command(async () => await LoadBarberias());
             ClearSearchCommand = new Command(ClearSearch);
-            RefreshCommand = new Command(async () => await LoadBarberias());
+            PropertyChanged = delegate { }; // Initialize PropertyChanged to avoid null warnings
         }
-
         protected override async void OnAppearing()
         {
             base.OnAppearing();
@@ -94,9 +71,6 @@ namespace Gasolutions.Maui.App.Pages
 
         private async Task LoadBarberias()
         {
-            if (IsBusy) return;
-
-            IsBusy = true;
             try
             {
                 var barberias = await _barberiaService.GetBarberiasAsync();
@@ -127,10 +101,6 @@ namespace Gasolutions.Maui.App.Pages
                 {
                     await AppUtils.MostrarSnackbar($"Error cargando barberías: {ex.Message}", Colors.Red, Colors.White);
                 });
-            }
-            finally
-            {
-                IsBusy = false;
             }
         }
 
@@ -192,7 +162,7 @@ namespace Gasolutions.Maui.App.Pages
         {
             try
             {
-                if (sender is Frame frame && frame.BindingContext is Barberia selectedBarberia)
+                if (sender is Border frame && frame.BindingContext is Barberia selectedBarberia)
                 {
                     // Feedback visual (opcional)
                     frame.BackgroundColor = Colors.LightGray;
@@ -210,8 +180,8 @@ namespace Gasolutions.Maui.App.Pages
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public new PropertyChangedEventHandler PropertyChanged;
+        protected new void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

@@ -134,7 +134,7 @@
                 if (!isAvailable || currentDate < today)
                 {
                     button.BackgroundColor = Colors.Transparent;
-                    button.TextColor = Color.FromArgb("#CCCCCC");
+                    button.TextColor = Color.FromArgb("#000000");
                     button.BorderWidth = 0;
                     button.FontAttributes = FontAttributes.None;
                 }
