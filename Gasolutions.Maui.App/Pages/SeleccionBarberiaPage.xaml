@@ -30,7 +30,7 @@
                 <Setter Property="BackgroundColor" Value="{StaticResource SecondaryBackground}"/>
                 <Setter Property="StrokeShape" Value="25"/>
                 <Setter Property="Padding" Value="15"/>
-                <Setter Property="HeightRequest" Value="120"/>
+                <Setter Property="HeightRequest" Value="150"/>
             </Style>
 
             <Style x:Key="TitleLabelStyle" TargetType="Label">

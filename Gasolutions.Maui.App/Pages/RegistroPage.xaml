@@ -65,7 +65,7 @@
                     </Frame>
 
                     <!-- Frame para mostrar la barbería seleccionada (inicialmente oculto) -->
-                    <Frame x:Name="SelectedBarberiaFrame" CornerRadius="10" BackgroundColor="#1E3A49" Padding="15" IsVisible="False">
+                    <Frame x:Name="SelectedBarberiaFrame" CornerRadius="10" BackgroundColor="#1E3A49" Padding="20" IsVisible="False">
                         <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
                             <Border WidthRequest="80" HeightRequest="80" StrokeShape="RoundRectangle 50" VerticalOptions="Center" HorizontalOptions="Center">
                                 <Image x:Name="SelectedBarberiaImage" Aspect="AspectFill"/>
