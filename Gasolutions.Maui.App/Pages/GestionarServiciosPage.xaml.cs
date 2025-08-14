@@ -51,10 +51,46 @@ namespace Gasolutions.Maui.App.Pages
             if (selectedIndex != -1)
             {
                 var barberiaSeleccionada = (Barberia)picker.SelectedItem;
-                _barberiaSeleccionadaId = barberiaSeleccionada.Idbarberia; // Guardar el ID
-                await CargarServicios(barberiaSeleccionada.Idbarberia);
+                _barberiaSeleccionadaId = barberiaSeleccionada.Idbarberia;
+
+                // Cargar los servicios de la nueva barbería
+                await CargarServicios(_barberiaSeleccionadaId);
+
+                // Si estamos editando, buscar el servicio equivalente en esta barbería
+                if (_servicioEditando != null)
+                {
+                    var servicios = await _servicioService.GetServiciosByBarberiaAsync(_barberiaSeleccionadaId);
+                    var servicioEnNuevaBarberia = servicios.FirstOrDefault(s => s.Id == _servicioEditando.Id);
+
+                    if (servicioEnNuevaBarberia != null)
+                    {
+                        _servicioEditando = servicioEnNuevaBarberia;
+                        NombreEntry.Text = _servicioEditando.Nombre;
+                        PrecioEntry.Text = _servicioEditando.Precio.ToString("N0");
+
+                        if (!string.IsNullOrEmpty(_servicioEditando.Imagen))
+                        {
+                            PreviewImage.Source = _servicioEditando.Imagen;
+                            PreviewImage.IsVisible = true;
+                        }
+                        else
+                        {
+                            PreviewImage.IsVisible = false;
+                        }
+
+                        AgregarBtn.IsVisible = false;
+                        EditarBtn.IsVisible = true;
+                        CancelarBtn.IsVisible = true;
+                    }
+                    else
+                    {
+                        // Si el servicio no existe en esta barbería, limpiar
+                        LimpiarFormulario();
+                    }
+                }
             }
         }
+
 
         private async Task CargarServicios(int idBarberia)
         {

@@ -34,7 +34,7 @@
                         <Picker x:Name="BarberiaPicker" 
                 SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" 
                 ItemDisplayBinding="{Binding Nombre}" 
-                Title="Seleccionar Barbería"
+                Title="Seleccionar Barbería" TitleColor="Gray"
                 TextColor="Black" 
                 FontSize="16" 
                 HeightRequest="45" 
