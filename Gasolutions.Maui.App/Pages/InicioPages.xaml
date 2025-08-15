@@ -96,7 +96,7 @@
 
                                                 <!-- Sección blanca inferior con texto -->
                                                 <StackLayout Grid.Row="1" BackgroundColor="#90A4AE" Padding="3" HorizontalOptions="Fill" VerticalOptions="Center">
-                                                    <Label Text="{Binding Nombre}" FontAttributes="Bold" FontSize="16" TextColor="Black" HorizontalOptions="Center"/>
+                                                    <Label Text="{Binding Nombre}" FontAttributes="Bold" FontSize="16" TextColor="Black" HorizontalOptions="Center" LineBreakMode="TailTruncation" MaxLines="1"/>
                                                     <Label Grid.Row="2"  Text="{Binding Precio, StringFormat='${0:N0}'}" TextColor="Black" FontSize="16" HorizontalOptions="Center"/>
 
                                                 </StackLayout>
@@ -134,7 +134,7 @@
                                                         <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
                                                     </Frame.GestureRecognizers>
                                                 </Frame>
-                                                <Label Grid.Row="1" Text="{Binding Nombre}" TextColor="Black" FontSize="15" FontAttributes="Bold" HorizontalOptions="Start" HorizontalTextAlignment="Start" LineBreakMode="WordWrap" MaxLines="1"/>
+                                                <Label Grid.Row="1" Text="{Binding Nombre}" TextColor="Black" FontSize="15" FontAttributes="Bold" HorizontalOptions="Start" HorizontalTextAlignment="Start" LineBreakMode="TailTruncation" MaxLines="1"/>
                                                 <HorizontalStackLayout Grid.Row="2" HorizontalOptions="Start" Spacing="1">
                                                     <Image Source="starblackrellena.png" HeightRequest="20" WidthRequest="20">
                                                         <Image.Triggers>

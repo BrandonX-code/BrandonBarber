@@ -32,18 +32,18 @@
                                        VerticalOptions="Center" 
                                        Margin="20,0">
                                     <Label Text="Información del Cliente"
-                                       FontSize="18"
+                                       FontSize="18" HorizontalOptions="Center"
                                        FontAttributes="Bold"
                                        TextColor="White" />
                                 </StackLayout>
 
-                                <Button Grid.Column="1"
+                                <!--<Button Grid.Column="1"
                                     Text="✕"
                                     BackgroundColor="Transparent"
                                     TextColor="White"
                                     FontSize="20"
                                     Clicked="OnCerrarClicked"
-                                    Margin="10" />
+                                    Margin="10" />-->
                             </Grid>
                         </Border>
 
