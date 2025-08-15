@@ -115,7 +115,7 @@
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Frame BackgroundColor="#90A4AE" CornerRadius="20" Padding="20"  HasShadow="True" HeightRequest="300" WidthRequest="180">
+                                        <Frame BackgroundColor="#90A4AE" CornerRadius="20" Padding="20"  HasShadow="True" HeightRequest="300" WidthRequest="182">
                                             <Frame.GestureRecognizers>
                                                 <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
                                             </Frame.GestureRecognizers>
@@ -172,7 +172,10 @@
                                                         </Image.Triggers>
                                                     </Image>
                                                 </HorizontalStackLayout>
-                                                <Label Grid.Row="3" Text="⟶"  FontSize="30" TextColor="Black" HorizontalOptions="End" Margin="0,-15,0,0"/>
+                                                <StackLayout Grid.Row="3" Orientation="Horizontal" HorizontalOptions="End" Margin="0,-5,0,0" Spacing="5">
+                                                    <Label Text="Ver Más" FontSize="13" TextColor="Blue" TextDecorations="Underline"/>
+                                                    <Image Source="choose.png" HeightRequest="17" WidthRequest="17"/>
+                                                </StackLayout>
 
                                             </Grid>
                                         </Frame>

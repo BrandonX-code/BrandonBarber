@@ -67,7 +67,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiIcon Include="Resources\AppIcon\barberapp.svg" />
+	  <MauiIcon Include="Resources\AppIcon\barbericons.png" />
 	</ItemGroup>
 
 	<ItemGroup>

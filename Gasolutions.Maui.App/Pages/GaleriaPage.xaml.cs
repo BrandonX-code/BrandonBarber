@@ -291,13 +291,13 @@ namespace Gasolutions.Maui.App.Pages
                 var descripcionLabel = new Label
                 {
                     Text = imagen.Descripcion,
-                    TextColor = Colors.Black,
+                    TextColor = Colors.White,
                     FontSize = 15,
                     LineBreakMode = LineBreakMode.WordWrap,
                     MaxLines = 2,
                     HorizontalTextAlignment = TextAlignment.Center,
                     Margin = new Thickness(5, 0, 5, 5),
-                    BackgroundColor = Color.FromArgb("#B0BEC5"),
+                    BackgroundColor = Color.FromArgb("#0E2A36"),
                     Padding = new Thickness(8, 4)
                 };
 
@@ -305,7 +305,7 @@ namespace Gasolutions.Maui.App.Pages
                 var descripcionFrame = new Frame
                 {
                     Content = descripcionLabel,
-                    BackgroundColor = Color.FromArgb("#B0BEC5"),
+                    BackgroundColor = Color.FromArgb("#0E2A36"),
                     BorderColor = Color.FromArgb("white"),
                     CornerRadius = 5,
                     Padding = new Thickness(0),
