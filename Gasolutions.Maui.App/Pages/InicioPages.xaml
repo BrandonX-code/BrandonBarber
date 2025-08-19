@@ -188,20 +188,22 @@
                         <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="BuscarCitas" />
-                            </Frame.GestureRecognizers>
-                            <HorizontalStackLayout Spacing="10" HeightRequest="60">
-                                <Image Source="busquedacitas.png" WidthRequest="30" HeightRequest="30" />
-                                <Label Text="Buscar Tus Citas" TextColor="Black" FontSize="25" VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
+                            </Frame.GestureRecognizers> 
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="busquedacitas.png" WidthRequest="30" HeightRequest="30" />
+                                <Label Grid.Column="1" Text="Buscar Tus Citas" TextColor="Black" FontSize="25" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
                         </Frame>
                         <Frame x:Name="GaleriaClienteFrame" BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True" IsVisible="False">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="galery" />
                             </Frame.GestureRecognizers>
-                            <HorizontalStackLayout Spacing="10" HeightRequest="60">
-                                <Image Source="galeriuser.png" WidthRequest="30" HeightRequest="30" />
-                                <Label Text="Galeria De Cortes" TextColor="Black" FontSize="25" VerticalOptions="Center"/>
-                            </HorizontalStackLayout>
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="galeriuser.png" WidthRequest="30" HeightRequest="30" />
+                                <Label Grid.Column="1" Text="Galeria De Cortes" TextColor="Black" FontSize="25" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
                         </Frame>
                     </VerticalStackLayout>
 
