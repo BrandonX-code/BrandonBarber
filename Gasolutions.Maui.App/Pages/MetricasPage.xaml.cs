@@ -26,7 +26,7 @@ namespace Gasolutions.Maui.App.Pages
             BindingContext = this;
             ChartTypePicker.SelectedIndex = 0;
             RankingChartTypePicker.SelectedIndex = 0;
-            
+
             // Cargar barberías primero, luego métricas
             _ = CargarBarberias();
         }
@@ -190,10 +190,25 @@ namespace Gasolutions.Maui.App.Pages
                 SKColor.Parse("#a5a29a")
             };
 
+            // Obtener todas las citas históricas de una vez
+            List<CitaModel> todasLasCitas;
+            if (_barberiaSeleccionadaId > 0)
+            {
+                todasLasCitas = await _reservationService.GetReservationsByBarberia(_barberiaSeleccionadaId);
+            }
+            else
+            {
+                todasLasCitas = await _reservationService.GetAllReservationsHistorical();
+            }
+
             for (int i = 5; i >= 0; i--)
             {
                 var fecha = fechaActual.AddMonths(-i);
-                var citasDelMes = await ObtenerCitasDelMesCompleto(fecha);
+
+                // Filtrar las citas del mes específico
+                var citasDelMes = todasLasCitas.Where(c =>
+                    c.Fecha.Year == fecha.Year &&
+                    c.Fecha.Month == fecha.Month).ToList();
 
                 entries.Add(new ChartEntry(citasDelMes.Count)
                 {
@@ -208,45 +223,42 @@ namespace Gasolutions.Maui.App.Pages
             return entries;
         }
 
-        private async Task<List<CitaModel>> ObtenerCitasDelMesCompleto(DateTime fecha)
-        {
-            List<CitaModel> citasDelMes;
-            if (_barberiaSeleccionadaId > 0)
-            {
-                // Filtrar por barbería seleccionada
-                var citas = await _reservationService.GetReservations(fecha, _barberiaSeleccionadaId);
-                citasDelMes = citas.Where(c => c.Fecha.Year == fecha.Year && c.Fecha.Month == fecha.Month).ToList();
-            }
-            else
-            {
-                var todasLasCitasDelSistema = await _reservationService.GetAllReservations();
-                citasDelMes = todasLasCitasDelSistema.Where(c => c.Fecha.Year == fecha.Year && c.Fecha.Month == fecha.Month).ToList();
-            }
-            return citasDelMes;
-        }
+        //private async Task<List<CitaModel>> ObtenerCitasDelMesCompleto(DateTime fecha)
+        //{
+        //    // Este método ya no es necesario, pero lo mantengo por compatibilidad
+        //    List<CitaModel> todasLasCitas;
+        //    if (_barberiaSeleccionadaId > 0)
+        //    {
+        //        todasLasCitas = await _reservationService.GetReservationsByBarberia(_barberiaSeleccionadaId);
+        //    }
+        //    else
+        //    {
+        //        todasLasCitas = await _reservationService.GetAllReservationsHistorical();
+        //    }
+
+        //    return todasLasCitas.Where(c => c.Fecha.Year == fecha.Year && c.Fecha.Month == fecha.Month).ToList();
+        //}
 
         private async Task CargarRankingBarberos()
         {
             try
             {
+                // Obtener todas las citas históricas
                 List<CitaModel> todasLasCitas;
                 if (_barberiaSeleccionadaId > 0)
                 {
-                    // Traer solo las citas de la barbería seleccionada (últimos 6 meses)
-                    var meses = Enumerable.Range(0, 6).Select(i => DateTime.Now.AddMonths(-i)).ToList();
-                    todasLasCitas = new List<CitaModel>();
-                    foreach (var mes in meses)
-                    {
-                        var citasMes = await _reservationService.GetReservations(mes, _barberiaSeleccionadaId);
-                        todasLasCitas.AddRange(citasMes);
-                    }
+                    todasLasCitas = await _reservationService.GetReservationsByBarberia(_barberiaSeleccionadaId);
                 }
                 else
                 {
-                    todasLasCitas = await _reservationService.GetAllReservations();
+                    todasLasCitas = await _reservationService.GetAllReservationsHistorical();
                 }
 
-                var ranking = todasLasCitas
+                // Filtrar por los últimos 6 meses para el ranking
+                var fechaLimite = DateTime.Now.AddMonths(-6);
+                var citasUltimos6Meses = todasLasCitas.Where(c => c.Fecha >= fechaLimite).ToList();
+
+                var ranking = citasUltimos6Meses
                     .Where(c => c.BarberoId > 0)
                     .GroupBy(c => c.BarberoId)
                     .Select(g => new { BarberoId = g.Key, Total = g.Count() })
@@ -262,7 +274,7 @@ namespace Gasolutions.Maui.App.Pages
                     SKColor.Parse("#9ebcca"),
                     SKColor.Parse("#868788"),
                     SKColor.Parse("#a5a29a")
-                };
+        };
 
                 int maxBarberosAMostrar = DeterminarMaximoBarberos(ranking.Count);
                 int colorIndex = 0;
@@ -313,7 +325,7 @@ namespace Gasolutions.Maui.App.Pages
 
                 if (ranking.Count == 0)
                 {
-                    var mensaje = _barberiaSeleccionadaId > 0 
+                    var mensaje = _barberiaSeleccionadaId > 0
                         ? "No hay datos de barberos para la barbería seleccionada."
                         : "No hay datos de barberos para mostrar en el ranking.";
                     await AppUtils.MostrarSnackbar(mensaje, Colors.Orange, Colors.White);
@@ -349,7 +361,7 @@ namespace Gasolutions.Maui.App.Pages
 
                 if (ranking.Count > maxBarberosAMostrar)
                 {
-                    await AppUtils.MostrarSnackbar($"Mostrando top {maxBarberosAMostrar} de {ranking.Count} barberos", Colors.Blue, Colors.White);
+                    await AppUtils.MostrarSnackbar($"Mostrando top {maxBarberosAMostrar} de {ranking.Count} barberos", Colors.Green, Colors.White);
                 }
             }
             catch (Exception ex)
@@ -357,7 +369,6 @@ namespace Gasolutions.Maui.App.Pages
                 await AppUtils.MostrarSnackbar($"Error al cargar ranking: {ex.Message}", Colors.Red, Colors.White);
             }
         }
-
         private int DeterminarMaximoBarberos(int totalBarberos)
         {
             if (totalBarberos <= 5) return 6;
@@ -382,24 +393,22 @@ namespace Gasolutions.Maui.App.Pages
         {
             try
             {
+                // Obtener todas las citas históricas
                 List<CitaModel> todasLasCitas;
                 if (_barberiaSeleccionadaId > 0)
                 {
-                    // Traer solo las citas de la barbería seleccionada (últimos 6 meses)
-                    var meses = Enumerable.Range(0, 6).Select(i => DateTime.Now.AddMonths(-i)).ToList();
-                    todasLasCitas = new List<CitaModel>();
-                    foreach (var mes in meses)
-                    {
-                        var citasMes = await _reservationService.GetReservations(mes, _barberiaSeleccionadaId);
-                        todasLasCitas.AddRange(citasMes);
-                    }
+                    todasLasCitas = await _reservationService.GetReservationsByBarberia(_barberiaSeleccionadaId);
                 }
                 else
                 {
-                    todasLasCitas = await _reservationService.GetAllReservations();
+                    todasLasCitas = await _reservationService.GetAllReservationsHistorical();
                 }
 
-                var clientesFrecuentes = todasLasCitas
+                // Filtrar por los últimos 6 meses
+                var fechaLimite = DateTime.Now.AddMonths(-6);
+                var citasUltimos6Meses = todasLasCitas.Where(c => c.Fecha >= fechaLimite).ToList();
+
+                var clientesFrecuentes = citasUltimos6Meses
                     .Where(c => c.Cedula > 0)
                     .GroupBy(c => c.Cedula)
                     .Select(g => new { Cedula = g.Key, Visitas = g.Count() })
@@ -425,7 +434,7 @@ namespace Gasolutions.Maui.App.Pages
 
                 if (clientesDetallados.Count == 0)
                 {
-                    var mensaje = _barberiaSeleccionadaId > 0 
+                    var mensaje = _barberiaSeleccionadaId > 0
                         ? "No hay datos de clientes para la barbería seleccionada."
                         : "No hay datos de clientes para mostrar en el ranking.";
                     await AppUtils.MostrarSnackbar(mensaje, Colors.Orange, Colors.White);

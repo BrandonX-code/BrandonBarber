@@ -23,13 +23,142 @@ public class CitasController : ControllerBase
             .ToListAsync();
         var barberoIds = barberos.Select(b => b.Cedula).ToList();
         var citas = await _context.Citas
-
             .Where(c => barberoIds.Contains(c.BarberoId))
             .OrderBy(c => c.Fecha)
             .ToListAsync();
         return Ok(citas);
     }
 
+    // NUEVO: Obtener todas las citas históricas del sistema
+    [HttpGet("todas")]
+    public async Task<ActionResult<IEnumerable<Cita>>> GetTodasLasCitas()
+    {
+        try
+        {
+            var citas = await _context.Citas
+                .OrderByDescending(c => c.Fecha)
+                .ToListAsync();
+
+            // Llenar información de barberos
+            var barberoIds = citas.Select(c => c.BarberoId).Distinct().ToList();
+            var barberos = await _context.UsuarioPerfiles
+                .Where(b => barberoIds.Contains(b.Cedula))
+                .ToDictionaryAsync(b => b.Cedula, b => b.Nombre);
+
+            foreach (var cita in citas)
+            {
+                cita.BarberoNombre = barberos.GetValueOrDefault(cita.BarberoId, "No encontrado");
+            }
+
+            return Ok(citas);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Error al obtener todas las citas.", error = ex.Message });
+        }
+    }
+
+    // NUEVO: Obtener todas las citas históricas de una barbería específica
+    [HttpGet("barberia/{idBarberia}")]
+    public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorBarberia(int idBarberia)
+    {
+        try
+        {
+            // Obtener barberos de la barbería
+            var barberos = await _context.UsuarioPerfiles
+                .Where(b => b.IdBarberia == idBarberia)
+                .Select(b => new { b.Cedula, b.Nombre })
+                .ToListAsync();
+
+            var barberoIds = barberos.Select(b => b.Cedula).ToList();
+            var barberoDict = barberos.ToDictionary(b => b.Cedula, b => b.Nombre);
+
+            // Obtener todas las citas de esos barberos (sin filtro de fecha)
+            var citas = await _context.Citas
+                .Where(c => barberoIds.Contains(c.BarberoId))
+                .OrderByDescending(c => c.Fecha)
+                .ToListAsync();
+
+            // Llenar información de barberos
+            foreach (var cita in citas)
+            {
+                cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
+            }
+
+            return Ok(citas);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Error al obtener citas de la barbería.", error = ex.Message });
+        }
+    }
+
+    // NUEVO: Obtener citas por rango de fechas
+    [HttpGet("by-date-range/{fechaInicio}/{fechaFin}")]
+    public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorRangoFechas(DateTime fechaInicio, DateTime fechaFin)
+    {
+        try
+        {
+            var citas = await _context.Citas
+                .Where(c => c.Fecha.Date >= fechaInicio.Date && c.Fecha.Date <= fechaFin.Date)
+                .OrderBy(c => c.Fecha)
+                .ToListAsync();
+
+            // Llenar información de barberos
+            var barberoIds = citas.Select(c => c.BarberoId).Distinct().ToList();
+            var barberos = await _context.UsuarioPerfiles
+                .Where(b => barberoIds.Contains(b.Cedula))
+                .ToDictionaryAsync(b => b.Cedula, b => b.Nombre);
+
+            foreach (var cita in citas)
+            {
+                cita.BarberoNombre = barberos.GetValueOrDefault(cita.BarberoId, "No encontrado");
+            }
+
+            return Ok(citas);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Error al obtener citas por rango de fechas.", error = ex.Message });
+        }
+    }
+
+    // NUEVO: Obtener citas por rango de fechas y barbería
+    [HttpGet("by-date-range/{fechaInicio}/{fechaFin}/{idBarberia}")]
+    public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorRangoFechasYBarberia(DateTime fechaInicio, DateTime fechaFin, int idBarberia)
+    {
+        try
+        {
+            // Obtener barberos de la barbería
+            var barberos = await _context.UsuarioPerfiles
+                .Where(b => b.IdBarberia == idBarberia)
+                .Select(b => new { b.Cedula, b.Nombre })
+                .ToListAsync();
+
+            var barberoIds = barberos.Select(b => b.Cedula).ToList();
+            var barberoDict = barberos.ToDictionary(b => b.Cedula, b => b.Nombre);
+
+            // Obtener citas en el rango de fechas para esos barberos
+            var citas = await _context.Citas
+                .Where(c => c.Fecha.Date >= fechaInicio.Date &&
+                           c.Fecha.Date <= fechaFin.Date &&
+                           barberoIds.Contains(c.BarberoId))
+                .OrderBy(c => c.Fecha)
+                .ToListAsync();
+
+            // Llenar información de barberos
+            foreach (var cita in citas)
+            {
+                cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
+            }
+
+            return Ok(citas);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Error al obtener citas por rango de fechas y barbería.", error = ex.Message });
+        }
+    }
 
     [HttpGet("{cedula}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorCedula(long cedula)
@@ -41,12 +170,11 @@ public class CitasController : ControllerBase
         foreach (var cita in citas)
         {
             Auth barbero = _context.UsuarioPerfiles.Where(b => b.Cedula == cita.BarberoId).FirstOrDefault();
-            cita.BarberoNombre = barbero.Nombre;
+            cita.BarberoNombre = barbero?.Nombre ?? "No encontrado";
         }
 
         return Ok(citas);
     }
-
 
     [HttpGet("by-date/{fecha}&{idBarberia}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorFecha(DateTime fecha, int idbarberia)
@@ -90,7 +218,7 @@ public class CitasController : ControllerBase
     {
         if (nuevaCita == null || string.IsNullOrWhiteSpace(nuevaCita.Nombre) || nuevaCita.Fecha < DateTime.Now)
         {
-            return BadRequest("Error: Datos inválidos en la solicitud." );
+            return BadRequest("Error: Datos inválidos en la solicitud.");
         }
 
         bool existeCita = await _context.Citas.AnyAsync(c => c.Fecha == nuevaCita.Fecha && c.BarberoId == nuevaCita.BarberoId);
@@ -111,6 +239,7 @@ public class CitasController : ControllerBase
             return StatusCode(500, new { message = "Error al guardar la cita.", error = ex.Message });
         }
     }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> EliminarCita(int id)
     {
@@ -125,5 +254,4 @@ public class CitasController : ControllerBase
 
         return NoContent();
     }
-
 }

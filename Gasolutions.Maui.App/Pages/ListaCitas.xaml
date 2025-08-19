@@ -8,7 +8,7 @@
         <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <Grid RowDefinitions="Auto, Auto, *" Padding="20">
                 <VerticalStackLayout Spacing="15">
-                    <Frame BackgroundColor="#0E2A36" CornerRadius="10" Padding="15" HasShadow="True">
+                    <Frame BackgroundColor="#1E3A49" CornerRadius="10" Padding="15" HasShadow="True">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Citas Agendadas" TextColor="White" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center" />
                             <!-- Selector de Barbería -->
@@ -16,16 +16,16 @@
                                 <Label Text="Seleccionar Barbería" TextColor="White" FontSize="16" />
                                 <Frame CornerRadius="12" Padding="3" HasShadow="True" BackgroundColor="#90A4AE" WidthRequest="260" HorizontalOptions="Center">
                                     <Picker x:Name="BarberiaPicker" 
-                SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" 
-                ItemDisplayBinding="{Binding Nombre}" 
-                Title="Seleccionar Barbería" 
-                TitleColor="Gray" 
-                TextColor="Black" 
-                FontSize="16" 
-                FontAttributes="Bold" 
-                HeightRequest="45" 
-                VerticalOptions="Center" 
-                Margin="10,0" />
+                                    SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" 
+                                    ItemDisplayBinding="{Binding Nombre}" 
+                                    Title="Seleccionar Barbería" 
+                                    TitleColor="Gray" 
+                                    TextColor="Black" 
+                                    FontSize="16" 
+                                    FontAttributes="Bold" 
+                                    HeightRequest="45" 
+                                    VerticalOptions="Center" 
+                                    Margin="10,0" />
                                 </Frame>
                             </VerticalStackLayout>
                             <Frame CornerRadius="12" Padding="3" HasShadow="True" BackgroundColor="#90A4AE" WidthRequest="260" HorizontalOptions="Center">
@@ -40,7 +40,7 @@
                     </Frame>
 
 
-                    <Frame BackgroundColor="#0E2A36" CornerRadius="10" Padding="15" HasShadow="True">
+                    <Frame BackgroundColor="#1E3A49" CornerRadius="10" Padding="15" HasShadow="True">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Citas" TextColor="White" FontSize="18" />
                             <CollectionView x:Name="ResultadosCollection" HeightRequest="420">
@@ -62,12 +62,12 @@
                                                         <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
                                                         <Label Text="{Binding FechaConFormato, StringFormat='{0:hh:mm tt}'}" FontSize="16" TextColor="Black" />
                                                     </HorizontalStackLayout>
-                                                    
+
                                                     <HorizontalStackLayout Spacing="5">
                                                         <Image Source="call.png" WidthRequest="20" HeightRequest="20" />
                                                         <Label Text="{Binding Telefono}" FontSize="14" TextColor="Black" />
                                                     </HorizontalStackLayout>
-                                                    
+
                                                     <HorizontalStackLayout>
                                                         <HorizontalStackLayout Spacing="5">
                                                             <Image Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />

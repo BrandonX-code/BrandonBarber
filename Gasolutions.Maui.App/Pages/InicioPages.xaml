@@ -36,7 +36,7 @@
                         <!--<Label Text="Panel de Cliente" FontSize="30" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center" />-->
 
                         <VerticalStackLayout Padding="0">
-                            <Label Text="Servicios"  TextColor="#E0F7FA" 
+                            <Label Text="Servicios"  TextColor="White" 
                                        FontSize="22" 
                                        FontAttributes="Bold" 
                                        HorizontalOptions="Start"/>
@@ -107,7 +107,7 @@
                             </CollectionView>
                         </VerticalStackLayout>
                         <VerticalStackLayout Spacing="5" Padding="0">
-                            <Label Text="Barberos" TextColor="#E0F7FA" FontSize="22"  FontAttributes="Bold"  HorizontalOptions="Start"/>
+                            <Label Text="Barberos" TextColor="White" FontSize="22"  FontAttributes="Bold"  HorizontalOptions="Start"/>
 
                             <CollectionView x:Name="BarberosCollectionView"  HeightRequest="320">
                                 <CollectionView.ItemsLayout>

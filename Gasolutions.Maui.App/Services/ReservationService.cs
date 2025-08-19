@@ -179,27 +179,6 @@ namespace Gasolutions.Maui.App.Services
             return _reservations.Any(c => c.Cedula == cedula);
         }
 
-        //public async Task<List<CitaModel>> GetAllReservations()
-        //{
-        //    try
-        //    {
-        //        var response = await _httpClient.GetAsync($"{URL}/todas");
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            var content = await response.Content.ReadAsStringAsync();
-        //            var citas = JsonSerializer.Deserialize<List<CitaModel>>(content, 
-        //                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-        //            return citas ?? new List<CitaModel>();
-        //        }
-        //        return new List<CitaModel>();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine($"Error al obtener todas las citas: {ex.Message}");
-        //        return new List<CitaModel>();
-        //    }
-        //}
-
         public async Task<List<CitaModel>> GetReservationsByBarber(long cedula)
         {
             try
@@ -217,6 +196,85 @@ namespace Gasolutions.Maui.App.Services
             catch (Exception ex)
             {
                 Debug.WriteLine($"Error al obtener citas del barbero: {ex.Message}");
+                return new List<CitaModel>();
+            }
+        }
+        // Agregar estos métodos al ReservationService
+
+        public async Task<List<CitaModel>> GetReservationsByDateRange(DateTime fechaInicio, DateTime fechaFin, int? idBarberia = null)
+        {
+            try
+            {
+                string url;
+                if (idBarberia.HasValue && idBarberia > 0)
+                {
+                    url = $"{_httpClient.BaseAddress}api/citas/by-date-range/{fechaInicio:yyyy-MM-dd}/{fechaFin:yyyy-MM-dd}/{idBarberia.Value}";
+                }
+                else
+                {
+                    url = $"{_httpClient.BaseAddress}api/citas/by-date-range/{fechaInicio:yyyy-MM-dd}/{fechaFin:yyyy-MM-dd}";
+                }
+
+                var response = await _httpClient.GetAsync(url);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    Debug.WriteLine($"❌ Error al obtener citas por rango: {response.StatusCode}");
+                    return new List<CitaModel>();
+                }
+
+                var json = await response.Content.ReadAsStringAsync();
+                var citas = JsonSerializer.Deserialize<List<CitaModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                return citas ?? new List<CitaModel>();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"❌ Excepción al obtener citas por rango: {ex.Message}");
+                return new List<CitaModel>();
+            }
+        }
+
+        public async Task<List<CitaModel>> GetAllReservationsHistorical()
+        {
+            try
+            {
+                var admin = AuthService.CurrentUser;
+                // Obtener todas las citas filtradas por el administrador actual
+                var response = await _httpClient.GetAsync($"{_httpClient.BaseAddress}api/citas/barberos/{admin.IdBarberia}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var citas = JsonSerializer.Deserialize<List<CitaModel>>(content,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return citas ?? new List<CitaModel>();
+                }
+                return new List<CitaModel>();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error al obtener todas las citas históricas: {ex.Message}");
+                return new List<CitaModel>();
+            }
+        }
+
+        public async Task<List<CitaModel>> GetReservationsByBarberia(int idBarberia)
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync($"{_httpClient.BaseAddress}api/citas/barberia/{idBarberia}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    var citas = JsonSerializer.Deserialize<List<CitaModel>>(content,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    return citas ?? new List<CitaModel>();
+                }
+                return new List<CitaModel>();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error al obtener citas de la barbería: {ex.Message}");
                 return new List<CitaModel>();
             }
         }

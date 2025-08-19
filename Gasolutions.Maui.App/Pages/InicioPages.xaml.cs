@@ -160,7 +160,7 @@
             if (AuthService.CurrentUser != null)
             {
                 // Mostrar información del usuario
-                WelcomeLabel.Text = $"Bienvenido, {AuthService.CurrentUser.Nombre}";
+                WelcomeLabel.Text = $"Hola, {AuthService.CurrentUser.Nombre}";
 
                 // Ocultar indicador de carga
                 LoadingIndicator.IsVisible = false;
