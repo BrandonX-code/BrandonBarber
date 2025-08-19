@@ -33,8 +33,6 @@
 
                     <!-- ClienteView -->
                     <VerticalStackLayout x:Name="ClienteView" IsVisible="false" Padding="20" Spacing="10">
-                        <!--<Label Text="Panel de Cliente" FontSize="30" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center" />-->
-
                         <VerticalStackLayout Padding="0">
                             <Label Text="Servicios"  TextColor="White" 
                                        FontSize="22" 
@@ -48,35 +46,6 @@
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <!--<Frame BackgroundColor="#90A4AE" CornerRadius="20" Padding="10"  HasShadow="True" HeightRequest="220" WidthRequest="170">
-                                            <Grid RowSpacing="10">
-                                                <Grid.RowDefinitions>
-                                                    <RowDefinition Height="135"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                    <RowDefinition Height="Auto"/>
-                                                </Grid.RowDefinitions>
-                                                <Frame Grid.Row="0" BackgroundColor="#F0F0F0" CornerRadius="6"  HeightRequest="140"  WidthRequest="110"  HorizontalOptions="Center"  Padding="0" IsClippedToBounds="True">
-                                                    <Image Grid.Row="0" Source="{Binding Imagen}" Aspect="AspectFill" HeightRequest="140" WidthRequest="110">
-                                                        <Image.Clip>
-                                                            <RoundRectangleGeometry CornerRadius="6" Rect="0,0,125,150"/>
-                                                        </Image.Clip>
-                                                    </Image>
-                                                </Frame>
-                                                <Label Grid.Row="1"
-                                                           Text="{Binding Nombre}"
-                                                           TextColor="Black"
-                                                           FontSize="18"
-                                                           FontAttributes="Bold"
-                                                           HorizontalOptions="Center"/>
-
-                                                <Label Grid.Row="2"
-                                                           Text="{Binding Precio, StringFormat='${0:N0}'}"
-                                                           TextColor="#0E2A36"
-                                                           FontSize="16"
-                                                           HorizontalOptions="Center"/>
-                                            </Grid>
-                                        </Frame>-->
                                         <Frame CornerRadius="20"  BackgroundColor="#90A4AE" Padding="-1" HeightRequest="220" WidthRequest="170" HasShadow="True">
 
                                             <Grid RowSpacing="0">
