@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Gasolutions.Maui.App.Mobal;
+using System.Globalization;
 
 namespace Gasolutions.Maui.App
 {
@@ -254,7 +255,8 @@ namespace Gasolutions.Maui.App
         {
             await AnimateButtonClick(sender as Button);
 
-            bool confirm = await DisplayAlert("Confirmación", "¿Está seguro que desea cancelar la reserva?", "Sí", "No");
+            var popup = new CustomAlertPopup("¿Está seguro que desea cancelar la reserva?");
+            bool confirm = await popup.ShowAsync(this);
 
             if (confirm)
             {
@@ -263,6 +265,8 @@ namespace Gasolutions.Maui.App
                 await Navigation.PopToRootAsync();
             }
         }
+
+
 
         private void Limpiarcampos()
         {

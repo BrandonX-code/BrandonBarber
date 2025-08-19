@@ -166,20 +166,6 @@ namespace Gasolutions.Maui.App.Pages
 
             EmptyStateFrame.IsVisible = !_barberosFiltrados.Any();
         }
-
-        //private async void OnVerDetallesClicked(object sender, EventArgs e)
-        //{
-        //    if (sender is Button button && button.CommandParameter is UsuarioModels barbero)
-        //    {
-        //        var detalles = $"Nombre: {barbero.Nombre}\n" +
-        //                       $"Email: {barbero.Email}\n" +
-        //                       $"Cédula: {barbero.Cedula}\n" +
-        //                       $"Especialidades: {barbero.Especialidades}\n" +
-        //                       $"Rol: {barbero.Rol}";
-
-        //        await DisplayAlert("Detalles del Barbero", detalles, "OK");
-        //    }
-        //}
         private async void OnVerDetallesClicked(object sender, EventArgs e)
         {
             if (sender is Button button && button.CommandParameter is UsuarioModels barbero)
@@ -194,10 +180,8 @@ namespace Gasolutions.Maui.App.Pages
                 image.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tap &&
                 tap.CommandParameter is UsuarioModels barbero)
             {
-                var confirm = await DisplayAlert("Confirmar",
-                    $"¿Está seguro de que desea eliminar al barbero {barbero.Nombre}?",
-                    "Sí", "No");
-
+                var popup = new CustomAlertPopup($"¿Está seguro de que desea eliminar al barbero {barbero.Nombre}?");
+                bool confirm = await popup.ShowAsync(this);
                 if (confirm)
                 {
                     try

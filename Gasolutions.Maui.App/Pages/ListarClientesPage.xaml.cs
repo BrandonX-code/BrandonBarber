@@ -183,10 +183,9 @@ namespace Gasolutions.Maui.App.Pages
                 image.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tap &&
                 tap.CommandParameter is UsuarioModels cliente)
             {
-                var confirm = await DisplayAlert("Confirmar",
-                    $"¿Está seguro de que desea eliminar al cliente {cliente.Nombre}?",
-                    "Sí", "No");
-
+                
+                var popup = new CustomAlertPopup($"¿Está seguro de que desea eliminar al cliente {cliente.Nombre}?");
+                bool confirm = await popup.ShowAsync(this);
                 if (confirm)
                 {
                     try

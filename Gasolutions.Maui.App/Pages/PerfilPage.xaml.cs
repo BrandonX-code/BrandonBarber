@@ -1,4 +1,6 @@
-﻿namespace Gasolutions.Maui.App.Pages
+﻿using Gasolutions.Maui.App.Mobal;
+
+namespace Gasolutions.Maui.App.Pages
 {
     public partial class PerfilPage : ContentPage
     {
@@ -98,7 +100,8 @@
         }
         private async void OnCerrarSesionClicked(object sender, EventArgs e)
         {
-            var confirmacion = await DisplayAlert("Cerrar sesión", "¿Estás seguro que deseas cerrar sesión?", "Sí", "Cancelar");
+            var popup = new CustomAlertPopup("¿Quieres Cerrar Sesión?");
+            bool confirmacion = await popup.ShowAsync(this);
 
             if (confirmacion)
             {

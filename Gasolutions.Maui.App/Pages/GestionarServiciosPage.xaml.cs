@@ -1,4 +1,5 @@
-﻿using Gasolutions.Maui.App.Models;
+﻿using Gasolutions.Maui.App.Mobal;
+using Gasolutions.Maui.App.Models;
 using Gasolutions.Maui.App.Services;
 using Microsoft.Maui.Storage; // Asegúrate de tener este using
 
@@ -256,8 +257,8 @@ namespace Gasolutions.Maui.App.Pages
         {
             var servicio = (sender as Button)?.CommandParameter as ServicioModel;
             if (servicio == null) return;
-
-            bool confirm = await DisplayAlert("Confirmar", $"¿Eliminar el servicio '{servicio.Nombre}'?", "Sí", "No");
+            var popup = new CustomAlertPopup($"¿Quieres Eliminar el servicio '{servicio.Nombre}'?");
+            bool confirm = await popup.ShowAsync(this);
             if (!confirm) return;
 
             try

@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup
+   xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+   xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+   xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+   x:Class="Gasolutions.Maui.App.Mobal.CustomAlertPopup"
+   Size="350,240"
+   Color="Transparent"> <!-- 👈 hace el fondo del popup transparente -->
+
+    <Border
+        StrokeThickness="0"
+        BackgroundColor="#0E2A36"
+        StrokeShape="RoundRectangle 20,20,20,20"
+        Padding="20"
+        HorizontalOptions="Center"
+        VerticalOptions="Center">
+
+        <VerticalStackLayout Spacing="20">
+
+            <Label x:Name="MessageLabel"
+                   Text="Mensaje"
+                   TextColor="White"
+                   FontSize="20"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"/>
+
+            <Button x:Name="YesButton"
+                    Text="Sí"
+                    BackgroundColor="#FF6F91"
+                    TextColor="Black"
+                    FontSize="18"
+                    CornerRadius="25"
+                    HeightRequest="50"/>
+
+            <Button x:Name="NoButton"
+                    Text="No"
+                    BackgroundColor="#717d7e"
+                    TextColor="Black"
+                    FontSize="18"
+                    BorderWidth="2"
+                    CornerRadius="25"
+                    HeightRequest="50"/>
+        </VerticalStackLayout>
+    </Border>
+</toolkit:Popup>

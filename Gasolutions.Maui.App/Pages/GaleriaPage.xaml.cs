@@ -1,4 +1,5 @@
-﻿using Gasolutions.Maui.App.Models;
+﻿using Gasolutions.Maui.App.Mobal;
+using Gasolutions.Maui.App.Models;
 using Gasolutions.Maui.App.Services;
 using Microsoft.Maui.Controls;
 using System;
@@ -366,7 +367,8 @@ namespace Gasolutions.Maui.App.Pages
         {
             try
             {
-                bool confirmar = await DisplayAlert("Confirmar", "¿Estás seguro de que deseas eliminar esta imagen?", "Sí", "No");
+                var popup = new CustomAlertPopup("¿Quieres Eliminar Esta Imagen?");
+                bool confirmar = await popup.ShowAsync(this);
 
                 if (!confirmar)
                     return;

@@ -1,4 +1,5 @@
-﻿using Gasolutions.Maui.App.Models;
+﻿using Gasolutions.Maui.App.Mobal;
+using Gasolutions.Maui.App.Models;
 using Gasolutions.Maui.App.Services;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -189,12 +190,8 @@ namespace Gasolutions.Maui.App.Pages
         private async Task EliminarBarberia(Barberia barberia)
         {
             if (barberia == null) return;
-
-            bool confirmar = await DisplayAlert(
-                "Confirmar eliminación",
-                $"¿Estás seguro de que deseas eliminar la barbería '{barberia.Nombre}'?\n\nEsta acción no se puede deshacer y eliminará también la imagen asociada.",
-                "Eliminar",
-                "Cancelar");
+            var popup = new CustomAlertPopup($"¿Quieres Eliminar La Barbería '{barberia.Nombre}'?");
+            bool confirmar = await popup.ShowAsync(this);
 
             if (!confirmar) return;
 
