@@ -18,10 +18,9 @@
 						<ColumnDefinition Width="*"/>
 					</Grid.ColumnDefinitions>
 
-					<Frame Grid.Column="0" BackgroundColor="#90A4AE" CornerRadius="10" Padding="0" HeightRequest="180" WidthRequest="150"
-                           IsClippedToBounds="True">
+                    <Border Grid.Column="0" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" HeightRequest="180" WidthRequest="150">
 						<Image x:Name="BarberoImage" Source="{Binding ImagenPath}" Aspect="AspectFill"/>
-					</Frame>
+					</Border>
 
 					<VerticalStackLayout Grid.Column="1" Padding="15,0,0,0" Spacing="5">
 						<Label x:Name="BarberoName" FontSize="30" TextColor="white" FontAttributes="Bold"/>
@@ -48,7 +47,7 @@
                     <Label x:Name="DescripcionLabel" TextColor="White" FontSize="14" LineHeight="1.4"/>
                 </VerticalStackLayout>
 
-                <Frame BackgroundColor="#90A4AE" CornerRadius="15" Padding="0" HasShadow="False">
+                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0">
                     <VerticalStackLayout Spacing="0">
                         <!--<Frame BackgroundColor="#0e2a36" CornerRadius="15" Padding="15,12" HasShadow="False">-->
                             <Label Text="Calendario De Disponibilidad" Padding="20" TextColor="Black" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
@@ -76,7 +75,7 @@
 
                         <Grid x:Name="CalendarioGrid" Padding="15,0,15,20"/>
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
 
                 <VerticalStackLayout Spacing="15">

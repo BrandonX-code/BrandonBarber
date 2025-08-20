@@ -4,13 +4,13 @@
     {
         private readonly AuthService _authService;
         private readonly BarberiaService _barberiaService;
-        private List<Barberia> _barberias;
+        private List<Barberia>? _barberias;
         private int _barberiaSeleccionadaId;
         public AgregarBarberoPage()
         {
             InitializeComponent();
-            _authService = Application.Current.Handler.MauiContext.Services.GetService<AuthService>();
-            _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
+            _authService = Application.Current!.Handler.MauiContext!.Services.GetService<AuthService>()!;
+            _barberiaService = Application.Current!.Handler.MauiContext!.Services.GetService<BarberiaService>()!;
 
             CargarBarberias();
         }
@@ -78,7 +78,7 @@
                 {
                     LimpiarFormulario();
 
-                    await AppUtils.MostrarSnackbar( "El barbero ha sido agregado correctamente", Colors.Green, Colors.White);
+                    await AppUtils.MostrarSnackbar("El barbero ha sido agregado correctamente", Colors.Green, Colors.White);
                 }
                 else
                 {

@@ -1,4 +1,8 @@
-﻿namespace Gasolutions.Maui.App.Pages
+﻿using CommunityToolkit.Mvvm.Messaging;
+using Gasolutions.Maui.App.Messenger;
+using Microsoft.Maui.Controls.Shapes;
+
+namespace Gasolutions.Maui.App.Pages
 {
     public partial class BarberoDetailPage : ContentPage
     {
@@ -7,27 +11,25 @@
         private readonly AuthService _authService;
         private readonly ReservationService _reservationService;
         private DateTime? _diaSeleccionado;
-        private List<DisponibilidadModel> _disponibilidades;
-        private Button _botonSeleccionado;
-
+        private List<DisponibilidadModel>? _disponibilidades;
+        
         public BarberoDetailPage(UsuarioModels barbero)
         {
             InitializeComponent();
             _barbero = barbero;
-            _disponibilidadService = App.Current.Handler.MauiContext.Services.GetRequiredService<DisponibilidadService>();
+            _disponibilidadService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<DisponibilidadService>();
             _authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
             _reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             LoadBarberoData();
             ContarYMostrarVisita();
             LoadCalendario();
-            CargarPromedioCalificacion();
-
-            // Suscribirse para refrescar cuando se envía una calificación
-            MessagingCenter.Subscribe<CalificarBarberoPage, long>(this, "CalificacionEnviada", async (sender, barberoId) =>
+            _= CargarPromedioCalificacion();
+            WeakReferenceMessenger.Default.Register<CalificacionEnviadaMessage>(this, async (r, m) =>
             {
-                if (barberoId == _barbero.Cedula)
+                if (m.Value == _barbero.Cedula)
                     await CargarPromedioCalificacion();
             });
+
         }
 
         private void LoadBarberoData()
@@ -55,11 +57,11 @@
                 var diasDisponibles = _disponibilidades?
                     .Where(d => d.HorariosDict.Any(h => h.Value))
                     .Select(d => d.Fecha.Date)
-                    .ToHashSet() ?? new HashSet<DateTime>();
+                    .ToHashSet() ?? [];
 
                 GenerarCalendario(diasDisponibles);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 await DisplayAlert("Error", "No se pudo cargar el calendario", "OK");
             }
@@ -105,21 +107,23 @@
                 var isToday = currentDate.Date == today.Date;
 
                 // Crear un Frame contenedor con mejor espaciado
-                var frame = new Frame
+                var border = new Border
                 {
-                    Padding = new Thickness(3),
+                    Stroke = Colors.Transparent,
                     BackgroundColor = Colors.Transparent,
-                    BorderColor = Colors.Transparent,
-                    HasShadow = false,
-                    IsClippedToBounds = true,
-                    Margin = new Thickness(2)
+                    Padding = new Thickness(3),
+                    Margin = new Thickness(2), 
+                    StrokeShape = new RoundRectangle()
                 };
-
+                border.StrokeShape = new RoundRectangle
+                {
+                    CornerRadius = 5
+                };
                 var button = new Button
                 {
                     Text = day.ToString(),
                     FontSize = 13,
-                    CornerRadius = 8, // Radio más pequeño para mejor ajuste
+                    CornerRadius = 8,
                     WidthRequest = 35,
                     HeightRequest = 32,
                     HorizontalOptions = LayoutOptions.Center,
@@ -130,7 +134,6 @@
                     FontAttributes = FontAttributes.Bold
                 };
 
-                // Estilo del botón - solo visual, sin funcionalidad
                 if (!isAvailable || currentDate < today)
                 {
                     button.BackgroundColor = Colors.Transparent;
@@ -154,10 +157,10 @@
                     button.FontAttributes = FontAttributes.None;
                 }
 
-                frame.Content = button;
-                Grid.SetRow(frame, row);
-                Grid.SetColumn(frame, col);
-                CalendarioGrid.Children.Add(frame);
+                border.Content = button;
+                Grid.SetRow(border, row);
+                Grid.SetColumn(border, col);
+                CalendarioGrid.Children.Add(border);
             }
 
             // Mostrar horarios del día actual por defecto si está disponible
@@ -169,36 +172,13 @@
             else
             {
                 var primerDiaDisponible = diasDisponibles.Where(d => d >= today).OrderBy(d => d).FirstOrDefault();
-                if (primerDiaDisponible != default(DateTime))
+                if (primerDiaDisponible != default)
                 {
                     _diaSeleccionado = primerDiaDisponible;
                     LoadHorasDisponiblesParaDia(primerDiaDisponible);
                 }
             }
         }
-        // MÉTODO REMOVIDO - Ya no se necesita selección de días
-        /*
-        private void OnDaySelected(DateTime fecha, Button button)
-        {
-            // Restaurar el estilo del botón anteriormente seleccionado
-            if (_botonSeleccionado != null && _botonSeleccionado != button)
-            {
-                _botonSeleccionado.BackgroundColor = Colors.Transparent;
-                _botonSeleccionado.TextColor = Colors.Black;
-                _botonSeleccionado.BorderWidth = 1;
-                _botonSeleccionado.BorderColor = Color.FromArgb("#EEEEEE");
-            }
-
-            // Aplicar estilo al botón seleccionado
-            button.BackgroundColor = Color.FromArgb("#0e2a36");
-            button.TextColor = Colors.White;
-            button.BorderWidth = 0;
-
-            _botonSeleccionado = button;
-            _diaSeleccionado = fecha;
-            LoadHorasDisponiblesParaDia(fecha);
-        }
-        */
 
         private void LoadHorasDisponiblesParaDia(DateTime dia)
         {
@@ -213,15 +193,19 @@
                 AvailableHoursContainer.Children.Clear();
                 foreach (var hora in horasDisponibles)
                 {
-                    var frame = new Frame
+                    var border = new Border
                     {
                         BackgroundColor = Color.FromArgb("#90A4AE"),
-                        CornerRadius = 5,
                         Padding = new Thickness(15, 8),
-                        HasShadow = false,
-                        HeightRequest = 40
-
+                        HeightRequest = 40,
+                        Stroke = Colors.Transparent,
+                        StrokeThickness = 0,
+                        StrokeShape = new RoundRectangle
+                        {
+                            CornerRadius = 5
+                        }
                     };
+
 
                     var label = new Label
                     {
@@ -230,12 +214,12 @@
                         FontSize = 14
                     };
 
-                    frame.Content = label;
-                    AvailableHoursContainer.Children.Add(frame);
+                    border.Content = label;
+                    AvailableHoursContainer.Children.Add(border);
                 }
 
-                NoAvailabilityLabel.IsVisible = !horasDisponibles.Any();
-                AvailableHoursContainer.IsVisible = horasDisponibles.Any();
+                NoAvailabilityLabel.IsVisible = horasDisponibles.Count == 0;
+                AvailableHoursContainer.IsVisible = horasDisponibles.Count != 0;
             }
         }
 
@@ -252,7 +236,7 @@
 
                 BarberoVisitasLabel.Text = $"Visitas: {visitas}";
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 BarberoVisitasLabel.Text = "Visitas: 0";
             }
@@ -265,7 +249,7 @@
 
         private async void OnMakeAppointmentClicked(object sender, EventArgs e)
         {
-            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
             var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
             await Navigation.PushAsync(new MainPage(reservationService, authService));
         }
@@ -292,8 +276,8 @@
 
         private async Task CargarPromedioCalificacion()
         {
-            var calificacionService = Application.Current.Handler.MauiContext.Services.GetService<CalificacionService>();
-            var (promedio, total) = await calificacionService.ObtenerPromedioAsync(_barbero.Cedula);
+            var calificacionService = Application.Current!.Handler.MauiContext!.Services.GetService<CalificacionService>()!;
+            var (promedio, _) = await calificacionService.ObtenerPromedioAsync(_barbero.Cedula);
 
             // Actualiza el modelo y la UI
             _barbero.CalificacionPromedio = promedio;

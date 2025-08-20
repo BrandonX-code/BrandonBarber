@@ -1,4 +1,7 @@
-﻿namespace Gasolutions.Maui.App.Pages
+﻿using CommunityToolkit.Mvvm.Messaging;
+using Gasolutions.Maui.App.Messenger;
+
+namespace Gasolutions.Maui.App.Pages
 {
     public partial class CalificarBarberoPage : ContentPage
     {
@@ -69,7 +72,10 @@
             {
                 await AppUtils.MostrarSnackbar("¡Gracias por tu calificación!", Colors.Green, Colors.White);
                 // Notifica a la página anterior que debe refrescar el promedio
-                MessagingCenter.Send(this, "CalificacionEnviada", _barbero.Cedula);
+                //MessagingCenter.Send(this, "CalificacionEnviada", _barbero.Cedula);
+
+                WeakReferenceMessenger.Default.Send(new CalificacionEnviadaMessage(_barbero.Cedula));
+
                 await Navigation.PopAsync();
             }
             else
