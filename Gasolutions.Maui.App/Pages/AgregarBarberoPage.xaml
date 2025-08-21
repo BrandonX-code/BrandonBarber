@@ -31,7 +31,7 @@
                 <VerticalStackLayout x:Name="PickerSection" Spacing="5" IsVisible="False">
                     <Label Text="Seleccionar Barbería *" TextColor="White" FontSize="16" />
                     <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45">
-                        <Picker x:Name="BarberiaPicker" SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}"  Title="Seleccionar Barbería" TitleColor="Gray" TextColor="Black"   FontSize="16"  HeightRequest="45"  VerticalOptions="Center" Margin="10,0" />
+                        <Picker x:Name="BarberiaPicker" SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}"  Title="Seleccionar Barbería" TitleColor="Black" TextColor="Black"   FontSize="16"  HeightRequest="45"  VerticalOptions="Center" Margin="10,0" />
                     </Border>
                 </VerticalStackLayout>
                 <VerticalStackLayout Spacing="5">

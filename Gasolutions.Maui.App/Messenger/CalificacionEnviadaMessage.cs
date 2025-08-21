@@ -3,9 +3,8 @@
 namespace Gasolutions.Maui.App.Messenger
 {
 
-    public class CalificacionEnviadaMessage : ValueChangedMessage<long>
+    public class CalificacionEnviadaMessage(long barberoId) : ValueChangedMessage<long>(barberoId)
     {
-        public CalificacionEnviadaMessage(long barberoId) : base(barberoId) { }
     }
 
 }

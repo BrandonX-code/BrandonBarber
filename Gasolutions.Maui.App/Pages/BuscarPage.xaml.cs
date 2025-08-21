@@ -2,8 +2,8 @@
 {
     public partial class BuscarPage : ContentPage, INotifyPropertyChanged
     {
-        public ObservableCollection<CitaModel> ProximasCitas { get; set; } = new();
-        public ObservableCollection<CitaModel> HistorialCitas { get; set; } = new();
+        public ObservableCollection<CitaModel> ProximasCitas { get; set; } = [];
+        public ObservableCollection<CitaModel> HistorialCitas { get; set; } = [];
 
         private bool _hasProximasCitas;
         public bool HasProximasCitas
@@ -70,7 +70,7 @@
                 var clienteCedula = AuthService.CurrentUser.Cedula;
                 var citas = await _reservationService.GetReservationsById(clienteCedula);
 
-                if (citas == null || !citas.Any())
+                if (citas == null || citas.Count == 0)
                 {
                     await AppUtils.MostrarSnackbar("No se encontró ninguna cita con esa Cédula.", Colors.Red, Colors.White);
                     UpdateVisibility();
@@ -122,7 +122,7 @@
         {
             if (sender is SwipeItem swipeItem && swipeItem.CommandParameter is int citaId)
             {
-                CitaModel cita = ProximasCitas.FirstOrDefault(c => c.Id == citaId);
+                CitaModel? cita = ProximasCitas.FirstOrDefault(c => c.Id == citaId);
                 if (cita == null)
                 {
                     await AppUtils.MostrarSnackbar("No se puede encontrar la cita seleccionada.", Colors.Red, Colors.White);

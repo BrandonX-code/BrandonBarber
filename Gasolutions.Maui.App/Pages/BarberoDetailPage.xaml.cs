@@ -27,7 +27,7 @@ namespace Gasolutions.Maui.App.Pages
             WeakReferenceMessenger.Default.Register<CalificacionEnviadaMessage>(this, async (r, m) =>
             {
                 if (m.Value == _barbero.Cedula)
-                    await CargarPromedioCalificacion();
+                await CargarPromedioCalificacion();
             });
 
         }
@@ -271,7 +271,35 @@ namespace Gasolutions.Maui.App.Pages
 
         private async void OnCalificarClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new CalificarBarberoPage(_barbero));
+            try
+            {
+                // Validar que el usuario actual sea válido y sea cliente
+                if (AuthService.CurrentUser == null)
+                {
+                    await DisplayAlert("Error", "Usuario no autenticado", "OK");
+                    return;
+                }
+
+                if (AuthService.CurrentUser.Rol?.ToLower() != "cliente")
+                {
+                    await DisplayAlert("Error", "Solo los clientes pueden calificar barberos", "OK");
+                    return;
+                }
+
+                // Validar que el barbero sea válido
+                if (_barbero == null)
+                {
+                    await DisplayAlert("Error", "Error al cargar información del barbero", "OK");
+                    return;
+                }
+
+                // Navegar a la página de calificación
+                await Navigation.PushAsync(new CalificarBarberoPage(_barbero));
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"No se pudo abrir la página de calificación: {ex.Message}", "OK");
+            }
         }
 
         private async Task CargarPromedioCalificacion()

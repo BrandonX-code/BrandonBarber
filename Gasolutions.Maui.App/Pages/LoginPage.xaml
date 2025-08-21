@@ -46,11 +46,6 @@
                         <Entry Grid.Column="1"  x:Name="EmailEntry" TextColor="#0E2A36" Placeholder="Usuario" PlaceholderColor="#90A4AE" FontSize="14" HeightRequest="45" BackgroundColor="Transparent" HorizontalOptions="FillAndExpand" VerticalOptions="Center" Keyboard="Email"/>
                     </Grid>
                 </Border>
-
-
-                <!--<Frame CornerRadius="10" Padding="0" HasShadow="False" BackgroundColor="#c2e8ff">
-                    <Entry x:Name="PasswordEntry" TextColor="#0E2A36" Placeholder="Contraseña" PlaceholderColor="#90A4AE" FontSize="14"  HeightRequest="45" BackgroundColor="Transparent" Keyboard="Password" />
-                </Frame>-->
                 <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 25" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
                     <Grid Padding="12,0" ColumnDefinitions="Auto, *" VerticalOptions="Center">
                         <Image Source="lock.png"  WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />

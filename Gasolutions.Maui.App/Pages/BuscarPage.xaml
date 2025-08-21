@@ -38,13 +38,10 @@
     </ContentPage.Resources>
 
     <AbsoluteLayout>
-        <!--<Image Source="fondobarber.jpg" Opacity="0.90" Aspect="AspectFill" 
-               AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" />-->
-
         <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <Grid Padding="15,10" BackgroundColor="Transparent">
                 <VerticalStackLayout Spacing="5">
-                    <Frame BackgroundColor="#2a3f48" CornerRadius="10" Padding="15" HasShadow="True">
+                    <Border BackgroundColor="#2a3f48" StrokeShape="RoundRectangle 10" Padding="15">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Próximas Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasProximasCitas}"/>
                             <CollectionView x:Name="ProximasCitasCollection" ItemsSource="{Binding ProximasCitas}" EmptyView="No hay citas próximas Ingrese su Cedula" HeightRequest="330">
@@ -57,7 +54,7 @@
                                                 </SwipeItems>
                                             </SwipeView.RightItems>
 
-                                            <Frame Padding="8" Margin="4" BackgroundColor="#90A4AE" CornerRadius="8" HasShadow="True">
+                                            <Border Padding="8" Margin="4" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10"  >
                                                 <Grid ColumnDefinitions="*">
                                                     <VerticalStackLayout Grid.Column="0" Spacing="10">
                                                         <HorizontalStackLayout Spacing="5">
@@ -80,21 +77,21 @@
                                                         </HorizontalStackLayout>
                                                     </VerticalStackLayout>
                                                 </Grid>
-                                            </Frame>
+                                            </Border>
                                         </SwipeView>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
 
-                    <Frame BackgroundColor="#2a3f48" CornerRadius="10" Padding="15" HasShadow="True">
+                    <Border BackgroundColor="#2a3f48" StrokeShape="RoundRectangle 10" Padding="15"  >
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Historial de Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasHistorialCitas}" Margin="0,5,0,0"/>
                             <CollectionView x:Name="HistorialCitasCollection"  ItemsSource="{Binding HistorialCitas}" EmptyView="No hay historial de citas Ingrese su Cedula" HeightRequest="285">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Frame Padding="8" Margin="2" BackgroundColor="#90A4AE" CornerRadius="8" HasShadow="True">
+                                        <Border Padding="8" Margin="2" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10"  >
                                             <Grid ColumnDefinitions="*, Auto">
                                                 <VerticalStackLayout Grid.Column="0" Spacing="5">
                                                     <HorizontalStackLayout Spacing="5">
@@ -119,19 +116,19 @@
                                                 </VerticalStackLayout>
                                                 <Label Grid.Column="1" Text="✓" TextColor="Black" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" />
                                             </Grid>
-                                        </Frame>
+                                        </Border>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
 
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
 
                 </VerticalStackLayout>
             </Grid>
         </ScrollView>
 
-        <Grid x:Name="LoaderOverlay" BackgroundColor="#80000000" IsVisible="False" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ZIndex="10">
+        <Grid x:Name="LoaderOverlay" BackgroundColor="#80000000" IsVisible="False" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="Fill" HorizontalOptions="Fill" ZIndex="10">
             <BoxView BackgroundColor="Transparent">
                 <BoxView.GestureRecognizers>
                     <TapGestureRecognizer />

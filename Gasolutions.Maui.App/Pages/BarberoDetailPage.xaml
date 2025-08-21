@@ -19,25 +19,17 @@
 					</Grid.ColumnDefinitions>
 
                     <Border Grid.Column="0" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" HeightRequest="180" WidthRequest="150">
-						<Image x:Name="BarberoImage" Source="{Binding ImagenPath}" Aspect="AspectFill"/>
+						<Image x:Name="BarberoImage" Aspect="AspectFill"/>
 					</Border>
 
 					<VerticalStackLayout Grid.Column="1" Padding="15,0,0,0" Spacing="5">
-						<Label x:Name="BarberoName" FontSize="30" TextColor="white" FontAttributes="Bold"/>
+                        <Label x:Name="BarberoName" FontSize="30" TextColor="white" FontAttributes="Bold" LineBreakMode="TailTruncation" MaxLines="1"/>
 							<HorizontalStackLayout Spacing="2">
 								<Label x:Name="CalificacionLabel" Text="★★★★★" FontSize="20" TextColor="White"/>
 								<Label x:Name="PromedioLabel" Text="(0.0)" TextColor="White" FontSize="20"/>
 							</HorizontalStackLayout>
 						<Label x:Name="BarberoVisitasLabel" TextColor="White" FontSize="14"/>
-						<Button x:Name="CalificarButton" 
-								Text="Calificar Barbero" 
-								BackgroundColor="#FF6F91"
-								TextColor="Black"
-								FontSize="12"
-								CornerRadius="15"
-								HeightRequest="30"
-								Margin="0,5,0,0"
-								Clicked="OnCalificarClicked"/>
+						<Button x:Name="CalificarButton" Text="Calificar Barbero" BackgroundColor="#FF6F91" TextColor="Black" FontSize="12"	CornerRadius="15" HeightRequest="30" Margin="0,5,0,0" Clicked="OnCalificarClicked"/>
 					</VerticalStackLayout>
 				</Grid>
 
@@ -49,10 +41,8 @@
 
                 <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0">
                     <VerticalStackLayout Spacing="0">
-                        <!--<Frame BackgroundColor="#0e2a36" CornerRadius="15" Padding="15,12" HasShadow="False">-->
-                            <Label Text="Calendario De Disponibilidad" Padding="20" TextColor="Black" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
-                        <!--</Frame>-->
-
+                        <Label Text="Calendario De Disponibilidad" Padding="20" TextColor="Black" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        
                         <Grid Padding="15,20,15,10" ColumnSpacing="7">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
