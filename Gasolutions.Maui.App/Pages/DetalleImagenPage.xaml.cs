@@ -1,11 +1,4 @@
-﻿using Microsoft.Maui.Controls;
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Gasolutions.Maui.App.Models;
-using Gasolutions.Maui.App.Services; // Add this using directive for GaleriaService
-
-namespace Gasolutions.Maui.App.Pages
+﻿namespace Gasolutions.Maui.App.Pages
 {
     public partial class DetalleImagenPage : ContentPage
     {
@@ -96,8 +89,8 @@ namespace Gasolutions.Maui.App.Pages
 
                     var imageBytes = await response.Content.ReadAsByteArrayAsync();
 
-                    string fileName = Path.GetFileName(new Uri(imageUrl).LocalPath);
-                    string tempFilePath = Path.Combine(FileSystem.CacheDirectory, fileName); // Use CacheDirectory for temp files
+                    string fileName = System.IO.Path.GetFileName(new Uri(imageUrl).LocalPath);
+                    string tempFilePath = System.IO.Path.Combine(FileSystem.CacheDirectory, fileName); // Use CacheDirectory for temp files
 
                     await File.WriteAllBytesAsync(tempFilePath, imageBytes);
                     return tempFilePath;

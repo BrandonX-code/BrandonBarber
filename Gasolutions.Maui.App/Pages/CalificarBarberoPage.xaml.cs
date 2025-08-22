@@ -1,7 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
-using Gasolutions.Maui.App.Messenger;
-
-namespace Gasolutions.Maui.App.Pages
+﻿namespace Gasolutions.Maui.App.Pages
 {
     public partial class CalificarBarberoPage : ContentPage
     {

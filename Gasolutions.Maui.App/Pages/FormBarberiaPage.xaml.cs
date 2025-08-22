@@ -189,7 +189,7 @@ namespace Gasolutions.Maui.App.Pages
                 _logoBytes = memoryStream.ToArray();
                 _logoFileName = result.FileName;
 
-                var tempPath = Path.Combine(FileSystem.CacheDirectory, result.FileName);
+                var tempPath = System.IO.Path.Combine(FileSystem.CacheDirectory, result.FileName);
                 await File.WriteAllBytesAsync(tempPath, _logoBytes);
                 LogoUrl = tempPath;
 

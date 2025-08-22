@@ -151,7 +151,7 @@ public class ServicioService
     // Método helper para detectar el tipo de contenido
     private static string GetContentType(string fileName)
     {
-        var extension = Path.GetExtension(fileName).ToLowerInvariant();
+        var extension = System.IO.Path.GetExtension(fileName).ToLowerInvariant();
         return extension switch
         {
             ".jpg" or ".jpeg" => "image/jpeg",

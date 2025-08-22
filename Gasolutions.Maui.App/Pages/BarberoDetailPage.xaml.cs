@@ -1,8 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
-using Gasolutions.Maui.App.Messenger;
-using Microsoft.Maui.Controls.Shapes;
-
-namespace Gasolutions.Maui.App.Pages
+﻿namespace Gasolutions.Maui.App.Pages
 {
     public partial class BarberoDetailPage : ContentPage
     {

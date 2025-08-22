@@ -129,8 +129,8 @@ namespace Gasolutions.Maui.App.Pages
             }
 
             // Guardar la imagen en el almacenamiento local de la app
-            string fileName = Path.GetFileName(_imagenSeleccionada.FullPath);
-            string localPath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+            string fileName = System.IO.Path.GetFileName(_imagenSeleccionada.FullPath);
+            string localPath = System.IO.Path.Combine(FileSystem.AppDataDirectory, fileName);
 
             using (var stream = await _imagenSeleccionada.OpenReadAsync())
             using (var fileStream = File.OpenWrite(localPath))
@@ -226,8 +226,8 @@ namespace Gasolutions.Maui.App.Pages
 
             if (_imagenSeleccionada != null)
             {
-                string fileName = Path.GetFileName(_imagenSeleccionada.FullPath);
-                string localPath = Path.Combine(FileSystem.AppDataDirectory, fileName);
+                string fileName = System.IO.Path.GetFileName(_imagenSeleccionada.FullPath);
+                string localPath = System.IO.Path.Combine(FileSystem.AppDataDirectory, fileName);
 
                 using (var stream = await _imagenSeleccionada.OpenReadAsync())
                 using (var fileStream = File.OpenWrite(localPath))

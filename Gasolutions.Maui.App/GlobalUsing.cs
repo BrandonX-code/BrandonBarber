@@ -10,3 +10,6 @@ global using System.ComponentModel;
 global using System.Diagnostics;
 global using System.Text.RegularExpressions;
 global using Gasolutions.Maui.App.Utils;
+global using CommunityToolkit.Mvvm.Messaging;
+global using Gasolutions.Maui.App.Messenger;
+global using Microsoft.Maui.Controls.Shapes;

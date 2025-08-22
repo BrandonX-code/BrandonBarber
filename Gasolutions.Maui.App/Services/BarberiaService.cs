@@ -230,7 +230,7 @@ namespace Gasolutions.Maui.App.Services
                 using var content = new MultipartFormDataContent();
                 var fileContent = new ByteArrayContent(logoBytes);
 
-                string mimeType = GetMimeType(Path.GetExtension(fileName));
+                string mimeType = GetMimeType(System.IO.Path.GetExtension(fileName));
                 fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(mimeType);
 
                 content.Add(fileContent, "file", fileName);
