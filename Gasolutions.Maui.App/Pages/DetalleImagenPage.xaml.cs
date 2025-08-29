@@ -2,10 +2,10 @@
 {
     public partial class DetalleImagenPage : ContentPage
     {
-        private ImagenGaleriaModel _imagen;
-        private string _imageUrl;
+        private readonly ImagenGaleriaModel _imagen;
+        private readonly string _imageUrl;
 
-        private string _baseUrl;
+        private readonly string _baseUrl;
         public DetalleImagenPage(ImagenGaleriaModel imagen, string baseUrl)
         {
             InitializeComponent();
@@ -40,8 +40,8 @@
                 return;
 
             // Actualizar usando el servicio
-            var galeriaService = Application.Current.Handler.MauiContext.Services.GetService<GaleriaService>();
-            bool actualizado = await galeriaService.ActualizarImagen(_imagen.Id, nuevaDescripcion);
+            var galeriaService = Application.Current!.Handler.MauiContext!.Services.GetService<GaleriaService>();
+            bool actualizado = await galeriaService!.ActualizarImagen(_imagen.Id, nuevaDescripcion);
 
             if (actualizado)
             {
@@ -58,7 +58,7 @@
         {
             try
             {
-                string localFilePath = await DownloadImageToTempFile(_imageUrl);
+                string? localFilePath = await DownloadImageToTempFile(_imageUrl);
 
                 if (string.IsNullOrEmpty(localFilePath))
                 {
@@ -78,7 +78,7 @@
             }
         }
 
-        private async Task<string> DownloadImageToTempFile(string imageUrl)
+        private async static Task<string?> DownloadImageToTempFile(string imageUrl)
         {
             try
             {
@@ -90,7 +90,7 @@
                     var imageBytes = await response.Content.ReadAsByteArrayAsync();
 
                     string fileName = System.IO.Path.GetFileName(new Uri(imageUrl).LocalPath);
-                    string tempFilePath = System.IO.Path.Combine(FileSystem.CacheDirectory, fileName); // Use CacheDirectory for temp files
+                    string tempFilePath = System.IO.Path.Combine(FileSystem.CacheDirectory, fileName);
 
                     await File.WriteAllBytesAsync(tempFilePath, imageBytes);
                     return tempFilePath;

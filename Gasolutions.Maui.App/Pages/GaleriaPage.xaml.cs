@@ -337,31 +337,7 @@ namespace Gasolutions.Maui.App.Pages
 
             return frame;
         }
-        private async Task EditarDescripcionImagen(ImagenGaleriaModel imagen)
-        {
-            string nuevaDescripcion = await DisplayPromptAsync(
-                "Editar descripción",
-                "Modifica la descripción de la imagen:",
-                initialValue: imagen.Descripcion ?? "",
-                maxLength: 500
-            );
-
-            if (nuevaDescripcion == null) // Cancelado
-                return;
-
-            bool actualizado = await _galeriaService.ActualizarImagen(imagen.Id, nuevaDescripcion);
-
-            if (actualizado)
-            {
-                await AppUtils.MostrarSnackbar("Descripción actualizada.", Colors.Green, Colors.White);
-                imagen.Descripcion = nuevaDescripcion;
-                UpdateGaleriaUI();
-            }
-            else
-            {
-                await AppUtils.MostrarSnackbar("No se pudo actualizar la descripción.", Colors.Red, Colors.White);
-            }
-        }
+        
         // Método para eliminar una imagen
         private async Task DeleteImage(int imagenId)
         {

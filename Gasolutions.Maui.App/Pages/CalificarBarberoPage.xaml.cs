@@ -10,10 +10,7 @@
         {
             InitializeComponent();
             _barbero = barbero;
-            _estrellas = new List<ImageButton>
-            {
-                Estrella1, Estrella2, Estrella3, Estrella4, Estrella5
-            };
+            _estrellas = [ Estrella1, Estrella2, Estrella3, Estrella4, Estrella5 ];
             this.Appearing += async (s, e) => await CargarCalificacionPrevia();
         }
 
@@ -55,25 +52,29 @@
         {
             try
             {
-                var estrella = sender as ImageButton;
-                var index = _estrellas.IndexOf(estrella) + 1;
-                _calificacionSeleccionada = index;
+                if (sender is not ImageButton estrella)
+                    return; // No es un ImageButton, salimos
+
+                var index = _estrellas.IndexOf(estrella);
+                if (index < 0)
+                    return; // El botón no está en la lista, salimos
+
+                _calificacionSeleccionada = index + 1;
 
                 // Animación
                 await estrella.ScaleTo(1.2, 100, Easing.CubicOut);
                 await estrella.ScaleTo(1.0, 100, Easing.CubicIn);
 
-                // CORRECCIÓN: Actualizar visualización de estrellas correctamente
+                // Actualizar visualización de estrellas
                 for (int i = 0; i < _estrellas.Count; i++)
-                {
-                    _estrellas[i].Source = i < index ? "star_filled.png" : "star_empty.png";
-                }
+                    _estrellas[i].Source = i <= index ? "star_filled.png" : "star_empty.png";
             }
             catch (Exception ex)
             {
                 await AppUtils.MostrarSnackbar($"Error al seleccionar estrella: {ex.Message}", Colors.Red, Colors.White);
             }
         }
+
 
         private async void OnEnviarCalificacionClicked(object sender, EventArgs e)
         {

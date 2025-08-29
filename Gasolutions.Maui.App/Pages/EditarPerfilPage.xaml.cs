@@ -2,17 +2,17 @@
 {
     public partial class EditarPerfilPage : ContentPage
     {
-        private UsuarioModels _perfilData;
+        private readonly UsuarioModels _perfilData;
 
         private readonly PerfilUsuarioService _perfilService;
 
         private bool _imagenModificada = false;
 
-        public EditarPerfilPage(UsuarioModels perfilData = null)
+        public EditarPerfilPage(UsuarioModels? perfilData = null)
         {
             InitializeComponent();
 
-            _perfilService = Application.Current.Handler.MauiContext.Services.GetService<PerfilUsuarioService>();
+            _perfilService = Application.Current!.Handler.MauiContext!.Services.GetService<PerfilUsuarioService>()!;
 
             _perfilData = perfilData ?? new UsuarioModels
             {
@@ -92,7 +92,7 @@
                 bool perfilGuardado = await _perfilService.SavePerfilUsuario(_perfilData);
                 bool imagenActualizada = true;
 
-                if (perfilGuardado && _imagenModificada && !_perfilData.ImagenPath.StartsWith("http"))
+                if (perfilGuardado && _imagenModificada && !_perfilData.ImagenPath!.StartsWith("http"))
                 {
                     imagenActualizada = await _perfilService.UpdateProfileImage(_perfilData.Cedula, _perfilData.ImagenPath);
 

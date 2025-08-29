@@ -108,7 +108,10 @@ namespace Barber.Maui.API.Controllers
             barberia.Telefono = barberiaDto.Telefono;
             barberia.Direccion = barberiaDto.Direccion;
             barberia.Email = barberiaDto.Email;
-            barberia.LogoUrl = barberiaDto.LogoUrl;
+            if (barberiaDto.LogoUrl != null)
+            {
+                barberia.LogoUrl = barberiaDto.LogoUrl;
+            }
 
             try
             {

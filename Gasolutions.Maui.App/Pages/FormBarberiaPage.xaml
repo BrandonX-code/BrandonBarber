@@ -48,11 +48,10 @@
                 </Style.Triggers>
             </Style>
 
-            <Style x:Key="SectionFrameStyle" TargetType="Frame">
+            <Style x:Key="SectionFrameStyle" TargetType="Border">
                 <Setter Property="BackgroundColor" Value="{StaticResource SecondaryBackground}"/>
-                <Setter Property="CornerRadius" Value="15"/>
+                <Setter Property="StrokeShape" Value="15"/>
                 <Setter Property="Padding" Value="20"/>
-                <Setter Property="HasShadow" Value="True"/>
             </Style>
 
             <Style x:Key="PrimaryButtonStyle" TargetType="Button">
@@ -79,47 +78,47 @@
         <StackLayout Spacing="20">
             <Label Text="{Binding PageTitle}" Style="{StaticResource TitleStyle}" Margin="0,0,0,10"/>
 
-            <Frame Style="{StaticResource SectionFrameStyle}">
+            <Border Style="{StaticResource SectionFrameStyle}">
                 <StackLayout Spacing="15">
                     <Label Text="Logo de la Barbería" Style="{StaticResource SectionTitleStyle}"/>
-                    <Frame WidthRequest="120" HeightRequest="120" CornerRadius="10" Padding="0" BackgroundColor="{StaticResource TertiaryBackground}" HorizontalOptions="Center">
+                    <Border WidthRequest="120" HeightRequest="120" StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="{StaticResource TertiaryBackground}" HorizontalOptions="Center">
                         <Image x:Name="LogoImage" Source="{Binding LogoUrl, TargetNullValue='picture.png'}" Aspect="AspectFill"/>
-                        <Frame.GestureRecognizers>
+                        <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnSelectLogoTapped"/>
-                        </Frame.GestureRecognizers>
-                    </Frame>
+                        </Border.GestureRecognizers>
+                    </Border>
                     <Button Text="Seleccionar Logo" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnSelectLogoClicked"/>
                 </StackLayout>
-            </Frame>
+            </Border>
 
-            <Frame Style="{StaticResource SectionFrameStyle}">
+            <Border Style="{StaticResource SectionFrameStyle}">
                 <StackLayout Spacing="15">
                     <StackLayout>
                         <Label Text="Nombre de la Barbería *" Style="{StaticResource FieldLabelStyle}"/>
-                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0" HorizontalOptions="Fill" VerticalOptions="Fill">
                             <Entry Text="{Binding Nombre}" Placeholder="Ingresa el nombre" Style="{StaticResource RequiredEntryStyle}" TextColor="Black"/>
                         </Border>
                     </StackLayout>
                     <StackLayout>
                         <Label Text="Teléfono *" Style="{StaticResource FieldLabelStyle}"/>
-                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill" VerticalOptions="Fill">
                             <Entry Text="{Binding Telefono}" Placeholder="Ej: 300 123 4567" Style="{StaticResource RequiredEntryStyle}" Keyboard="Telephone" TextColor="Black"/>
                         </Border>
                     </StackLayout>
                     <StackLayout>
                         <Label Text="Dirección *" Style="{StaticResource FieldLabelStyle}"/>
-                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill" VerticalOptions="Fill">
                             <Entry Text="{Binding Direccion}" Placeholder="Ingresa la dirección completa" Style="{StaticResource RequiredEntryStyle}" TextColor="Black"/>
                         </Border>
                     </StackLayout>
                     <StackLayout>
                         <Label Text="Email" Style="{StaticResource FieldLabelStyle}"/>
-                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill" VerticalOptions="Fill">
                             <Entry Text="{Binding Email}" Placeholder="contacto@barberia.com" Style="{StaticResource FormEntryStyle}" Keyboard="Email" TextColor="Black"/>
                         </Border>
                     </StackLayout>
                 </StackLayout>
-            </Frame>
+            </Border>
 
             <StackLayout Spacing="10" Margin="0,10,0,20" Orientation="Horizontal" HorizontalOptions="Center">
                 <Button Text="{Binding SaveButtonText}" Style="{StaticResource PrimaryButtonStyle}" Clicked="OnGuardarClicked" IsEnabled="{Binding CanSave}"/>
@@ -127,8 +126,6 @@
             </StackLayout>
 
             <Label x:Name="ErrorLabel" TextColor="#ff0000" FontSize="14" HorizontalOptions="Center" IsVisible="False"/>
-
-            <!--<ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="Center" Color="{StaticResource TextPrimary}" Scale="1.5"/>-->
         </StackLayout>
     </ScrollView>
 </ContentPage>
