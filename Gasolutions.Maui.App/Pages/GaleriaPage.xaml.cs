@@ -14,8 +14,8 @@ namespace Gasolutions.Maui.App.Pages
     public partial class GaleriaPage : ContentPage
     {
         private readonly AuthService _authService;
-        private List<UsuarioModels> _todosLosBarberos;
-        public List<UsuarioModels> TodosLosBarberos
+        private List<UsuarioModels>? _todosLosBarberos;
+        public List<UsuarioModels>? TodosLosBarberos
         {
             get => _todosLosBarberos;
             set
@@ -33,7 +33,7 @@ namespace Gasolutions.Maui.App.Pages
                 _ = LoadBarberos();
             }
         }
-        private List<ImagenGaleriaModel> imagenes = new List<ImagenGaleriaModel>();
+        private List<ImagenGaleriaModel> imagenes = [];
         private readonly GaleriaService _galeriaService;
 
         public GaleriaPage(GaleriaService galeriaService, AuthService barberoid)
@@ -59,7 +59,7 @@ namespace Gasolutions.Maui.App.Pages
                 if (addButton != null) addButton.IsVisible = false;
             }
         }
-        private async void Picker_SelectedIndexChanged(object sender, EventArgs e)
+        private void Picker_SelectedIndexChanged(object sender, EventArgs e)
         {
             var picker = (Picker)sender;
             int selectedIndex = picker.SelectedIndex;
@@ -85,7 +85,7 @@ namespace Gasolutions.Maui.App.Pages
                         new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                     var admin = AuthService.CurrentUser;
-                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero" && u.IdBarberia == admin.IdBarberia).ToList() ?? new List<UsuarioModels>();
+                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero" && u.IdBarberia == admin.IdBarberia).ToList() ?? [];
                     TodosLosBarberos = barberos;
                     Picker.ItemsSource = TodosLosBarberos;
                 }
@@ -186,7 +186,7 @@ namespace Gasolutions.Maui.App.Pages
             }
         }
         // Crear un frame para cada imagen
-        private Frame CreateImageFrame(ImagenGaleriaModel imagen)
+        private Border CreateImageFrame(ImagenGaleriaModel imagen)
         {
             // Determinar si el usuario actual es barbero
             bool esBarbero = AuthService.CurrentUser?.Rol?.ToLower() == "barbero";
@@ -211,7 +211,7 @@ namespace Gasolutions.Maui.App.Pages
             Debug.WriteLine($"🔗 URL final de imagen: {imageUrl}");
 
             // Crear la imagen con manejo de errores
-            Image imageControl = new Image
+            Image imageControl = new()
             {
                 Source = ImageSource.FromUri(new Uri(imageUrl)),
                 Aspect = Aspect.AspectFill,
@@ -303,30 +303,30 @@ namespace Gasolutions.Maui.App.Pages
                 };
 
                 // Aplicar esquinas redondeadas a la descripción
-                var descripcionFrame = new Frame
+                var border = new Border
                 {
                     Content = descripcionLabel,
                     BackgroundColor = Color.FromArgb("#0E2A36"),
-                    BorderColor = Color.FromArgb("white"),
-                    CornerRadius = 5,
                     Padding = new Thickness(0),
                     Margin = new Thickness(0),
-                    HasShadow = false
+                    StrokeShape = new RoundRectangle
+                    {
+                        CornerRadius = 5
+                    }
                 };
-
-                mainContainer.Children.Add(descripcionFrame);
+                mainContainer.Children.Add(border);
             }
 
             // Frame contenedor principal
-            var frame = new Frame
+            var borderPrincipal = new Border
             {
                 Content = mainContainer,
-                CornerRadius = 10,
+                StrokeShape = new RoundRectangle
+                {
+                    CornerRadius = 5
+                },
                 Padding = new Thickness(8),
                 Margin = new Thickness(5, 5, 5, 15),
-                IsClippedToBounds = true,
-                BorderColor = Color.FromArgb("black"),
-                HasShadow = true,
                 BackgroundColor = Color.FromArgb("#B0BEC5")
             };
 
@@ -335,7 +335,7 @@ namespace Gasolutions.Maui.App.Pages
             tapGestureRecognizer.Tapped += async (s, e) => await ShowImageDetail(imagen);
             imageControl.GestureRecognizers.Add(tapGestureRecognizer);
 
-            return frame;
+            return borderPrincipal;
         }
         
         // Método para eliminar una imagen

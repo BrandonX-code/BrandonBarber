@@ -9,11 +9,11 @@ namespace Gasolutions.Maui.App.Pages
     {
         private readonly BarberiaService _barberiaService;
         private readonly bool _isEdit;
-        private readonly Barberia? _barberiaOriginal;          // ahora nullable
-        private byte[]? _logoBytes;                            // ahora nullable
-        private string? _logoFileName;                         // ahora nullable
+        private readonly Barberia? _barberiaOriginal;
+        private byte[]? _logoBytes;                  
+        private string? _logoFileName;               
 
-        public event EventHandler? BarberiaGuardada;           // evento nullable
+        public event EventHandler? BarberiaGuardada; 
 
         public string Nombre { get => _nombre; set { if (_nombre == value) return; _nombre = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanSave)); } }
         public string Telefono { get => _telefono; set { if (_telefono == value) return; _telefono = value; OnPropertyChanged(); OnPropertyChanged(nameof(CanSave)); } }

@@ -34,9 +34,9 @@
             </VerticalStackLayout>
             <VerticalStackLayout x:Name="PickerSection" Grid.Row="0"  Spacing="5"  Margin="0,100,0,10" IsVisible="False">
                 <Label Text="Seleccione el Barbero Para Ver Su Galeria" TextColor="White"  FontSize="16"  HorizontalOptions="Center" />
-                <Frame BackgroundColor="#90A4AE" Padding="15" CornerRadius="10" HasShadow="True" BorderColor="Black" HeightRequest="100">
+                <Border BackgroundColor="#90A4AE" Padding="15" StrokeShape="RoundRectangle 10" HeightRequest="100">
                     <Picker x:Name="Picker" SelectedIndexChanged="Picker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}" Title="Seleccionar Barbero" TitleColor="Black" Style="{StaticResource EntryStyle}"  VerticalOptions="Center" />
-                </Frame>
+                </Border>
             </VerticalStackLayout>
             <ScrollView Grid.Row="1" Orientation="Vertical">
                 <FlexLayout x:Name="GaleriaContainer" Direction="Row" Wrap="Wrap" JustifyContent="SpaceAround" AlignItems="Start"  AlignContent="Start">
