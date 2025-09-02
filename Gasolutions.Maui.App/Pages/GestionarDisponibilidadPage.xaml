@@ -19,15 +19,15 @@
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Padding="20" Spacing="20">
                 <!-- Calendario -->
-                <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
+                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
                     <VerticalStackLayout Spacing="15">
                         <Label Text="Selecciona fecha" TextColor="Black" FontSize="18" />
                         <DatePicker x:Name="FechaSelector" Format="D" TextColor="Black" MinimumDate="{Binding MinimumDate}" DateSelected="OnDateSelected" />
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
                 <!-- Horarios Disponibles -->
-                <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
+                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
                     <VerticalStackLayout Spacing="15">
                         <Label Text="Horarios Disponibles" TextColor="Black" FontSize="18" />
                         <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="10">
@@ -51,28 +51,28 @@
                         </Grid>
 
                     </VerticalStackLayout>
-                </Frame>
+                </Border>
 
                 <!-- Citas Existentes -->
                 <ScrollView>
-                    <Frame BackgroundColor="#90A4AE" CornerRadius="10" Padding="15" HasShadow="True">
+                    <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Citas Programadas" TextColor="Black" FontSize="18" />
                             <CollectionView x:Name="CitasCollection" HeightRequest="260" EmptyView="No hay citas programadas para esta fecha.">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Frame Margin="0,5" BackgroundColor="#90A4AE" Padding="10" CornerRadius="5">
+                                        <Border Margin="0,5" BackgroundColor="#90A4AE" Padding="10" StrokeShape="RoundRectangle 10">
                                             <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
                                                 <Label Text="{Binding Nombre}" TextColor="Black" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" />
                                                 <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" TextColor="Black" Grid.Row="1" Grid.Column="0" />
                                                 <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="12" TextColor="Black" Grid.Row="2" Grid.Column="0" />
                                             </Grid>
-                                        </Frame>
+                                        </Border>
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
                         </VerticalStackLayout>
-                    </Frame>
+                    </Border>
                 </ScrollView>
             </VerticalStackLayout>
         </ScrollView>

@@ -9,10 +9,10 @@ namespace Gasolutions.Maui.App.Pages
         private readonly DisponibilidadService _disponibilidadService;
         private readonly ReservationService _reservationService;
         private DateTime _selectedDate;
-        private ObservableCollection<CitaModel> _citas;
+        private readonly ObservableCollection<CitaModel> _citas;
         private Dictionary<string, bool> _horariosDisponibles;
 
-        public DateTime MinimumDate => DateTime.Today;
+        public static DateTime MinimumDate => DateTime.Today;
 
         public GestionarDisponibilidadPage(DisponibilidadService disponibilidadService, ReservationService reservationService)
         {
@@ -20,8 +20,8 @@ namespace Gasolutions.Maui.App.Pages
             _disponibilidadService = disponibilidadService;
             _reservationService = reservationService;
             _selectedDate = DateTime.Today;
-            _citas = new ObservableCollection<CitaModel>();
-            _horariosDisponibles = new Dictionary<string, bool>();
+            _citas = [];
+            _horariosDisponibles = [];
 
             FechaSelector.Date = _selectedDate;
             CitasCollection.ItemsSource = _citas;
@@ -101,7 +101,7 @@ namespace Gasolutions.Maui.App.Pages
             }
         }
 
-        private async void OnDateSelected(object sender, DateChangedEventArgs e)
+        private void OnDateSelected(object sender, DateChangedEventArgs e)
         {
             _selectedDate = e.NewDate;
             LoadData();
