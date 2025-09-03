@@ -1,16 +1,14 @@
-﻿using Gasolutions.Maui.App.Mobal;
-using Gasolutions.Maui.App.Models;
-using Gasolutions.Maui.App.Services;
-using System.Collections.ObjectModel;
+﻿using System.Text.Json;
+
 namespace Gasolutions.Maui.App.Pages
 {
     public partial class ListarClientesPage : ContentPage
     {
         public readonly AuthService _authService;
-        private ObservableCollection<UsuarioModels> _todosLosClientes;
+        private readonly ObservableCollection<UsuarioModels> _todosLosClientes;
         private ObservableCollection<UsuarioModels> _clientesFiltrados;
-        private readonly BarberiaService _barberiaService;
-        private List<Barberia> _barberias;
+        private readonly BarberiaService? _barberiaService;
+        private List<Barberia>? _barberias;
         private int? _barberiaSeleccionadaId = null;
         public Command RefreshCommand { get; }
         public ObservableCollection<UsuarioModels> ClientesFiltrados
@@ -27,9 +25,9 @@ namespace Gasolutions.Maui.App.Pages
         {
             InitializeComponent();
             _authService = authService;
-            _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
-            _todosLosClientes = new ObservableCollection<UsuarioModels>();
-            _clientesFiltrados = new ObservableCollection<UsuarioModels>();
+            _barberiaService = Application.Current!.Handler.MauiContext!.Services.GetService<BarberiaService>();
+            _todosLosClientes = [];
+            _clientesFiltrados = [];
             RefreshCommand = new Command(async () => await RefreshClienteList());
             BindingContext = this;
 
@@ -41,10 +39,10 @@ namespace Gasolutions.Maui.App.Pages
             try
             {
                 long idAdministrador = AuthService.CurrentUser.Cedula;
-                _barberias = await _barberiaService.GetBarberiasByAdministradorAsync(idAdministrador);
+                _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
 
                 BarberiaPicker.ItemsSource = _barberias;
-                PickerSection.IsVisible = _barberias.Any();
+                PickerSection.IsVisible = _barberias.Count > 0;
 
                 // No seleccionar nada por defecto, quedará vacío
             }
@@ -76,9 +74,12 @@ namespace Gasolutions.Maui.App.Pages
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            LoadClientes();
+            _ = LoadClientes();
         }
-
+        private static readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
         private async Task LoadClientes()
 
         {
@@ -104,16 +105,14 @@ namespace Gasolutions.Maui.App.Pages
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonContent = await response.Content.ReadAsStringAsync();
-                    var usuarios = System.Text.Json.JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent,
-                        new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    var usuarios = System.Text.Json.JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent, _jsonOptions);
 
                     // Filtrar solo los clientes
-                    var clientes = usuarios?.Where(u => u.Rol.ToLower() == "cliente" && u.IdBarberia == _barberiaSeleccionadaId).ToList() ?? new List<UsuarioModels>();
-
+                    var clientes = usuarios?.Where(u => string.Equals(u.Rol, "cliente", StringComparison.OrdinalIgnoreCase)&& u.IdBarberia == _barberiaSeleccionadaId) .ToList() ?? [];
                     _todosLosClientes.Clear();
                     _clientesFiltrados.Clear();
 
-                    foreach (var cliente in clientes) 
+                    foreach (var cliente in clientes)
                     {
                         _todosLosClientes.Add(cliente);
                         _clientesFiltrados.Add(cliente);
@@ -156,9 +155,9 @@ namespace Gasolutions.Maui.App.Pages
             var filtered = string.IsNullOrWhiteSpace(searchText)
                 ? _todosLosClientes
                 : _todosLosClientes.Where(c =>
-                    c.Nombre.ToLower().Contains(searchText) ||
-                    c.Email.ToLower().Contains(searchText) ||
-                    c.Cedula.ToString().Contains(searchText));
+                    c.Nombre.ToLower().Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                    c.Email.ToLower().Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                    c.Cedula.ToString().Contains(searchText, StringComparison.InvariantCultureIgnoreCase));
 
             foreach (var cliente in filtered)
             {
@@ -183,7 +182,7 @@ namespace Gasolutions.Maui.App.Pages
                 image.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tap &&
                 tap.CommandParameter is UsuarioModels cliente)
             {
-                
+
                 var popup = new CustomAlertPopup($"¿Está seguro de que desea eliminar al cliente {cliente.Nombre}?");
                 bool confirm = await popup.ShowAsync(this);
                 if (confirm)

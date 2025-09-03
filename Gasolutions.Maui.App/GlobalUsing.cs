@@ -13,3 +13,4 @@ global using Gasolutions.Maui.App.Utils;
 global using CommunityToolkit.Mvvm.Messaging;
 global using Gasolutions.Maui.App.Messenger;
 global using Microsoft.Maui.Controls.Shapes;
+global using Gasolutions.Maui.App.Mobal;

@@ -1,18 +1,13 @@
-﻿using Gasolutions.Maui.App.Mobal;
-using Gasolutions.Maui.App.Models;
-using Gasolutions.Maui.App.Services;
-using System.Collections.ObjectModel;
-
-namespace Gasolutions.Maui.App.Pages
+﻿namespace Gasolutions.Maui.App.Pages
 {
     public partial class ListarBarberosPage : ContentPage
     {
         public readonly AuthService _authService;
-        private ObservableCollection<UsuarioModels> _todosLosBarberos;
+        private readonly ObservableCollection<UsuarioModels> _todosLosBarberos;
         private ObservableCollection<UsuarioModels> _barberosFiltrados;
-        private readonly BarberiaService _barberiaService;
-        private List<Barberia> _barberias;
-        private int? _barberiaSeleccionadaId = null; // null = todas las barberías
+        private readonly BarberiaService? _barberiaService;
+        private List<Barberia>? _barberias;
+        private int? _barberiaSeleccionadaId = null;
         public Command RefreshCommand { get; }
         public ObservableCollection<UsuarioModels> BarberosFiltrados
         {
@@ -28,9 +23,9 @@ namespace Gasolutions.Maui.App.Pages
         {
             InitializeComponent();
             _authService = authService;
-            _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
-            _todosLosBarberos = new ObservableCollection<UsuarioModels>();
-            _barberosFiltrados = new ObservableCollection<UsuarioModels>();
+            _barberiaService = Application.Current!.Handler.MauiContext!.Services.GetService<BarberiaService>();
+            _todosLosBarberos = [];
+            _barberosFiltrados = [];
             RefreshCommand = new Command(async () => await RefreshBarberoList());
             BindingContext = this;
 
@@ -42,7 +37,7 @@ namespace Gasolutions.Maui.App.Pages
             try
             {
                 long idAdministrador = AuthService.CurrentUser.Cedula;
-                _barberias = await _barberiaService.GetBarberiasByAdministradorAsync(idAdministrador);
+                _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
 
                 BarberiaPicker.ItemsSource = _barberias;
                 PickerSection.IsVisible = _barberias.Any();
@@ -108,7 +103,7 @@ namespace Gasolutions.Maui.App.Pages
                         return;
                     }
 
-                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero" && u.IdBarberia == _barberiaSeleccionadaId).ToList() ?? new List<UsuarioModels>();
+                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero" && u.IdBarberia == _barberiaSeleccionadaId).ToList() ?? [];
                     _todosLosBarberos.Clear();
                     _barberosFiltrados.Clear();
 

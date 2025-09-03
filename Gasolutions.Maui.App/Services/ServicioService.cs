@@ -123,7 +123,7 @@ public class ServicioService
             formData.Add(new StringContent(fileInfo.Name), nameof(ServicioModel.Imagen));
         }
 
-        var response = await _httpClient.PutAsync($"api/servicios/{servicio.IdBarberia}", formData);
+        var response = await _httpClient.PutAsync($"api/servicios/{servicio.Id}", formData);
 
         if (!response.IsSuccessStatusCode)
         {

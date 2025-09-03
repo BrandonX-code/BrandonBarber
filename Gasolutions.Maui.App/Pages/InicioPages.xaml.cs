@@ -1,13 +1,15 @@
-﻿namespace Gasolutions.Maui.App.Pages
+﻿using System.Text.Json;
+
+namespace Gasolutions.Maui.App.Pages
 {
     public partial class InicioPages : ContentPage
     {
         private readonly AuthService _authService;
         private readonly ServicioService _servicioService; // Inyecta este servicio
-        private List<UsuarioModels> _todosLosBarberos;
-        private readonly ReservationService _reservationService;
-        private UsuarioModels _perfilData;
-        public List<UsuarioModels> TodosLosBarberos
+        private List<UsuarioModels>? _todosLosBarberos;
+        private readonly ReservationService? _reservationService;
+        private readonly UsuarioModels? _perfilData;
+        public List<UsuarioModels>? TodosLosBarberos
         {
             get => _todosLosBarberos;
             set
@@ -25,9 +27,8 @@
             LoadUserInfo();
 
             // Suscribirse al evento de calificación
-            MessagingCenter.Subscribe<CalificarBarberoPage, long>(this, "CalificacionEnviada", async (sender, barberoId) =>
+            WeakReferenceMessenger.Default.Register<CalificacionEnviadaMessage>(this, async (r, m) =>
             {
-                // Recargar la lista de barberos para actualizar las calificaciones
                 await LoadBarberos();
             });
         }
@@ -58,20 +59,20 @@
 
         private async void MainPage(object sender, EventArgs e)
         {
-            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
-            var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
+            var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
+            var authService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<AuthService>();
             await Navigation.PushAsync(new MainPage(reservationService, authService));
         }
 
         private async void CitasList(object sender, EventArgs e)
         {
-            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new ListaCitas(reservationService));
         }
 
         private async void BuscarCitas(object sender, EventArgs e)
         {
-            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new BuscarPage(reservationService));
         }
 
@@ -80,17 +81,17 @@
             await Navigation.PushAsync(new PerfilPage());
         }
 
-        private async void galery(object sender, EventArgs e)
+        private async void Galery(object sender, EventArgs e)
         {
-            var galeriaService = Handler.MauiContext.Services.GetService<GaleriaService>();
-            var barberoid = Handler.MauiContext.Services.GetService<AuthService>();
+            var galeriaService = Handler!.MauiContext!.Services.GetService<GaleriaService>()!;
+            var barberoid = Handler.MauiContext.Services.GetService<AuthService>()!;
             await Navigation.PushAsync(new GaleriaPage(galeriaService, barberoid));
         }
 
         private async void AddGaleri(object sender, EventArgs e)
         {
-            var galeriaService = Handler.MauiContext.Services.GetService<GaleriaService>();
-            var barberoid = Handler.MauiContext.Services.GetService<AuthService>();
+            var galeriaService = Handler!.MauiContext!.Services.GetService<GaleriaService>()!;
+            var barberoid = Handler.MauiContext.Services.GetService<AuthService>()!;
             await Navigation.PushAsync(new GaleriaPage(galeriaService, barberoid));
         }
 
@@ -102,35 +103,35 @@
 
         private async void ListarBarberos(object sender, EventArgs e)
         {
-            var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
+            var authService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<AuthService>();
             await Navigation.PushAsync(new ListarBarberosPage(authService));
         }
 
         private async void ListarClientes(object sender, EventArgs e)
         {
-            var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
+            var authService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<AuthService>();
             await Navigation.PushAsync(new ListarClientesPage(authService));
         }
 
         private async void VerCitas(object sender, EventArgs e)
         {
-            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new ListaCitas(reservationService));
         }
 
         private async void OnInicioClicked(object sender, EventArgs e)
         {
-            var serviciosService = App.Current.Handler.MauiContext.Services.GetRequiredService<ServicioService>();
+            var serviciosService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ServicioService>();
             await Navigation.PushAsync(new InicioPages(_authService, serviciosService));
         }
         private async void GestionDeServicios(object sender, EventArgs e)
         {
-            var serviciosService = App.Current.Handler.MauiContext.Services.GetRequiredService<ServicioService>();
+            var serviciosService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ServicioService>();
             await Navigation.PushAsync(new GestionarServiciosPage(serviciosService));
         }
         private async void GestionDeBarberias(object sender, EventArgs e)
         {
-            var idAdministrador = App.Current.Handler.MauiContext.Services.GetRequiredService<BarberiaService>();
+            _ = App.Current!.Handler.MauiContext!.Services.GetRequiredService<BarberiaService>();
             // En tu página de administrador, navegar a:
             var gestionPage = new GestionBarberiasPage();
             await Navigation.PushAsync(gestionPage);
@@ -138,20 +139,20 @@
 
         private async void OnBuscarClicked(object sender, EventArgs e)
         {
-            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new BuscarPage(reservationService));
         }
 
         private async void OnConfiguracionClicked(object sender, EventArgs e)
         {
-            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new ListaCitas(reservationService));
         }
 
         private async void VerMetricas(object sender, EventArgs e)
         {
-            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
-            var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
+            var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
+            var authService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<AuthService>();
             await Navigation.PushAsync(new MetricasPage(reservationService, authService));
         }
 
@@ -173,7 +174,7 @@
                         ClienteView.IsVisible = true;
                         BarberoView.IsVisible = false;
                         AdminView.IsVisible = false; // Ocultar panel admin
-                        GaleriaClienteFrame.IsVisible = true;
+                        GaleriaClienteBorder.IsVisible = true;
                         CargarServicios();
                         CargarBarberos();
                         break;
@@ -182,21 +183,21 @@
                         ClienteView.IsVisible = false;
                         BarberoView.IsVisible = true;
                         AdminView.IsVisible = false; // Ocultar panel admin
-                        GaleriaClienteFrame.IsVisible = false;
+                        GaleriaClienteBorder.IsVisible = false;
                         break;
 
                     case "administrador":
                         ClienteView.IsVisible = false;
                         BarberoView.IsVisible = false;
                         AdminView.IsVisible = true; // Mostrar panel admin
-                        GaleriaClienteFrame.IsVisible = false;
+                        GaleriaClienteBorder.IsVisible = false;
                         break;
 
                     default:
                         ClienteView.IsVisible = false;
                         BarberoView.IsVisible = false;
                         AdminView.IsVisible = false;
-                        GaleriaClienteFrame.IsVisible = false;
+                        GaleriaClienteBorder.IsVisible = false;
                         break;
                 }
             }
@@ -205,11 +206,14 @@
         // Add this method to the InicioPages class
         private async void GestionarDisponibilidad(object sender, EventArgs e)
         {
-            var disponibilidadService = App.Current.Handler.MauiContext.Services.GetRequiredService<DisponibilidadService>();
-            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            var disponibilidadService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<DisponibilidadService>();
+            var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new GestionarDisponibilidadPage(disponibilidadService, reservationService));
         }
-
+        private static readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
         private async Task LoadBarberos()
         {
             try
@@ -223,11 +227,14 @@
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonContent = await response.Content.ReadAsStringAsync();
-                    var usuarios = System.Text.Json.JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent,
-                        new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    var usuarios = JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent, _jsonOptions);
 
                     var admin = AuthService.CurrentUser;
-                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero" && u.IdBarberia == admin.IdBarberia).ToList() ?? new List<UsuarioModels>();
+                    var barberos = usuarios?
+                        .Where(u => u.Rol.Equals("barbero", StringComparison.CurrentCultureIgnoreCase)
+                                    && u.IdBarberia == admin.IdBarberia)
+                        .ToList() ?? [];
+
                     TodosLosBarberos = barberos;
                     BarberosCollectionView.ItemsSource = barberos;
                 }
@@ -247,7 +254,6 @@
                 ContentContainer.IsVisible = true;
             }
         }
-
         private async void Picker_SelectedIndexChanged(object sender, EventArgs e)
         {
             var picker = (Picker)sender;
@@ -255,18 +261,18 @@
             if (selectedIndex != -1)
             {
                 UsuarioModels barbero = (UsuarioModels)picker.SelectedItem;
-                await CargarDisponibilidadesPorBarberoAsync(barbero.Cedula);
+                await InicioPages.CargarDisponibilidadesPorBarberoAsync(barbero.Cedula);
             }
         }
 
-        private async Task CargarDisponibilidadesPorBarberoAsync(long barberoId)
+        private static async Task CargarDisponibilidadesPorBarberoAsync(long barberoId)
         {
-            var disponibilidadService = App.Current.Handler.MauiContext.Services.GetRequiredService<DisponibilidadService>();
+            var disponibilidadService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<DisponibilidadService>();
 
             // Llama al método que devuelve la lista de disponibilidades para el barbero
             var disponibilidades = await disponibilidadService.GetDisponibilidadActualPorBarbero(barberoId);
 
-            if (disponibilidades != null && disponibilidades.Any())
+            if (disponibilidades != null && disponibilidades.Count != 0)
             {
                 // Puedes adaptar esto según cómo quieras mostrar los horarios
                 var horariosDisponibles = disponibilidades
@@ -277,15 +283,6 @@
                         Disponible = h.Value ? "Disponible" : "No Disponible"
                     }))
                     .ToList();
-
-                //DisponibilidadListView.ItemsSource = horariosDisponibles;
-                //DisponibilidadListView.IsVisible = true;
-                //NoDisponibilidadAlert.IsVisible = false;
-            }
-            else
-            {
-                //DisponibilidadListView.IsVisible = false;
-                //NoDisponibilidadAlert.IsVisible = true;
             }
         }
         private async void CargarBarberos()
@@ -298,13 +295,16 @@
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonContent = await response.Content.ReadAsStringAsync();
-                    var usuarios = System.Text.Json.JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent,
-                        new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                    var usuarios = JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent, _jsonOptions);
 
                     var admin = AuthService.CurrentUser;
-                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero" && u.IdBarberia == admin.IdBarberia).ToList() ?? new List<UsuarioModels>();
+                    var barberos = usuarios?
+                        .Where(u => u.Rol.Equals("barbero", StringComparison.CurrentCultureIgnoreCase)
+                                    && u.IdBarberia == admin.IdBarberia)
+                        .ToList() ?? [];
+
                     BarberosCollectionView.ItemsSource = barberos;
-                }   
+                }
                 else
                 {
                     await DisplayAlert("Error", "No se pudieron cargar los barberos", "OK");
@@ -315,23 +315,13 @@
                 await DisplayAlert("Error", $"Error al cargar los barberos: {ex.Message}", "OK");
             }
         }
-        //private async void OnBarberoSelected(object sender, EventArgs e)
-        //{
-        //    var tappedEventArgs = e as TappedEventArgs;
-        //    if (tappedEventArgs?.Parameter is UsuarioModels barbero)
-        //    {
-        //        // Aquí puedes navegar a la página de detalles del barbero
-        //        // o cargar su disponibilidad
-        //        await CargarDisponibilidadesPorBarberoAsync(barbero.Cedula);
-        //    }
-        //}
         private async void OnBarberoSelected(object sender, EventArgs e)
         {
-            if (sender is Frame frame && frame.BindingContext is UsuarioModels barbero)
+            if (sender is Border border && border.BindingContext is UsuarioModels barbero)
             {
                 // Animación de toque
-                await frame.ScaleTo(0.95, 100, Easing.CubicIn);
-                await frame.ScaleTo(1, 100, Easing.CubicOut);
+                await border.ScaleTo(0.95, 100, Easing.CubicIn);
+                await border.ScaleTo(1, 100, Easing.CubicOut);
 
                 // Navegación a la página de detalle
                 await Navigation.PushAsync(new BarberoDetailPage(barbero));

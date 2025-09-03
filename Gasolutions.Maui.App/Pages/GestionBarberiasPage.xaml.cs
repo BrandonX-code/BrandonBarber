@@ -10,11 +10,11 @@ namespace Gasolutions.Maui.App.Pages
 {
     public partial class GestionBarberiasPage : ContentPage, INotifyPropertyChanged
     {
-        private long _idAdministrador;
-        private readonly BarberiaService _barberiaService;
+        private readonly long _idAdministrador;
+        private readonly BarberiaService? _barberiaService;
 
-        public ObservableCollection<Barberia> Barberias { get; } = new ObservableCollection<Barberia>();
-        public ObservableCollection<Barberia> FilteredBarberias { get; } = new ObservableCollection<Barberia>();
+        public ObservableCollection<Barberia> Barberias { get; } = [];
+        public ObservableCollection<Barberia> FilteredBarberias { get; } = [];
 
         private string _searchText = string.Empty;
         public string SearchText
@@ -32,7 +32,7 @@ namespace Gasolutions.Maui.App.Pages
         public bool HasSearchText => !string.IsNullOrWhiteSpace(SearchText);
 
         private bool _isBusy;
-        public bool IsBusy
+        public new bool IsBusy
         {
             get => _isBusy;
             set
@@ -42,16 +42,16 @@ namespace Gasolutions.Maui.App.Pages
             }
         }
 
-        public ICommand LoadBarberiasCommand { get; }
-        public ICommand AgregarBarberiaCommand { get; }
-        public ICommand EditarBarberiaCommand { get; }
-        public ICommand EliminarBarberiaCommand { get; }
-        public ICommand ClearSearchCommand { get; }
+        public Command LoadBarberiasCommand { get; }
+        public Command AgregarBarberiaCommand { get; }
+        public Command EditarBarberiaCommand { get; }
+        public Command EliminarBarberiaCommand { get; }
+        public Command ClearSearchCommand { get; }
 
         public GestionBarberiasPage()
         {
             InitializeComponent();
-            _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
+            _barberiaService = Application.Current!.Handler.MauiContext!.Services.GetService<BarberiaService>();
 
             BindingContext = this;
             _idAdministrador = AuthService.CurrentUser.Cedula;
@@ -73,7 +73,7 @@ namespace Gasolutions.Maui.App.Pages
             IsBusy = true;
             try
             {
-                var barberias = await _barberiaService.GetBarberiasByAdministradorAsync(_idAdministrador);
+                var barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(_idAdministrador);
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
                     Barberias.Clear();
@@ -111,9 +111,9 @@ namespace Gasolutions.Maui.App.Pages
                 {
                     var searchLower = SearchText.ToLowerInvariant();
                     var filtered = Barberias.Where(b =>
-                        (b.Nombre?.ToLowerInvariant().Contains(searchLower) ?? false) ||
-                        (b.Direccion?.ToLowerInvariant().Contains(searchLower) ?? false) ||
-                        (b.Telefono?.ToLowerInvariant().Contains(searchLower) ?? false)
+                        (b.Nombre?.ToLowerInvariant().Contains(searchLower, StringComparison.InvariantCultureIgnoreCase) ?? false) ||
+                        (b.Direccion?.ToLowerInvariant().Contains(searchLower, StringComparison.InvariantCultureIgnoreCase) ?? false) ||
+                        (b.Telefono?.ToLowerInvariant().Contains(searchLower, StringComparison.InvariantCultureIgnoreCase) ?? false)
                     ).ToList();
 
                     foreach (var barberia in filtered)
@@ -160,7 +160,7 @@ namespace Gasolutions.Maui.App.Pages
                 var formPage = new FormBarberiaPage();
                 formPage.BarberiaGuardada += OnBarberiaGuardada;
 
-                await Device.InvokeOnMainThreadAsync(async () =>
+                await Dispatcher.DispatchAsync(async () =>
                 {
                     await Navigation.PushAsync(formPage);
                 });
@@ -198,7 +198,7 @@ namespace Gasolutions.Maui.App.Pages
             try
             {
                 IsBusy = true;
-                bool success = await _barberiaService.DeleteBarberiaAsync(barberia.Idbarberia);
+                bool success = await _barberiaService!.DeleteBarberiaAsync(barberia.Idbarberia);
 
                 if (success)
                 {
@@ -216,7 +216,7 @@ namespace Gasolutions.Maui.App.Pages
             }
         }
 
-        private async void OnBarberiaGuardada(object sender, EventArgs e)
+        private async void OnBarberiaGuardada(object? sender, EventArgs e)
         {
             await LoadBarberias();
         }
@@ -243,8 +243,8 @@ namespace Gasolutions.Maui.App.Pages
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public new PropertyChangedEventHandler? PropertyChanged;
+        protected new void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

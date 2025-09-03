@@ -61,11 +61,11 @@
                             <CollectionView x:Name="CitasCollection" HeightRequest="260" EmptyView="No hay citas programadas para esta fecha.">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Margin="0,5" BackgroundColor="#90A4AE" Padding="10" StrokeShape="RoundRectangle 10">
+                                        <Border Margin="0,5" BackgroundColor="#0E2A36" Padding="10" StrokeShape="RoundRectangle 10">
                                             <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
-                                                <Label Text="{Binding Nombre}" TextColor="Black" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" />
-                                                <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" TextColor="Black" Grid.Row="1" Grid.Column="0" />
-                                                <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="12" TextColor="Black" Grid.Row="2" Grid.Column="0" />
+                                                <Label Text="{Binding Nombre}" TextColor="White" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" />
+                                                <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" TextColor="White" Grid.Row="1" Grid.Column="0" />
+                                                <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="12" TextColor="White" Grid.Row="2" Grid.Column="0" />
                                             </Grid>
                                         </Border>
                                     </DataTemplate>

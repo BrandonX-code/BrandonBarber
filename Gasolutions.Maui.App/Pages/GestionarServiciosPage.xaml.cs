@@ -8,17 +8,18 @@ namespace Gasolutions.Maui.App.Pages
     public partial class GestionarServiciosPage : ContentPage
     {
         private readonly ServicioService _servicioService;
-        private ServicioModel _servicioEditando;
-        private FileResult _imagenSeleccionada;
-        private readonly BarberiaService _barberiaService;
-        private List<Barberia> _barberias;
-        private int _barberiaSeleccionadaId; // Agregar esta variable para mantener el ID de la barbería seleccionada
+        private ServicioModel? _servicioEditando;
+        private FileResult? _imagenSeleccionada;
+        private readonly BarberiaService? _barberiaService;
+        private List<Barberia>? _barberias;
+        private int _barberiaSeleccionadaId;
+        bool _isUpdatingText = false;
 
         public GestionarServiciosPage(ServicioService servicioService)
         {
             InitializeComponent();
             _servicioService = servicioService;
-            _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
+            _barberiaService = Application.Current!.Handler.MauiContext!.Services.GetService<BarberiaService>()!;
 
             CargarBarberias();
         }
@@ -28,13 +29,13 @@ namespace Gasolutions.Maui.App.Pages
             try
             {
                 long idAdministrador = AuthService.CurrentUser.Cedula;
-                _barberias = await _barberiaService.GetBarberiasByAdministradorAsync(idAdministrador);
+                _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
 
                 Picker.ItemsSource = _barberias;
                 Picker.ItemDisplayBinding = new Binding("Nombre");
-                PickerSection.IsVisible = _barberias.Any();
+                PickerSection.IsVisible = _barberias.Count != 0;
 
-                if (_barberias.Any())
+                if (_barberias.Count != 0)
                 {
                     Picker.SelectedIndex = 0; // Dispara Picker_SelectedIndexChanged
                 }
@@ -121,7 +122,7 @@ namespace Gasolutions.Maui.App.Pages
                 return;
             }
 
-            string precioTexto = PrecioEntry.Text?.Replace("$", "").Replace(",", "");
+            string precioTexto = PrecioEntry.Text?.Replace("$", "").Replace(",", "")!;
             if (!decimal.TryParse(precioTexto, out decimal precio))
             {
                 await DisplayAlert("Validación", "El precio debe ser un número válido.", "OK");
@@ -157,9 +158,6 @@ namespace Gasolutions.Maui.App.Pages
                 await DisplayAlert("Error", "No se pudo agregar el servicio: " + ex.Message, "OK");
             }
         }
-
-        bool _isUpdatingText = false;
-
         private void OnPrecioEntryTextChanged(object sender, TextChangedEventArgs e)
         {
             if (_isUpdatingText || sender is not Entry entry) return;
@@ -186,8 +184,7 @@ namespace Gasolutions.Maui.App.Pages
 
         private void OnEditarBtnClicked(object sender, EventArgs e)
         {
-            var servicio = (sender as Button)?.CommandParameter as ServicioModel;
-            if (servicio == null) return;
+            if ((sender as Button)?.CommandParameter is not ServicioModel servicio) return;
 
             _servicioEditando = servicio;
             NombreEntry.Text = servicio.Nombre;
@@ -215,7 +212,7 @@ namespace Gasolutions.Maui.App.Pages
         {
             if (_servicioEditando == null) return;
 
-            string precioTexto = PrecioEntry.Text?.Replace("$", "").Replace(",", "");
+            string precioTexto = PrecioEntry.Text?.Replace("$", "").Replace(",", "")!;
             if (!decimal.TryParse(precioTexto, out decimal precio))
             {
                 await DisplayAlert("Validación", "El precio debe ser un número válido.", "OK");
@@ -255,8 +252,7 @@ namespace Gasolutions.Maui.App.Pages
 
         private async void OnEliminarBtnClicked(object sender, EventArgs e)
         {
-            var servicio = (sender as Button)?.CommandParameter as ServicioModel;
-            if (servicio == null) return;
+            if ((sender as Button)?.CommandParameter is not ServicioModel servicio) return;
             var popup = new CustomAlertPopup($"¿Quieres Eliminar el servicio '{servicio.Nombre}'?");
             bool confirm = await popup.ShowAsync(this);
             if (!confirm) return;

@@ -2,11 +2,11 @@
 {
     public partial class ListaCitas : ContentPage
     {
-        public ObservableCollection<CitaModel> CitasFiltradas { get; set; } = new();
+        public ObservableCollection<CitaModel> CitasFiltradas { get; set; } = [];
         private readonly ReservationService _reservationService;
         public DateTime FechaSeleccionada = DateTime.Now;
-        private readonly BarberiaService _barberiaService;
-        private List<Barberia> _barberias;
+        private readonly BarberiaService? _barberiaService;
+        private List<Barberia>? _barberias;
         private int? _barberiaSeleccionadaId = null;
         public ListaCitas(ReservationService reservationService)
         {
@@ -14,7 +14,7 @@
             BindingContext = this;
             ResultadosCollection.ItemsSource = CitasFiltradas;
             _reservationService = reservationService;
-            _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
+            _barberiaService = Application.Current!.Handler.MauiContext!.Services.GetService<BarberiaService>();
 
             CargarBarberias();
         }
@@ -28,10 +28,10 @@
                 if (user?.Rol?.ToLower() == "admin" || user?.Rol?.ToLower() == "administrador")
                 {
                     long idAdministrador = user.Cedula;
-                    _barberias = await _barberiaService.GetBarberiasByAdministradorAsync(idAdministrador);
+                    _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
 
                     BarberiaPicker.ItemsSource = _barberias;
-                    PickerSection.IsVisible = _barberias.Any();
+                    PickerSection.IsVisible = _barberias.Count != 0;
                 }
                 else
                 {
@@ -81,10 +81,10 @@
                     return;
                 }
 
-                List<CitaModel> listaReservas = new();
+                List<CitaModel> listaReservas = [];
                 if (user.Rol?.ToLower() == "admin" || user.Rol?.ToLower() == "administrador")
                 {
-                    listaReservas = await _reservationService.GetReservations(datePicker.Date, _barberiaSeleccionadaId.Value);
+                    listaReservas = await _reservationService.GetReservations(datePicker.Date, _barberiaSeleccionadaId!.Value);
                 }
                 else if (user.Rol?.ToLower() == "barbero")
                 {
@@ -96,7 +96,7 @@
                     return;
                 }
 
-                if (!listaReservas.Any())
+                if (listaReservas.Count == 0)
                 {
                     await AppUtils.MostrarSnackbar("No hay reservas para esta fecha.", Colors.DarkRed, Colors.White);
                 }
