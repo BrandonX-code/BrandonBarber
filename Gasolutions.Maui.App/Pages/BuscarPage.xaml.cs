@@ -129,7 +129,7 @@
                     return;
                 }
 
-                bool confirm = await DisplayAlert("Confirmar", $"¿Seguro Que Quieres Eliminar la cita de {cita.Nombre}?", "Sí", "No");
+                bool confirmacion = await popup.ShowAsync(this);
                 if (!confirm) return;
 
                 try
