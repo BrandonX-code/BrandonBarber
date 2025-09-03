@@ -60,13 +60,6 @@
             {
                 MostrarLoader(true);
 
-                //if (string.IsNullOrWhiteSpace(SearchEntry.Text) || !long.TryParse(SearchEntry.Text, out long cedula))
-                //{
-                //    await AppUtils.MostrarSnackbar("Ingrese una Cédula válida.", Colors.Orange, Colors.White);
-                //    UpdateVisibility();
-                //    return;
-                //}
-
                 var clienteCedula = AuthService.CurrentUser.Cedula;
                 var citas = await _reservationService.GetReservationsById(clienteCedula);
 
@@ -128,9 +121,9 @@
                     await AppUtils.MostrarSnackbar("No se puede encontrar la cita seleccionada.", Colors.Red, Colors.White);
                     return;
                 }
-
+                var popup = new CustomAlertPopup($"¿Seguro Que Quieres Eliminar la cita de {cita.Nombre}?");
                 bool confirmacion = await popup.ShowAsync(this);
-                if (!confirm) return;
+                if (!confirmacion) return;
 
                 try
                 {

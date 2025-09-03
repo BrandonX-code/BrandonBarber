@@ -1,7 +1,4 @@
-﻿using Gasolutions.Maui.App.Mobal;
-using System.Globalization;
-
-namespace Gasolutions.Maui.App
+﻿namespace Gasolutions.Maui.App
 {
     public partial class MainPage : ContentPage
     {
@@ -237,7 +234,7 @@ namespace Gasolutions.Maui.App
                 //    else
                 //    {
                 //        Console.WriteLine("Fallo al guardar sin detectar conflicto");
-                        
+
                 //    }
                 //}
             }

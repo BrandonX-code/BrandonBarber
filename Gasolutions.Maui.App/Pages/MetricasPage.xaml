@@ -21,49 +21,40 @@
                     </Border>
                 </VerticalStackLayout>
                 <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="16"  RowSpacing="16">
-                    <Frame Grid.Column="0" Grid.Row="0" BackgroundColor="#90A4AE" CornerRadius="12" Padding="16">
+                    <Border Grid.Column="0" Grid.Row="0" BackgroundColor="#90A4AE" StrokeShape="12" Padding="16">
 						<VerticalStackLayout>
                             <Label Text="Total Citas Hoy" TextColor="Black" FontSize="16"/>
 							<Label x:Name="TotalCitasLabel" Text="0" TextColor="Black" FontSize="24" FontAttributes="Bold"/>
 						</VerticalStackLayout>
-					</Frame>
+					</Border>
 
-                    <Frame Grid.Column="1" Grid.Row="0" BackgroundColor="#90A4AE" CornerRadius="12" Padding="16">
+                    <Border Grid.Column="1" Grid.Row="0" BackgroundColor="#90A4AE" StrokeShape="12" Padding="16">
 						<VerticalStackLayout>
 							<Label Text="Tasa de Asistencia" TextColor="Black" FontSize="16"/>
 							<Label x:Name="TasaAsistenciaLabel" Text="0%" TextColor="Black" FontSize="24" FontAttributes="Bold"/>
 						</VerticalStackLayout>
-					</Frame>
+					</Border>
 				</Grid>
 
-                <Frame BackgroundColor="#90A4AE" Padding="16" CornerRadius="16" HasShadow="True">
-					<VerticalStackLayout>
-						<Grid ColumnDefinitions="*,Auto">
+                <Border BackgroundColor="#90A4AE" Padding="16" StrokeShape="16">
+                    <VerticalStackLayout>
+                        <Grid ColumnDefinitions="*,Auto">
                             <Label Text="Asistencia Mensual" TextColor="Black" FontSize="20" FontAttributes="Bold"/>
                             <Picker x:Name="ChartTypePicker" Grid.Column="1" TextColor="Black" BackgroundColor="#90A4AE" SelectedIndexChanged="OnChartTypeChanged">
-								<Picker.Items>
-									<x:String>Barras</x:String>
-									<x:String>Líneas</x:String>
-								</Picker.Items>
-							</Picker>
-						</Grid>
-                        <Frame BackgroundColor="#0E2A36" Padding="0" CornerRadius="16" HasShadow="False">
+                                <Picker.Items>
+                                    <x:String>Barras</x:String>
+                                    <x:String>Líneas</x:String>
+                                </Picker.Items>
+                            </Picker>
+                        </Grid>
+                        <Border BackgroundColor="#0E2A36" Padding="0" StrokeShape="16">
                             <microcharts:ChartView x:Name="AsistenciaChart" HeightRequest="220" BackgroundColor="Transparent" />
-                        </Frame>
+                        </Border>
 
                     </VerticalStackLayout>
-				</Frame>
-
-				<!-- Gráfico de Cancelaciones -->
-				<!--<Frame BackgroundColor="#232323" BorderColor="#90A4AE" Padding="16" CornerRadius="16" HasShadow="True">
-                    <VerticalStackLayout>
-                        <Label Text="Tasa de Cancelaciones" TextColor="#90A4AE" FontSize="20" FontAttributes="Bold"/>
-                        <microcharts:ChartView x:Name="CancelacionesChart" HeightRequest="220" BackgroundColor="#fffbe6"/>
-                    </VerticalStackLayout>
-                </Frame>-->
-
-				<!-- Ranking de Barberos -->
-                <Frame BackgroundColor="#90A4AE" Padding="16" CornerRadius="16" HasShadow="True">
+                </Border>
+                
+                <Border BackgroundColor="#90A4AE" Padding="16" StrokeShape="16">
 					<VerticalStackLayout>
 						<Grid ColumnDefinitions="*,Auto">
 							<Label Text="Top Barberos" TextColor="Black" FontSize="20"  FontAttributes="Bold"/>
@@ -74,14 +65,13 @@
 								</Picker.Items>
 							</Picker>
 						</Grid>
-                        <Frame BackgroundColor="#0E2A36" Padding="0" CornerRadius="16" HasShadow="False">
+                        <Border BackgroundColor="#0E2A36" Padding="0" StrokeShape="16">
                             <microcharts:ChartView x:Name="RankingBarberosChart" HeightRequest="220" BackgroundColor="Transparent"/>
-                        </Frame>
+                        </Border>
                     </VerticalStackLayout>
-				</Frame>
+				</Border>
 
-				<!-- Clientes Frecuentes -->
-                <Frame BackgroundColor="#90A4AE" Padding="16" CornerRadius="16" HasShadow="True">
+                <Border BackgroundColor="#90A4AE" Padding="16" StrokeShape="16">
 					<VerticalStackLayout Spacing="10">
 						<Label Text="Top Clientes Frecuentes" TextColor="Black" FontSize="20" FontAttributes="Bold"/>
 						<CollectionView x:Name="ClientesFrecuentesCollection" HeightRequest="220">
@@ -99,7 +89,7 @@
 							</CollectionView.ItemTemplate>
 						</CollectionView>
 					</VerticalStackLayout>
-				</Frame>
+				</Border>
 			</VerticalStackLayout>
 		</ScrollView>
 	</RefreshView>

@@ -4,7 +4,6 @@
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
    x:Class="Gasolutions.Maui.App.Mobal.CustomAlertPopup"
-   Size="350,240"
    Color="Transparent"> <!-- 👈 hace el fondo del popup transparente -->
 
     <Border
@@ -13,7 +12,8 @@
         StrokeShape="RoundRectangle 20,20,20,20"
         Padding="20"
         HorizontalOptions="Center"
-        VerticalOptions="Center">
+        VerticalOptions="Center" WidthRequest="350"
+        MaximumHeightRequest="600">
 
         <VerticalStackLayout Spacing="20">
 

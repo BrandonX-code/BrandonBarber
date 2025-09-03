@@ -123,8 +123,9 @@
         {
             if (sender is Button btn && btn.BindingContext is CitaModel cita)
             {
-                bool confirm = await DisplayAlert("Confirmar", $"¿Eliminar la cita de {cita.Nombre}?", "Sí", "No");
-                if (!confirm) return;
+                var popup = new CustomAlertPopup("¿Seguro Que Quieres Eliminar La Cita?");
+                bool confirmacion = await popup.ShowAsync(this);
+                if (!confirmacion) return;
 
                 try
                 {

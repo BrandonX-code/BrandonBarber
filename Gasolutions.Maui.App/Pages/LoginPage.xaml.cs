@@ -8,7 +8,7 @@ namespace Gasolutions.Maui.App.Pages
         public LoginPage()
         {
             InitializeComponent();
-            _authService = Application.Current.Handler.MauiContext.Services.GetService<AuthService>();
+            _authService = Application.Current!.Handler.MauiContext!.Services.GetService<AuthService>()!;
         }
 
         protected override async void OnAppearing()
@@ -22,7 +22,7 @@ namespace Gasolutions.Maui.App.Pages
 
             if (isLoggedIn)
             {
-                await NavigateToMainPage();
+                NavigateToMainPage();
             }
 
             LoadingIndicator.IsVisible = false;
@@ -59,7 +59,7 @@ namespace Gasolutions.Maui.App.Pages
                 var response = await _authService.Login(EmailEntry.Text, PasswordEntry.Text);
                 if (response.IsSuccess)
                 {
-                    await NavigateToMainPage();
+                    NavigateToMainPage();
                 }
                 else
                 {
@@ -86,13 +86,20 @@ namespace Gasolutions.Maui.App.Pages
             await Navigation.PushAsync(new RegistroPage());
         }
 
-        private async Task NavigateToMainPage()
+        private void NavigateToMainPage()
         {
             EmailEntry.Text = string.Empty;
             PasswordEntry.Text = string.Empty;
             Preferences.Set("IsLoggedIn", true);
-            var serviciosService = App.Current.Handler.MauiContext.Services.GetRequiredService<ServicioService>();
-            Application.Current.MainPage = new NavigationPage(new InicioPages(_authService, serviciosService));
+
+            var serviciosService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ServicioService>();
+            var newPage = new NavigationPage(new InicioPages(_authService, serviciosService));
+
+            if (Application.Current?.Windows.Count > 0)
+            {
+                Application.Current.Windows[0].Page = newPage;
+            }
         }
+
     }
 }

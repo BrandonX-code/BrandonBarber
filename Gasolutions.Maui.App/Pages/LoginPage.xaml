@@ -35,21 +35,21 @@
 
     <ScrollView Padding="30">
         <Grid>
-            <VerticalStackLayout Spacing="20" VerticalOptions="CenterAndExpand">
+            <VerticalStackLayout Spacing="20" VerticalOptions="Center">
                 <Image Source="gentlemen.png" WidthRequest="230" HeightRequest="230" HorizontalOptions="Center" />
 
                 <Label Text="Ingresa tus credenciales" FontSize="14" TextColor="White" HorizontalOptions="Center" />
 
-                <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 25" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 25" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
                     <Grid Padding="12,0" ColumnDefinitions="Auto, *" VerticalOptions="Center">
                         <Image Source="usericons.png"  WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
-                        <Entry Grid.Column="1"  x:Name="EmailEntry" TextColor="#0E2A36" Placeholder="Usuario" PlaceholderColor="#90A4AE" FontSize="14" HeightRequest="45" BackgroundColor="Transparent" HorizontalOptions="FillAndExpand" VerticalOptions="Center" Keyboard="Email"/>
+                        <Entry Grid.Column="1"  x:Name="EmailEntry" TextColor="#0E2A36" Placeholder="Usuario" PlaceholderColor="#90A4AE" FontSize="14" HeightRequest="45" BackgroundColor="Transparent" HorizontalOptions="Fill" VerticalOptions="Center" Keyboard="Email"/>
                     </Grid>
                 </Border>
-                <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 25" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 25" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
                     <Grid Padding="12,0" ColumnDefinitions="Auto, *" VerticalOptions="Center">
                         <Image Source="lock.png"  WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
-                        <Entry Grid.Column="1"  x:Name="PasswordEntry" TextColor="#0E2A36" Placeholder="Contraseña" PlaceholderColor="#90A4AE" FontSize="14" HeightRequest="45" BackgroundColor="Transparent" HorizontalOptions="FillAndExpand" VerticalOptions="Center" Keyboard="Password"/>
+                        <Entry Grid.Column="1"  x:Name="PasswordEntry" TextColor="#0E2A36" Placeholder="Contraseña" PlaceholderColor="#90A4AE" FontSize="14" HeightRequest="45" BackgroundColor="Transparent" HorizontalOptions="Fill" VerticalOptions="Center" Keyboard="Password"/>
                     </Grid>
                 </Border>
                 <Grid Margin="0,20,0,10">

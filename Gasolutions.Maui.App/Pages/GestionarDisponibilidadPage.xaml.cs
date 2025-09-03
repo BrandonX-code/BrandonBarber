@@ -144,11 +144,9 @@ namespace Gasolutions.Maui.App.Pages
 
                     if (citasAfectadas.Any())
                     {
-                        bool confirmar = await DisplayAlert("Atención",
-                            "Hay citas programadas para este horario. Si lo marca como no disponible, estas citas se cancelarán. ¿Desea continuar?",
-                            "Sí", "No");
-
-                        if (!confirmar)
+                        var popup = new CustomAlertPopup("Hay citas programadas para este horario. Si lo marca como no disponible, estas citas se cancelarán. ¿Desea continuar?\"");
+                        bool confirmacion = await popup.ShowAsync(this);
+                        if (!confirmacion)
                         {
                             _horariosDisponibles[hora] = true;
                             ActualizarCheckbox(hora, true);

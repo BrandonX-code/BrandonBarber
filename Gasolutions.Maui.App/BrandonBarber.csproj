@@ -72,8 +72,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Pages\MainPage.xaml.cs">
-	    <DependentUpon>MainPage.xaml</DependentUpon>
+	  <Compile Update="Pages\ReservaCita.xaml.cs">
+	    <DependentUpon>ReservaCita.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
 

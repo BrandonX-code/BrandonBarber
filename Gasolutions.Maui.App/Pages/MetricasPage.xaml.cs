@@ -11,8 +11,8 @@ namespace Gasolutions.Maui.App.Pages
     {
         private readonly ReservationService _reservationService;
         private readonly AuthService _authService;
-        private readonly BarberiaService _barberiaService;
-        private List<Barberia> _barberias;
+        private readonly BarberiaService? _barberiaService;
+        private List<Barberia>? _barberias;
         private int _barberiaSeleccionadaId; // ID de la barbería seleccionada
         public Command RefreshCommand { get; }
 
@@ -21,7 +21,7 @@ namespace Gasolutions.Maui.App.Pages
             InitializeComponent();
             _reservationService = reservationService;
             _authService = authService;
-            _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
+            _barberiaService = Application.Current!.Handler.MauiContext!.Services.GetService<BarberiaService>();
             RefreshCommand = new Command(async () => await RefreshMetricas());
             BindingContext = this;
             ChartTypePicker.SelectedIndex = 0;
@@ -36,13 +36,13 @@ namespace Gasolutions.Maui.App.Pages
             try
             {
                 long idAdministrador = AuthService.CurrentUser.Cedula;
-                _barberias = await _barberiaService.GetBarberiasByAdministradorAsync(idAdministrador);
+                _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
 
                 BarberiaPicker.ItemsSource = _barberias;
                 BarberiaPicker.ItemDisplayBinding = new Binding("Nombre");
-                PickerSection.IsVisible = _barberias.Any();
+                PickerSection.IsVisible = _barberias.Count > 0;
 
-                if (_barberias.Any())
+                if (_barberias.Count > 0)
                 {
                     BarberiaPicker.SelectedIndex = 0; // Esto disparará automáticamente el evento
                 }
@@ -88,7 +88,7 @@ namespace Gasolutions.Maui.App.Pages
             try
             {
                 var fechaActual = DateTime.Now;
-                List<CitaModel> citasDelMes = new List<CitaModel>();
+                List<CitaModel> citasDelMes = [];
                 int mes = fechaActual.Month;
                 int anio = fechaActual.Year;
 
@@ -96,12 +96,12 @@ namespace Gasolutions.Maui.App.Pages
                 if (_barberiaSeleccionadaId > 0)
                 {
                     var todasCitas = await _reservationService.GetReservations(fechaActual, _barberiaSeleccionadaId);
-                    citasDelMes = todasCitas.Where(c => c.Fecha.Month == mes && c.Fecha.Year == anio).ToList();
+                    citasDelMes = [.. todasCitas.Where(c => c.Fecha.Month == mes && c.Fecha.Year == anio)];
                 }
                 else
                 {
                     var todasCitas = await _reservationService.GetAllReservations();
-                    citasDelMes = todasCitas.Where(c => c.Fecha.Month == mes && c.Fecha.Year == anio).ToList();
+                    citasDelMes = [.. todasCitas.Where(c => c.Fecha.Month == mes && c.Fecha.Year == anio)];
                 }
 
                 // Actualizar estadísticas generales (del mes actual)
@@ -222,23 +222,6 @@ namespace Gasolutions.Maui.App.Pages
 
             return entries;
         }
-
-        //private async Task<List<CitaModel>> ObtenerCitasDelMesCompleto(DateTime fecha)
-        //{
-        //    // Este método ya no es necesario, pero lo mantengo por compatibilidad
-        //    List<CitaModel> todasLasCitas;
-        //    if (_barberiaSeleccionadaId > 0)
-        //    {
-        //        todasLasCitas = await _reservationService.GetReservationsByBarberia(_barberiaSeleccionadaId);
-        //    }
-        //    else
-        //    {
-        //        todasLasCitas = await _reservationService.GetAllReservationsHistorical();
-        //    }
-
-        //    return todasLasCitas.Where(c => c.Fecha.Year == fecha.Year && c.Fecha.Month == fecha.Month).ToList();
-        //}
-
         private async Task CargarRankingBarberos()
         {
             try
@@ -369,24 +352,24 @@ namespace Gasolutions.Maui.App.Pages
                 await AppUtils.MostrarSnackbar($"Error al cargar ranking: {ex.Message}", Colors.Red, Colors.White);
             }
         }
-        private int DeterminarMaximoBarberos(int totalBarberos)
+        private static int DeterminarMaximoBarberos(int totalBarberos)
         {
             if (totalBarberos <= 5) return 6;
             if (totalBarberos <= 10) return 8;
             return 10;
         }
 
-        private float DeterminarTamañoTexto(int cantidadElementos)
+        private static float DeterminarTamañoTexto(int cantidadElementos)
         {
             if (cantidadElementos <= 5) return 20f;
             if (cantidadElementos <= 8) return 18f;
             return 16f;
         }
 
-        private string TruncateLabel(string nombre, int maxLength)
+        private static string TruncateLabel(string nombre, int maxLength)
         {
             if (string.IsNullOrEmpty(nombre)) return "";
-            return nombre.Length <= maxLength ? nombre : nombre.Substring(0, maxLength - 2) + "..";
+            return nombre.Length <= maxLength ? nombre : nombre[..(maxLength - 2)] + "..";
         }
 
         private async Task CargarClientesFrecuentes()

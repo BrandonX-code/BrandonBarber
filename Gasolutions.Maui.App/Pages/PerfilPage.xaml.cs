@@ -1,22 +1,23 @@
-﻿using Gasolutions.Maui.App.Mobal;
+﻿using CommunityToolkit.Mvvm.Messaging.Messages;
+using Gasolutions.Maui.App.Mobal;
 
 namespace Gasolutions.Maui.App.Pages
 {
     public partial class PerfilPage : ContentPage
     {
-        private UsuarioModels _perfilData;
-        private readonly PerfilUsuarioService _perfilService;
+        private UsuarioModels? _perfilData;
+        private readonly PerfilUsuarioService? _perfilService;
 
         public PerfilPage()
         {
             InitializeComponent();
-            _perfilService = Application.Current.Handler.MauiContext.Services.GetService<PerfilUsuarioService>();
+            _perfilService = Application.Current!.Handler.MauiContext!.Services.GetService<PerfilUsuarioService>();
 
-            MessagingCenter.Subscribe<EditarPerfilPage, UsuarioModels>(
-                this, "PerfilActualizado", (sender, perfilActualizado) =>
-                {
-                    ActualizarPerfil(perfilActualizado);
-                });
+            WeakReferenceMessenger.Default.Register<PerfilActualizadoMessage>(this, (r, m) =>
+            {
+                ActualizarPerfil(m.Value);
+            });
+
 
             this.Appearing += async (sender, e) => await CargarDatosPerfil();
         }
@@ -33,7 +34,7 @@ namespace Gasolutions.Maui.App.Pages
                     return;
                 }
 
-                var perfil = await _perfilService.GetPerfilUsuario(AuthService.CurrentUser.Cedula);
+                var perfil = await _perfilService!.GetPerfilUsuario(AuthService.CurrentUser.Cedula);
 
                 if (perfil != null)
                 {
@@ -74,7 +75,7 @@ namespace Gasolutions.Maui.App.Pages
 
         private void ActualizarUI()
         {
-            NombreLabel.Text = _perfilData.Nombre;
+            NombreLabel.Text = _perfilData!.Nombre;
             TelefonoLabel.Text = _perfilData.Telefono;
 
             if (!string.IsNullOrEmpty(_perfilData.ImagenPath))
@@ -108,9 +109,14 @@ namespace Gasolutions.Maui.App.Pages
                 Preferences.Remove("isLoggedIn");
                 Preferences.Remove("currentUser");
 
-                Application.Current.MainPage = new NavigationPage(new LoginPage());
+                Application.Current!.Windows[0].Page = new NavigationPage(new LoginPage());
+
             }
         }
 
     }
+}
+public class PerfilActualizadoMessage : ValueChangedMessage<UsuarioModels>
+{
+    public PerfilActualizadoMessage(UsuarioModels value) : base(value) { }
 }

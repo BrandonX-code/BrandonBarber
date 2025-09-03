@@ -41,7 +41,7 @@
                     <Border x:Name="idBorder"   StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Id:" TextColor="Black" FontSize="16"/>
-                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
                                 <Entry x:Name="CedulaEntry" Placeholder="Ingrese el ID" Keyboard="Numeric" Style="{StaticResource EntryStyle}" />
                             </Border>
                         </VerticalStackLayout>
@@ -50,7 +50,7 @@
                     <Border x:Name="nombreBorder"   StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Nombre:" TextColor="Black" FontSize="16"/>
-                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
                                 <Entry x:Name="NombreEntry" Placeholder="Ingrese su Nombre" Style="{StaticResource EntryStyle}" />
                             </Border>
                         </VerticalStackLayout>
@@ -59,7 +59,7 @@
                     <Border x:Name="telefonoBorder"   StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Teléfono:" TextColor="Black" FontSize="16"/>
-                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="FillAndExpand">
+                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
                                 <Entry x:Name="TelefonoEntry" Placeholder="Ingrese su Teléfono" Keyboard="Telephone" Style="{StaticResource EntryStyle}" />
                             </Border>
                         </VerticalStackLayout>
@@ -68,7 +68,7 @@
                     <Border x:Name="barberoBorder" StrokeThickness="0" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Barbero:" TextColor="Black" FontSize="16"/>
-                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="0" HorizontalOptions="FillAndExpand">
+                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="0" HorizontalOptions="Fill">
                                 <Picker x:Name="BarberoPicker"  ItemDisplayBinding="{Binding Nombre}" Title="Seleccione un barbero" TitleColor="Gray" TextColor="Black" VerticalOptions="Center"/>
                             </Border>
                         </VerticalStackLayout>
@@ -79,7 +79,7 @@
                     <Border x:Name="fechaBorder"  StrokeThickness="0" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Fecha:" TextColor="Black" FontSize="16"/>
-                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10"  StrokeThickness="0"  Padding="0" HorizontalOptions="FillAndExpand">
+                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10"  StrokeThickness="0"  Padding="0" HorizontalOptions="Fill">
                                 <DatePicker x:Name="FechaPicker" TextColor="Black" VerticalOptions="Center" />
                             </Border>
                         </VerticalStackLayout>
@@ -89,7 +89,7 @@
                     <Border x:Name="horaBorder" StrokeThickness="0" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Hora:" TextColor="Black" FontSize="16"/>
-                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="0" HorizontalOptions="FillAndExpand">
+                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="0" HorizontalOptions="Fill">
                                 <TimePicker x:Name="HoraPicker" TextColor="Black" VerticalOptions="Center" />
                             </Border>
                         </VerticalStackLayout>
@@ -114,7 +114,7 @@
                 </VerticalStackLayout>
             </ScrollView>
         </Grid>
-        <Grid x:Name="LoaderOverlay" BackgroundColor="#80000000" IsVisible="False" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" ZIndex="10">
+        <Grid x:Name="LoaderOverlay" BackgroundColor="#80000000" IsVisible="False" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="Fill" HorizontalOptions="Fill" ZIndex="10">
             <BoxView BackgroundColor="Transparent">
                 <BoxView.GestureRecognizers>
                     <TapGestureRecognizer />

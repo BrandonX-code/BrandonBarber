@@ -16,15 +16,12 @@
 
         <Grid Grid.Row="0" ColumnSpacing="10">
             <Label Text="Perfil" FontSize="22" FontAttributes="Bold" TextColor="White" VerticalOptions="Center" />
-            <StackLayout Orientation="Horizontal" HorizontalOptions="EndAndExpand">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="End">
                 <ImageButton Source="logout.png" HeightRequest="32" WidthRequest="32" VerticalOptions="Center" Clicked="OnCerrarSesionClicked"/>
             </StackLayout>
         </Grid>
 
         <VerticalStackLayout Grid.Row="1" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
-            <!--<Border WidthRequest="120" HeightRequest="150" BackgroundColor="#90A4AE" Padding="5"  StrokeShape="RoundRectangle 10">
-                <Image  Aspect="AspectFill" />
-            </Border>-->
             <Border Grid.Column="0"  BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" HeightRequest="180" WidthRequest="150">
                 <Image x:Name="PerfilImage" Aspect="AspectFill">
                     <Image.Clip>
