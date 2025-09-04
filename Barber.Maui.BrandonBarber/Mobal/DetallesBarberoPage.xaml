@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Barber.Maui.BrandonBarber.Mobal.DetallesBarberoPage" BackgroundColor="#90A4AE">
+    <ContentPage.Content>
+        <ScrollView>
+            <Grid>
+                <BoxView BackgroundColor="Black" Opacity="0.5" />
+                <Frame BackgroundColor="White" CornerRadius="20" HasShadow="True" Margin="20" Padding="0" VerticalOptions="Center">
+                    <StackLayout Spacing="0">
+                        <Border BackgroundColor="#2C3E50" StrokeShape="RoundRectangle 20,20,0,0" HeightRequest="80">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <StackLayout Grid.Column="0" VerticalOptions="Center" Margin="20,0">
+                                    <Label Text="Información del Barbero" FontSize="18" FontAttributes="Bold" TextColor="White" />
+                                </StackLayout>
+                                <Button Grid.Column="1" Text="✕" BackgroundColor="Transparent" TextColor="White" FontSize="20" Clicked="OnCerrarClicked" Margin="10" />
+                            </Grid>
+                        </Border>
+                        <StackLayout Padding="25" Spacing="20">
+                            <Border BackgroundColor="#E8E8E8" StrokeShape="RoundRectangle 50" WidthRequest="100" HeightRequest="100" HorizontalOptions="Center">
+                                <Grid>
+                                    <Border StrokeShape="RoundRectangle 50" WidthRequest="100" HeightRequest="100" IsVisible="{Binding TieneImagen}">
+                                        <Image Source="{Binding ImagenPath}" Aspect="AspectFill" />
+                                    </Border>
+                                    <Border BackgroundColor="#3498DB" StrokeShape="RoundRectangle 50" WidthRequest="100" HeightRequest="100" IsVisible="{Binding NoTieneImagen}">
+                                        <Label Text="{Binding InicialNombre}" FontSize="32" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <StackLayout Spacing="15">
+                                <StackLayout>
+                                    <Label Text="Nombre Completo" FontSize="12" TextColor="#7F8C8D" FontAttributes="Bold" />
+                                    <Label Text="{Binding Nombre}" FontSize="16" TextColor="#2C3E50" Margin="0,5,0,0" />
+                                    <BoxView HeightRequest="1" BackgroundColor="#ECF0F1" Margin="0,5,0,0" />
+                                </StackLayout>
+                                <StackLayout>
+                                    <Label Text="Correo Electrónico" FontSize="12" TextColor="#7F8C8D" FontAttributes="Bold" />
+                                    <Label Text="{Binding Email}" FontSize="16" TextColor="#2C3E50" Margin="0,5,0,0" />
+                                    <BoxView HeightRequest="1" BackgroundColor="#ECF0F1" Margin="0,5,0,0" />
+                                </StackLayout>
+                                <StackLayout>
+                                    <Label Text="Número de Cédula" FontSize="12" TextColor="#7F8C8D" FontAttributes="Bold" />
+                                    <Label Text="{Binding Cedula}" FontSize="16" TextColor="#2C3E50" Margin="0,5,0,0" />
+                                    <BoxView HeightRequest="1" BackgroundColor="#ECF0F1" Margin="0,5,0,0" />
+                                </StackLayout>
+                                <StackLayout>
+                                    <Label Text="Teléfono" FontSize="12" TextColor="#7F8C8D" FontAttributes="Bold" />
+                                    <Label Text="{Binding Telefono}" FontSize="16" TextColor="#2C3E50" Margin="0,5,0,0" />
+                                    <BoxView HeightRequest="1" BackgroundColor="#ECF0F1" Margin="0,5,0,0" />
+                                </StackLayout>
+                                <StackLayout>
+                                    <Label Text="Dirección" FontSize="12" TextColor="#7F8C8D" FontAttributes="Bold" />
+                                    <Label Text="{Binding Direccion}" FontSize="16" TextColor="#2C3E50" Margin="0,5,0,0" />
+                                    <BoxView HeightRequest="1" BackgroundColor="#ECF0F1" Margin="0,5,0,0" />
+                                </StackLayout>
+                                <StackLayout>
+                                    <Label Text="Especialidades" FontSize="12" TextColor="#7F8C8D" FontAttributes="Bold" />
+                                    <Frame BackgroundColor="#E8F6F3" BorderColor="#1ABC9C" CornerRadius="10" Padding="10" Margin="0,5,0,0">
+                                        <Label Text="{Binding Especialidades}" FontSize="14" TextColor="#16A085" />
+                                    </Frame>
+                                </StackLayout>
+                                <StackLayout>
+                                    <Label Text="Rol en el Sistema" FontSize="12" TextColor="#7F8C8D" FontAttributes="Bold" />
+                                    <Frame BackgroundColor="#FEF9E7" BorderColor="#F39C12" CornerRadius="10" Padding="10" Margin="0,5,0,0">
+                                        <Label Text="{Binding Rol}" FontSize="14" TextColor="#E67E22" FontAttributes="Bold" />
+                                    </Frame>
+                                </StackLayout>
+                                <StackLayout>
+                                    <Label Text="Calificaciones" FontSize="12" TextColor="#7F8C8D" FontAttributes="Bold" />
+                                    <Frame BackgroundColor="#FFF3E0" BorderColor="#FF9800" CornerRadius="10" Padding="10" Margin="0,5,0,0">
+                                        <Label Text="{Binding CalificacionTexto}" FontSize="14" TextColor="#FF6F00" FontAttributes="Bold" />
+                                    </Frame>
+                                </StackLayout>
+                            </StackLayout>
+                            <Button Text="Cerrar" BackgroundColor="#3498DB" TextColor="White" CornerRadius="25" HeightRequest="50" FontSize="16" FontAttributes="Bold" Clicked="OnCerrarClicked" Margin="0,20,0,0" />
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

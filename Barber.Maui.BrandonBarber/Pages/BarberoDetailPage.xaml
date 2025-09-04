@@ -1,0 +1,93 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Barber.Maui.BrandonBarber.Pages.BarberoDetailPage"
+             BackgroundColor="#0E2A36">
+
+	<Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <ScrollView Grid.Row="1">
+			<VerticalStackLayout Padding="20" Spacing="20">
+
+				<Grid>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+
+                    <Border Grid.Column="0" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" HeightRequest="180" WidthRequest="150">
+						<Image x:Name="BarberoImage" Aspect="AspectFill"/>
+					</Border>
+
+					<VerticalStackLayout Grid.Column="1" Padding="15,0,0,0" Spacing="5">
+                        <Label x:Name="BarberoName" FontSize="30" TextColor="white" FontAttributes="Bold" LineBreakMode="TailTruncation" MaxLines="1"/>
+							<HorizontalStackLayout Spacing="2">
+								<Label x:Name="CalificacionLabel" Text="★★★★★" FontSize="20" TextColor="White"/>
+								<Label x:Name="PromedioLabel" Text="(0.0)" TextColor="White" FontSize="20"/>
+							</HorizontalStackLayout>
+						<Label x:Name="BarberoVisitasLabel" TextColor="White" FontSize="14"/>
+						<Button x:Name="CalificarButton" Text="Calificar Barbero" BackgroundColor="#FF6F91" TextColor="Black" FontSize="12"	CornerRadius="15" HeightRequest="30" Margin="0,5,0,0" Clicked="OnCalificarClicked"/>
+					</VerticalStackLayout>
+				</Grid>
+
+				<VerticalStackLayout Spacing="10">
+					<Label Text="Especialidades" TextColor="White" FontSize="16" FontAttributes="Bold"/>
+
+                    <Label x:Name="DescripcionLabel" TextColor="White" FontSize="14" LineHeight="1.4"/>
+                </VerticalStackLayout>
+
+                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0">
+                    <VerticalStackLayout Spacing="0">
+                        <Label Text="Calendario De Disponibilidad" Padding="20" TextColor="Black" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
+                        
+                        <Grid Padding="15,20,15,10" ColumnSpacing="7">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="Lunes" Grid.Column="0" TextColor="Black" FontSize="12" HorizontalOptions="Center"/>
+                            <Label Text="Martes" Grid.Column="1" TextColor="Black" FontSize="12" HorizontalOptions="Center"/>
+                            <Label Text="Miercoles" Grid.Column="2" TextColor="Black" FontSize="12" HorizontalOptions="Center"/>
+                            <Label Text="Jueves" Grid.Column="3" TextColor="Black" FontSize="12" HorizontalOptions="Center"/>
+                            <Label Text="Viernes" Grid.Column="4" TextColor="Black" FontSize="12" HorizontalOptions="Center"/>
+                            <Label Text="Sabado" Grid.Column="5" TextColor="Black" FontSize="12" HorizontalOptions="Center"/>
+                            <Label Text="Domingo" Grid.Column="6" TextColor="Black" FontSize="12" HorizontalOptions="Center"/>
+                        </Grid>
+
+                        <Grid x:Name="CalendarioGrid" Padding="15,0,15,20"/>
+                    </VerticalStackLayout>
+                </Border>
+
+
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Horas Disponibles" TextColor="White" FontSize="16" FontAttributes="Bold"/>
+
+                    <Label x:Name="NoAvailabilityLabel" Text="No hay horarios disponibles" TextColor="White" IsVisible="false"/>
+
+                    <ScrollView Orientation="Horizontal">
+                        <HorizontalStackLayout x:Name="AvailableHoursContainer" Spacing="15">
+                        </HorizontalStackLayout>
+                    </ScrollView>
+                </VerticalStackLayout>
+
+                <Grid ColumnSpacing="15" Margin="0,20,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.ColumnSpan="2" Text="Agendar Cita" BackgroundColor="#FF6F91" TextColor="Black" FontSize="16" CornerRadius="25" HeightRequest="50" HorizontalOptions="Center" Clicked="OnMakeAppointmentClicked"/>
+                </Grid>
+            </VerticalStackLayout>
+		</ScrollView>
+	</Grid>
+</ContentPage>

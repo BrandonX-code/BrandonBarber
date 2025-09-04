@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Barber.Maui.BrandonBarber.MainPage"
+             Background="#0E2A36">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style x:Key="EntryStyle" TargetType="Entry">
+                <Setter Property="BackgroundColor" Value="#90A4AE" />
+                <Setter Property="TextColor" Value="Black" />
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1" />
+                                </VisualState.Setters>
+                            </VisualState>
+                            <VisualState x:Name="Focused">
+                                <VisualState.Setters>
+                                    <Setter Property="Scale" Value="1.02" />
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <AbsoluteLayout>
+        <Grid x:Name="mainContent" Opacity="0" RowDefinitions="Auto, *, Auto" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+
+            <Label Text="Reservar Turno" FontSize="32" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+
+            <ScrollView Grid.Row="1">
+                <VerticalStackLayout x:Name="formLayout" Padding="20" Spacing="7" BackgroundColor="Transparent" TranslationY="50" Opacity="0">
+
+                    <Border x:Name="idBorder"   StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Id:" TextColor="Black" FontSize="16"/>
+                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
+                                <Entry x:Name="CedulaEntry" Placeholder="Ingrese el ID" Keyboard="Numeric" Style="{StaticResource EntryStyle}" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border x:Name="nombreBorder"   StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Nombre:" TextColor="Black" FontSize="16"/>
+                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
+                                <Entry x:Name="NombreEntry" Placeholder="Ingrese su Nombre" Style="{StaticResource EntryStyle}" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border x:Name="telefonoBorder"   StrokeThickness="1" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Teléfono:" TextColor="Black" FontSize="16"/>
+                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
+                                <Entry x:Name="TelefonoEntry" Placeholder="Ingrese su Teléfono" Keyboard="Telephone" Style="{StaticResource EntryStyle}" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border x:Name="barberoBorder" StrokeThickness="0" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Barbero:" TextColor="Black" FontSize="16"/>
+                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="0" HorizontalOptions="Fill">
+                                <Picker x:Name="BarberoPicker"  ItemDisplayBinding="{Binding Nombre}" Title="Seleccione un barbero" TitleColor="Gray" TextColor="Black" VerticalOptions="Center"/>
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+
+                    <!-- Fecha -->
+                    <Border x:Name="fechaBorder"  StrokeThickness="0" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Fecha:" TextColor="Black" FontSize="16"/>
+                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10"  StrokeThickness="0"  Padding="0" HorizontalOptions="Fill">
+                                <DatePicker x:Name="FechaPicker" TextColor="Black" VerticalOptions="Center" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <!-- Hora -->
+                    <Border x:Name="horaBorder" StrokeThickness="0" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Hora:" TextColor="Black" FontSize="16"/>
+                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="0" HorizontalOptions="Fill">
+                                <TimePicker x:Name="HoraPicker" TextColor="Black" VerticalOptions="Center" />
+                            </Border>
+                        </VerticalStackLayout>
+                    </Border>
+
+
+                    <HorizontalStackLayout x:Name="buttonsLayout" Padding="20,10" Spacing="20" HorizontalOptions="Center" Opacity="0">
+                        <Button Text="Cancelar" Clicked="OnCancelarClicked" WidthRequest="130" BackgroundColor="#717d7e" TextColor="Black" 
+                                CornerRadius="10" FontAttributes="Bold">
+                            <Button.Shadow>
+                                <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.6" />
+                            </Button.Shadow>
+                        </Button>
+
+                        <Button Text="Reservar" Clicked="OnGuardarClicked" WidthRequest="130" BackgroundColor="#FF6F91" TextColor="Black" 
+                                CornerRadius="10" FontAttributes="Bold">
+                            <Button.Shadow>
+                                <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.6" />
+                            </Button.Shadow>
+                        </Button>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+        <Grid x:Name="LoaderOverlay" BackgroundColor="#80000000" IsVisible="False" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="Fill" HorizontalOptions="Fill" ZIndex="10">
+            <BoxView BackgroundColor="Transparent">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+            <ActivityIndicator IsRunning="True" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="50" HeightRequest="50"/>
+        </Grid>
+    </AbsoluteLayout>
+</ContentPage>

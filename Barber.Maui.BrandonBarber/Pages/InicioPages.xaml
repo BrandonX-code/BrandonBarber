@@ -1,0 +1,316 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Barber.Maui.BrandonBarber.Pages.InicioPages"  
+             xmlns:local="clr-namespace:Barber.Maui.BrandonBarber.style">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:DisponibilidadColorConverter x:Key="DisponibilidadColorConverter" />
+            <local:LessThanConverter x:Key="LessThanConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid BackgroundColor="#0E2A36">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="20,5,20,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label x:Name="WelcomeLabel" MaxLines="2" Grid.Column="0" FontSize="20" TextColor="#E0F7FA" FontAttributes="Bold" VerticalOptions="Center" LineBreakMode="TailTruncation" />
+            <ImageButton Grid.Column="1" Source="user.png" BackgroundColor="Transparent" HeightRequest="32" WidthRequest="32" VerticalOptions="Center" HorizontalOptions="End" Clicked="PerfilPage" />
+        </Grid>
+
+        <Grid Grid.Row="1" x:Name="ContentContainer">
+            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" IsVisible="True" Color="#E0F7FA" VerticalOptions="Center" HorizontalOptions="Center" />
+
+            <ScrollView>
+                <VerticalStackLayout>
+
+                    <!-- ClienteView -->
+                    <VerticalStackLayout x:Name="ClienteView" IsVisible="false" Padding="20" Spacing="10">
+                        <VerticalStackLayout Padding="0">
+                            <Label Text="Servicios"  TextColor="White" 
+                                       FontSize="22" 
+                                       FontAttributes="Bold" 
+                                       HorizontalOptions="Start"/>
+
+                            <CollectionView x:Name="ServiciosCarousel" 
+                                              HeightRequest="280">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border StrokeShape="20"  BackgroundColor="#90A4AE" Padding="-1" HeightRequest="220" WidthRequest="170"  >
+
+                                            <Grid RowSpacing="0">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="*" />
+                                                    <RowDefinition Height="50" />
+                                                </Grid.RowDefinitions>
+
+                                                <!-- Imagen centrada -->
+                                                <Border Grid.Row="0" BackgroundColor="White" StrokeShape="6"  HeightRequest="175"  WidthRequest="175"  HorizontalOptions="Center"  Padding="0">
+                                                    <Image Grid.Row="0" Source="{Binding Imagen}" Aspect="AspectFill" HeightRequest="175" WidthRequest="175">
+                                                        <Image.Clip>
+                                                            <RoundRectangleGeometry CornerRadius="6" Rect="0,0,175,175"/>
+                                                        </Image.Clip>
+                                                    </Image>
+                                                </Border>
+
+                                                <!-- Sección blanca inferior con texto -->
+                                                <StackLayout Grid.Row="1" BackgroundColor="#90A4AE" Padding="5" HorizontalOptions="Fill" VerticalOptions="Center">
+                                                    <Label Text="{Binding Nombre}" FontAttributes="Bold" FontSize="16" TextColor="Black" HorizontalOptions="Center" LineBreakMode="TailTruncation" MaxLines="1"/>
+                                                    <Label Grid.Row="2"  Text="{Binding Precio, StringFormat='${0:N0}'}" TextColor="Black" FontSize="16" HorizontalOptions="Center"/>
+
+                                                </StackLayout>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Spacing="5" Padding="0">
+                            <Label Text="Barberos" TextColor="White" FontSize="22"  FontAttributes="Bold"  HorizontalOptions="Start"/>
+
+                            <CollectionView x:Name="BarberosCollectionView"  HeightRequest="320">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BackgroundColor="#90A4AE" StrokeShape="20" Padding="20" HeightRequest="300" WidthRequest="182">
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
+                                            </Border.GestureRecognizers>
+
+                                            <Grid RowSpacing="10">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="170"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                    <RowDefinition Height="Auto"/>
+                                                </Grid.RowDefinitions>
+
+                                                <Border Grid.Row="0" BackgroundColor="#F0F0F0" StrokeShape="6"  HeightRequest="170"  WidthRequest="140"  HorizontalOptions="Center"  Padding="0">
+                                                    <Image Source="{Binding ImagenPath}"  HeightRequest="170"  WidthRequest="140"  Aspect="AspectFill"/>
+                                                    <Border.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
+                                                    </Border.GestureRecognizers>
+                                                </Border>
+                                                <Label Grid.Row="1" Text="{Binding Nombre}" TextColor="Black" FontSize="15" FontAttributes="Bold" HorizontalOptions="Start" HorizontalTextAlignment="Start" LineBreakMode="TailTruncation" MaxLines="1"/>
+                                                <HorizontalStackLayout Grid.Row="2" HorizontalOptions="Start" Spacing="1">
+                                                    <Image Source="starblackrellena.png" HeightRequest="20" WidthRequest="20">
+                                                        <Image.Triggers>
+                                                            <DataTrigger TargetType="Image" Binding="{Binding CalificacionPromedio}" Value="0">
+                                                                <Setter Property="Source" Value="starblacksinrelleno.png"/>
+                                                            </DataTrigger>
+                                                        </Image.Triggers>
+                                                    </Image>
+                                                    <Image Source="starblackrellena.png" HeightRequest="20" WidthRequest="20">
+                                                        <Image.Triggers>
+                                                            <DataTrigger TargetType="Image" Binding="{Binding CalificacionPromedio, Converter={StaticResource LessThanConverter}, ConverterParameter=2}" Value="True">
+                                                                <Setter Property="Source" Value="starblacksinrelleno.png"/>
+                                                            </DataTrigger>
+                                                        </Image.Triggers>
+                                                    </Image>
+                                                    <Image Source="starblackrellena.png" HeightRequest="20" WidthRequest="20">
+                                                        <Image.Triggers>
+                                                            <DataTrigger TargetType="Image" Binding="{Binding CalificacionPromedio, Converter={StaticResource LessThanConverter}, ConverterParameter=3}" Value="True">
+                                                                <Setter Property="Source" Value="starblacksinrelleno.png"/>
+                                                            </DataTrigger>
+                                                        </Image.Triggers>
+                                                    </Image>
+                                                    <Image Source="starblackrellena.png" HeightRequest="20" WidthRequest="20">
+                                                        <Image.Triggers>
+                                                            <DataTrigger TargetType="Image" Binding="{Binding CalificacionPromedio, Converter={StaticResource LessThanConverter}, ConverterParameter=4}" Value="True">
+                                                                <Setter Property="Source" Value="starblacksinrelleno.png"/>
+                                                            </DataTrigger>
+                                                        </Image.Triggers>
+                                                    </Image>
+                                                    <Image Source="starblackrellena.png" HeightRequest="20" WidthRequest="20">
+                                                        <Image.Triggers>
+                                                            <DataTrigger TargetType="Image" Binding="{Binding CalificacionPromedio, Converter={StaticResource LessThanConverter}, ConverterParameter=5}" Value="True">
+                                                                <Setter Property="Source" Value="starblacksinrelleno.png"/>
+                                                            </DataTrigger>
+                                                        </Image.Triggers>
+                                                    </Image>
+                                                </HorizontalStackLayout>
+                                                <StackLayout Grid.Row="3" Orientation="Horizontal" HorizontalOptions="End" Margin="0,-5,0,0" Spacing="5">
+                                                    <Label Text="Ver Más" FontSize="13" TextColor="Blue" TextDecorations="Underline"/>
+                                                    <Image Source="choose.png" HeightRequest="17" WidthRequest="17"/>
+                                                </StackLayout>
+
+                                            </Grid>
+                                        </Border>
+
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="BuscarCitas" />
+                            </Border.GestureRecognizers> 
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="busquedacitas.png" WidthRequest="30" HeightRequest="30" />
+                                <Label Grid.Column="1" Text="Buscar Tus Citas" TextColor="Black" FontSize="25" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
+                        </Border>
+                        <Border x:Name="GaleriaClienteBorder" BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"   IsVisible="False">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="Galery" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="galeriuser.png" WidthRequest="30" HeightRequest="30" />
+                                <Label Grid.Column="1" Text="Galeria De Cortes" TextColor="Black" FontSize="25" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <!-- BarberoView -->
+                    <VerticalStackLayout x:Name="BarberoView" IsVisible="false" Padding="20" Spacing="20">
+                        <Label Text="Panel de Barbero" FontSize="24" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
+
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="CitasList" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="history.png" WidthRequest="30" HeightRequest="30" />
+                                <Label Grid.Column="1" Text="Tus Citas" TextColor="Black" FontSize="25" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
+                        </Border>
+
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="GestionarDisponibilidad" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="calendar.png" WidthRequest="30" HeightRequest="30" />
+                                <Label Grid.Column="1" Text="Gestionar Disponibilidad" TextColor="Black" FontSize="25" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
+                        </Border>
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="AddGaleri" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="galeribarber.png" WidthRequest="30" HeightRequest="30" />
+                                <Label Grid.Column="1" Text="Agregar Corte" TextColor="Black" FontSize="25" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
+                        </Border>
+
+                    </VerticalStackLayout>
+
+                    <!-- AdminView -->
+                    <VerticalStackLayout x:Name="AdminView" IsVisible="false" Padding="20" Spacing="17">
+                       
+                        <!-- Nueva sección de Métricas -->
+                        <Label Text="Métricas y Estadísticas" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="VerMetricas" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="metrics.png" WidthRequest="40" HeightRequest="40" />
+                                <Label Grid.Column="1" Text="Dashboard de Métricas" TextColor="Black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Gestión de Barberos -->
+                        <Label Text="Gestión de Barberos" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" />
+
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="AgregarBarbero" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="agregarbarbero.png" WidthRequest="40" HeightRequest="30" />
+                                <Label Grid.Column="1" Text="Agregar Barbero" TextColor="black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
+                        </Border>
+
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="ListarBarberos" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="listarbarbero.png" WidthRequest="40" HeightRequest="40" />
+                                <Label Grid.Column="1" Text="Listar Barberos" TextColor="black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Gestión de Clientes -->
+                        <Label Text="Gestión de Clientes" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
+
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="ListarClientes" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="listarcliente.png" WidthRequest="40" HeightRequest="40" />
+                                <Label Grid.Column="1" Text="Listar Clientes" TextColor="black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
+                        </Border>
+
+                        <!-- Reportes -->
+                        <Label Text="Reportes" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
+
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="VerCitas" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="todaslascitas.png" WidthRequest="40" HeightRequest="40" />
+                                <Label Grid.Column="1" Text="Ver Todas las Citas" TextColor="black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
+                        </Border>
+
+                        <Label Text="Servicios" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
+
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="GestionDeServicios" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="man.png" WidthRequest="40" HeightRequest="40" />
+                                <Label Grid.Column="1" Text="Gestinar Servicios" TextColor="black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
+                        </Border>
+                        <Label Text="Barberias" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="GestionDeBarberias" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="barberias.png" WidthRequest="40" HeightRequest="40" />
+                                <Label Grid.Column="1" Text="Gestinar Barberias" TextColor="black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
+                        </Border>
+
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </ScrollView>
+        </Grid>
+    </Grid>
+</ContentPage>

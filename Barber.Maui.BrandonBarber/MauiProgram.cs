@@ -1,0 +1,86 @@
+﻿using CommunityToolkit.Maui;
+using Microcharts.Maui;
+using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Platform;
+
+namespace Barber.Maui.BrandonBarber
+{
+    public static class MauiProgram
+    {
+        public static MauiApp CreateMauiApp()
+        {
+            var builder = MauiApp.CreateBuilder();
+            builder
+                .UseMauiApp<App>();
+            builder
+           .UseMauiCommunityToolkit(options =>
+           {
+               options.SetShouldEnableSnackbarOnWindows(true); // 👈 Habilita Snackbar en Windows
+           })
+
+           .UseMauiCommunityToolkit()
+           .UseMicrocharts()
+           .ConfigureFonts(fonts =>
+           {
+               fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+               fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+           });
+
+
+#if ANDROID
+            Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (h, v) =>
+            {
+                h.PlatformView.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(Colors.Transparent.ToPlatform());
+            });
+
+            // Update the problematic line
+#endif
+
+            string apiBaseUrl;
+            if (DeviceInfo.Platform == DevicePlatform.Android)
+            {
+                apiBaseUrl = "https://192.168.0.28:7283/";
+            }
+            else
+            {
+                apiBaseUrl = "https://localhost:7283/";
+            }
+
+            builder.Services.AddSingleton<HttpClient>(sp =>
+            {
+                var httpClientHandler = new HttpClientHandler();
+                if (DeviceInfo.Platform == DevicePlatform.Android)
+                {
+                    httpClientHandler.ServerCertificateCustomValidationCallback =
+                        (message, cert, chain, errors) => true;
+                }
+                return new HttpClient(httpClientHandler) { BaseAddress = new Uri(apiBaseUrl) };
+            });
+
+            // Registrar servicios
+            builder.Services.AddSingleton<ReservationService>();
+            builder.Services.AddSingleton<PerfilUsuarioService>();
+            builder.Services.AddSingleton<AuthService>();
+            builder.Services.AddSingleton<DisponibilidadService>();
+            builder.Services.AddSingleton<GaleriaService>();
+            builder.Services.AddSingleton<ServicioService>();
+            builder.Services.AddSingleton<CalificacionService>();
+            builder.Services.AddSingleton<BarberiaService>();
+            // Registrar páginas
+            builder.Services.AddSingleton<LoginPage>();
+            builder.Services.AddTransient<RegistroPage>();
+            builder.Services.AddSingleton<BuscarPage>();
+            builder.Services.AddSingleton<ListaCitas>();
+            builder.Services.AddSingleton<PerfilPage>();
+            builder.Services.AddSingleton<GaleriaPage>();
+            builder.Services.AddSingleton<SeleccionBarberiaPage>();
+
+            builder.UseMauiApp<App>().UseMauiCommunityToolkit();
+
+#if DEBUG
+            builder.Logging.AddDebug();
+#endif
+            return builder.Build();
+        }
+    }
+}

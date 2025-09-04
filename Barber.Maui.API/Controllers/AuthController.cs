@@ -15,6 +15,7 @@ namespace Barber.Maui.API.Controllers
         {
             _context = context;
         }
+        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Auth>>> GetAuth()
         {
@@ -142,5 +143,42 @@ namespace Barber.Maui.API.Controllers
 
             return Ok(usuario);
         }
+
+        //[HttpPost("forgot-password")]
+        //public async Task<IActionResult> ForgotPassword([FromBody] string userOrEmail)
+        //{
+        //    if (string.IsNullOrEmpty(userOrEmail))
+        //    {
+        //        return BadRequest("User or email is required.");
+        //    }
+        //    var forgotPasswordResponse = await.GenerateForgotPasswordCode(userOrEmail);
+        //    if (!forgotPasswordResponse.IsSuccess)
+        //    {
+        //        return NotFound(forgotPasswordResponse.ErrorMessage);
+        //    }
+        //    return Ok(new { message = "Se ha enviado un código de recuperación al correo asociado." });
+        //}
+
+        //[HttpPost("reset-password")]
+        //public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+        //{
+        //    if (resetPasswordDto == null)
+        //    {
+        //        return BadRequest("Invalid reset password request.");
+        //    }
+        //    if (string.IsNullOrEmpty(resetPasswordDto.UserOrEmail) || string.IsNullOrEmpty(resetPasswordDto.Code) || string.IsNullOrEmpty(resetPasswordDto.NewPassword))
+        //    {
+        //        return BadRequest("User or email, code, and new password are required.");
+        //    }
+
+        //    var result = await _authService.ResetPasswordAsync(resetPasswordDto);
+
+        //    if (!result.IsSuccess)
+        //    {
+        //        return BadRequest(new { errorMessage = result.ErrorMessage });
+        //    }
+
+        //    return Ok(new { Message = "Password has been reset successfully." });
+        //}
     }
 }

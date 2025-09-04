@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Barber.Maui.BrandonBarber.Pages.CalificarBarberoPage" BackgroundColor="#0E2A36">
+    <VerticalStackLayout Padding="30,40" Spacing="25">
+        <Label Text="Califica tu experiencia" TextColor="White" FontSize="28"  FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,0,10"/>
+
+        <HorizontalStackLayout x:Name="EstrellaStack"  Spacing="15" HorizontalOptions="Center">
+            <ImageButton x:Name="Estrella1" Source="star_empty.png" HeightRequest="48"  WidthRequest="48" Aspect="AspectFit" Clicked="OnEstrellaClicked" BackgroundColor="Transparent"/>
+            <ImageButton x:Name="Estrella2" Source="star_empty.png"  HeightRequest="48" WidthRequest="48" Aspect="AspectFit" Clicked="OnEstrellaClicked" BackgroundColor="Transparent"/>
+            <ImageButton x:Name="Estrella3"  Source="star_empty.png" HeightRequest="48" WidthRequest="48" Aspect="AspectFit" Clicked="OnEstrellaClicked" BackgroundColor="Transparent"/>
+            <ImageButton x:Name="Estrella4" Source="star_empty.png" HeightRequest="48" WidthRequest="48" Aspect="AspectFit" Clicked="OnEstrellaClicked" BackgroundColor="Transparent"/>
+            <ImageButton x:Name="Estrella5"  Source="star_empty.png" HeightRequest="48" WidthRequest="48" Aspect="AspectFit" Clicked="OnEstrellaClicked" BackgroundColor="Transparent"/>
+        </HorizontalStackLayout>
+
+        <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="10" Margin="0,20,0,0">
+            <Editor x:Name="ComentarioEditor" Placeholder="Escribe un comentario (opcional)" HeightRequest="80" TextColor="White" BackgroundColor="Transparent"/>
+        </Border>
+
+        <Button Text="Enviar Calificación" BackgroundColor="#FF6F91" TextColor="Black" FontSize="18" FontAttributes="Bold" CornerRadius="30" HeightRequest="55" Clicked="OnEnviarCalificacionClicked"/>
+    </VerticalStackLayout>
+</ContentPage>

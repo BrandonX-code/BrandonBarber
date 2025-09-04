@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Barber.Maui.BrandonBarber.Pages.ListaCitas"
+             BackgroundColor="#0E2A36">
+
+    <AbsoluteLayout>
+        <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+            <Grid RowDefinitions="Auto, Auto, *" Padding="20">
+                <VerticalStackLayout Spacing="15">
+                    <Border BackgroundColor="#1E3A49" StrokeShape="10" Padding="15">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="Citas Agendadas" TextColor="White" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <!-- Selector de Barbería -->
+                            <VerticalStackLayout x:Name="PickerSection" Spacing="10" IsVisible="False">
+
+                                <Border StrokeShape="12" Padding="3" BackgroundColor="#90A4AE" WidthRequest="260" HorizontalOptions="Center">
+                                    <Picker x:Name="BarberiaPicker" SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}"  Title="Seleccionar Barbería"  TitleColor="Gray"  TextColor="Black"  FontSize="16"   FontAttributes="Bold"  HeightRequest="45"  VerticalOptions="Center"  Margin="10,0" />
+                                </Border>
+                            </VerticalStackLayout>
+                            <Border StrokeShape="12" Padding="3" BackgroundColor="#90A4AE" WidthRequest="260" HorizontalOptions="Center">
+                                <DatePicker x:Name="datePicker" Date="{Binding FechaSeleccionada, Mode=TwoWay}" Format="dd/MM/yyyy" TextColor="Black" WidthRequest="250" FontSize="20" FontAttributes="Bold" HeightRequest="65" />
+                            </Border>
+
+                            <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="10" Margin="0,10">
+                                <Button Text="Buscar Reservas" Clicked="RecuperarCitasPorFecha" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="10" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+
+                    <Border BackgroundColor="#1E3A49" StrokeShape="10" Padding="15">
+                        <VerticalStackLayout Spacing="15">
+                            <Label Text="Citas" TextColor="White" FontSize="18" />
+                            <CollectionView x:Name="ResultadosCollection" HeightRequest="420">
+                                <CollectionView.ItemsLayout>
+                                    <LinearItemsLayout Orientation="Vertical" />
+                                </CollectionView.ItemsLayout>
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Padding="5" Margin="0,7" BackgroundColor="#90A4AE" StrokeShape="12">
+                                            <Grid ColumnDefinitions="*, Auto">
+                                                <VerticalStackLayout Spacing="10">
+                                                    <HorizontalStackLayout Spacing="5">
+                                                        <HorizontalStackLayout Spacing="5">
+                                                            <Image Source="id.png" WidthRequest="20" HeightRequest="20" />
+                                                        </HorizontalStackLayout>
+                                                        <Label Text="{Binding Nombre}" FontSize="Body" TextColor="Black" FontAttributes="Bold" MaxLines="1"/>
+                                                    </HorizontalStackLayout>
+                                                    <HorizontalStackLayout Spacing="5">
+                                                        <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
+                                                        <Label Text="{Binding FechaConFormato, StringFormat='{0:hh:mm tt}'}" FontSize="16" TextColor="Black" />
+                                                    </HorizontalStackLayout>
+
+                                                    <HorizontalStackLayout Spacing="5">
+                                                        <Image Source="call.png" WidthRequest="20" HeightRequest="20" />
+                                                        <Label Text="{Binding Telefono}" FontSize="14" TextColor="Black" />
+                                                    </HorizontalStackLayout>
+
+                                                    <HorizontalStackLayout>
+                                                        <HorizontalStackLayout Spacing="5">
+                                                            <Image Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />
+                                                            <Label Text="Barbero: " FontSize="Small" TextColor="Black" />
+                                                        </HorizontalStackLayout>
+                                                        <Label Text="{Binding BarberoNombre}" FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                                    </HorizontalStackLayout>
+                                                </VerticalStackLayout>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </Border>
+
+
+                </VerticalStackLayout>
+            </Grid>
+        </ScrollView>
+
+        <Grid x:Name="LoaderOverlay" BackgroundColor="#80000000" IsVisible="False" InputTransparent="False" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="Fill" HorizontalOptions="Fill"  ZIndex="10">
+            <BoxView BackgroundColor="Transparent">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+            <ActivityIndicator IsRunning="True" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="50" HeightRequest="50" />
+        </Grid>
+    </AbsoluteLayout>
+</ContentPage>
