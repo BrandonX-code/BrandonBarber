@@ -12,7 +12,7 @@ public class ServicioService
     public async Task<List<ServicioModel>> GetServiciosAsync()
     {
         var admin = AuthService.CurrentUser;
-        var response = await _httpClient.GetAsync($"api/servicios/{admin.IdBarberia}");
+        var response = await _httpClient.GetAsync($"api/servicios/{admin!.IdBarberia}");
         response.EnsureSuccessStatusCode();
         var json = await response.Content.ReadAsStringAsync();
         return JsonSerializer.Deserialize<List<ServicioModel>>(json, new JsonSerializerOptions
@@ -40,7 +40,7 @@ public class ServicioService
             formData.Add(new StringContent(servicio.Nombre), nameof(ServicioModel.Nombre));
 
         formData.Add(new StringContent(servicio.Precio.ToString()), nameof(ServicioModel.Precio));
-        formData.Add(new StringContent(servicio.Imagen.ToString()), nameof(ServicioModel.Imagen));
+        formData.Add(new StringContent(servicio.Imagen!.ToString()), nameof(ServicioModel.Imagen));
         formData.Add(new StringContent(servicio.Id.ToString()), nameof(ServicioModel.Id));
 
         // Agregar el IdBarberia seleccionado
@@ -53,7 +53,7 @@ public class ServicioService
         // Obtener información del archivo
         var fileInfo = new FileInfo(servicio.Imagen);
         string fileName = fileInfo.Name;
-        string mimeType = GetMimeType(fileInfo.Extension);
+        string mimeType = ServicioService.GetMimeType(fileInfo.Extension);
 
         fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(mimeType);
         formData.Add(fileContent, "imageFile", fileName);
@@ -79,7 +79,7 @@ public class ServicioService
         }
     }
 
-    private string GetMimeType(string extension)
+    private static string GetMimeType(string extension)
     {
         return extension.ToLower() switch
         {
@@ -96,7 +96,7 @@ public class ServicioService
     {
         using var formData = new MultipartFormDataContent();
 
-        formData.Add(new StringContent(servicio.Nombre), nameof(ServicioModel.Nombre));
+        formData.Add(new StringContent(servicio.Nombre!), nameof(ServicioModel.Nombre));
         formData.Add(new StringContent(servicio.Precio.ToString()), nameof(ServicioModel.Precio));
 
         bool esUrl = Uri.TryCreate(servicio.Imagen, UriKind.Absolute, out var uri) &&
@@ -104,7 +104,7 @@ public class ServicioService
 
         if (esUrl)
         {
-            formData.Add(new StringContent(servicio.Imagen), nameof(ServicioModel.Imagen));
+            formData.Add(new StringContent(servicio.Imagen!), nameof(ServicioModel.Imagen));
         }
         else
         {
@@ -115,7 +115,7 @@ public class ServicioService
             var fileContent = new ByteArrayContent(fileBytes);
 
             var fileInfo = new FileInfo(servicio.Imagen);
-            var mimeType = GetMimeType(fileInfo.Extension);
+            var mimeType = ServicioService.GetMimeType(fileInfo.Extension);
 
             fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(mimeType);
 

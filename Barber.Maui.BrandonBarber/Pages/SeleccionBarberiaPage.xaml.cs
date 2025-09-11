@@ -6,7 +6,7 @@ namespace Barber.Maui.BrandonBarber.Pages
     {
         private readonly BarberiaService _barberiaService;
 
-        private ObservableCollection<Barberia> _barberias = new ObservableCollection<Barberia>();
+        private ObservableCollection<Barberia> _barberias = [];
         public ObservableCollection<Barberia> Barberias
         {
             get => _barberias;
@@ -18,7 +18,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
         }
 
-        private ObservableCollection<Barberia> _filteredBarberias = new ObservableCollection<Barberia>();
+        private ObservableCollection<Barberia> _filteredBarberias = [];
         public ObservableCollection<Barberia> FilteredBarberias
         {
             get => _filteredBarberias;
@@ -79,14 +79,14 @@ namespace Barber.Maui.BrandonBarber.Pages
                 {
                     Barberias.Clear();
 
-                    if (barberias?.Any() == true)
+                    if (barberias?.Count > 0 == true)
                     {
                         foreach (var barberia in barberias)
                         {
                             // Asegurar que la URL del logo esté correcta
                             if (string.IsNullOrWhiteSpace(barberia.LogoUrl))
                             {
-                                barberia.LogoUrl = "picture.png"; // Imagen por defecto
+                                barberia.LogoUrl = "picture.png";
                             }
                             Barberias.Add(barberia);
                         }
@@ -110,7 +110,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    var sourceList = Barberias?.ToList() ?? new List<Barberia>();
+                    var sourceList = Barberias?.ToList() ?? [];
 
                     if (string.IsNullOrWhiteSpace(SearchText))
                     {
@@ -122,10 +122,10 @@ namespace Barber.Maui.BrandonBarber.Pages
                         // Filtrar por múltiples campos
                         var searchLower = SearchText.Trim().ToLowerInvariant();
                         var filtered = sourceList.Where(b =>
-                            ContainsIgnoreCase(b.Nombre, searchLower) ||
-                            ContainsIgnoreCase(b.Email, searchLower) ||
-                            ContainsIgnoreCase(b.Telefono, searchLower) ||
-                            ContainsIgnoreCase(b.Direccion, searchLower)
+                            ContainsIgnoreCase(b.Nombre!, searchLower) ||
+                            ContainsIgnoreCase(b.Email!, searchLower) ||
+                            ContainsIgnoreCase(b.Telefono!, searchLower) ||
+                            ContainsIgnoreCase(b.Direccion!, searchLower)
                         ).ToList();
 
                         UpdateFilteredList(filtered);
@@ -149,8 +149,7 @@ namespace Barber.Maui.BrandonBarber.Pages
 
         private static bool ContainsIgnoreCase(string source, string search)
         {
-            return !string.IsNullOrEmpty(source) &&
-                   source.ToLowerInvariant().Contains(search);
+            return !string.IsNullOrEmpty(source) && source.Contains(search, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private void ClearSearch()

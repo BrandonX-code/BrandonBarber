@@ -7,8 +7,6 @@ namespace Barber.Maui.BrandonBarber.Mobal
         public DetallesBarberoPage(UsuarioModels barbero)
         {
             InitializeComponent();
-
-            // Configurar los datos
             BindingContext = new DetallesBarberoViewModel(barbero);
         }
 
@@ -18,7 +16,6 @@ namespace Barber.Maui.BrandonBarber.Mobal
         }
     }
 
-    // ViewModel para manejar los datos
     public class DetallesBarberoViewModel
     {
         public string Nombre { get; set; }
@@ -27,7 +24,7 @@ namespace Barber.Maui.BrandonBarber.Mobal
         public string Especialidades { get; set; }
         public string Rol { get; set; }
         public string InicialNombre { get; set; }
-        public string ImagenPath { get; set; }
+        public string? ImagenPath { get; set; }
         public bool TieneImagen { get; set; }
         public bool NoTieneImagen { get; set; }
         public string Telefono { get; set; }
@@ -46,7 +43,7 @@ namespace Barber.Maui.BrandonBarber.Mobal
 
             // Obtener la inicial del nombre para el avatar de respaldo
             InicialNombre = !string.IsNullOrEmpty(barbero.Nombre) ?
-                           barbero.Nombre.Substring(0, 1).ToUpper() : "?";
+                           barbero.Nombre[..1].ToUpper() : "?";
 
             // Configurar la imagen
             ImagenPath = barbero.ImagenPath;

@@ -7,14 +7,9 @@ using System.Net.Http.Json;
 
 namespace Barber.Maui.BrandonBarber.Services
 {
-    public class CalificacionService
+    public class CalificacionService(HttpClient httpClient)
     {
-        private readonly HttpClient _httpClient;
-
-        public CalificacionService(HttpClient httpClient)
-        {
-            _httpClient = httpClient;
-        }
+        private readonly HttpClient _httpClient = httpClient;
 
         public async Task<bool> EnviarCalificacionAsync(CalificacionModel calificacion)
         {
@@ -29,7 +24,7 @@ namespace Barber.Maui.BrandonBarber.Services
                 return (0, 0);
 
             var result = await response.Content.ReadFromJsonAsync<PromedioResponse>();
-            return (result?.promedio ?? 0, result?.total ?? 0);
+            return (result?.Promedio ?? 0, result?.Total ?? 0);
         }
 
         public async Task<int> ObtenerCalificacionClienteAsync(long barberoId, long clienteId)
@@ -39,18 +34,18 @@ namespace Barber.Maui.BrandonBarber.Services
                 return 0;
 
             var result = await response.Content.ReadFromJsonAsync<CalificacionClienteResponse>();
-            return result?.puntuacion ?? 0;
+            return result?.Puntuacion ?? 0;
         }
 
         private class PromedioResponse
         {
-            public double promedio { get; set; }
-            public int total { get; set; }
+            public double Promedio { get; set; }
+            public int Total { get; set; }
         }
 
         private class CalificacionClienteResponse
         {
-            public int puntuacion { get; set; }
+            public int Puntuacion { get; set; }
         }
     }
 }

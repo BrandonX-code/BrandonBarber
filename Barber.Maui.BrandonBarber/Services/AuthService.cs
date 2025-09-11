@@ -9,13 +9,13 @@ namespace Barber.Maui.BrandonBarber.Services
     public class AuthService
     {
         public readonly HttpClient _BaseClient;
-        private string URLServices;
-        public static UsuarioModels CurrentUser { get; set; }
+        private readonly string URLServices;
+        public static UsuarioModels? CurrentUser { get; set; }
 
         public AuthService(HttpClient httpClient)
         {
             _BaseClient = httpClient;
-            URLServices = _BaseClient.BaseAddress.ToString();
+            URLServices = _BaseClient.BaseAddress!.ToString();
         }
 
         public async Task<AuthResponse> Login(string email, string password)
@@ -57,8 +57,8 @@ namespace Barber.Maui.BrandonBarber.Services
                     CurrentUser = authResponse.User;
 
                     // Guardar el token para futuras peticiones
-                    await SecureStorage.Default.SetAsync("auth_token", authResponse.Token);
-                    await SecureStorage.Default.SetAsync("user_cedula", CurrentUser.Cedula.ToString());
+                    await SecureStorage.Default.SetAsync("auth_token", authResponse.Token!);
+                    await SecureStorage.Default.SetAsync("user_cedula", CurrentUser!.Cedula.ToString());
 
                     // Configurar el token en el HttpClient para futuras peticiones
                     _BaseClient.DefaultRequestHeaders.Authorization =
@@ -96,22 +96,30 @@ namespace Barber.Maui.BrandonBarber.Services
                 Console.WriteLine($"🔹 Código de estado API: {responseContent.StatusCode}");
                 Console.WriteLine($"🔹 Respuesta API: {responseMessage}");
 
-                // Verificar la respuesta dependiendo del código de estado
+                // 🔹 Obtén la página activa de forma segura
+                var mainPage = Application.Current?.Windows.FirstOrDefault()?.Page;
+
                 if (responseContent.StatusCode == HttpStatusCode.Conflict)
                 {
-                    await Application.Current.MainPage.DisplayAlert("Error", "El usuario ya existe. Por favor, elija otro correo electrónico.", "Aceptar");
+                    if (mainPage != null)
+                        await mainPage.DisplayAlert("Error", "El usuario ya existe. Por favor, elija otro correo electrónico.", "Aceptar");
+
                     return new AuthResponse { IsSuccess = false, Message = "El usuario ya existe." };
                 }
 
                 if (responseContent.StatusCode == HttpStatusCode.BadRequest)
                 {
-                    await Application.Current.MainPage.DisplayAlert("Error", "Los datos enviados no son válidos. Por favor, verifique los campos e intente nuevamente.", "Aceptar");
+                    if (mainPage != null)
+                        await mainPage.DisplayAlert("Error", "Los datos enviados no son válidos. Por favor, verifique los campos e intente nuevamente.", "Aceptar");
+
                     return new AuthResponse { IsSuccess = false, Message = "Datos inválidos." };
                 }
 
                 if (responseContent.StatusCode == HttpStatusCode.InternalServerError)
                 {
-                    await Application.Current.MainPage.DisplayAlert("Error", "Hubo un problema en el servidor. Por favor, intente más tarde.", "Aceptar");
+                    if (mainPage != null)
+                        await mainPage.DisplayAlert("Error", "Hubo un problema en el servidor. Por favor, intente más tarde.", "Aceptar");
+
                     return new AuthResponse { IsSuccess = false, Message = "Error del servidor." };
                 }
 
@@ -120,19 +128,25 @@ namespace Barber.Maui.BrandonBarber.Services
                     return new AuthResponse { IsSuccess = true, Message = "¡Registro exitoso! Ahora puedes iniciar sesión." };
                 }
 
-                // Si el código de estado no es específico
-                await Application.Current.MainPage.DisplayAlert("Error", "Hubo un error al procesar tu solicitud. Intenta nuevamente.", "Aceptar");
+                if (mainPage != null)
+                    await mainPage.DisplayAlert("Error", "Hubo un error al procesar tu solicitud. Intenta nuevamente.", "Aceptar");
+
                 return new AuthResponse { IsSuccess = false, Message = $"Error desconocido. Código de estado: {responseContent.StatusCode}" };
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"❌ Error al conectar con la API: {ex.Message}");
-                await Application.Current.MainPage.DisplayAlert("Error de Conexión", "Hubo un problema al intentar conectar con el servidor. Por favor, verifica tu conexión a internet.", "Aceptar");
+
+                var mainPage = Application.Current?.Windows.FirstOrDefault()?.Page;
+                if (mainPage != null)
+                    await mainPage.DisplayAlert("Error de Conexión", "Hubo un problema al intentar conectar con el servidor. Por favor, verifica tu conexión a internet.", "Aceptar");
+
                 return new AuthResponse { IsSuccess = false, Message = "Error de conexión." };
             }
         }
 
-        public async Task<bool> Logout()
+
+        public bool Logout()
         {
             try
             {
@@ -181,7 +195,7 @@ namespace Barber.Maui.BrandonBarber.Services
                 if (!userResponse.IsSuccessStatusCode)
                 {
                     Console.WriteLine("🔹 No se pudo obtener datos del usuario, haciendo logout");
-                    await Logout();
+                    Logout();
                     return false;
                 }
 
@@ -197,14 +211,14 @@ namespace Barber.Maui.BrandonBarber.Services
                     return true;
                 }
 
-                await Logout();
+                Logout();
                 return false;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"❌ Error al verificar autenticación: {ex.Message}");
                 Console.WriteLine($"❌ Error al verificar autenticación: {ex.Message}");
-                await Logout();
+                Logout();
                 return false;
             }
         }
@@ -240,33 +254,7 @@ namespace Barber.Maui.BrandonBarber.Services
                 return new List<UsuarioModels>();
             }
         }
-
-        //public async Task<UsuarioModels> GetUserByCedula(long cedula)
-        //{
-        //    try
-        //    {
-        //        var response = await _BaseClient.GetAsync($"api/auth/usuario/{cedula}");
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            var content = await response.Content.ReadAsStringAsync();
-        //            var usuario = JsonSerializer.Deserialize<UsuarioModels>(content,
-        //                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-        //            // Filtrar solo clientes
-        //            if (usuario != null && usuario.Rol?.ToLower() == "cliente")
-        //            {
-        //                return usuario;
-        //            }
-        //        }
-        //        return null;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Debug.WriteLine($"Error al obtener cliente: {ex.Message}");
-        //        return null;
-        //    }
-        //}
-        public async Task<UsuarioModels> GetUserByCedula(long cedula)
+        public async Task<UsuarioModels?> GetUserByCedula(long cedula)
         {
             try
             {
@@ -285,72 +273,6 @@ namespace Barber.Maui.BrandonBarber.Services
                 return null;
             }
         }
-        //public async Task<ResetPasswordResponseDto> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
-        //{
-        //    var user = await FindUser(resetPasswordDto.UserOrEmail);
-        //    if (user == null)
-        //    {
-        //        return new ResetPasswordResponseDto
-        //        {
-        //            IsSuccess = false,
-        //            ErrorMessage = "User not found."
-        //        };
-        //    }
 
-        //    var savedValue = await _userManager.GetAuthenticationTokenAsync(user, "PasswordReset", "ResetCode");
-        //    if (string.IsNullOrEmpty(savedValue))
-        //    {
-        //        return new ResetPasswordResponseDto
-        //        {
-        //            IsSuccess = false,
-        //            ErrorMessage = "No reset code found. Please request a new one."
-        //        };
-        //    }
-
-        //    var parts = savedValue.Split('|');
-        //    var savedCode = parts[0];
-        //    var expiresAt = DateTime.Parse(parts[1], null, System.Globalization.DateTimeStyles.RoundtripKind);
-
-        //    if (DateTime.UtcNow > expiresAt)
-        //    {
-        //        return new ResetPasswordResponseDto
-        //        {
-        //            IsSuccess = false,
-        //            ErrorMessage = "The reset code has expired. Please request a new one."
-        //        };
-        //    }
-
-        //    // Invalida el token para que no se pueda reutilizar
-        //    await _userManager.RemoveAuthenticationTokenAsync(user, "PasswordReset", "ResetCode");
-
-        //    // Reset de la contraseña
-        //    var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-        //    var result = await _userManager.ResetPasswordAsync(user, resetToken, resetPasswordDto.NewPassword);
-
-        //    if (!result.Succeeded)
-        //    {
-        //        return new ResetPasswordResponseDto
-        //        {
-        //            IsSuccess = false,
-        //            ErrorMessage = string.Join("; ", result.Errors.Select(e => e.Description))
-        //        };
-        //    }
-
-        //    return new ResetPasswordResponseDto
-        //    {
-        //        IsSuccess = true
-        //    };
-
-        //}
-
-        private string GenerateSecureCode()
-        {
-            var bytes = new byte[4];
-            RandomNumberGenerator.Fill(bytes);
-            int value = BitConverter.ToInt32(bytes, 0);
-            value = Math.Abs(value % (int)Math.Pow(10, 6));
-            return value.ToString(new string('0', 6));
-
-        }
     }
 }

@@ -39,8 +39,7 @@
                                        FontAttributes="Bold" 
                                        HorizontalOptions="Start"/>
 
-                            <CollectionView x:Name="ServiciosCarousel" 
-                                              HeightRequest="280">
+                            <CollectionView x:Name="ServiciosCarousel" HeightRequest="240">
                                 <CollectionView.ItemsLayout>
                                     <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
                                 </CollectionView.ItemsLayout>
@@ -63,7 +62,6 @@
                                                     </Image>
                                                 </Border>
 
-                                                <!-- Sección blanca inferior con texto -->
                                                 <StackLayout Grid.Row="1" BackgroundColor="#90A4AE" Padding="5" HorizontalOptions="Fill" VerticalOptions="Center">
                                                     <Label Text="{Binding Nombre}" FontAttributes="Bold" FontSize="16" TextColor="Black" HorizontalOptions="Center" LineBreakMode="TailTruncation" MaxLines="1"/>
                                                     <Label Grid.Row="2"  Text="{Binding Precio, StringFormat='${0:N0}'}" TextColor="Black" FontSize="16" HorizontalOptions="Center"/>

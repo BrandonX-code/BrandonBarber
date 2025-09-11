@@ -7,22 +7,22 @@ namespace Barber.Maui.BrandonBarber.Services
 {
     public class ReservationService
     {
-        private static List<CitaModel> _reservations = new();
+        private static readonly List<CitaModel> _reservations = [];
         private readonly HttpClient _httpClient;
-        private string URL;
-        public static DisponibilidadModel CurrentUser { get; set; }
+        private readonly string URL;
+        public static DisponibilidadModel? CurrentUser { get; set; }
 
         public ReservationService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            URL = _httpClient.BaseAddress.ToString();
+            URL = _httpClient.BaseAddress!.ToString();
         }
         public async Task<List<CitaModel>> GetAllReservations()
         {
             try
             {
                 var admin = AuthService.CurrentUser;
-                var response = await _httpClient.GetAsync($"{_httpClient.BaseAddress}api/citas/barberos/{admin.IdBarberia}");
+                var response = await _httpClient.GetAsync($"{_httpClient.BaseAddress}api/citas/barberos/{admin!.IdBarberia}");
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();

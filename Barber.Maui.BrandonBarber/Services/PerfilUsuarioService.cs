@@ -10,18 +10,18 @@ namespace Barber.Maui.BrandonBarber.Services
     public class PerfilUsuarioService
     {
         private readonly HttpClient _httpClient;
-        private string URL;
+        private readonly string URL;
 
         public PerfilUsuarioService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            URL = _httpClient.BaseAddress.ToString();
+            URL = _httpClient.BaseAddress!.ToString();
         }
 
         /// <summary>
         /// Obtiene el perfil de usuario por su ID o cédula
         /// </summary>
-        public async Task<UsuarioModels> GetPerfilUsuario(long cedula)
+        public async Task<UsuarioModels?> GetPerfilUsuario(long cedula)
         {
             try
             {

@@ -8,7 +8,7 @@ namespace Barber.Maui.BrandonBarber.Services
         public string BaseUrl => _httpClient.BaseAddress?.ToString() ?? "";
 
         private readonly HttpClient _httpClient;
-        private string URL;
+        private readonly string URL;
 
         public BarberiaService(HttpClient httpClient)
         {
@@ -224,7 +224,7 @@ namespace Barber.Maui.BrandonBarber.Services
                 using var content = new MultipartFormDataContent();
                 var fileContent = new ByteArrayContent(logoBytes);
 
-                string mimeType = GetMimeType(System.IO.Path.GetExtension(fileName));
+                string mimeType = BarberiaService.GetMimeType(System.IO.Path.GetExtension(fileName));
                 fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(mimeType);
 
                 content.Add(fileContent, "file", fileName);
@@ -254,7 +254,7 @@ namespace Barber.Maui.BrandonBarber.Services
             }
         }
 
-        private string GetMimeType(string extension)
+        private static string GetMimeType(string extension)
         {
             return extension.ToLower() switch
             {

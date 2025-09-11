@@ -7,16 +7,16 @@ namespace Barber.Maui.BrandonBarber.Services
     public class DisponibilidadService
     {
         private readonly HttpClient _httpClient;
-        private string URL;
-        public static DisponibilidadModel CurrentUser { get; set; }
+        private readonly string URL;
+        public static DisponibilidadModel? CurrentUser { get; set; }
 
         public DisponibilidadService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            URL = _httpClient.BaseAddress.ToString();
+            URL = _httpClient.BaseAddress!.ToString();
         }
 
-        public async Task<DisponibilidadModel> GetDisponibilidad(DateTime fecha, long barberoId)
+        public async Task<DisponibilidadModel?> GetDisponibilidad(DateTime fecha, long barberoId)
         {
             try
             {
@@ -48,7 +48,7 @@ namespace Barber.Maui.BrandonBarber.Services
             }
         }
 
-        public async Task<DisponibilidadModel> GetDisponibilidadPorBarbero(long cedula)
+        public async Task<DisponibilidadModel?> GetDisponibilidadPorBarbero(long cedula)
         {
             try
             {

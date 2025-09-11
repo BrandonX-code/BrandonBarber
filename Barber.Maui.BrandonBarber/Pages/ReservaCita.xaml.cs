@@ -14,7 +14,7 @@
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            CedulaEntry.TextChanged += OnCedulaEntryTextChanged;
+            CedulaEntry.TextChanged += OnCedulaEntryTextChanged!;
             _ = StartEntryAnimations();
             _ = CargarBarberosAsync();
         }
@@ -89,17 +89,19 @@
         }
 
 
-        private async void OnBuscarClicked(object sender, EventArgs e)
+        private async Task OnBuscarClicked(object sender, EventArgs e)
         {
-            await AnimateButtonClick(sender as Button);
-            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            if (sender is Button button)
+                await MainPage.AnimateButtonClick(button);
+            var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new BuscarPage(reservationService));
         }
 
         private async void OnConfiguracionClicked(object sender, EventArgs e)
         {
-            await AnimateButtonClick(sender as Button);
-            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+            if (sender is Button button)
+                await MainPage.AnimateButtonClick(button);
+            var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
             await Navigation.PushAsync(new ListaCitas(reservationService));
         }
 
@@ -160,31 +162,10 @@
                 var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date, idBarberia);
                 Console.WriteLine($"Citas encontradas para el día {FechaPicker.Date:yyyy-MM-dd}: {citasDelDia?.Count ?? 0}");
 
-                var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? new List<CitaModel>();
+                var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? [];
 
                 Console.WriteLine($"Citas filtradas solo para fecha actual: {citasActuales.Count}");
 
-                //bool conflictoHora = false;
-                //CitaModel citaConflicto = null;
-
-                //foreach (var cita in citasActuales)
-                //{
-                //    if (cita.Fecha.Hour == fechaSeleccionada.Hour && cita.Fecha.Minute == fechaSeleccionada.Minute && cita.BarberoId == barberoSeleccionado.Cedula)
-                //    {
-                //        conflictoHora = true;
-                //        citaConflicto = cita;
-                //        Console.WriteLine($"¡CONFLICTO! Hora existente: {cita.Fecha.Hour}:{cita.Fecha.Minute:D2}");
-                //        break;
-                //    }
-                //}
-
-                //if (conflictoHora)
-                //{
-                //    MostrarLoader(false);
-                //    Console.WriteLine($"Mostrando alerta de conflicto para hora {fechaSeleccionada.Hour}:{fechaSeleccionada.Minute:D2}");
-                //    await AppUtils.MostrarSnackbar("Ya existe una cita en esta fecha y hora. Elija otro horario.", Colors.DarkRed, Colors.White);
-                //    return;
-                //}
                 bool cedulaYaRegistrada = citasActuales.Any(c => c.Cedula == cedula);
                 if (cedulaYaRegistrada)
                 {
@@ -193,7 +174,7 @@
                     return;
                 }
 
-                CitaModel nuevaReserva = new CitaModel
+                CitaModel nuevaReserva = new()
                 {
                     Cedula = cedula,
                     Nombre = NombreEntry.Text,
@@ -217,26 +198,6 @@
                     await AnimarSalida();
                     await Navigation.PopToRootAsync();
                 }
-                //else
-                //{
-                //    var citasActualizadas = await _reservationServices.GetReservations(FechaPicker.Date);
-                //    var citasFiltradas = citasActualizadas?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? new List<CitaModel>();
-
-                //    bool ahoraHayConflicto = citasFiltradas.Any(c =>
-                //        c.Fecha.Hour == fechaSeleccionada.Hour &&
-                //        c.Fecha.Minute == fechaSeleccionada.Minute);
-
-                //    if (ahoraHayConflicto)
-                //    {
-                //        Console.WriteLine("Se detectó conflicto al verificar después del fallo");
-                //        await AppUtils.MostrarSnackbar("Ya existe una cita en esta fecha y hora. Elija otro horario.", Colors.DarkRed, Colors.White);
-                //    }
-                //    else
-                //    {
-                //        Console.WriteLine("Fallo al guardar sin detectar conflicto");
-
-                //    }
-                //}
             }
             catch (Exception ex)
             {
@@ -250,7 +211,8 @@
 
         private async void OnCancelarClicked(object sender, EventArgs e)
         {
-            await AnimateButtonClick(sender as Button);
+            if (sender is Button button)
+                await MainPage.AnimateButtonClick(button);
 
             var popup = new CustomAlertPopup("¿Está seguro que desea cancelar la reserva?");
             bool confirm = await popup.ShowAsync(this);
@@ -274,7 +236,7 @@
             HoraPicker.Time = TimeSpan.Zero;
         }
 
-        private async Task AnimateButtonClick(Button button)
+        private static async Task AnimateButtonClick(Button button)
         {
             if (button == null) return;
 

@@ -4,7 +4,7 @@ namespace Barber.Maui.BrandonBarber.Mobal
 {
     public partial class CustomAlertPopup : Popup
     {
-        private TaskCompletionSource<bool> _tcs;
+        private TaskCompletionSource<bool>? _tcs;
 
         public CustomAlertPopup(string message)
         {

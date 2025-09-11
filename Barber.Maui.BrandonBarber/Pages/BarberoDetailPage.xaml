@@ -29,7 +29,7 @@
 								<Label x:Name="PromedioLabel" Text="(0.0)" TextColor="White" FontSize="20"/>
 							</HorizontalStackLayout>
 						<Label x:Name="BarberoVisitasLabel" TextColor="White" FontSize="14"/>
-						<Button x:Name="CalificarButton" Text="Calificar Barbero" BackgroundColor="#FF6F91" TextColor="Black" FontSize="12"	CornerRadius="15" HeightRequest="30" Margin="0,5,0,0" Clicked="OnCalificarClicked"/>
+						<Button x:Name="CalificarButton" Text="Calificar Barbero" BackgroundColor="#FF6F91" TextColor="Black" FontSize="15"	CornerRadius="15" HeightRequest="30" Margin="0,5,0,0" Clicked="OnCalificarClicked"/>
 					</VerticalStackLayout>
 				</Grid>
 

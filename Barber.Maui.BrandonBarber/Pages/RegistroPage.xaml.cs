@@ -4,15 +4,15 @@
     {
         private readonly AuthService _authService;
         private readonly BarberiaService _barberiaService;
-        private Barberia _selectedBarberia;
-        private List<Barberia> _allBarberias;
-        public ObservableCollection<Barberia> Barberias { get; } = new ObservableCollection<Barberia>();
+        private Barberia? _selectedBarberia;
+        private List<Barberia>? _allBarberias;
+        public ObservableCollection<Barberia> Barberias { get; } = [];
 
         public RegistroPage()
         {
             InitializeComponent();
-            _authService = Application.Current.Handler.MauiContext.Services.GetService<AuthService>();
-            _barberiaService = Application.Current.Handler.MauiContext.Services.GetService<BarberiaService>();
+            _authService = Application.Current!.Handler.MauiContext!.Services.GetService<AuthService>()!;
+            _barberiaService = Application.Current!.Handler.MauiContext!.Services.GetService<BarberiaService>()!;
 
             // Cargar barberías
             LoadBarberias();
@@ -37,7 +37,7 @@
         {
             Barberias.Clear();
 
-            var filtered = _allBarberias.AsEnumerable();
+            var filtered = _allBarberias!.AsEnumerable();
 
             if (!string.IsNullOrWhiteSpace(searchText))
             {
@@ -158,7 +158,7 @@
                 return false;
             }
 
-            if (!IsValidEmail(EmailEntry.Text))
+            if (!RegistroPage.IsValidEmail(EmailEntry.Text))
             {
                 ErrorLabel.Text = "El formato del correo electrónico no es válido";
                 ErrorLabel.IsVisible = true;
@@ -172,7 +172,7 @@
                 return false;
             }
 
-            if (!IsPasswordSecure(PasswordEntry.Text))
+            if (!RegistroPage.IsPasswordSecure(PasswordEntry.Text))
             {
                 ErrorLabel.Text = "La contraseña debe tener al menos 8 caracteres, incluir letras mayúsculas, minúsculas y números";
                 ErrorLabel.IsVisible = true;
@@ -182,13 +182,13 @@
             return true;
         }
 
-        private bool IsValidEmail(string email)
+        private static bool IsValidEmail(string email)
         {
             var regex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$");
             return regex.IsMatch(email);
         }
 
-        private bool IsPasswordSecure(string password)
+        private static bool IsPasswordSecure(string password)
         {
             if (password.Length < 8)
                 return false;

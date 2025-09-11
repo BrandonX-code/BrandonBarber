@@ -7,10 +7,10 @@ namespace Barber.Maui.BrandonBarber.Models
         public int Id { get; set; }
 
         [Required]
-        public string NombreArchivo { get; set; }
+        public string? NombreArchivo { get; set; }
 
         [Required]
-        public string RutaArchivo { get; set; }
+        public string? RutaArchivo { get; set; }
 
         public string? Descripcion { get; set; }
 

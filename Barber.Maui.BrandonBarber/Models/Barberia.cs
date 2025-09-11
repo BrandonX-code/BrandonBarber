@@ -9,11 +9,9 @@
         public string? Direccion { get; set; }
         public string? Email { get; set; }
 
-        // Propiedades para UI
-        public string? LogoUrl { get; set; } // URL o nombre del archivo local
+        public string? LogoUrl { get; set; }
         public bool IsSelected { get; set; }
 
-        // Puedes agregar servicios destacados si los tienes
-        public List<string> ServiciosDestacados { get; set; } = new();
+        public List<string> ServiciosDestacados { get; set; } = [];
     }
 }

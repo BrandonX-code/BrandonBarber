@@ -9,12 +9,12 @@ namespace Barber.Maui.BrandonBarber.Services
         public string BaseUrl => _httpClient.BaseAddress?.ToString() ?? "";
 
         private readonly HttpClient _httpClient;
-        private string URL;
+        private readonly string URL;
 
         public GaleriaService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            URL = _httpClient.BaseAddress.ToString();
+            URL = _httpClient.BaseAddress!.ToString();
         }
 
         public async Task<bool> SubirImagen(string rutaImagen, string descripcion, long idbarbero)
@@ -99,7 +99,7 @@ namespace Barber.Maui.BrandonBarber.Services
             }
         }
 
-        public async Task<ImagenGaleriaModel> ObtenerImagenPorId(int id)
+        public async Task<ImagenGaleriaModel?> ObtenerImagenPorId(int id)
         {
             try
             {

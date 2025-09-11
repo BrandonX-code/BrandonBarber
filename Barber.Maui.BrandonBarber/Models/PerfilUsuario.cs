@@ -11,18 +11,18 @@ namespace Barber.Maui.BrandonBarber.Models
         public long Cedula { get; set; }
 
         [JsonPropertyName("nombre")]
-        public string Nombre { get; set; }
+        public string? Nombre { get; set; }
 
         [JsonPropertyName("telefono")]
-        public string Telefono { get; set; }
+        public string? Telefono { get; set; }
 
         [JsonPropertyName("email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [JsonPropertyName("direccion")]
-        public string Direccion { get; set; }
+        public string? Direccion { get; set; }
 
         [JsonPropertyName("imagenPath")]
-        public string ImagenPath { get; set; }
+        public string? ImagenPath { get; set; }
     }
 }
