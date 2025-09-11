@@ -168,7 +168,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 LoadingIndicator.IsRunning = false;
 
                 // Mostrar la vista correspondiente según el rol
-                switch (AuthService.CurrentUser.Rol.ToLower())
+                switch (AuthService.CurrentUser.Rol!.ToLower())
                 {
                     case "cliente":
                         ClienteView.IsVisible = true;
@@ -231,8 +231,8 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                     var admin = AuthService.CurrentUser;
                     var barberos = usuarios?
-                        .Where(u => u.Rol.Equals("barbero", StringComparison.CurrentCultureIgnoreCase)
-                                    && u.IdBarberia == admin.IdBarberia)
+                        .Where(u => u.Rol!.Equals("barbero", StringComparison.CurrentCultureIgnoreCase)
+                                    && u.IdBarberia == admin!.IdBarberia)
                         .ToList() ?? [];
 
                     TodosLosBarberos = barberos;
@@ -289,7 +289,7 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
-                var usuario = AuthService.CurrentUser.IdBarberia ?? 0;
+                var usuario = AuthService.CurrentUser!.IdBarberia ?? 0;
                 var response = await _authService._BaseClient.GetAsync($"api/auth/barberos/{usuario}");
 
                 if (response.IsSuccessStatusCode)
@@ -299,7 +299,7 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                     var admin = AuthService.CurrentUser;
                     var barberos = usuarios?
-                        .Where(u => u.Rol.Equals("barbero", StringComparison.CurrentCultureIgnoreCase)
+                        .Where(u => u.Rol!.Equals("barbero", StringComparison.CurrentCultureIgnoreCase)
                                     && u.IdBarberia == admin.IdBarberia)
                         .ToList() ?? [];
 

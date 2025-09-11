@@ -97,6 +97,7 @@ namespace Barber.Maui.API.Controllers
                 {
                     usuario.Cedula,
                     usuario.Nombre,
+                    usuario.Telefono,
                     usuario.Email,
                     usuario.Rol,
                     usuario.IdBarberia

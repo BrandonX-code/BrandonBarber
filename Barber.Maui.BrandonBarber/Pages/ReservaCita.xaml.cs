@@ -14,7 +14,6 @@
         protected override void OnAppearing()
         {
             base.OnAppearing();
-            CedulaEntry.TextChanged += OnCedulaEntryTextChanged!;
             _ = StartEntryAnimations();
             _ = CargarBarberosAsync();
         }
@@ -25,11 +24,6 @@
             await formLayout.FadeTo(1, 300);
             await formLayout.TranslateTo(0, 0, 400, Easing.CubicOut);
             uint delay = 100;
-            await idBorder.FadeTo(1, 300);
-            await Task.Delay((int)delay);
-            await nombreBorder.FadeTo(1, 300);
-            await Task.Delay((int)delay);
-            await telefonoBorder.FadeTo(1, 300);
             await Task.Delay((int)delay);
             await barberoBorder.FadeTo(1, 300);
             await Task.Delay((int)delay);
@@ -53,41 +47,6 @@
             BarberoPicker.ItemsSource = barberos;
             BarberoPicker.SelectedIndex = -1;
         }
-
-
-        private async void OnCedulaEntryTextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (long.TryParse(CedulaEntry.Text, out long cedula) && CedulaEntry.Text.Length >= 6)
-            {
-                var usuario = await _authService.GetUserByCedula(cedula);
-
-                // Validar si el usuario existe y su rol es cliente
-                if (usuario != null && usuario.Rol?.ToLower() == "cliente")
-                {
-                    NombreEntry.Text = usuario.Nombre;
-                    TelefonoEntry.Text = usuario.Telefono;
-                    NombreEntry.IsEnabled = false;
-                    TelefonoEntry.IsEnabled = false;
-                }
-                else
-                {
-                    // Si el usuario no es cliente o no existe, limpiar y habilitar
-                    NombreEntry.Text = string.Empty;
-                    TelefonoEntry.Text = string.Empty;
-                    NombreEntry.IsEnabled = true;
-                    TelefonoEntry.IsEnabled = true;
-                }
-            }
-            else
-            {
-                // Si la cédula no es válida, limpiar y habilitar campos
-                NombreEntry.Text = string.Empty;
-                TelefonoEntry.Text = string.Empty;
-                NombreEntry.IsEnabled = true;
-                TelefonoEntry.IsEnabled = true;
-            }
-        }
-
 
         private async Task OnBuscarClicked(object sender, EventArgs e)
         {
@@ -118,28 +77,13 @@
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(CedulaEntry.Text) || !long.TryParse(CedulaEntry.Text, out long cedula) || CedulaEntry.Text.Length < 6 || CedulaEntry.Text.Length > 10)
+                var usuario = AuthService.CurrentUser;
+                if (usuario == null)
                 {
                     MostrarLoader(false);
-                    await AppUtils.MostrarSnackbar("Por favor, ingrese una cédula válida (entre 6 y 10 dígitos).", Colors.Orange, Colors.White);
+                    await AppUtils.MostrarSnackbar("Usuario no autenticado.", Colors.Red, Colors.White);
                     return;
                 }
-
-
-                if (string.IsNullOrWhiteSpace(NombreEntry.Text) || NombreEntry.Text.Length < 2 || NombreEntry.Text.Length > 50)
-                {
-                    MostrarLoader(false);
-                    await AppUtils.MostrarSnackbar("El Nombre debe tener entre 2 y 50 caracteres.", Colors.Orange, Colors.White);
-                    return;
-                }
-
-                //if (string.IsNullOrWhiteSpace(TelefonoEntry.Text) || !TelefonoEntry.Text.All(char.IsDigit) || TelefonoEntry.Text.Length != 10)
-                //{
-                //    MostrarLoader(false);
-                //    await AppUtils.MostrarSnackbar("El Teléfono debe contener 10 dígitos numéricos.", Colors.Orange, Colors.White);
-                //    return;
-                //}
-
 
                 DateTime fechaSeleccionada = FechaPicker.Date.Add(HoraPicker.Time);
                 if (fechaSeleccionada < DateTime.Now)
@@ -156,38 +100,29 @@
                     return;
                 }
 
-                Console.WriteLine($"Fecha y hora seleccionada: {fechaSeleccionada:yyyy-MM-dd HH:mm:ss}");
-
-                int idBarberia = AuthService.CurrentUser.IdBarberia ?? 0;
+                int idBarberia = usuario.IdBarberia ?? 0;
                 var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date, idBarberia);
-                Console.WriteLine($"Citas encontradas para el día {FechaPicker.Date:yyyy-MM-dd}: {citasDelDia?.Count ?? 0}");
-
                 var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? [];
 
-                Console.WriteLine($"Citas filtradas solo para fecha actual: {citasActuales.Count}");
-
-                bool cedulaYaRegistrada = citasActuales.Any(c => c.Cedula == cedula);
+                bool cedulaYaRegistrada = citasActuales.Any(c => c.Cedula == usuario.Cedula);
                 if (cedulaYaRegistrada)
                 {
                     MostrarLoader(false);
                     await AppUtils.MostrarSnackbar("Ya existe una cita registrada con esta cédula para el día seleccionado.", Colors.OrangeRed, Colors.White);
                     return;
                 }
-
+                var cliente = AuthService.CurrentUser;
                 CitaModel nuevaReserva = new()
                 {
-                    Cedula = cedula,
-                    Nombre = NombreEntry.Text,
-                    Telefono = TelefonoEntry.Text,
+                    Cedula = cliente!.Cedula,
+                    Nombre = cliente.Nombre,
+                    Telefono = cliente.Telefono,
                     Fecha = fechaSeleccionada,
                     BarberoId = barberoSeleccionado.Cedula,
                     BarberoNombre = string.Empty
                 };
 
-                Console.WriteLine($"Intentando guardar cita: Cedula={nuevaReserva.Cedula}, Fecha={nuevaReserva.Fecha:yyyy-MM-dd HH:mm:ss}");
-
                 bool guardadoExitoso = await _reservationServices.AddReservation(nuevaReserva);
-                Console.WriteLine($"Resultado del guardado: {(guardadoExitoso ? "Éxito" : "Fallo")}");
 
                 MostrarLoader(false);
 
@@ -202,10 +137,7 @@
             catch (Exception ex)
             {
                 await AppUtils.MostrarSnackbar(ex.Message, Colors.DarkRed, Colors.White);
-                Console.WriteLine($"ERROR: {ex.Message}");
-                Console.WriteLine($"STACK TRACE: {ex.StackTrace}");
                 MostrarLoader(false);
-                //await AppUtils.MostrarSnackbar("Ocurrió un error al procesar la solicitud.", Colors.DarkRed, Colors.White);
             }
         }
 
@@ -225,13 +157,8 @@
             }
         }
 
-
-
         private void Limpiarcampos()
         {
-            CedulaEntry.Text = string.Empty;
-            NombreEntry.Text = string.Empty;
-            TelefonoEntry.Text = string.Empty;
             FechaPicker.Date = DateTime.Today;
             HoraPicker.Time = TimeSpan.Zero;
         }
