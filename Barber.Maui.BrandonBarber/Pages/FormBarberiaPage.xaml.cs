@@ -36,7 +36,7 @@
             InitializeComponent();
             _isEdit = false;
             _barberiaService = Application.Current!.Handler!.MauiContext!.Services.GetService<BarberiaService>()!;
-            _idAdministrador = AuthService.CurrentUser.Cedula;
+            _idAdministrador = AuthService.CurrentUser!.Cedula;
             BindingContext = this;
         }
 

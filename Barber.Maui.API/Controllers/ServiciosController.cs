@@ -40,7 +40,7 @@ namespace Barber.Maui.API.Controllers
             // ✅ Usa la nueva propiedad 'ImagenFile' del modelo
             if (imageFile != null)
             {
-                var resultadoSubida = await SubirImagenACloudinary(imageFile, servicio.Nombre);
+                var resultadoSubida = await SubirImagenACloudinary(imageFile, servicio.Nombre!);
                 if (resultadoSubida == null)
                     return StatusCode(500, new { message = "Error al subir la imagen del servicio a Cloudinary." });
 
@@ -76,7 +76,7 @@ namespace Barber.Maui.API.Controllers
             // ✅ Usa la nueva propiedad 'ImagenFile' del modelo
             if (imagenFile != null)
             {
-                var resultadoSubida = await SubirImagenACloudinary(imagenFile, servicio.Nombre);
+                var resultadoSubida = await SubirImagenACloudinary(imagenFile, servicio.Nombre!);
                 if (resultadoSubida == null)
                     return StatusCode(500, new { message = "Error al actualizar la imagen del servicio en Cloudinary." });
 

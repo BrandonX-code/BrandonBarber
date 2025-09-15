@@ -38,7 +38,7 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
-                long idAdministrador = AuthService.CurrentUser.Cedula;
+                long idAdministrador = AuthService.CurrentUser!.Cedula;
                 _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
 
                 BarberiaPicker.ItemsSource = _barberias;
@@ -155,8 +155,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             var filtered = string.IsNullOrWhiteSpace(searchText)
                 ? _todosLosClientes
                 : _todosLosClientes.Where(c =>
-                    c.Nombre.ToLower().Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
-                    c.Email.ToLower().Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                    c.Nombre!.ToLower().Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                    c.Email!.ToLower().Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
                     c.Cedula.ToString().Contains(searchText, StringComparison.InvariantCultureIgnoreCase));
 
             foreach (var cliente in filtered)

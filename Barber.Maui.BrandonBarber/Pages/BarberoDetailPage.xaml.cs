@@ -223,7 +223,7 @@
         {
             try
             {
-                var barberoCedula = AuthService.CurrentUser.Cedula;
+                var barberoCedula = AuthService.CurrentUser!.Cedula;
                 // Obtener todas las citas
                 var todasLasCitas = await _reservationService.GetReservationsById(barberoCedula);
 

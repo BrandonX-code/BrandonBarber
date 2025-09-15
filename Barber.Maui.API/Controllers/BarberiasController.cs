@@ -208,7 +208,7 @@ namespace Barber.Maui.API.Controllers
                 return Ok(new
                 {
                     Url = barberia.LogoUrl,
-                    PublicId = uploadResult.PublicId
+                    uploadResult.PublicId
                 });
             }
             catch (Exception ex)
@@ -282,7 +282,7 @@ namespace Barber.Maui.API.Controllers
         }
 
         private static Barberia BarberiaToDto(Barberia barberia) =>
-            new Barberia
+            new()
             {
                 Idbarberia = barberia.Idbarberia,
                 Idadministrador = barberia.Idadministrador,

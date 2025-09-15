@@ -50,7 +50,7 @@
         {
             try
             {
-                long barberoid = AuthService.CurrentUser.Cedula;
+                long barberoid = AuthService.CurrentUser!.Cedula;
                 var citas = await _reservationService.GetReservationsByBarberoAndFecha(barberoid, _selectedDate);
                 _citas.Clear();
                 foreach (var cita in citas)

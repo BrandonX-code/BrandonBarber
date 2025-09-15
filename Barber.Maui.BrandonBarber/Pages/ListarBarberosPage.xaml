@@ -85,7 +85,7 @@
 
                     <Border x:Name="EmptyStateFrame" BackgroundColor="#90A4AE" StrokeShape="10" Padding="30" IsVisible="False">
                         <VerticalStackLayout Spacing="15" HorizontalOptions="Center">
-                            <Image Source="empty_users.png"  WidthRequest="64" HeightRequest="64" />
+                            <Image Source="listarbarbero.png"  WidthRequest="64" HeightRequest="64" />
                             <Label Text="No hay barberos registrados" FontSize="18" TextColor="Black" HorizontalOptions="Center" />
                             <Label Text="Los barberos aparecerán aquí cuando se registren en la aplicación" FontSize="14" TextColor="#666666"  HorizontalOptions="Center" HorizontalTextAlignment="Center" />
                         </VerticalStackLayout>

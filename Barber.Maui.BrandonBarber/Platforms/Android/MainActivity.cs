@@ -14,15 +14,15 @@ namespace Barber.Maui.BrandonBarber
         private float _downX, _downY;
         private const int TapThreshold = 20; // píxeles permitidos para considerar tap
 
-        protected override void OnCreate(Bundle savedInstanceState)
+        protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            Window.SetSoftInputMode(Android.Views.SoftInput.AdjustResize);
+            Window!.SetSoftInputMode(Android.Views.SoftInput.AdjustResize);
         }
 
-        public override bool DispatchTouchEvent(MotionEvent ev)
+        public override bool DispatchTouchEvent(MotionEvent? ev)
         {
-            switch (ev.Action)
+            switch (ev!.Action)
             {
                 case MotionEventActions.Down:
                     _downX = ev.RawX;
@@ -38,8 +38,8 @@ namespace Barber.Maui.BrandonBarber
                         var focusedView = CurrentFocus;
                         if (focusedView is Android.Views.View currentView)
                         {
-                            var rootView = Window.DecorView.RootView;
-                            var touchedView = FindTouchedEditText(rootView, upX, upY);
+                            var rootView = Window!.DecorView.RootView;
+                            var touchedView = FindTouchedEditText(rootView!, upX, upY);
                             if (touchedView != null && touchedView != currentView)
                             {
                                 return base.DispatchTouchEvent(ev);
@@ -57,7 +57,7 @@ namespace Barber.Maui.BrandonBarber
             return base.DispatchTouchEvent(ev);
         }
 
-        private static EditText FindTouchedEditText(Android.Views.View view, float x, float y)
+        private static EditText? FindTouchedEditText(Android.Views.View view, float x, float y)
         {
             if (view is EditText editText)
             {
@@ -76,7 +76,7 @@ namespace Barber.Maui.BrandonBarber
             {
                 for (int i = 0; i < group.ChildCount; i++)
                 {
-                    var result = FindTouchedEditText(group.GetChildAt(i), x, y);
+                    var result = FindTouchedEditText(group.GetChildAt(i)!, x, y);
                     if (result != null)
                         return result;
                 }

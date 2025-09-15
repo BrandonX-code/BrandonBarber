@@ -7,15 +7,10 @@ namespace Barber.Maui.API.Controllers
 {
     [Route("api/auth")]
     [ApiController]
-    public class AuthController : ControllerBase
+    public class AuthController(AppDbContext context) : ControllerBase
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _context = context;
 
-        public AuthController(AppDbContext context)
-        {
-            _context = context;
-        }
-        
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Auth>>> GetAuth()
         {
@@ -24,7 +19,7 @@ namespace Barber.Maui.API.Controllers
         [HttpGet("cliente/{idbarberia}")]
         public async Task<ActionResult<IEnumerable<Auth>>> GetClientePorBarberia(int idbarberia)
         {
-            return await _context.UsuarioPerfiles.Where(c=> idbarberia == c.IdBarberia && c.Rol.Equals("cliente")).ToListAsync();
+            return await _context.UsuarioPerfiles.Where(c=> idbarberia == c.IdBarberia && c.Rol!.Equals("cliente")).ToListAsync();
 
         }
         [HttpGet("{cedula}")]

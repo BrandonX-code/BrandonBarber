@@ -3,7 +3,7 @@
     public partial class DetalleImagenPage : ContentPage
     {
         private readonly ImagenGaleriaModel _imagen;
-        private readonly string _imageUrl;
+        private readonly string? _imageUrl;
 
         private readonly string _baseUrl;
         public DetalleImagenPage(ImagenGaleriaModel imagen, string baseUrl)
@@ -13,7 +13,7 @@
             _baseUrl = baseUrl;
 
             _imageUrl = imagen.RutaArchivo;
-            DetalleImagen.Source = ImageSource.FromUri(new Uri(_imageUrl));
+            DetalleImagen.Source = ImageSource.FromUri(new Uri(_imageUrl!));
 
             // Mostrar botón de editar solo para barberos
             EditarButton.IsVisible = AuthService.CurrentUser?.Rol?.ToLower() == "barbero";
@@ -58,7 +58,7 @@
         {
             try
             {
-                string? localFilePath = await DownloadImageToTempFile(_imageUrl);
+                string? localFilePath = await DownloadImageToTempFile(_imageUrl!);
 
                 if (string.IsNullOrEmpty(localFilePath))
                 {
@@ -82,19 +82,17 @@
         {
             try
             {
-                using (var httpClient = new HttpClient())
-                {
-                    var response = await httpClient.GetAsync(imageUrl);
-                    response.EnsureSuccessStatusCode();
+                using var httpClient = new HttpClient();
+                var response = await httpClient.GetAsync(imageUrl);
+                response.EnsureSuccessStatusCode();
 
-                    var imageBytes = await response.Content.ReadAsByteArrayAsync();
+                var imageBytes = await response.Content.ReadAsByteArrayAsync();
 
-                    string fileName = System.IO.Path.GetFileName(new Uri(imageUrl).LocalPath);
-                    string tempFilePath = System.IO.Path.Combine(FileSystem.CacheDirectory, fileName);
+                string fileName = System.IO.Path.GetFileName(new Uri(imageUrl).LocalPath);
+                string tempFilePath = System.IO.Path.Combine(FileSystem.CacheDirectory, fileName);
 
-                    await File.WriteAllBytesAsync(tempFilePath, imageBytes);
-                    return tempFilePath;
-                }
+                await File.WriteAllBytesAsync(tempFilePath, imageBytes);
+                return tempFilePath;
             }
             catch (Exception ex)
             {

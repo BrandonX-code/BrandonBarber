@@ -169,7 +169,7 @@ public class CitasController : ControllerBase
 
         foreach (var cita in citas)
         {
-            Auth barbero = _context.UsuarioPerfiles.Where(b => b.Cedula == cita.BarberoId).FirstOrDefault();
+            Auth barbero = _context.UsuarioPerfiles.Where(b => b.Cedula == cita.BarberoId).FirstOrDefault()!;
             cita.BarberoNombre = barbero?.Nombre ?? "No encontrado";
         }
 

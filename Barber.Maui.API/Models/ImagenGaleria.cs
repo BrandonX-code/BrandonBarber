@@ -12,11 +12,11 @@ namespace Barber.Maui.API.Models
 
         [Required]
         [MaxLength(255)]
-        public string NombreArchivo { get; set; }
+        public string? NombreArchivo { get; set; }
 
         [Required]
         [MaxLength(500)]
-        public string RutaArchivo { get; set; }
+        public string? RutaArchivo { get; set; }
 
         [MaxLength(500)]
         public string? Descripcion { get; set; }

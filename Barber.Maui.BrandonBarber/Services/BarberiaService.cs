@@ -84,7 +84,7 @@ namespace Barber.Maui.BrandonBarber.Services
             }
         }
 
-        public async Task<Barberia> GetBarberiaByIdAsync(int id)
+        public async Task<Barberia?> GetBarberiaByIdAsync(int id)
         {
             try
             {
@@ -105,7 +105,7 @@ namespace Barber.Maui.BrandonBarber.Services
                 };
 
                 var barberia = JsonSerializer.Deserialize<Barberia>(json, options);
-                return barberia;
+                return barberia!;
             }
             catch (Exception ex)
             {

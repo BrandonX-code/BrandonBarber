@@ -20,8 +20,8 @@
             base.OnStart();
 
             // Redirigir a la página de login si no hay una sesión activa
-            var authService = Current.Handler.MauiContext.Services.GetService<AuthService>();
-            var isLoggedIn = await authService.CheckAuthStatus();
+            var authService = Current!.Handler.MauiContext!.Services.GetService<AuthService>();
+            var isLoggedIn = await authService!.CheckAuthStatus();
 
             if (!isLoggedIn)
             {

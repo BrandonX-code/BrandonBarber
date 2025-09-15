@@ -214,7 +214,7 @@
                 return;
             }
 
-            string imagenPath = _servicioEditando.Imagen;
+            string imagenPath = _servicioEditando.Imagen!;
 
             if (_imagenSeleccionada != null)
             {

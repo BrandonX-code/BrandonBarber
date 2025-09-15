@@ -48,7 +48,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             _barberiaService = Application.Current!.Handler.MauiContext!.Services.GetService<BarberiaService>();
 
             BindingContext = this;
-            _idAdministrador = AuthService.CurrentUser.Cedula;
+            _idAdministrador = AuthService.CurrentUser!.Cedula;
             LoadBarberiasCommand = new Command(async () => await LoadBarberias());
             AgregarBarberiaCommand = new Command(async () => await AgregarBarberia());
             EditarBarberiaCommand = new Command<Barberia>(async (barberia) => await EditarBarberia(barberia));

@@ -7,14 +7,9 @@ namespace Barber.Maui.API.Controllers
 {
     [Route("api/calificaciones")]
     [ApiController]
-    public class CalificacionesController : ControllerBase
+    public class CalificacionesController(AppDbContext context) : ControllerBase
     {
-        private readonly AppDbContext _context;
-
-        public CalificacionesController(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         // POST: api/calificaciones
         [HttpPost]

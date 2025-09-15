@@ -156,7 +156,7 @@ namespace Barber.Maui.API.Controllers
                 }
 
                 // Eliminar de Cloudinary
-                await EliminarImagenDeCloudinary(imagen.NombreArchivo);
+                await EliminarImagenDeCloudinary(imagen.NombreArchivo!);
 
                 // Eliminar registro de base de datos
                 _context.ImagenesGaleria.Remove(imagen);

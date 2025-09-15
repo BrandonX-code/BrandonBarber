@@ -25,11 +25,11 @@ namespace Barber.Maui.API.Models
             {
                 try
                 {
-                    return JsonSerializer.Deserialize<Dictionary<string, bool>>(Horarios) ?? new Dictionary<string, bool>();
+                    return JsonSerializer.Deserialize<Dictionary<string, bool>>(Horarios) ?? [];
                 }
                 catch
                 {
-                    return new Dictionary<string, bool>();
+                    return [];
                 }
             }
             set

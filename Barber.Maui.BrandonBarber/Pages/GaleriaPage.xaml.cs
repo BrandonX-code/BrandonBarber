@@ -74,7 +74,7 @@
                         new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                     var admin = AuthService.CurrentUser;
-                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero" && u.IdBarberia == admin.IdBarberia).ToList() ?? [];
+                    var barberos = usuarios?.Where(u => u.Rol!.ToLower() == "barbero" && u.IdBarberia == admin.IdBarberia).ToList() ?? [];
                     TodosLosBarberos = barberos;
                     Picker.ItemsSource = TodosLosBarberos;
                 }
@@ -397,6 +397,13 @@
                     return;
                 }
 
+                // Validar límite de imágenes
+                if (imagenes.Count >= 6)
+                {
+                    await AppUtils.MostrarSnackbar("Solo puedes subir hasta 6 imágenes en tu galería.", Colors.Orange, Colors.White);
+                    return;
+                }
+
                 // Abre la galería
                 var foto = await MediaPicker.PickPhotoAsync(new MediaPickerOptions
                 {
@@ -407,19 +414,12 @@
                     return; // usuario canceló
 
                 // Opcional: pide descripción
-                string descripcion = await DisplayPromptAsync("Descripción", "Ingresa una descripción para la imagen (opcional):", placeholder: "Ej: Corte fade con barba", maxLength: 500
-                );
+                string descripcion = await DisplayPromptAsync("Descripción", "Ingresa una descripción para la imagen (opcional):", placeholder: "Ej: Corte fade con barba", maxLength: 500);
 
-                // Obtén la ruta o el stream para subir
                 string rutaLocal = foto.FullPath;
-                // o bien
-                // using var stream = await foto.OpenReadAsync();
 
-                // Subir la imagen a la API
                 long barberoId = AuthService.CurrentUser.Cedula;
                 bool subida = await _galeriaService.SubirImagen(rutaLocal, descripcion, barberoId);
-                // si tu API acepta stream, pásalo en lugar de la ruta:
-                // bool subida = await _galeriaService.SubirImagen(stream, descripcion);
 
                 if (subida)
                 {

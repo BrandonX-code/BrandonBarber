@@ -6,11 +6,11 @@ namespace Barber.Maui.API.Models
     {
         public int Id { get; set; }
         public long Cedula { get; set; }
-        public string Nombre { get; set; }
-        public string Telefono { get; set; }
+        public string? Nombre { get; set; }
+        public string? Telefono { get; set; }
         public DateTime Fecha { get; set; } = DateTime.Now;
         public long BarberoId { get; set; }
         [NotMapped]
-        public string BarberoNombre { get; set; }
+        public string? BarberoNombre { get; set; }
     }
 }

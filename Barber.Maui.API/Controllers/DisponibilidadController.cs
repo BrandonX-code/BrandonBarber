@@ -8,14 +8,9 @@ namespace Barber.Maui.API.Controllers
 {
     [Route("api/disponibilidad")]
     [ApiController]
-    public class DisponibilidadController : ControllerBase
+    public class DisponibilidadController(AppDbContext context) : ControllerBase
     {
-        private readonly AppDbContext _context;
-
-        public DisponibilidadController(AppDbContext context)
-        {
-            _context = context;
-        }
+        private readonly AppDbContext _context = context;
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Disponibilidad>>> GetDisponibilidad()

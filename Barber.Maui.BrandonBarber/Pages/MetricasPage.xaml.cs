@@ -270,7 +270,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                     {
                         entries.Add(new ChartEntry(item.Total)
                         {
-                            Label = TruncateLabel(barbero.Nombre, 10),
+                            Label = TruncateLabel(barbero.Nombre!, 10),
                             ValueLabel = item.Total.ToString(),
                             Color = colores[colorIndex++ % colores.Length],
                             TextColor = SKColor.Parse("#ffffff"),

@@ -6,9 +6,9 @@ namespace Barber.Maui.API.Models
     {
         [Required]
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [Required]
-        public string Contraseña { get; set; }
+        public string? Contraseña { get; set; }
     }
 }

@@ -12,18 +12,18 @@ namespace Barber.Maui.API.Models
 
         [Required]
         [StringLength(100)]
-        public string Nombre { get; set; }
+        public string? Nombre { get; set; }
 
         [StringLength(20)]
-        public string Telefono { get; set; }
+        public string? Telefono { get; set; }
 
         [StringLength(100)]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [StringLength(200)]
-        public string Direccion { get; set; }
+        public string? Direccion { get; set; }
 
         [StringLength(255)]
-        public string ImagenPath { get; set; }
+        public string? ImagenPath { get; set; }
     }
 }

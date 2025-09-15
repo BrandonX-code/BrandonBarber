@@ -18,7 +18,7 @@
         {
             try
             {
-                long idAdministrador = AuthService.CurrentUser.Cedula;
+                long idAdministrador = AuthService.CurrentUser!.Cedula;
                 _barberias = await _barberiaService.GetBarberiasByAdministradorAsync(idAdministrador);
 
                 BarberiaPicker.ItemsSource = _barberias;

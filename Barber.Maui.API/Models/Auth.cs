@@ -5,12 +5,12 @@ namespace Barber.Maui.API.Models
     public class Auth
     {
         public long Cedula { get; set; }
-        public string Nombre { get; set; }
-        public string Email { get; set; }
-        public string Direccion { get; set; }
-        public string Telefono { get; set; }
-        public string Contraseña { get; set; }
-        public string Rol { get; set; }
+        public string? Nombre { get; set; }
+        public string? Email { get; set; }
+        public string? Direccion { get; set; }
+        public string? Telefono { get; set; }
+        public string? Contraseña { get; set; }
+        public string? Rol { get; set; }
         public string? ImagenPath { get; set; }
         public string? Especialidades { get; set; }
         public int? IdBarberia { get; set; }

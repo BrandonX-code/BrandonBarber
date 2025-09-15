@@ -150,8 +150,8 @@
             var filtered = string.IsNullOrWhiteSpace(searchText)
                 ? _todosLosBarberos
                 : _todosLosBarberos.Where(b =>
-                    b.Nombre.ToLower().Contains(searchText) ||
-                    b.Email.ToLower().Contains(searchText) ||
+                    b.Nombre!.ToLower().Contains(searchText) ||
+                    b.Email!.ToLower().Contains(searchText) ||
                     b.Cedula.ToString().Contains(searchText));
 
             foreach (var barbero in filtered)
