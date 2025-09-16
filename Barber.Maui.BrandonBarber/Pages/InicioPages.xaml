@@ -195,7 +195,7 @@
                             </Border.GestureRecognizers>
                             <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
                                 <Image Grid.Column="0" Source="calendar.png" WidthRequest="30" HeightRequest="30" />
-                                <Label Grid.Column="1" Text="Gestionar Disponibilidad" TextColor="Black" FontSize="25" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Label Grid.Column="1" Text="Gestionar Disponibilidad" TextColor="Black" FontSize="24" VerticalOptions="Center" Margin="10,0,0,0"/>
                                 <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
                             </Grid>
                         </Border>
