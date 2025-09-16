@@ -35,7 +35,7 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
-                long idAdministrador = AuthService.CurrentUser.Cedula;
+                long idAdministrador = AuthService.CurrentUser!.Cedula;
                 _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
 
                 BarberiaPicker.ItemsSource = _barberias;
@@ -259,7 +259,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                     SKColor.Parse("#a5a29a")
         };
 
-                int maxBarberosAMostrar = DeterminarMaximoBarberos(ranking.Count);
+                int maxBarberosAMostrar = 5; // Mostrar máximo 5 barberos
                 int colorIndex = 0;
                 int barberosAgregados = 0;
 
@@ -320,7 +320,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                     chart = new BarChart
                     {
                         Entries = entries,
-                        LabelTextSize = DeterminarTamañoTexto(entries.Count),
+                        LabelTextSize = 40,
                         Margin = 50,
                         LabelOrientation = Orientation.Horizontal,
                         ValueLabelOrientation = Orientation.Horizontal,
@@ -332,7 +332,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                     chart = new LineChart
                     {
                         Entries = entries,
-                        LabelTextSize = DeterminarTamañoTexto(entries.Count),
+                        LabelTextSize = 40,
                         Margin = 50,
                         LabelOrientation = Orientation.Horizontal,
                         ValueLabelOrientation = Orientation.Horizontal,
@@ -352,19 +352,17 @@ namespace Barber.Maui.BrandonBarber.Pages
                 await AppUtils.MostrarSnackbar($"Error al cargar ranking: {ex.Message}", Colors.Red, Colors.White);
             }
         }
-        private static int DeterminarMaximoBarberos(int totalBarberos)
-        {
-            if (totalBarberos <= 5) return 6;
-            if (totalBarberos <= 10) return 8;
-            return 10;
-        }
+        //private static int DeterminarMaximoBarberos(int totalBarberos)
+        //{
+        //    return Math.Min(5, totalBarberos);
+        //}
 
-        private static float DeterminarTamañoTexto(int cantidadElementos)
-        {
-            if (cantidadElementos <= 5) return 20f;
-            if (cantidadElementos <= 8) return 18f;
-            return 16f;
-        }
+        //private static float DeterminarTamañoTexto(int cantidadElementos)
+        //{
+        //    if (cantidadElementos <= 5) return 20f;
+        //    if (cantidadElementos <= 8) return 18f;
+        //    return 16f;
+        //}
 
         private static string TruncateLabel(string nombre, int maxLength)
         {
