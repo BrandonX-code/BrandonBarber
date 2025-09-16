@@ -247,7 +247,8 @@
         {
             var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
             var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
-            await Navigation.PushAsync(new MainPage(reservationService, authService));
+            // Navega a ReservaCita y pasa el barbero actual como preseleccionado
+            await Navigation.PushAsync(new MainPage(reservationService, authService, _barbero));
         }
 
         private void ActualizarCalificacionVisual()

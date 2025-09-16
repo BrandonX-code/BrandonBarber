@@ -4,18 +4,32 @@
     {
         private readonly ReservationService _reservationServices;
         private readonly AuthService _authService;
-        public MainPage(ReservationService reservationService, AuthService authService)
+        private readonly UsuarioModels? _barberoPreseleccionado;
+
+        public MainPage(ReservationService reservationService, AuthService authService, UsuarioModels? barberoPreseleccionado = null)
         {
             InitializeComponent();
             _reservationServices = reservationService;
             _authService = authService;
+            _barberoPreseleccionado = barberoPreseleccionado;
         }
 
-        protected override void OnAppearing()
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
-            _ = StartEntryAnimations();
-            _ = CargarBarberosAsync();
+            await StartEntryAnimations();
+            await CargarBarberosAsync();
+            if (_barberoPreseleccionado != null && BarberoPicker.ItemsSource is List<UsuarioModels> barberos)
+            {
+                BarberoPicker.IsEnabled = false;
+                int index = barberos.FindIndex(b => b.Cedula == _barberoPreseleccionado.Cedula);
+                if (index >= 0)
+                    BarberoPicker.SelectedIndex = index;
+            }
+            else
+            {
+                BarberoPicker.IsEnabled = true;
+            }
         }
 
         private async Task StartEntryAnimations()

@@ -323,12 +323,8 @@ namespace Barber.Maui.BrandonBarber.Pages
                 await border.ScaleTo(0.95, 100, Easing.CubicIn);
                 await border.ScaleTo(1, 100, Easing.CubicOut);
 
-                // Navegación a la página de detalle
                 await Navigation.PushAsync(new BarberoDetailPage(barbero));
             }
         }
-
-
-
     }
 }

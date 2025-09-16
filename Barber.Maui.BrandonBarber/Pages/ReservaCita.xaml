@@ -42,7 +42,7 @@
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Barbero:" TextColor="Black" FontSize="16"/>
                             <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="0" HorizontalOptions="Fill">
-                                <Picker x:Name="BarberoPicker"  ItemDisplayBinding="{Binding Nombre}" Title="Seleccione un barbero" TitleColor="Gray" TextColor="Black" VerticalOptions="Center"/>
+                                <Picker x:Name="BarberoPicker" IsEnabled="False" ItemDisplayBinding="{Binding Nombre}" Title="Seleccione un barbero" TitleColor="Gray" TextColor="Black" VerticalOptions="Center"/>
                             </Border>
                         </VerticalStackLayout>
                     </Border>
