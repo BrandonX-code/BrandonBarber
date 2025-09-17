@@ -105,6 +105,9 @@
 	  <MauiXaml Update="Pages\EditarPerfilPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\ForgotPasswordPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\FormBarberiaPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

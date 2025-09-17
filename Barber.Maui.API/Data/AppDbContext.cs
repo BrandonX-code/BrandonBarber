@@ -14,12 +14,28 @@ namespace Barber.Maui.API.Data
         public DbSet<ImagenGaleria> ImagenesGaleria { get; set; }
         public DbSet<ServicioModel> Servicios { get; set; }
         public DbSet<Calificacion> Calificaciones { get; set; }
-
+        public DbSet<PasswordReset> PasswordResets { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Auth>()
-                .HasKey(a => a.Cedula);
+            // Tu configuración existente...
 
+            modelBuilder.Entity<Auth>(e =>
+            {
+                e.HasKey(e => e.Cedula);
+            });
+
+            // Configuración para PasswordReset
+            modelBuilder.Entity<PasswordReset>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.Email).IsRequired().HasMaxLength(255);
+                entity.Property(e => e.Token).IsRequired().HasMaxLength(10);
+                entity.Property(e => e.ExpiryDate).IsRequired();
+                entity.Property(e => e.IsUsed).IsRequired();
+                entity.Property(e => e.CreatedAt).IsRequired();
+            });
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

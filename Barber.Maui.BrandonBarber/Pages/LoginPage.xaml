@@ -49,16 +49,28 @@
                 <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 25" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
                     <Grid Padding="12,0" ColumnDefinitions="Auto, *" VerticalOptions="Center">
                         <Image Source="lock.png"  WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
-                        <Entry Grid.Column="1"  x:Name="PasswordEntry" TextColor="#0E2A36" Placeholder="Contraseña" PlaceholderColor="#90A4AE" FontSize="14" HeightRequest="45" BackgroundColor="Transparent" HorizontalOptions="Fill" VerticalOptions="Center" Keyboard="Password"/>
+                        <Entry Grid.Column="1"  x:Name="PasswordEntry" TextColor="#0E2A36" Placeholder="Contraseña" PlaceholderColor="#90A4AE" FontSize="14" HeightRequest="45" BackgroundColor="Transparent" HorizontalOptions="Fill" VerticalOptions="Center" IsPassword="True"/>
                     </Grid>
                 </Border>
-                <Grid Margin="0,20,0,10">
+
+                <!-- 🔥 NUEVO: Botón Olvidé mi contraseña 🔥 -->
+                <Label Text="¿Olvidaste tu contraseña?" 
+                       TextColor="#FF6F91" 
+                       FontSize="Body" 
+                       FontAttributes="Bold"
+                       HorizontalOptions="Center"
+                       Margin="0,5,0,10">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnForgotPasswordClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <Grid Margin="0,10,0,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Button Text="Iniciar Sesión"  Style="{StaticResource LoginButtonStyle}" Clicked="OnLoginClicked" HorizontalOptions="Center"/>
                 </Grid>
-
 
                 <Label x:Name="ErrorLabel" TextColor="#FF6F91" FontSize="14" HorizontalOptions="Center" IsVisible="False" />
 

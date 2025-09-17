@@ -100,6 +100,9 @@ namespace Barber.Maui.BrandonBarber.Pages
                 Application.Current.Windows[0].Page = newPage;
             }
         }
-
+        private async void OnForgotPasswordClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ForgotPasswordPage());
+        }
     }
 }

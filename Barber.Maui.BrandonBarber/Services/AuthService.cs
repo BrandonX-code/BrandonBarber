@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
-using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 
@@ -145,6 +144,108 @@ namespace Barber.Maui.BrandonBarber.Services
             }
         }
 
+        // 🔥 NUEVOS MÉTODOS PARA RECUPERACIÓN DE CONTRASEÑA 🔥
+
+        public async Task<ForgotPasswordResponse> ForgotPassword(string email)
+        {
+            try
+            {
+                var request = new ForgotPasswordRequest { Email = email };
+                var json = JsonSerializer.Serialize(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                Console.WriteLine($"🔹 Enviando solicitud forgot-password para: {email}");
+
+                var response = await _BaseClient.PostAsync("api/auth/forgot-password", content);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                Console.WriteLine($"🔹 Forgot Password Response: {responseContent}");
+                Console.WriteLine($"🔹 Status Code: {response.StatusCode}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorResult = JsonSerializer.Deserialize<ForgotPasswordResponse>(responseContent,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                    return errorResult ?? new ForgotPasswordResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Error al procesar la solicitud"
+                    };
+                }
+
+                var result = JsonSerializer.Deserialize<ForgotPasswordResponse>(responseContent,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                return result ?? new ForgotPasswordResponse
+                {
+                    IsSuccess = false,
+                    Message = "Respuesta vacía del servidor"
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error en ForgotPassword: {ex.Message}");
+                return new ForgotPasswordResponse
+                {
+                    IsSuccess = false,
+                    Message = $"Error de conexión: {ex.Message}"
+                };
+            }
+        }
+
+        public async Task<ForgotPasswordResponse> ResetPassword(string email, string token, string newPassword)
+        {
+            try
+            {
+                var request = new ResetPasswordRequest
+                {
+                    Email = email,
+                    Token = token,
+                    NewPassword = newPassword
+                };
+                var json = JsonSerializer.Serialize(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                Console.WriteLine($"🔹 Enviando solicitud reset-password para: {email} con token: {token}");
+
+                var response = await _BaseClient.PostAsync("api/auth/reset-password", content);
+                var responseContent = await response.Content.ReadAsStringAsync();
+
+                Console.WriteLine($"🔹 Reset Password Response: {responseContent}");
+                Console.WriteLine($"🔹 Status Code: {response.StatusCode}");
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorResult = JsonSerializer.Deserialize<ForgotPasswordResponse>(responseContent,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                    return errorResult ?? new ForgotPasswordResponse
+                    {
+                        IsSuccess = false,
+                        Message = "Error al restablecer la contraseña"
+                    };
+                }
+
+                var result = JsonSerializer.Deserialize<ForgotPasswordResponse>(responseContent,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                return result ?? new ForgotPasswordResponse
+                {
+                    IsSuccess = false,
+                    Message = "Respuesta vacía del servidor"
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error en ResetPassword: {ex.Message}");
+                return new ForgotPasswordResponse
+                {
+                    IsSuccess = false,
+                    Message = $"Error de conexión: {ex.Message}"
+                };
+            }
+        }
 
         public bool Logout()
         {
@@ -188,7 +289,7 @@ namespace Barber.Maui.BrandonBarber.Services
                     new AuthenticationHeaderValue("Bearer", token);
 
                 // Obtener los datos del usuario directamente
-                var userResponse = await _BaseClient.GetAsync($"api/auth/user/{userCedula}");
+                var userResponse = await _BaseClient.GetAsync($"api/auth/usuario/{userCedula}");
 
                 Console.WriteLine($"🔹 Respuesta del servidor para usuario: {userResponse.StatusCode}");
 
@@ -222,6 +323,7 @@ namespace Barber.Maui.BrandonBarber.Services
                 return false;
             }
         }
+
         public async Task<bool> EliminarUsuario(long cedula)
         {
             var response = await _BaseClient.DeleteAsync($"api/auth/{cedula}");
@@ -234,6 +336,7 @@ namespace Barber.Maui.BrandonBarber.Services
 
             return true;
         }
+
         public async Task<List<UsuarioModels>> ObtenerBarberos(int? idBarberia)
         {
             try
@@ -254,6 +357,7 @@ namespace Barber.Maui.BrandonBarber.Services
                 return new List<UsuarioModels>();
             }
         }
+
         public async Task<UsuarioModels?> GetUserByCedula(long cedula)
         {
             try
@@ -273,6 +377,24 @@ namespace Barber.Maui.BrandonBarber.Services
                 return null;
             }
         }
+    }
 
+    // 🔥 MODELOS PARA RECUPERACIÓN DE CONTRASEÑA 🔥
+    public class ForgotPasswordRequest
+    {
+        public string Email { get; set; } = string.Empty;
+    }
+
+    public class ResetPasswordRequest
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Token { get; set; } = string.Empty;
+        public string NewPassword { get; set; } = string.Empty;
+    }
+
+    public class ForgotPasswordResponse
+    {
+        public bool IsSuccess { get; set; }
+        public string Message { get; set; } = string.Empty;
     }
 }
