@@ -289,7 +289,7 @@ namespace Barber.Maui.BrandonBarber.Services
                     new AuthenticationHeaderValue("Bearer", token);
 
                 // Obtener los datos del usuario directamente
-                var userResponse = await _BaseClient.GetAsync($"api/auth/usuario/{userCedula}");
+                var userResponse = await _BaseClient.GetAsync($"api/auth/user/{userCedula}");
 
                 Console.WriteLine($"🔹 Respuesta del servidor para usuario: {userResponse.StatusCode}");
 
