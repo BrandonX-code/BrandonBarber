@@ -58,8 +58,7 @@
                        TextColor="#FF6F91" 
                        FontSize="Body" 
                        FontAttributes="Bold"
-                       HorizontalOptions="Center"
-                       Margin="0,5,0,10">
+                       HorizontalOptions="Center">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnForgotPasswordClicked" />
                     </Label.GestureRecognizers>
