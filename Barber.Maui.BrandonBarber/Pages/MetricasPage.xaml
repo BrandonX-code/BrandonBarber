@@ -6,7 +6,7 @@
              BackgroundColor="#0E2A36">
 
 	<RefreshView x:Name="metricsRefreshView" Command="{Binding RefreshCommand}">
-		<ScrollView>
+        <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
 			<VerticalStackLayout Spacing="10" Padding="16">
 				<Grid>
                     <Label Text="Dashboard de Métricas" FontSize="32" TextColor="White"  FontAttributes="Bold"  HorizontalOptions="Center">

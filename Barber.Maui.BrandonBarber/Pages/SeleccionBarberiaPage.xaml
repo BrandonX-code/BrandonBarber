@@ -63,34 +63,36 @@
         </Border>
 
         <Grid Grid.Row="1">
-            <CollectionView ItemsSource="{Binding FilteredBarberias}" SelectionMode="None" EmptyView="{Binding EmptyMessage}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
-                        <Border Style="{StaticResource BarberiaFrameStyle}"  Margin="0,0,0,10">
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnBarberiaTapped" />
-                            </Border.GestureRecognizers>
+            <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
+                <CollectionView ItemsSource="{Binding FilteredBarberias}" SelectionMode="None" EmptyView="{Binding EmptyMessage}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Style="{StaticResource BarberiaFrameStyle}"  Margin="0,0,0,10">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnBarberiaTapped" />
+                                </Border.GestureRecognizers>
 
-                            <Grid ColumnDefinitions="80, *" ColumnSpacing="15">
-                                <Border WidthRequest="80" HeightRequest="80" StrokeShape="RoundRectangle 50" BackgroundColor="{StaticResource TertiaryBackground}" VerticalOptions="Center" HorizontalOptions="Center">
-                                    <Image Source="{Binding LogoUrl, TargetNullValue='picture.png'}" Aspect="AspectFill">
-                                    </Image>
-                                </Border>
-                                <StackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
+                                <Grid ColumnDefinitions="80, *" ColumnSpacing="15">
+                                    <Border WidthRequest="80" HeightRequest="80" StrokeShape="RoundRectangle 50" BackgroundColor="{StaticResource TertiaryBackground}" VerticalOptions="Center" HorizontalOptions="Center">
+                                        <Image Source="{Binding LogoUrl, TargetNullValue='picture.png'}" Aspect="AspectFill">
+                                        </Image>
+                                    </Border>
+                                    <StackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
 
-                                    <Label Text="{Binding Nombre}" Style="{StaticResource TitleLabelStyle}" />
+                                        <Label Text="{Binding Nombre}" Style="{StaticResource TitleLabelStyle}" />
 
-                                    <Label Text="{Binding Direccion}"   Style="{StaticResource InfoLabelStyle}" MaxLines="1" />
+                                        <Label Text="{Binding Direccion}"   Style="{StaticResource InfoLabelStyle}" MaxLines="1" />
 
-                                    <Label Text="{Binding Telefono}"  Style="{StaticResource ContactLabelStyle}" />
+                                        <Label Text="{Binding Telefono}"  Style="{StaticResource ContactLabelStyle}" />
 
-                                    <Label Text="{Binding Email}" Style="{StaticResource ContactLabelStyle}" MaxLines="1" />
-                                </StackLayout>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                                        <Label Text="{Binding Email}" Style="{StaticResource ContactLabelStyle}" MaxLines="1" />
+                                    </StackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
         </Grid>
     </Grid>
 </ContentPage>

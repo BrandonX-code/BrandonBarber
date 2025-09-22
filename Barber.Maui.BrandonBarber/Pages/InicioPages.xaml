@@ -28,7 +28,7 @@
         <Grid Grid.Row="1" x:Name="ContentContainer">
             <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" IsVisible="True" Color="#E0F7FA" VerticalOptions="Center" HorizontalOptions="Center" />
 
-            <ScrollView>
+            <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
                 <VerticalStackLayout>
 
                     <!-- ClienteView -->

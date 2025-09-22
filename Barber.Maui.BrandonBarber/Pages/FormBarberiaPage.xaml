@@ -74,7 +74,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ScrollView Padding="20">
+    <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Padding="20">
         <StackLayout Spacing="20">
             <Label Text="{Binding PageTitle}" Style="{StaticResource TitleStyle}" Margin="0,0,0,10"/>
 

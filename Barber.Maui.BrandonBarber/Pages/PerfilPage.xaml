@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Barber.Maui.BrandonBarber.Pages.PerfilPage"
              BackgroundColor="#0E2A36">
-    <ScrollView>
+    <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
         <Grid Padding="20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />

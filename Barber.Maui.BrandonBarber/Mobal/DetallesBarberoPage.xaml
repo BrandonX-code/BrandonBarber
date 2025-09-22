@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Barber.Maui.BrandonBarber.Mobal.DetallesBarberoPage" BackgroundColor="#90A4AE">
     <ContentPage.Content>
-        <ScrollView>
+        <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
             <Grid>
                 <BoxView BackgroundColor="Black" Opacity="0.5" />
                 <Border BackgroundColor="White" StrokeShape="20" Margin="20" Padding="0" VerticalOptions="Center">

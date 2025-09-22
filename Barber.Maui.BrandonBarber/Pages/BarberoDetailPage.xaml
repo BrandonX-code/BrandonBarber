@@ -8,8 +8,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        
-        <ScrollView Grid.Row="1">
+
+        <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Grid.Row="1">
 			<VerticalStackLayout Padding="20" Spacing="20">
 
 				<Grid>
@@ -73,7 +73,7 @@
 
                     <Label x:Name="NoAvailabilityLabel" Text="No hay horarios disponibles" TextColor="White" IsVisible="false"/>
 
-                    <ScrollView Orientation="Horizontal">
+                    <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Orientation="Horizontal">
                         <HorizontalStackLayout x:Name="AvailableHoursContainer" Spacing="15">
                         </HorizontalStackLayout>
                     </ScrollView>

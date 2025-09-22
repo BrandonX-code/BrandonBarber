@@ -33,7 +33,7 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <ScrollView Padding="30">
+    <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Padding="30">
         <Grid>
             <VerticalStackLayout Spacing="20" VerticalOptions="Center">
                 <Image Source="gentlemen.png" WidthRequest="230" HeightRequest="230" HorizontalOptions="Center" />

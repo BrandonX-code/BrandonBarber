@@ -16,7 +16,7 @@
         </Grid>
 
         <!-- Content -->
-        <ScrollView Grid.Row="1">
+        <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Grid.Row="1">
             <VerticalStackLayout Padding="20" Spacing="20">
                 <!-- Calendario -->
                 <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
@@ -54,7 +54,7 @@
                 </Border>
 
                 <!-- Citas Existentes -->
-                <ScrollView>
+                <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
                     <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Citas Programadas" TextColor="Black" FontSize="18" />

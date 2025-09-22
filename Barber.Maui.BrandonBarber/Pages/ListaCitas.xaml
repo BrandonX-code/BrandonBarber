@@ -5,7 +5,7 @@
              BackgroundColor="#0E2A36">
 
     <AbsoluteLayout>
-        <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+        <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <Grid RowDefinitions="Auto, Auto, *" Padding="20">
                 <VerticalStackLayout Spacing="15">
                     <Border BackgroundColor="#1E3A49" StrokeShape="10" Padding="15">

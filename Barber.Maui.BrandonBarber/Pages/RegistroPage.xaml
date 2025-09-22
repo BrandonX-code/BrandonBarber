@@ -45,7 +45,7 @@
     </ContentPage.Resources>
 
     <Grid Padding="20">
-        <ScrollView>
+        <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
             <VerticalStackLayout Spacing="20" Padding="0,20">
                 <Label Text="Crear Cuenta de Cliente"  FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" Margin="0,0,0,20" />
                 <VerticalStackLayout Spacing="5">

@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Barber.Maui.BrandonBarber.Pages.GestionarServiciosPage">
-    <ScrollView>
+    <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
         <VerticalStackLayout Padding="20" Spacing="20" BackgroundColor="#0E2A36">
             <Label Text="Gestión de Servicios" FontSize="24" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center"/>
             <VerticalStackLayout x:Name="PickerSection" Grid.Row="0"  Spacing="5"  IsVisible="False">
@@ -42,7 +42,7 @@
                 </VerticalStackLayout>
             </Border>
 
-            <ScrollView HeightRequest="400">
+            <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" HeightRequest="400">
                 <CollectionView x:Name="ServiciosListView" SelectionMode="Single" SelectionChanged="OnServicioSeleccionado">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>

@@ -37,7 +37,7 @@
                 <Picker x:Name="Picker" SelectedIndexChanged="Picker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}" Title="Seleccionar Barbero" TitleColor="Black" Style="{StaticResource EntryStyle}"  VerticalOptions="Center" />
             </Border>
         </VerticalStackLayout>
-        <ScrollView Grid.Row="1" Orientation="Vertical">
+        <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Grid.Row="1" Orientation="Vertical">
             <FlexLayout x:Name="GaleriaContainer" Direction="Row" Wrap="Wrap" JustifyContent="SpaceAround" AlignItems="Start"  AlignContent="Start">
             </FlexLayout>
         </ScrollView>

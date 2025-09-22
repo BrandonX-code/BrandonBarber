@@ -38,7 +38,7 @@
     </ContentPage.Resources>
 
     <AbsoluteLayout>
-        <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
+        <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <Grid Padding="15,10" BackgroundColor="Transparent">
                 <VerticalStackLayout Spacing="5">
                     <Border BackgroundColor="#2a3f48" StrokeShape="RoundRectangle 10" Padding="15">

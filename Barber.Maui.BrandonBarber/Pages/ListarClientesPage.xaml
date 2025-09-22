@@ -7,7 +7,7 @@
         <Grid Grid.Row="1" Padding="20">
             <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" IsVisible="True" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" />
 
-            <ScrollView x:Name="ContentContainer" IsVisible="False">
+            <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="ContentContainer" IsVisible="False">
                 <VerticalStackLayout Spacing="10">
                     <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="20,30,20,10">
                         <Label Grid.Column="1" Text="Lista de Clientes" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" />

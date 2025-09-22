@@ -35,7 +35,7 @@
 
             <Label Text="Reservar Turno" FontSize="32" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
 
-            <ScrollView Grid.Row="1">
+            <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Grid.Row="1">
                 <VerticalStackLayout x:Name="formLayout" Padding="20" Spacing="7" BackgroundColor="Transparent" TranslationY="50" Opacity="0">
 
                     <Border x:Name="barberoBorder" StrokeThickness="0" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0">
