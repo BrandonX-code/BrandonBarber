@@ -34,7 +34,7 @@
                             </VerticalStackLayout>
                         </Grid>
                     </Border>
-                    <CollectionView x:Name="BarberosCollectionView" ItemsSource="{Binding BarberosFiltrados}" BackgroundColor="Transparent" Margin="0,0,0,10">
+                    <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="BarberosCollectionView" ItemsSource="{Binding BarberosFiltrados}" BackgroundColor="Transparent" Margin="0,0,0,10">
                         <CollectionView.ItemsLayout>
                             <LinearItemsLayout Orientation="Vertical"/>
                         </CollectionView.ItemsLayout>

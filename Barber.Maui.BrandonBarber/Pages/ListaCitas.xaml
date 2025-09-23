@@ -31,7 +31,7 @@
                     <Border BackgroundColor="#1E3A49" StrokeShape="10" Padding="15">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Citas" TextColor="White" FontSize="18" />
-                            <CollectionView x:Name="ResultadosCollection" HeightRequest="420">
+                            <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="ResultadosCollection" HeightRequest="420">
                                 <CollectionView.ItemsLayout>
                                     <LinearItemsLayout Orientation="Vertical" />
                                 </CollectionView.ItemsLayout>

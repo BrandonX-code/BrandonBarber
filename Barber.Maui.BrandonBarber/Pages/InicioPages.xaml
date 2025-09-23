@@ -39,7 +39,7 @@
                                        FontAttributes="Bold" 
                                        HorizontalOptions="Start"/>
 
-                            <CollectionView x:Name="ServiciosCarousel" HeightRequest="240">
+                            <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="ServiciosCarousel" HeightRequest="240">
                                 <CollectionView.ItemsLayout>
                                     <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
                                 </CollectionView.ItemsLayout>
@@ -76,7 +76,7 @@
                         <VerticalStackLayout Spacing="5" Padding="0">
                             <Label Text="Barberos" TextColor="White" FontSize="22"  FontAttributes="Bold"  HorizontalOptions="Start"/>
 
-                            <CollectionView x:Name="BarberosCollectionView"  HeightRequest="320">
+                            <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="BarberosCollectionView"  HeightRequest="320">
                                 <CollectionView.ItemsLayout>
                                     <LinearItemsLayout Orientation="Horizontal" ItemSpacing="20"/>
                                 </CollectionView.ItemsLayout>

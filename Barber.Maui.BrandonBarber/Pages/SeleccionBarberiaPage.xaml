@@ -64,7 +64,7 @@
 
         <Grid Grid.Row="1">
             <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
-                <CollectionView ItemsSource="{Binding FilteredBarberias}" SelectionMode="None" EmptyView="{Binding EmptyMessage}">
+                <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" ItemsSource="{Binding FilteredBarberias}" SelectionMode="None" EmptyView="{Binding EmptyMessage}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Border Style="{StaticResource BarberiaFrameStyle}"  Margin="0,0,0,10">

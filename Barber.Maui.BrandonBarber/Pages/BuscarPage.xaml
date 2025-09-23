@@ -44,7 +44,7 @@
                     <Border BackgroundColor="#2a3f48" StrokeShape="RoundRectangle 10" Padding="15">
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Próximas Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasProximasCitas}"/>
-                            <CollectionView x:Name="ProximasCitasCollection" ItemsSource="{Binding ProximasCitas}" EmptyView="No hay citas próximas Ingrese su Cedula" HeightRequest="330">
+                            <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="ProximasCitasCollection" ItemsSource="{Binding ProximasCitas}" EmptyView="No hay citas próximas Ingrese su Cedula" HeightRequest="330">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <SwipeView>
@@ -88,7 +88,7 @@
                     <Border BackgroundColor="#2a3f48" StrokeShape="RoundRectangle 10" Padding="15"  >
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Historial de Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasHistorialCitas}" Margin="0,5,0,0"/>
-                            <CollectionView x:Name="HistorialCitasCollection"  ItemsSource="{Binding HistorialCitas}" EmptyView="No hay historial de citas Ingrese su Cedula" HeightRequest="285">
+                            <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="HistorialCitasCollection"  ItemsSource="{Binding HistorialCitas}" EmptyView="No hay historial de citas Ingrese su Cedula" HeightRequest="285">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <Border Padding="8" Margin="2" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10"  >

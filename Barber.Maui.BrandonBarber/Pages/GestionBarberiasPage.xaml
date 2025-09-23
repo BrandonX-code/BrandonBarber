@@ -19,7 +19,7 @@
                 <Button Grid.Column="1" Text="✕" BackgroundColor="Transparent" TextColor="#A0A0A0"  FontSize="16" WidthRequest="30"  HeightRequest="30" Command="{Binding ClearSearchCommand}" IsVisible="{Binding HasSearchText}" />
             </Grid>
         </Border>
-        <CollectionView Grid.Row="2" ItemsSource="{Binding FilteredBarberias}" SelectionMode="None">
+        <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Grid.Row="2" ItemsSource="{Binding FilteredBarberias}" SelectionMode="None">
             <CollectionView.EmptyView>
                 <StackLayout Padding="20" VerticalOptions="Center">
                     <Label Text="🏪" FontSize="48" HorizontalOptions="Center"  TextColor="#A0A0A0"/>

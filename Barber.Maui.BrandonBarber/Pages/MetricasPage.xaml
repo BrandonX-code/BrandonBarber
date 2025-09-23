@@ -74,7 +74,7 @@
                 <Border BackgroundColor="#90A4AE" Padding="16" StrokeShape="16">
 					<VerticalStackLayout Spacing="10">
 						<Label Text="Top Clientes Frecuentes" TextColor="Black" FontSize="20" FontAttributes="Bold"/>
-						<CollectionView x:Name="ClientesFrecuentesCollection" HeightRequest="220">
+                        <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="ClientesFrecuentesCollection" HeightRequest="220">
 							<CollectionView.ItemTemplate>
 								<DataTemplate>
 									<Grid Padding="10" ColumnDefinitions="Auto,*,Auto">

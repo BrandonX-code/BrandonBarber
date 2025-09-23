@@ -74,7 +74,7 @@
                         new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                     var admin = AuthService.CurrentUser;
-                    var barberos = usuarios?.Where(u => u.Rol!.ToLower() == "barbero" && u.IdBarberia == admin.IdBarberia).ToList() ?? [];
+                    var barberos = usuarios?.Where(u => u.Rol!.ToLower() == "barbero" && u.IdBarberia == admin!.IdBarberia).ToList() ?? [];
                     TodosLosBarberos = barberos;
                     Picker.ItemsSource = TodosLosBarberos;
                 }
@@ -119,8 +119,8 @@
 
                 // Obtener imágenes desde la API
                 var usuarioActual = AuthService.CurrentUser;
-                long cedulaBarbero = barberoId == 0 ? usuarioActual.Cedula : barberoId;
-                int idBarberia = usuarioActual.IdBarberia ?? 0;
+                long cedulaBarbero = barberoId == 0 ? usuarioActual!.Cedula : barberoId;
+                int idBarberia = usuarioActual!.IdBarberia ?? 0;
                 imagenes = await _galeriaService.ObtenerImagenes(cedulaBarbero, idBarberia);
 
                 Debug.WriteLine($"📷 Se obtuvieron {imagenes.Count} imágenes de la API");
@@ -314,7 +314,7 @@
                 {
                     CornerRadius = 5
                 },
-                Padding = new Thickness(8),
+                Padding = new Thickness(5),
                 Margin = new Thickness(5, 5, 5, 15),
                 BackgroundColor = Color.FromArgb("#B0BEC5")
             };
@@ -450,7 +450,7 @@
             {
                 Debug.WriteLine("🔄 Recargando galería...");
                 var usuarioActual = AuthService.CurrentUser;
-                long barberoId = usuarioActual.Cedula;
+                long barberoId = usuarioActual!.Cedula;
                 int idBarberia = usuarioActual.IdBarberia ?? 0;
                 imagenes = await _galeriaService.ObtenerImagenes(barberoId, idBarberia);
                 UpdateGaleriaUI();

@@ -35,7 +35,7 @@
                         </Grid>
                     </Border>
 
-                    <CollectionView x:Name="ClientesCollectionView" ItemsSource="{Binding ClientesFiltrados}" BackgroundColor="Transparent" Margin="0,0,0,10">
+                    <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="ClientesCollectionView" ItemsSource="{Binding ClientesFiltrados}" BackgroundColor="Transparent" Margin="0,0,0,10">
                         <CollectionView.ItemsLayout>
                             <LinearItemsLayout Orientation="Vertical" />
                         </CollectionView.ItemsLayout>

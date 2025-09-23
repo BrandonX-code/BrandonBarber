@@ -58,7 +58,7 @@
                     <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Citas Programadas" TextColor="Black" FontSize="18" />
-                            <CollectionView x:Name="CitasCollection" HeightRequest="260" HorizontalOptions="Center" EmptyView="No hay citas programadas para esta fecha.">
+                            <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="CitasCollection" HeightRequest="260" HorizontalOptions="Center" EmptyView="No hay citas programadas para esta fecha.">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <Border Margin="0,5" BackgroundColor="#0E2A36" Padding="10" StrokeShape="RoundRectangle 10">
