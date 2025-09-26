@@ -149,7 +149,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                     {
                         Entries = entries,
                         LabelTextSize = 40,
-                        Margin = 50,
+                        Margin = 40,
                         LabelOrientation = Orientation.Horizontal,
                         ValueLabelOrientation = Orientation.Horizontal,
                         BackgroundColor = SKColor.Parse("#0E2A36")
@@ -161,7 +161,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                     {
                         Entries = entries,
                         LabelTextSize = 40,
-                        Margin = 50,
+                        Margin = 40,
                         LabelOrientation = Orientation.Horizontal,
                         ValueLabelOrientation = Orientation.Horizontal,
                         BackgroundColor = SKColor.Parse("#0E2A36")
@@ -321,7 +321,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                     {
                         Entries = entries,
                         LabelTextSize = 40,
-                        Margin = 50,
+                        Margin = 40,
                         LabelOrientation = Orientation.Horizontal,
                         ValueLabelOrientation = Orientation.Horizontal,
                         BackgroundColor = SKColor.Parse("#0E2A36")
@@ -333,7 +333,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                     {
                         Entries = entries,
                         LabelTextSize = 40,
-                        Margin = 50,
+                        Margin = 40,
                         LabelOrientation = Orientation.Horizontal,
                         ValueLabelOrientation = Orientation.Horizontal,
                         BackgroundColor = SKColor.Parse("#0E2A36")

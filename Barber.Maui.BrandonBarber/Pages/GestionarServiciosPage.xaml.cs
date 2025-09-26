@@ -184,7 +184,7 @@
             _servicioEditando = servicio;
             NombreEntry.Text = servicio.Nombre;
             PrecioEntry.Text = servicio.Precio.ToString();
-
+            
             // Mostrar la imagen previa si existe
             if (!string.IsNullOrEmpty(servicio.Imagen))
             {
@@ -237,7 +237,8 @@
             {
                 await _servicioService.EditarServicioAsync(_servicioEditando);
                 LimpiarFormulario();
-                await CargarServicios(_barberiaSeleccionadaId); // Pasar el ID de la barbería
+                await CargarServicios(_barberiaSeleccionadaId);
+                _ = AppUtils.MostrarSnackbar("Servicio Editado Con Exito", Colors.Green, Colors.White);
             }
             catch (Exception ex)
             {
@@ -254,6 +255,7 @@
 
             try
             {
+                _ = AppUtils.MostrarSnackbar("Servicio Eliminado Con Exito", Colors.Green, Colors.White);
                 await _servicioService.EliminarServicioAsync(servicio.Id);
                 await CargarServicios(_barberiaSeleccionadaId); // Pasar el ID de la barbería
             }
