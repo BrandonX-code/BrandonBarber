@@ -60,7 +60,7 @@
             {
                 MostrarLoader(true);
 
-                var clienteCedula = AuthService.CurrentUser.Cedula;
+                var clienteCedula = AuthService.CurrentUser!.Cedula;
                 var citas = await _reservationService.GetReservationsById(clienteCedula);
 
                 if (citas == null || citas.Count == 0)
