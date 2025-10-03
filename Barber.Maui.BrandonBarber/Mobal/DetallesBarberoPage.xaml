@@ -3,7 +3,7 @@
     <ContentPage.Content>
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
             <Grid>
-                <BoxView BackgroundColor="Black" Opacity="0.5" />
+                <BoxView BackgroundColor="Black" Opacity="0.5"/>
                 <Border BackgroundColor="White" StrokeShape="20" Margin="20" Padding="0" VerticalOptions="Center">
                     <StackLayout Spacing="0">
                         <Border BackgroundColor="#2C3E50" StrokeShape="RoundRectangle 20,20,0,0" HeightRequest="80">
@@ -13,9 +13,9 @@
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
                                 <StackLayout Grid.Column="0" VerticalOptions="Center" Margin="20,0">
-                                    <Label Text="Información del Barbero" FontSize="18" FontAttributes="Bold" TextColor="White" />
+                                    <Label Text="Información del Barbero" HorizontalOptions="Center" FontSize="18" FontAttributes="Bold" TextColor="White" />
                                 </StackLayout>
-                                <Button Grid.Column="1" Text="✕" BackgroundColor="Transparent" TextColor="White" FontSize="20" Clicked="OnCerrarClicked" Margin="10" />
+                                
                             </Grid>
                         </Border>
                         <StackLayout Padding="25" Spacing="20">

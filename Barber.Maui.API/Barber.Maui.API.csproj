@@ -14,8 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\uploads\galeria\" />
-    <Folder Include="wwwroot\uploads\perfiles\" />
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

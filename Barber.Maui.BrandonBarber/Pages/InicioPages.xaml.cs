@@ -50,6 +50,10 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var admin = AuthService.CurrentUser;
                 var servicios = await _servicioService.GetServiciosAsync();
                 ServiciosCarousel.ItemsSource = servicios;
+
+                // Mostrar u ocultar el mensaje
+                NoServiciosLabel.IsVisible = servicios == null || servicios.Count == 0;
+                ServiciosCarousel.IsVisible = servicios != null && servicios.Count > 0;
             }
             catch (Exception ex)
             {
@@ -304,6 +308,8 @@ namespace Barber.Maui.BrandonBarber.Pages
                         .ToList() ?? [];
 
                     BarberosCollectionView.ItemsSource = barberos;
+                    NoBarberosLabel.IsVisible = barberos.Count == 0;
+                    BarberosCollectionView.IsVisible = barberos.Count > 0;
                 }
                 else
                 {

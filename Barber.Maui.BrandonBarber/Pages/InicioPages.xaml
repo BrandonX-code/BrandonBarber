@@ -15,7 +15,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
+        
         <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="20,5,20,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -72,6 +72,7 @@
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
+                            <Label x:Name="NoServiciosLabel" Text="No hay servicios disponibles en este momento" TextColor="#E0F7FA" FontSize="16" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,20,0,0" IsVisible="False"/>
                         </VerticalStackLayout>
                         <VerticalStackLayout Spacing="5" Padding="0">
                             <Label Text="Barberos" TextColor="White" FontSize="22"  FontAttributes="Bold"  HorizontalOptions="Start"/>
@@ -150,6 +151,8 @@
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
+                            <Label x:Name="NoBarberosLabel" Text="No hay barberos disponibles en este momento" TextColor="#E0F7FA" FontSize="16" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,20,0,0" IsVisible="False"/>
+      
                         </VerticalStackLayout>
 
                         <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >

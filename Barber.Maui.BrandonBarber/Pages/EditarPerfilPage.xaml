@@ -51,28 +51,28 @@
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Nombre completo" Style="{StaticResource ProfileLabelStyle}" />
                     <Border StrokeShape="10" Padding="0" BackgroundColor="#E0F7FA">
-                        <Entry x:Name="NombreEntry" Text="xxx" Style="{StaticResource ProfileEntryStyle}" Placeholder="Nombre completo" />
+                        <Entry x:Name="NombreEntry" Margin="10,0" Text="xxx" Style="{StaticResource ProfileEntryStyle}" Placeholder="Nombre completo"/>
                     </Border>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Telefono" Style="{StaticResource ProfileLabelStyle}" />
                     <Border StrokeShape="10" Padding="0"  BackgroundColor="#E0F7FA">
-                        <Entry x:Name="TelefonoEntry"  Text="###" Style="{StaticResource ProfileEntryStyle}"  Placeholder="Numero de telefono" Keyboard="Telephone" />
+                        <Entry x:Name="TelefonoEntry" Margin="10,0"  Text="###" Style="{StaticResource ProfileEntryStyle}"  Placeholder="Numero de telefono" Keyboard="Telephone" />
                     </Border>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Correo electronico" Style="{StaticResource ProfileLabelStyle}" />
                     <Border StrokeShape="10" Padding="0"  BackgroundColor="#E0F7FA">
-                        <Entry x:Name="EmailEntry"  Style="{StaticResource ProfileEntryStyle}"  Placeholder="Correo electronico" Keyboard="Email" />
+                        <Entry x:Name="EmailEntry" Margin="10,0" Style="{StaticResource ProfileEntryStyle}"  Placeholder="Correo electronico" Keyboard="Email" />
                     </Border>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Direccion" Style="{StaticResource ProfileLabelStyle}" />
                     <Border StrokeShape="10" Padding="0" BackgroundColor="#E0F7FA">
-                        <Entry x:Name="DireccionEntry" Style="{StaticResource ProfileEntryStyle}" Placeholder="Direccion" />
+                        <Entry x:Name="DireccionEntry" Margin="10,0" Style="{StaticResource ProfileEntryStyle}" Placeholder="Direccion" />
                     </Border>
                 </VerticalStackLayout>
             </VerticalStackLayout>

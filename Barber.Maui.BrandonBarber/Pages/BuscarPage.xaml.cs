@@ -4,7 +4,7 @@
     {
         public ObservableCollection<CitaModel> ProximasCitas { get; set; } = [];
         public ObservableCollection<CitaModel> HistorialCitas { get; set; } = [];
-
+        private static SwipeView? _lastOpenedSwipeView;
         private bool _hasProximasCitas;
         public bool HasProximasCitas
         {
@@ -41,7 +41,15 @@
             BindingContext = this;
             _reservationService = reservationService;
         }
+        private void OnSwipeStarted(object sender, SwipeStartedEventArgs e)
+        {
+            if (_lastOpenedSwipeView != null && _lastOpenedSwipeView != sender)
+            {
+                _lastOpenedSwipeView.Close();
+            }
 
+            _lastOpenedSwipeView = sender as SwipeView;
+        }
         protected override void OnAppearing()
         {
             base.OnAppearing();
