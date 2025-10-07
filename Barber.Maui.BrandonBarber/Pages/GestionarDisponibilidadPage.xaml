@@ -52,6 +52,24 @@
 
                     </VerticalStackLayout>
                 </Border>
+                <!-- Después del Border de "Horarios Disponibles" y antes del ScrollView de "Citas Existentes" -->
+                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="Plantilla Semanal" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+
+                        <Button Text="Configurar Plantilla Semanal" 
+                BackgroundColor="#0E2A36" 
+                TextColor="White" 
+                CornerRadius="10" 
+                Clicked="OnConfigurarPlantillaClicked"/>
+
+                        <Button Text="Aplicar Plantilla al Mes" 
+                BackgroundColor="#FF6F91" 
+                TextColor="Black" 
+                CornerRadius="10" 
+                Clicked="OnAplicarPlantillaMesClicked"/>
+                    </VerticalStackLayout>
+                </Border>
 
                 <!-- Citas Existentes -->
                 <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">

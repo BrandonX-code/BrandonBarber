@@ -213,5 +213,50 @@
         {
             await Navigation.PopAsync();
         }
+        private async void OnConfigurarPlantillaClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new PlantillaDisponibilidadPage(_disponibilidadService));
+        }
+
+        private async void OnAplicarPlantillaMesClicked(object sender, EventArgs e)
+        {
+            try
+            {
+                var barberoId = AuthService.CurrentUser?.Cedula ?? 0;
+                var plantilla = await _disponibilidadService.ObtenerPlantillaSemanal(barberoId);
+
+                if (plantilla == null)
+                {
+                    await DisplayAlert("Aviso", "Primero debes configurar tu plantilla semanal", "OK");
+                    return;
+                }
+
+                var popup = new CustomAlertPopup("¿Deseas aplicar tu plantilla semanal a todo el mes actual? Esto sobrescribirá la disponibilidad existente.");
+                bool confirmacion = await popup.ShowAsync(this);
+
+                if (!confirmacion)
+                    return;
+
+                // Aplicar al mes actual
+                var primerDia = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                var ultimoDia = primerDia.AddMonths(1).AddDays(-1);
+
+                bool resultado = await _disponibilidadService.AplicarPlantillaARango(barberoId, primerDia, ultimoDia);
+
+                if (resultado)
+                {
+                    await AppUtils.MostrarSnackbar("Plantilla aplicada correctamente al mes", Colors.Green, Colors.White);
+                    await LoadDisponibilidad(); // Recargar la vista actual
+                }
+                else
+                {
+                    await AppUtils.MostrarSnackbar("Error al aplicar la plantilla", Colors.Red, Colors.White);
+                }
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Error", $"Error: {ex.Message}", "OK");
+            }
+        }
     }
 }

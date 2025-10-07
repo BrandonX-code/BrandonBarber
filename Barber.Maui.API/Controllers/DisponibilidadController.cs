@@ -58,7 +58,28 @@ namespace Barber.Maui.API.Controllers
 
             return Ok(disponibilidad);
         }
+        [HttpGet("barbero/{barberoId}/mes/{year}/{month}")]
+        public async Task<ActionResult<List<Disponibilidad>>> GetDisponibilidadPorMes(long barberoId, int year, int month)
+        {
+            try
+            {
+                var primerDia = new DateTime(year, month, 1);
+                var ultimoDia = primerDia.AddMonths(1).AddDays(-1);
 
+                var disponibilidades = await _context.Disponibilidad
+                    .Where(d => d.BarberoId == barberoId &&
+                           d.Fecha.Date >= primerDia &&
+                           d.Fecha.Date <= ultimoDia)
+                    .OrderBy(d => d.Fecha)
+                    .ToListAsync();
+
+                return Ok(disponibilidades);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Error al obtener disponibilidad", error = ex.Message });
+            }
+        }
 
         [HttpPost]
         public async Task<ActionResult<Disponibilidad>> CrearDisponibilidad([FromBody] Disponibilidad nuevaDisponibilidad)

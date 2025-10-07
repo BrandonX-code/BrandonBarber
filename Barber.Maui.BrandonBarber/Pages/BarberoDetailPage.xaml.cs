@@ -47,7 +47,13 @@
         {
             try
             {
-                _disponibilidades = await _disponibilidadService.GetDisponibilidadActualPorBarbero(_barbero.Cedula);
+                var today = DateTime.Today;
+                // Obtener disponibilidades del mes actual completo
+                _disponibilidades = await _disponibilidadService.GetDisponibilidadPorMes(
+                    _barbero.Cedula,
+                    today.Year,
+                    today.Month
+                );
 
                 if (_disponibilidades == null || !_disponibilidades.Any())
                 {

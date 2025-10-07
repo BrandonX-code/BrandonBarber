@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Barber.Maui.BrandonBarber.Pages.PlantillaDisponibilidadPage"
+             BackgroundColor="#0E2A36">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="10,30" HorizontalOptions="Center">
+            <Label Text="Plantilla Semanal" FontSize="20" TextColor="White" FontAttributes="Bold" />
+        </Grid>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout Padding="20" Spacing="15" x:Name="DiasContainer"/>
+        </ScrollView>
+
+        <!-- Footer -->
+        <HorizontalStackLayout Grid.Row="2" Padding="20" HorizontalOptions="Center">
+            <Button Text="Guardar Plantilla" 
+                    BackgroundColor="#FF6F91" 
+                    TextColor="Black" 
+                    CornerRadius="10" 
+                    Clicked="OnGuardarPlantillaClicked" />
+        </HorizontalStackLayout>
+    </Grid>
+</ContentPage>
