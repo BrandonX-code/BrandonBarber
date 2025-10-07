@@ -254,4 +254,48 @@ public class CitasController : ControllerBase
 
         return NoContent();
     }
+    [HttpPut("{id}/estado")]
+    public async Task<IActionResult> ActualizarEstado(int id, [FromBody] EstadoUpdateDto dto)
+    {
+        var cita = await _context.Citas.FindAsync(id);
+        if (cita == null)
+            return NotFound();
+
+        cita.Estado = dto.Estado;
+        await _context.SaveChangesAsync();
+        return Ok();
+    }
+    [HttpGet("barbero/{barberoId}")]
+    public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorBarbero(long barberoId)
+    {
+        try
+        {
+            var citas = await _context.Citas
+                .Where(c => c.BarberoId == barberoId)
+                .OrderBy(c => c.Fecha)
+                .ToListAsync();
+
+            // Llenar información del barbero
+            if (citas.Any())
+            {
+                var barbero = await _context.UsuarioPerfiles
+                    .FirstOrDefaultAsync(b => b.Cedula == barberoId);
+
+                foreach (var cita in citas)
+                {
+                    cita.BarberoNombre = barbero?.Nombre ?? "No encontrado";
+                }
+            }
+
+            return Ok(citas);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Error al obtener citas del barbero.", error = ex.Message });
+        }
+    }
+}
+public class EstadoUpdateDto
+{
+    public string Estado { get; set; } = string.Empty;
 }

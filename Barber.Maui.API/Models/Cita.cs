@@ -12,5 +12,6 @@ namespace Barber.Maui.API.Models
         public long BarberoId { get; set; }
         [NotMapped]
         public string? BarberoNombre { get; set; }
+        public string Estado { get; set; } = "Pendiente"; // Agregar esta línea
     }
 }

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Barber.Maui.BrandonBarber.Pages.BuscarPage"
+             x:Class="Barber.Maui.BrandonBarber.Pages.BuscarPage" xmlns:local="clr-namespace:Barber.Maui.BrandonBarber.style"
              Background="#0E2A36">
     <ContentPage.Resources>
         <ResourceDictionary>
+            <local:EstadoColorConverter x:Key="EstadoColorConverter" />
             <Style x:Key="EntryStyle" TargetType="Entry">
                 <Setter Property="BackgroundColor" Value="#2b2b2b" />
                 <Setter Property="TextColor" Value="White" />
@@ -91,30 +92,34 @@
                             <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="HistorialCitasCollection"  ItemsSource="{Binding HistorialCitas}" EmptyView="No hay historial de citas" HeightRequest="285">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Padding="8" Margin="2" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10"  >
+                                        <Border Padding="8" Margin="2" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10">
                                             <Grid ColumnDefinitions="*, Auto">
                                                 <VerticalStackLayout Grid.Column="0" Spacing="5">
                                                     <HorizontalStackLayout Spacing="5">
-                                                        <HorizontalStackLayout Spacing="5">
-                                                            <Image Source="id.png" WidthRequest="20" HeightRequest="20" />
-                                                        </HorizontalStackLayout>
+                                                        <Image Source="id.png" WidthRequest="20" HeightRequest="20" />
                                                         <Label Text="{Binding Nombre}" FontSize="Body" TextColor="Black" FontAttributes="Bold"/>
                                                     </HorizontalStackLayout>
+
                                                     <HorizontalStackLayout>
-                                                        <HorizontalStackLayout Spacing="5">
-                                                            <Image Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />
-                                                            <Label Text="Barbero: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
-                                                        </HorizontalStackLayout>
-                                                        <Label Text="{Binding BarberoNombre}" FontSize="Small" TextColor="Black" FontAttributes="None"/>
+                                                        <Image Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />
+                                                        <Label Text="Barbero: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                                        <Label Text="{Binding BarberoNombre}" FontSize="Small" TextColor="Black"/>
                                                     </HorizontalStackLayout>
 
                                                     <HorizontalStackLayout Spacing="5">
                                                         <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
-                                                        <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy -}'}" FontSize="15" FontAttributes="Bold" TextColor="Black"/>
-                                                        <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="15" FontAttributes="Bold" TextColor="Black"/>
+                                                        <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy - hh:mm tt}'}" FontSize="15" FontAttributes="Bold" TextColor="Black"/>
                                                     </HorizontalStackLayout>
                                                 </VerticalStackLayout>
-                                                <Label Grid.Column="1" Text="✓" TextColor="Black" FontSize="20" FontAttributes="Bold" VerticalOptions="Center" />
+
+                                                <!-- Icono de estado -->
+                                                <!-- Icono de estado -->
+                                                <Border Grid.Column="1" Stroke="Transparent" WidthRequest="22"  HeightRequest="22"  StrokeShape="20" VerticalOptions="Center">
+                                                    <Border.BackgroundColor>
+                                                        <Binding Path="Estado" Converter="{StaticResource EstadoColorConverter}" />
+                                                    </Border.BackgroundColor>
+                                                    <Label Text="{Binding IconoEstado}" TextColor="White"  FontSize="10"  FontAttributes="Bold"  HorizontalOptions="Center"  VerticalOptions="Center"/>
+                                                </Border>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>

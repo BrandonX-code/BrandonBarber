@@ -11,19 +11,22 @@
         public long Cedula { get; set; }
         public bool EsHoy => Fecha.Date == DateTime.Today;
         public long BarberoId { get; set; }
-
         public string BarberoNombre { get; set; } = string.Empty;
 
-        public string Estado
+        // Cambiar esta propiedad para que sea get y set
+        public string Estado { get; set; } = "Pendiente";
+
+        // Agregar esta nueva propiedad computada
+        public string IconoEstado
         {
             get
             {
-                if (Fecha < DateTime.Now)
-                    return "Pasada";
-                else if (Fecha.Date == DateTime.Today)
-                    return "Hoy";
-                else
-                    return "Futura";
+                return Estado?.ToLower() switch
+                {
+                    "completada" => "✓",
+                    "cancelada" => "✗",
+                    _ => "🟡"
+                };
             }
         }
     }

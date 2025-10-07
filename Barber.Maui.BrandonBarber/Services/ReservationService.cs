@@ -1,6 +1,7 @@
 ﻿using Barber.Maui.BrandonBarber.Models;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 namespace Barber.Maui.BrandonBarber.Services
@@ -17,6 +18,10 @@ namespace Barber.Maui.BrandonBarber.Services
             _httpClient = httpClient;
             URL = _httpClient.BaseAddress!.ToString();
         }
+        private static readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            PropertyNameCaseInsensitive = true
+        };
         public async Task<List<CitaModel>> GetAllReservations()
         {
             try
@@ -215,6 +220,40 @@ namespace Barber.Maui.BrandonBarber.Services
             {
                 Debug.WriteLine($"Error al obtener citas de la barbería: {ex.Message}");
                 return new List<CitaModel>();
+            }
+        }
+        public async Task<bool> ActualizarEstadoCita(int citaId, string nuevoEstado)
+        {
+            try
+            {
+                // Cambiar la ruta a la correcta
+                var response = await _httpClient.PutAsJsonAsync($"api/citas/{citaId}/estado", new { Estado = nuevoEstado });
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error al actualizar estado: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<List<CitaModel>> GetReservationsByBarbero(long barberoId)
+        {
+            try
+            {
+                // Cambiar la ruta a la correcta
+                var response = await _httpClient.GetAsync($"api/citas/barbero/{barberoId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    return JsonSerializer.Deserialize<List<CitaModel>>(json, _jsonOptions) ?? [];
+                }
+                return [];
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error al obtener citas del barbero: {ex.Message}");
+                return [];
             }
         }
     }

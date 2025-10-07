@@ -114,6 +114,9 @@
 	  <MauiXaml Update="Pages\GaleriaPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\GestionarCitasBarberoPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\GestionarDisponibilidadPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

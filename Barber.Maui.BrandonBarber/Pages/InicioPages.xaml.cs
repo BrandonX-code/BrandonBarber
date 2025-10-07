@@ -159,7 +159,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             var authService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<AuthService>();
             await Navigation.PushAsync(new MetricasPage(reservationService, authService));
         }
-
+        private async void GestionarCitasBarbero(object sender, EventArgs e)
+        {
+            var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
+            await Navigation.PushAsync(new GestionarCitasBarberoPage(reservationService));
+        }
         private void LoadUserInfo()
         {
             if (AuthService.CurrentUser != null)

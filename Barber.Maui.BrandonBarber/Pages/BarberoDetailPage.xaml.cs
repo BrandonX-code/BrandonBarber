@@ -8,7 +8,8 @@
         private readonly ReservationService _reservationService;
         private DateTime? _diaSeleccionado;
         private List<DisponibilidadModel>? _disponibilidades;
-        
+        private HashSet<DateTime> _diasDisponibles = new();
+
         public BarberoDetailPage(UsuarioModels barbero)
         {
             InitializeComponent();
@@ -19,13 +20,12 @@
             LoadBarberoData();
             ContarYMostrarVisita();
             LoadCalendario();
-            _= CargarPromedioCalificacion();
+            _ = CargarPromedioCalificacion();
             WeakReferenceMessenger.Default.Register<CalificacionEnviadaMessage>(this, async (r, m) =>
             {
                 if (m.Value == _barbero.Cedula)
-                await CargarPromedioCalificacion();
+                    await CargarPromedioCalificacion();
             });
-
         }
 
         private void LoadBarberoData()
@@ -49,18 +49,35 @@
             {
                 _disponibilidades = await _disponibilidadService.GetDisponibilidadActualPorBarbero(_barbero.Cedula);
 
+                if (_disponibilidades == null || !_disponibilidades.Any())
+                {
+                    // No hay disponibilidad gestionada
+                    _diasDisponibles = new HashSet<DateTime>();
+                    GenerarCalendario(_diasDisponibles);
+                    MostrarMensajeSinDisponibilidad();
+                    return;
+                }
+
                 // Obtén solo los días con al menos un horario disponible
-                var diasDisponibles = _disponibilidades?
+                _diasDisponibles = _disponibilidades
                     .Where(d => d.HorariosDict.Any(h => h.Value))
                     .Select(d => d.Fecha.Date)
-                    .ToHashSet() ?? [];
+                    .ToHashSet();
 
-                GenerarCalendario(diasDisponibles);
+                GenerarCalendario(_diasDisponibles);
             }
             catch (Exception)
             {
                 await DisplayAlert("Error", "No se pudo cargar el calendario", "OK");
             }
+        }
+
+        private void MostrarMensajeSinDisponibilidad()
+        {
+            NoAvailabilityLabel.Text = "El barbero no ha configurado su disponibilidad";
+            NoAvailabilityLabel.IsVisible = true;
+            AvailableHoursContainer.IsVisible = false;
+            _diaSeleccionado = null;
         }
 
         private void GenerarCalendario(HashSet<DateTime> diasDisponibles)
@@ -101,6 +118,7 @@
                 var col = position % 7;
                 var isAvailable = diasDisponibles.Contains(currentDate);
                 var isToday = currentDate.Date == today.Date;
+                var isSelected = _diaSeleccionado.HasValue && _diaSeleccionado.Value.Date == currentDate.Date;
 
                 // Crear un Frame contenedor con mejor espaciado
                 var border = new Border
@@ -108,13 +126,13 @@
                     Stroke = Colors.Transparent,
                     BackgroundColor = Colors.Transparent,
                     Padding = new Thickness(3),
-                    Margin = new Thickness(2), 
-                    StrokeShape = new RoundRectangle()
+                    Margin = new Thickness(2),
+                    StrokeShape = new RoundRectangle
+                    {
+                        CornerRadius = 5
+                    }
                 };
-                border.StrokeShape = new RoundRectangle
-                {
-                    CornerRadius = 5
-                };
+
                 var button = new Button
                 {
                     Text = day.ToString(),
@@ -124,33 +142,68 @@
                     HeightRequest = 32,
                     HorizontalOptions = LayoutOptions.Center,
                     VerticalOptions = LayoutOptions.Center,
-                    IsEnabled = false,
-                    InputTransparent = true,
                     Padding = new Thickness(0),
                     FontAttributes = FontAttributes.Bold
                 };
 
-                if (!isAvailable || currentDate < today)
+                // Configurar el botón según su estado
+                if (currentDate < today)
                 {
+                    // Días pasados - deshabilitados
                     button.BackgroundColor = Colors.Transparent;
-                    button.TextColor = Color.FromArgb("#000000");
+                    button.TextColor = Color.FromArgb("#666666");
                     button.BorderWidth = 0;
                     button.FontAttributes = FontAttributes.None;
+                    button.IsEnabled = false;
+                    button.InputTransparent = true;
                 }
-                else if (isToday)
+                else if (isSelected)
                 {
+                    // Día seleccionado
+                    button.BackgroundColor = Color.FromArgb("#FF6F91");
+                    button.TextColor = Colors.Black;
+                    button.BorderWidth = 0;
+                    button.FontAttributes = FontAttributes.Bold;
+                    button.IsEnabled = true;
+                    button.InputTransparent = false;
+                }
+                else if (isToday && isAvailable)
+                {
+                    // Hoy con disponibilidad
                     button.BackgroundColor = Color.FromArgb("#0e2a36");
                     button.TextColor = Colors.White;
                     button.BorderWidth = 0;
                     button.FontAttributes = FontAttributes.Bold;
+                    button.IsEnabled = true;
+                    button.InputTransparent = false;
                 }
-                else
+                else if (isAvailable)
                 {
+                    // Días futuros con disponibilidad
                     button.BackgroundColor = Colors.Transparent;
                     button.TextColor = Colors.Black;
                     button.BorderWidth = 1;
-                    button.BorderColor = Color.FromArgb("#EEEEEE");
+                    button.BorderColor = Colors.Transparent;
                     button.FontAttributes = FontAttributes.None;
+                    button.IsEnabled = true;
+                    button.InputTransparent = false;
+                }
+                else
+                {
+                    // Días futuros sin disponibilidad - también seleccionables
+                    button.BackgroundColor = Colors.Transparent;
+                    button.TextColor = Colors.Black;
+                    button.BorderColor = Color.FromArgb("#CCCCCC");
+                    button.FontAttributes = FontAttributes.None;
+                    button.IsEnabled = true;
+                    button.InputTransparent = false;
+                }
+
+                // Agregar evento click a todos los días futuros (incluyendo hoy)
+                if (currentDate >= today)
+                {
+                    var dateToCapture = currentDate;
+                    button.Clicked += (s, e) => OnDaySelected(dateToCapture);
                 }
 
                 border.Content = button;
@@ -159,8 +212,12 @@
                 CalendarioGrid.Children.Add(border);
             }
 
-            // Mostrar horarios del día actual por defecto si está disponible
-            if (diasDisponibles.Contains(today))
+            // Mostrar horarios del día seleccionado, o del día actual por defecto si está disponible
+            if (_diaSeleccionado.HasValue && diasDisponibles.Contains(_diaSeleccionado.Value))
+            {
+                LoadHorasDisponiblesParaDia(_diaSeleccionado.Value);
+            }
+            else if (diasDisponibles.Contains(today))
             {
                 _diaSeleccionado = today;
                 LoadHorasDisponiblesParaDia(today);
@@ -173,50 +230,78 @@
                     _diaSeleccionado = primerDiaDisponible;
                     LoadHorasDisponiblesParaDia(primerDiaDisponible);
                 }
+                else if (!diasDisponibles.Any())
+                {
+                    MostrarMensajeSinDisponibilidad();
+                }
             }
+        }
+
+        private void OnDaySelected(DateTime selectedDate)
+        {
+            _diaSeleccionado = selectedDate;
+            // Regenerar el calendario para actualizar el estado visual
+            GenerarCalendario(_diasDisponibles);
+            // Cargar las horas disponibles para el día seleccionado
+            LoadHorasDisponiblesParaDia(selectedDate);
         }
 
         private void LoadHorasDisponiblesParaDia(DateTime dia)
         {
             var disponibilidadDia = _disponibilidades?.FirstOrDefault(d => d.Fecha.Date == dia.Date);
-            if (disponibilidadDia != null)
+
+            if (disponibilidadDia == null)
             {
-                var horasDisponibles = disponibilidadDia.HorariosDict
-                    .Where(h => h.Value)
-                    .Select(h => h.Key)
-                    .ToList();
-
-                AvailableHoursContainer.Children.Clear();
-                foreach (var hora in horasDisponibles)
-                {
-                    var border = new Border
-                    {
-                        BackgroundColor = Color.FromArgb("#90A4AE"),
-                        Padding = new Thickness(15, 8),
-                        HeightRequest = 40,
-                        Stroke = Colors.Transparent,
-                        StrokeThickness = 0,
-                        StrokeShape = new RoundRectangle
-                        {
-                            CornerRadius = 5
-                        }
-                    };
-
-
-                    var label = new Label
-                    {
-                        Text = hora,
-                        TextColor = Colors.Black,
-                        FontSize = 14
-                    };
-
-                    border.Content = label;
-                    AvailableHoursContainer.Children.Add(border);
-                }
-
-                NoAvailabilityLabel.IsVisible = horasDisponibles.Count == 0;
-                AvailableHoursContainer.IsVisible = horasDisponibles.Count != 0;
+                // El barbero no ha gestionado disponibilidad para este día
+                NoAvailabilityLabel.Text = "El barbero no ha configurado su disponibilidad para este día";
+                NoAvailabilityLabel.IsVisible = true;
+                AvailableHoursContainer.IsVisible = false;
+                return;
             }
+
+            var horasDisponibles = disponibilidadDia.HorariosDict
+                .Where(h => h.Value)
+                .Select(h => h.Key)
+                .ToList();
+
+            AvailableHoursContainer.Children.Clear();
+
+            if (horasDisponibles.Count == 0)
+            {
+                NoAvailabilityLabel.Text = "No hay horarios disponibles para este día";
+                NoAvailabilityLabel.IsVisible = true;
+                AvailableHoursContainer.IsVisible = false;
+                return;
+            }
+
+            foreach (var hora in horasDisponibles)
+            {
+                var border = new Border
+                {
+                    BackgroundColor = Color.FromArgb("#90A4AE"),
+                    Padding = new Thickness(15, 8),
+                    HeightRequest = 40,
+                    Stroke = Colors.Transparent,
+                    StrokeThickness = 0,
+                    StrokeShape = new RoundRectangle
+                    {
+                        CornerRadius = 5
+                    }
+                };
+
+                var label = new Label
+                {
+                    Text = hora,
+                    TextColor = Colors.Black,
+                    FontSize = 14
+                };
+
+                border.Content = label;
+                AvailableHoursContainer.Children.Add(border);
+            }
+
+            NoAvailabilityLabel.IsVisible = false;
+            AvailableHoursContainer.IsVisible = true;
         }
 
         private async void ContarYMostrarVisita()

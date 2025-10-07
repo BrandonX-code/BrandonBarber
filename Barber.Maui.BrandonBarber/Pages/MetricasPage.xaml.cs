@@ -105,10 +105,13 @@ namespace Barber.Maui.BrandonBarber.Pages
                 }
 
                 // Actualizar estadísticas generales (del mes actual)
+                // Actualizar estadísticas generales (del mes actual)
                 TotalCitasLabel.Text = citasDelMes.Count.ToString();
+
                 var tasaAsistencia = citasDelMes.Count > 0
-                    ? (double)citasDelMes.Count(c => c.Estado == "Completada") / citasDelMes.Count * 100
+                    ? (double)citasDelMes.Count(c => c.Estado?.ToLower() == "completada") / citasDelMes.Count * 100
                     : 0;
+
                 TasaAsistenciaLabel.Text = $"{tasaAsistencia:F1}%";
 
                 // Los gráficos y rankings SIEMPRE muestran datos históricos (últimos 6 meses)
