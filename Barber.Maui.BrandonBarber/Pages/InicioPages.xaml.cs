@@ -36,9 +36,9 @@ namespace Barber.Maui.BrandonBarber.Pages
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            Application.Current!.UserAppTheme = AppTheme.Light;
             if (ClienteView.IsVisible)
             {
-                //LoadDisponibilidad();
                 _ = LoadBarberos();
             }
         }

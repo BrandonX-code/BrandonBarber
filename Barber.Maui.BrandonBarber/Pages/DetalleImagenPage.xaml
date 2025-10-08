@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Barber.Maui.BrandonBarber.Pages.DetalleImagenPage"
              BackgroundColor="#0E2A36">
+
     <ContentPage.Resources>
         <ResourceDictionary>
             <Style x:Key="ButtonStyle" TargetType="Button">
@@ -23,9 +24,31 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Image x:Name="DetalleImagen" Grid.Row="0" Aspect="AspectFit" HorizontalOptions="Fill" VerticalOptions="Fill" />
+        <!-- Imagen con zoom y arrastre -->
+        <Image x:Name="DetalleImagen"
+               Grid.Row="0"
+               Aspect="AspectFit"
+               HorizontalOptions="Fill"
+               VerticalOptions="Fill">
+            <Image.GestureRecognizers>
+                <TapGestureRecognizer NumberOfTapsRequired="2" Tapped="OnImageDoubleTapped" />
+                <PanGestureRecognizer PanUpdated="OnImagePanned" />
+            </Image.GestureRecognizers>
+        </Image>
 
-        <ImageButton x:Name="EditarButton" Grid.Row="0" Source="pencil.png" HeightRequest="60" WidthRequest="60" Padding="8" Margin="10" BackgroundColor="Transparent" CornerRadius="20" HorizontalOptions="End" VerticalOptions="Start" Clicked="OnEditarClicked" IsVisible="False" />
+        <ImageButton x:Name="EditarButton"
+                     Grid.Row="0"
+                     Source="pencil.png"
+                     HeightRequest="60"
+                     WidthRequest="60"
+                     Padding="8"
+                     Margin="10"
+                     BackgroundColor="Transparent"
+                     CornerRadius="20"
+                     HorizontalOptions="End"
+                     VerticalOptions="Start"
+                     Clicked="OnEditarClicked"
+                     IsVisible="False" />
 
         <Grid Grid.Row="1" Padding="20" ColumnSpacing="15">
             <Grid.ColumnDefinitions>
@@ -33,9 +56,15 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Button Text="Volver" Grid.Column="0" BackgroundColor="#90A4AE" Clicked="OnVolverClicked" />
+            <Button Text="Volver"
+                    Grid.Column="0"
+                    BackgroundColor="#90A4AE"
+                    Clicked="OnVolverClicked" />
 
-            <Button Text="Compartir" Grid.Column="1" Style="{StaticResource ButtonStyle}" Clicked="OnCompartirClicked" />
+            <Button Text="Compartir"
+                    Grid.Column="1"
+                    Style="{StaticResource ButtonStyle}"
+                    Clicked="OnCompartirClicked" />
         </Grid>
     </Grid>
 </ContentPage>

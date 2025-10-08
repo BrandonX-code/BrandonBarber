@@ -220,11 +220,12 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                 // Elegir color según la tasa
                 SKColor color;
-                if (tasaAsistencia >= 80) color = SKColor.Parse("#4CAF50"); // Verde
-                else if (tasaAsistencia >= 60) color = SKColor.Parse("#8BC34A"); // Verde claro
-                else if (tasaAsistencia >= 40) color = SKColor.Parse("#FFC107"); // Amarillo
-                else if (tasaAsistencia >= 20) color = SKColor.Parse("#FF9800"); // Naranja
-                else color = SKColor.Parse("#FF5722"); // Rojo
+                // Color según la tasa - ya está bien, solo ajusta los colores:
+                if (tasaAsistencia >= 80) color = SKColor.Parse("#2E7D32"); // Verde oscuro
+                else if (tasaAsistencia >= 60) color = SKColor.Parse("#66BB6A"); // Verde claro
+                else if (tasaAsistencia >= 40) color = SKColor.Parse("#FFA726"); // Naranja
+                else if (tasaAsistencia >= 20) color = SKColor.Parse("#FF7043"); // Naranja rojizo
+                else color = SKColor.Parse("#E53935"); // Rojo
 
                 entries.Add(new ChartEntry(tasaAsistencia)
                 {
@@ -295,12 +296,12 @@ namespace Barber.Maui.BrandonBarber.Pages
             var fechaActual = DateTime.Now;
             var colores = new[]
             {
-                SKColor.Parse("#868788"),
-                SKColor.Parse("#9ebcca"),
-                SKColor.Parse("#ffffff"),
-                SKColor.Parse("#88a0aa"),
-                SKColor.Parse("#83817e"),
-                SKColor.Parse("#a5a29a")
+                SKColor.Parse("#1E3A5F"), // Azul oscuro profundo
+                SKColor.Parse("#2E5C8A"), // Azul medio
+                SKColor.Parse("#4A90C8"), // Azul cielo
+                SKColor.Parse("#7FB3D5"), // Azul claro
+                SKColor.Parse("#B0D4E8"), // Azul pastel
+                SKColor.Parse("#D4E8F5")  // Azul muy claro
             };
 
             // Obtener todas las citas históricas de una vez
@@ -364,13 +365,13 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var entries = new List<ChartEntry>();
                 var colores = new[]
                 {
-                    SKColor.Parse("#ffffff"),
-                    SKColor.Parse("#83817e"),
-                    SKColor.Parse("#88a0aa"),
-                    SKColor.Parse("#9ebcca"),
-                    SKColor.Parse("#868788"),
-                    SKColor.Parse("#a5a29a")
-        };
+                    SKColor.Parse("#9BB9D4"), // Gris azulado claro
+                    SKColor.Parse("#546E7A"), // Gris azulado
+                    SKColor.Parse("#78909C"), // Gris azulado claro
+                    SKColor.Parse("#90A4AE"), // Gris plateado
+                    SKColor.Parse("#B0BEC5"), // Gris perla
+                    SKColor.Parse("#CFD8DC")  // Gris muy claro
+                };
 
                 int maxBarberosAMostrar = 5; // Mostrar máximo 5 barberos
                 int colorIndex = 0;
@@ -465,17 +466,6 @@ namespace Barber.Maui.BrandonBarber.Pages
                 await AppUtils.MostrarSnackbar($"Error al cargar ranking: {ex.Message}", Colors.Red, Colors.White);
             }
         }
-        //private static int DeterminarMaximoBarberos(int totalBarberos)
-        //{
-        //    return Math.Min(5, totalBarberos);
-        //}
-
-        //private static float DeterminarTamañoTexto(int cantidadElementos)
-        //{
-        //    if (cantidadElementos <= 5) return 20f;
-        //    if (cantidadElementos <= 8) return 18f;
-        //    return 16f;
-        //}
 
         private static string TruncateLabel(string nombre, int maxLength)
         {

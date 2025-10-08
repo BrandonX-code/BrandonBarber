@@ -4,8 +4,11 @@
     {
         private readonly ImagenGaleriaModel _imagen;
         private readonly string? _imageUrl;
-
         private readonly string _baseUrl;
+
+        private bool _isZoomed = false;
+        private double _xOffset, _yOffset;
+
         public DetalleImagenPage(ImagenGaleriaModel imagen, string baseUrl)
         {
             InitializeComponent();
@@ -15,18 +18,17 @@
             _imageUrl = imagen.RutaArchivo;
             DetalleImagen.Source = ImageSource.FromUri(new Uri(_imageUrl!));
 
-            // Mostrar botón de editar solo para barberos
             EditarButton.IsVisible = AuthService.CurrentUser?.Rol?.ToLower() == "barbero";
 
             if (!string.IsNullOrEmpty(imagen.Descripcion))
-            {
                 Title = imagen.Descripcion;
-            }
         }
+
         private async void OnVolverClicked(object sender, EventArgs e)
         {
             await Navigation.PopAsync();
         }
+
         private async void OnEditarClicked(object sender, EventArgs e)
         {
             string nuevaDescripcion = await DisplayPromptAsync(
@@ -36,10 +38,9 @@
                 maxLength: 500
             );
 
-            if (nuevaDescripcion == null) // Cancelado
+            if (nuevaDescripcion == null)
                 return;
 
-            // Actualizar usando el servicio
             var galeriaService = Application.Current!.Handler.MauiContext!.Services.GetService<GaleriaService>();
             bool actualizado = await galeriaService!.ActualizarImagen(_imagen.Id, nuevaDescripcion);
 
@@ -59,7 +60,6 @@
             try
             {
                 string? localFilePath = await DownloadImageToTempFile(_imageUrl!);
-
                 if (string.IsNullOrEmpty(localFilePath))
                 {
                     await AppUtils.MostrarSnackbar("No se pudo descargar la imagen para compartir.", Colors.Red, Colors.White);
@@ -98,6 +98,45 @@
             {
                 System.Diagnostics.Debug.WriteLine($"Error downloading image for sharing: {ex.Message}");
                 return null;
+            }
+        }
+
+        // 👇 Doble toque: activar/desactivar zoom
+        private async void OnImageDoubleTapped(object sender, TappedEventArgs e)
+        {
+            if (_isZoomed)
+            {
+                await DetalleImagen.ScaleTo(1, 250, Easing.CubicOut);
+                await DetalleImagen.TranslateTo(0, 0, 250, Easing.CubicOut);
+                _isZoomed = false;
+                _xOffset = _yOffset = 0;
+            }
+            else
+            {
+                DetalleImagen.AnchorX = 0.5;
+                DetalleImagen.AnchorY = 0.5;
+                await DetalleImagen.ScaleTo(2, 250, Easing.CubicOut);
+                _isZoomed = true;
+            }
+        }
+
+        // 👇 Permitir arrastrar cuando está en zoom
+        private void OnImagePanned(object sender, PanUpdatedEventArgs e)
+        {
+            if (!_isZoomed)
+                return;
+
+            switch (e.StatusType)
+            {
+                case GestureStatus.Running:
+                    DetalleImagen.TranslationX = _xOffset + e.TotalX;
+                    DetalleImagen.TranslationY = _yOffset + e.TotalY;
+                    break;
+
+                case GestureStatus.Completed:
+                    _xOffset = DetalleImagen.TranslationX;
+                    _yOffset = DetalleImagen.TranslationY;
+                    break;
             }
         }
     }
