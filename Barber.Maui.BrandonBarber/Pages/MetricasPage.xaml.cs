@@ -26,7 +26,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             BindingContext = this;
             ChartTypePicker.SelectedIndex = 0;
             RankingChartTypePicker.SelectedIndex = 0;
-
+            AsistenciaChartTypePicker.SelectedIndex = 0;
             // Cargar barberías primero, luego métricas
             _ = CargarBarberias();
         }
@@ -88,35 +88,41 @@ namespace Barber.Maui.BrandonBarber.Pages
             try
             {
                 var fechaActual = DateTime.Now;
-                List<CitaModel> citasDelMes = [];
                 int mes = fechaActual.Month;
                 int anio = fechaActual.Year;
 
-                // Obtener citas del mes actual para estadísticas generales
+                // Obtener todas las citas históricas
+                List<CitaModel> todasLasCitas;
                 if (_barberiaSeleccionadaId > 0)
                 {
-                    var todasCitas = await _reservationService.GetReservations(fechaActual, _barberiaSeleccionadaId);
-                    citasDelMes = [.. todasCitas.Where(c => c.Fecha.Month == mes && c.Fecha.Year == anio)];
+                    todasLasCitas = await _reservationService.GetReservationsByBarberia(_barberiaSeleccionadaId);
                 }
                 else
                 {
-                    var todasCitas = await _reservationService.GetAllReservations();
-                    citasDelMes = [.. todasCitas.Where(c => c.Fecha.Month == mes && c.Fecha.Year == anio)];
+                    todasLasCitas = await _reservationService.GetAllReservationsHistorical();
                 }
 
-                // Actualizar estadísticas generales (del mes actual)
-                // Actualizar estadísticas generales (del mes actual)
-                TotalCitasLabel.Text = citasDelMes.Count.ToString();
+                // Filtrar solo las citas de HOY para "Total Citas Hoy"
+                var citasHoy = todasLasCitas.Where(c =>
+                    c.Fecha.Date == fechaActual.Date).ToList();
+
+                // Filtrar las del mes actual para la tasa de asistencia
+                var citasDelMes = todasLasCitas.Where(c =>
+                    c.Fecha.Month == mes && c.Fecha.Year == anio).ToList();
+
+                // Actualizar estadísticas generales
+                TotalCitasLabel.Text = citasHoy.Count.ToString(); // ← CITAS DE HOY
 
                 var tasaAsistencia = citasDelMes.Count > 0
                     ? (double)citasDelMes.Count(c => c.Estado?.ToLower() == "completada") / citasDelMes.Count * 100
                     : 0;
 
-                TasaAsistenciaLabel.Text = $"{tasaAsistencia:F1}%";
+                TasaAsistenciaLabel.Text = $"{tasaAsistencia:F1}%"; // ← TASA DEL MES
 
                 // Los gráficos y rankings SIEMPRE muestran datos históricos (últimos 6 meses)
                 await Task.WhenAll(
                     CargarGraficoAsistencia(),
+                    CargarGraficoTasaAsistencia(),
                     CargarRankingBarberos(),
                     CargarClientesFrecuentes()
                 );
@@ -127,7 +133,111 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
         }
 
+        private void OnAsistenciaChartTypeChanged(object sender, EventArgs e)
+        {
+            CargarGraficoTasaAsistencia().ConfigureAwait(false);
+        }
 
+        private async Task CargarGraficoTasaAsistencia()
+        {
+            try
+            {
+                var entries = await ObtenerDatosTasaAsistencia();
+
+                Chart chart;
+                if (AsistenciaChartTypePicker.SelectedIndex == 0)
+                {
+                    chart = new BarChart
+                    {
+                        Entries = entries,
+                        LabelTextSize = 40,
+                        Margin = 40,
+                        LabelOrientation = Orientation.Horizontal,
+                        ValueLabelOrientation = Orientation.Horizontal,
+                        BackgroundColor = SKColor.Parse("#0E2A36"),
+                        MaxValue = 100 // Para porcentajes
+                    };
+                }
+                else
+                {
+                    chart = new LineChart
+                    {
+                        Entries = entries,
+                        LabelTextSize = 40,
+                        Margin = 40,
+                        LabelOrientation = Orientation.Horizontal,
+                        ValueLabelOrientation = Orientation.Horizontal,
+                        BackgroundColor = SKColor.Parse("#0E2A36"),
+                        MaxValue = 100 // Para porcentajes
+                    };
+                }
+
+                TasaAsistenciaChart.Chart = chart;
+            }
+            catch (Exception ex)
+            {
+                await AppUtils.MostrarSnackbar($"Error al cargar gráfico de tasa: {ex.Message}", Colors.Red, Colors.White);
+            }
+        }
+
+        private async Task<List<ChartEntry>> ObtenerDatosTasaAsistencia()
+        {
+            var entries = new List<ChartEntry>();
+            var fechaActual = DateTime.Now;
+            var colores = new[]
+            {
+                SKColor.Parse("#4CAF50"), // Verde para alta asistencia
+                SKColor.Parse("#8BC34A"),
+                SKColor.Parse("#FFC107"), // Amarillo para media
+                SKColor.Parse("#FF9800"),
+                SKColor.Parse("#FF5722"), // Rojo para baja
+                SKColor.Parse("#F44336")
+            };
+
+            // Obtener todas las citas históricas de una vez
+            List<CitaModel> todasLasCitas;
+            if (_barberiaSeleccionadaId > 0)
+            {
+                todasLasCitas = await _reservationService.GetReservationsByBarberia(_barberiaSeleccionadaId);
+            }
+            else
+            {
+                todasLasCitas = await _reservationService.GetAllReservationsHistorical();
+            }
+
+            for (int i = 5; i >= 0; i--)
+            {
+                var fecha = fechaActual.AddMonths(-i);
+
+                // Filtrar las citas del mes específico
+                var citasDelMes = todasLasCitas.Where(c =>
+                    c.Fecha.Year == fecha.Year &&
+                    c.Fecha.Month == fecha.Month).ToList();
+
+                var tasaAsistencia = citasDelMes.Count > 0
+                    ? (float)((double)citasDelMes.Count(c => c.Estado?.ToLower() == "completada") / citasDelMes.Count * 100)
+                    : 0f;
+
+                // Elegir color según la tasa
+                SKColor color;
+                if (tasaAsistencia >= 80) color = SKColor.Parse("#4CAF50"); // Verde
+                else if (tasaAsistencia >= 60) color = SKColor.Parse("#8BC34A"); // Verde claro
+                else if (tasaAsistencia >= 40) color = SKColor.Parse("#FFC107"); // Amarillo
+                else if (tasaAsistencia >= 20) color = SKColor.Parse("#FF9800"); // Naranja
+                else color = SKColor.Parse("#FF5722"); // Rojo
+
+                entries.Add(new ChartEntry(tasaAsistencia)
+                {
+                    Label = fecha.ToString("MMM"),
+                    ValueLabel = $"{tasaAsistencia:F1}%",
+                    Color = color,
+                    TextColor = SKColor.Parse("#ffffff"),
+                    ValueLabelColor = SKColor.Parse("#ffffff")
+                });
+            }
+
+            return entries;
+        }
 
         private void OnChartTypeChanged(object sender, EventArgs e)
         {
