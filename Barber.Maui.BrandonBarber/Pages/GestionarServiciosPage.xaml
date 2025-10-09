@@ -36,7 +36,7 @@
                     BackgroundColor="#FF6F91" TextColor="Black"
                     IsVisible="False" Grid.Column="0"/>
                         <Button x:Name="CancelarBtn" Text="Cancelar" Clicked="OnCancelarEdicion"
-                    BackgroundColor="#B0BEC5" TextColor="Black"
+                    BackgroundColor="#828282" TextColor="Black"
                     IsVisible="False" Grid.Column="1"/>
                     </Grid>
                 </VerticalStackLayout>
