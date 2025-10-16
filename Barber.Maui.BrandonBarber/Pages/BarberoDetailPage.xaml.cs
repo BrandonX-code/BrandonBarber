@@ -80,7 +80,7 @@
 
         private void MostrarMensajeSinDisponibilidad()
         {
-            NoAvailabilityLabel.Text = "El barbero no ha configurado su disponibilidad";
+            NoAvailabilityLabel.Text = "El barbero no ha gestinado su disponibilidad";
             NoAvailabilityLabel.IsVisible = true;
             AvailableHoursContainer.IsVisible = false;
             _diaSeleccionado = null;
@@ -259,7 +259,7 @@
             if (disponibilidadDia == null)
             {
                 // El barbero no ha gestionado disponibilidad para este día
-                NoAvailabilityLabel.Text = "El barbero no ha configurado su disponibilidad para este día";
+                NoAvailabilityLabel.Text = "El barbero no ha gestionado su disponibilidad para este día";
                 NoAvailabilityLabel.IsVisible = true;
                 AvailableHoursContainer.IsVisible = false;
                 return;

@@ -75,6 +75,14 @@
                         <Entry x:Name="DireccionEntry" Margin="10,0" Style="{StaticResource ProfileEntryStyle}" Placeholder="Direccion" />
                     </Border>
                 </VerticalStackLayout>
+
+                <!-- Campo de Especialidades - Solo visible para Barberos -->
+                <VerticalStackLayout x:Name="EspecialidadesContainer" Spacing="5" IsVisible="False">
+                    <Label Text="Especialidades" Style="{StaticResource ProfileLabelStyle}" />
+                    <Border StrokeShape="10" Padding="0" BackgroundColor="#E0F7FA">
+                        <Entry x:Name="EspecialidadesEntry" Margin="10,0" Style="{StaticResource ProfileEntryStyle}" Placeholder="Ej: Corte clásico, Barba, Afeitado" />
+                    </Border>
+                </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
 

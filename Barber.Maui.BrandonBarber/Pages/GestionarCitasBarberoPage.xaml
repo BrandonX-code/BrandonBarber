@@ -18,7 +18,7 @@
 
                                 <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="5">
                                     <Image Source="calendar.png" WidthRequest="20" HeightRequest="20"/>
-                                    <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy hh:mm tt}'}" TextColor="Black"/>
+                                    <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy - hh:mm tt}'}" TextColor="Black"/>
                                 </HorizontalStackLayout>
 
                                 <Label Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding Estado}" TextColor="Black" FontAttributes="Bold"/>

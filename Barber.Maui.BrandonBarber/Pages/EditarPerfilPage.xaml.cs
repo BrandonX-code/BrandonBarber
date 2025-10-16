@@ -20,10 +20,19 @@
                 Telefono = "555-123-4567",
                 Email = "",
                 Direccion = "",
-                ImagenPath = "default_avatar.png"
+                ImagenPath = "default_avatar.png",
+                Rol = "Cliente" // Valor por defecto
             };
 
             CargarDatosPerfil();
+            ConfigurarVisibilidadPorRol();
+        }
+
+        private void ConfigurarVisibilidadPorRol()
+        {
+            // Mostrar el campo de especialidades solo si el rol es "Barbero"
+            bool esBarbero = _perfilData.Rol?.Equals("Barbero", StringComparison.OrdinalIgnoreCase) ?? false;
+            EspecialidadesContainer.IsVisible = esBarbero;
         }
 
         private void CargarDatosPerfil()
@@ -32,6 +41,7 @@
             TelefonoEntry.Text = _perfilData.Telefono;
             EmailEntry.Text = _perfilData.Email;
             DireccionEntry.Text = _perfilData.Direccion;
+            EspecialidadesEntry.Text = _perfilData.Especialidades;
 
             if (!string.IsNullOrEmpty(_perfilData.ImagenPath) && _perfilData.ImagenPath != "default_avatar.png")
             {
@@ -59,7 +69,7 @@
                     FileTypes = FilePickerFileType.Images
                 };
 
-                var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions {});
+                var result = await MediaPicker.PickPhotoAsync(new MediaPickerOptions { });
                 if (result != null)
                 {
                     PerfilImage.Source = result.FullPath;
@@ -89,6 +99,12 @@
                 _perfilData.Email = EmailEntry.Text;
                 _perfilData.Direccion = DireccionEntry.Text;
 
+                // Guardar especialidades solo si es barbero
+                if (_perfilData.Rol?.Equals("Barbero", StringComparison.OrdinalIgnoreCase) ?? false)
+                {
+                    _perfilData.Especialidades = EspecialidadesEntry.Text;
+                }
+
                 bool perfilGuardado = await _perfilService.SavePerfilUsuario(_perfilData);
                 bool imagenActualizada = true;
 
@@ -108,7 +124,7 @@
 
                 if (perfilGuardado)
                 {
-                    await AppUtils.MostrarSnackbar( "Los cambios se han guardado correctamente", Colors.Green, Colors.White);
+                    await AppUtils.MostrarSnackbar("Los cambios se han guardado correctamente", Colors.Green, Colors.White);
                     await Navigation.PopAsync();
                 }
 

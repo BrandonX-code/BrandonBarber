@@ -111,9 +111,6 @@
                                                         <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy - hh:mm tt}'}" FontSize="15" FontAttributes="Bold" TextColor="Black"/>
                                                     </HorizontalStackLayout>
                                                 </VerticalStackLayout>
-
-                                                <!-- Icono de estado -->
-                                                <!-- Icono de estado -->
                                                 <Border Grid.Column="1" Stroke="Transparent" WidthRequest="22"  HeightRequest="22"  StrokeShape="20" VerticalOptions="Center">
                                                     <Border.BackgroundColor>
                                                         <Binding Path="Estado" Converter="{StaticResource EstadoColorConverter}" />

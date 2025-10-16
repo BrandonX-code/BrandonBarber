@@ -3,8 +3,6 @@ using Barber.Maui.API.Models;
 using Barber.Maui.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace Barber.Maui.API.Controllers
 {
@@ -21,7 +19,6 @@ namespace Barber.Maui.API.Controllers
             _emailService = emailService;
         }
 
-        // Tus endpoints existentes...
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Auth>>> GetAuth()
         {
@@ -111,7 +108,6 @@ namespace Barber.Maui.API.Controllers
             return Ok(response);
         }
 
-        // 🔥 NUEVOS ENDPOINTS PARA RECUPERACIÓN DE CONTRASEÑA 🔥
 
         [HttpPost("forgot-password")]
         public async Task<ActionResult<ForgotPasswordResponse>> ForgotPassword([FromBody] ForgotPasswordRequest request)
@@ -166,7 +162,7 @@ namespace Barber.Maui.API.Controllers
                 // Enviar email
                 var emailSent = await _emailService.SendPasswordResetEmailAsync(
                     request.Email,
-                    usuario.Nombre,
+                    usuario.Nombre!,
                     token
                 );
 
@@ -185,7 +181,7 @@ namespace Barber.Maui.API.Controllers
                     Message = "Se ha enviado un código de recuperación a tu email."
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, new ForgotPasswordResponse
                 {
@@ -263,7 +259,7 @@ namespace Barber.Maui.API.Controllers
                     Message = "Contraseña actualizada exitosamente."
                 });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(500, new ForgotPasswordResponse
                 {
@@ -312,10 +308,10 @@ namespace Barber.Maui.API.Controllers
         }
 
         // Método auxiliar para generar token
-        private string GenerateRecoveryToken()
+        private static string GenerateRecoveryToken()
         {
             var random = new Random();
-            return random.Next(100000, 999999).ToString(); // 6 dígitos
+            return random.Next(100000, 999999).ToString();
         }
     }
 }

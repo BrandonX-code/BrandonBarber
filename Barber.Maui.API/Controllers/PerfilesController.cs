@@ -73,6 +73,7 @@ namespace Barber.Maui.API.Controllers
             auth.Telefono = authUpdate.Telefono;
             auth.Contraseña = authUpdate.Contraseña;
             auth.Rol = authUpdate.Rol;
+            auth.Especialidades = authUpdate.Especialidades;
 
             try
             {

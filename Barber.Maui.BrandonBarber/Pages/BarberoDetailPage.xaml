@@ -79,12 +79,7 @@
                     </ScrollView>
                 </VerticalStackLayout>
 
-                <Grid ColumnSpacing="15" Margin="0,20,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
+                <Grid>
                     <Button Grid.ColumnSpan="2" Text="Agendar Cita" BackgroundColor="#FF6F91" TextColor="Black" FontSize="16" CornerRadius="25" HeightRequest="50" HorizontalOptions="Center" Clicked="OnMakeAppointmentClicked"/>
                 </Grid>
             </VerticalStackLayout>
