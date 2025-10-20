@@ -23,7 +23,7 @@
         {
             try
             {
-                long idAdministrador = AuthService.CurrentUser.Cedula;
+                long idAdministrador = AuthService.CurrentUser!.Cedula;
                 _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
 
                 Picker.ItemsSource = _barberias;
@@ -81,7 +81,6 @@
                     }
                     else
                     {
-                        // Si el servicio no existe en esta barbería, limpiar
                         LimpiarFormulario();
                     }
                 }
@@ -106,7 +105,7 @@
         {
             if (string.IsNullOrWhiteSpace(NombreEntry.Text) || _imagenSeleccionada == null || string.IsNullOrWhiteSpace(PrecioEntry.Text))
             {
-                await DisplayAlert("Validación", "Todos los campos son obligatorios.", "OK");
+                _ = AppUtils.MostrarSnackbar("Todos los campos son obligatorios", Colors.Red, Colors.White);
                 return;
             }
 

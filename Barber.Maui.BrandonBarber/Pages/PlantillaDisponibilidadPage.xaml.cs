@@ -100,19 +100,34 @@
                 var barberoId = AuthService.CurrentUser?.Cedula ?? 0;
                 var plantilla = await _disponibilidadService.ObtenerPlantillaSemanal(barberoId);
 
-                if (plantilla != null)
+                if (plantilla == null || plantilla.HorariosPorDia == null)
                 {
-                    foreach (var dia in _diasSemana)
+                    await DisplayAlert("Aviso", "No hay plantilla guardada.", "OK");
+                    return;
+                }
+
+                foreach (var dia in _diasSemana)
+                {
+                    if (plantilla.HorariosPorDia.TryGetValue(dia, out var horariosDia))
                     {
-                        if (plantilla.HorariosPorDia.ContainsKey(dia))
+                        foreach (var horario in _horarios)
                         {
-                            foreach (var horario in _horarios)
+                            if (horariosDia.TryGetValue(horario, out var disponible))
                             {
-                                if (plantilla.HorariosPorDia[dia].ContainsKey(horario))
-                                {
-                                    _checkboxesPorDia[dia][horario].IsChecked = plantilla.HorariosPorDia[dia][horario];
-                                }
+                                _checkboxesPorDia[dia][horario].IsChecked = disponible;
                             }
+                            else
+                            {
+                                _checkboxesPorDia[dia][horario].IsChecked = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Si no hay datos para el día, desmarca todos los horarios
+                        foreach (var horario in _horarios)
+                        {
+                            _checkboxesPorDia[dia][horario].IsChecked = false;
                         }
                     }
                 }
@@ -122,73 +137,6 @@
                 await DisplayAlert("Error", $"No se pudo cargar la plantilla: {ex.Message}", "OK");
             }
         }
-
-        //private async void OnGuardarPlantillaClicked(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        var barberoId = AuthService.CurrentUser?.Cedula ?? 0;
-        //        var plantilla = new PlantillaDisponibilidadModel
-        //        {
-        //            BarberoId = barberoId,
-        //            HorariosPorDia = new Dictionary<string, Dictionary<string, bool>>()
-        //        };
-
-        //        foreach (var dia in _diasSemana)
-        //        {
-        //            plantilla.HorariosPorDia[dia] = new Dictionary<string, bool>();
-
-        //            foreach (var horario in _horarios)
-        //            {
-        //                plantilla.HorariosPorDia[dia][horario] = _checkboxesPorDia[dia][horario].IsChecked;
-        //            }
-        //        }
-
-        //        // Guardar plantilla
-        //        bool resultadoPlantilla = await _disponibilidadService.GuardarPlantillaSemanal(plantilla);
-
-        //        if (!resultadoPlantilla)
-        //        {
-        //            await AppUtils.MostrarSnackbar("Error al guardar la plantilla", Colors.Red, Colors.White);
-        //            return;
-        //        }
-
-        //        // Preguntar si quiere aplicarla automáticamente
-        //        var popup = new CustomAlertPopup("¿Deseas aplicar esta plantilla al resto del mes actual?");
-        //        bool aplicar = await popup.ShowAsync(this);
-
-        //        if (aplicar)
-        //        {
-        //            var hoy = DateTime.Today;
-        //            var finDeMes = new DateTime(hoy.Year, hoy.Month, DateTime.DaysInMonth(hoy.Year, hoy.Month));
-
-        //            bool resultadoAplicacion = await _disponibilidadService.AplicarPlantillaARango(
-        //                barberoId,
-        //                hoy,
-        //                finDeMes
-        //            );
-
-        //            if (resultadoAplicacion)
-        //            {
-        //                await AppUtils.MostrarSnackbar("Plantilla guardada y aplicada correctamente", Colors.Green, Colors.White);
-        //            }
-        //            else
-        //            {
-        //                await AppUtils.MostrarSnackbar("Plantilla guardada pero hubo error al aplicarla", Colors.Orange, Colors.White);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            await AppUtils.MostrarSnackbar("Plantilla guardada correctamente", Colors.Green, Colors.White);
-        //        }
-
-        //        await Navigation.PopAsync();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        await DisplayAlert("Error", $"Error: {ex.Message}", "OK");
-        //    }
-        //}
         private async void OnGuardarPlantillaClicked(object sender, EventArgs e)
         {
             try
@@ -210,7 +158,6 @@
                     }
                 }
 
-                // Guardar plantilla
                 bool resultadoPlantilla = await _disponibilidadService.GuardarPlantillaSemanal(plantilla);
 
                 if (!resultadoPlantilla)

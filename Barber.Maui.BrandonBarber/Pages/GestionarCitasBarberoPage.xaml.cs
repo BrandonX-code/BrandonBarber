@@ -95,7 +95,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 if (exito)
                 {
                     await AppUtils.MostrarSnackbar($"Cita marcada como {nuevoEstado}", Colors.Green, Colors.White);
-                    await CargarCitas(); // Recargar la lista
+                    await CargarCitas();
                 }
                 else
                 {

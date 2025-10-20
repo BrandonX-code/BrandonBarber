@@ -10,24 +10,14 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
-        <!-- Header -->
         <Grid Grid.Row="0" Padding="10,30" HorizontalOptions="Center">
             <Label Text="Plantilla Semanal" FontSize="20" TextColor="White" FontAttributes="Bold" />
         </Grid>
-
-        <!-- Content -->
         <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
             <VerticalStackLayout Padding="20" Spacing="15" x:Name="DiasContainer"/>
         </ScrollView>
-
-        <!-- Footer -->
         <HorizontalStackLayout Grid.Row="2" Padding="20" HorizontalOptions="Center">
-            <Button Text="Guardar Plantilla" 
-                    BackgroundColor="#FF6F91" 
-                    TextColor="Black" 
-                    CornerRadius="10" 
-                    Clicked="OnGuardarPlantillaClicked" />
+            <Button Text="Guardar Plantilla" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="10" Clicked="OnGuardarPlantillaClicked" />
         </HorizontalStackLayout>
     </Grid>
 </ContentPage>

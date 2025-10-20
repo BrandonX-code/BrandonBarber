@@ -54,11 +54,7 @@
                 </Border>
 
                 <!-- 🔥 NUEVO: Botón Olvidé mi contraseña 🔥 -->
-                <Label Text="¿Olvidaste tu contraseña?" 
-                       TextColor="#FF6F91" 
-                       FontSize="Body" 
-                       FontAttributes="Bold"
-                       HorizontalOptions="Center">
+                <Label Text="¿Olvidaste tu contraseña?" TextColor="#FF6F91" FontSize="Body" FontAttributes="Bold" HorizontalOptions="Center">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnForgotPasswordClicked" />
                     </Label.GestureRecognizers>

@@ -31,10 +31,10 @@
                     <VerticalStackLayout Spacing="15">
                         <Label Text="Horarios Disponibles" TextColor="Black" FontSize="18" />
                         <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="10">
-                            <Label Text="Horario" TextColor="Black" FontAttributes="Bold" Grid.Column="0" Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Start"/>
+                            <Label Text="Horario" TextColor="Black" FontAttributes="Bold" Grid.Column="0" Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center"/>
                             <Label Text="Disponible" TextColor="Black" FontAttributes="Bold" Grid.Column="1" Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center"/>
 
-                            <Label Text="6:00 AM - 12:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="1" VerticalOptions="Center"/>
+                            <Label Text="6:00 AM - 12:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="1" VerticalOptions="Center" HorizontalOptions="Center"/>
                             <CheckBox x:Name="Horario6a12" Grid.Column="1" Grid.Row="1" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
 
                             <Label Text="12:00 PM - 03:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="2" VerticalOptions="Center"/>
@@ -56,18 +56,8 @@
                 <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
                     <VerticalStackLayout Spacing="15">
                         <Label Text="Plantilla Semanal" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
-
-                        <Button Text="Configurar Plantilla Semanal" 
-                BackgroundColor="#0E2A36" 
-                TextColor="White" 
-                CornerRadius="10" 
-                Clicked="OnConfigurarPlantillaClicked"/>
-
-                        <Button Text="Aplicar Plantilla al Mes" 
-                BackgroundColor="#FF6F91" 
-                TextColor="Black" 
-                CornerRadius="10" 
-                Clicked="OnAplicarPlantillaMesClicked"/>
+                        <Button Text="Configurar Plantilla Semanal" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" Clicked="OnConfigurarPlantillaClicked"/>
+                        <Button Text="Aplicar Plantilla al Mes" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="10" Clicked="OnAplicarPlantillaMesClicked"/>
                     </VerticalStackLayout>
                 </Border>
 
