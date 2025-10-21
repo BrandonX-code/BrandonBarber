@@ -11,7 +11,7 @@
             <CollectionView x:Name="CitasCollection" EmptyView="No hay citas para gestionar">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border Padding="15" Margin="5" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 15">
+                        <Border Padding="15" Margin="5" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 15" StrokeThickness="0">
                             <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,*" RowSpacing="10">
 
                                 <Label Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>

@@ -21,7 +21,10 @@
                     <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
                         <Entry x:Name="PrecioEntry"  Margin="10,0" Placeholder="Precio" Keyboard="Numeric" TextColor="Black" TextChanged="OnPrecioEntryTextChanged"/>
                     </Border>
-                    <Image x:Name="PreviewImage" HeightRequest="100" WidthRequest="100" Aspect="AspectFill" IsVisible="False"/>
+                    <Border x:Name="PreviewImageBorder" StrokeShape="10" HeightRequest="100" WidthRequest="100" HorizontalOptions="Fill" Padding="0" StrokeThickness="0" IsVisible="False">
+                        <Image x:Name="PreviewImage" HeightRequest="100" WidthRequest="100" Aspect="AspectFill"/>
+                    </Border>
+
 
                     <Button Text="Seleccionar Imagen" Clicked="OnSeleccionarImagen" BackgroundColor="#0E2A36" TextColor="White"/>
 
@@ -46,9 +49,11 @@
                 <CollectionView x:Name="ServiciosListView" SelectionMode="Single" SelectionChanged="OnServicioSeleccionado">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="10" Margin="5">
+                            <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="10" Margin="5" StrokeThickness="0">
                                 <Grid ColumnDefinitions="80,*,Auto,Auto" VerticalOptions="Center">
-                                    <Image Source="{Binding Imagen}" HeightRequest="60" WidthRequest="60" Grid.Column="0"/>
+                                    <Border StrokeShape="7" HeightRequest="60" WidthRequest="60" HorizontalOptions="Fill" Padding="0" StrokeThickness="0">
+                                        <Image Source="{Binding Imagen}" HeightRequest="60" WidthRequest="60" Grid.Column="0" Aspect="AspectFill"/>
+                                    </Border>
                                     <VerticalStackLayout Grid.Column="1" Spacing="2">
                                         <Label Text="{Binding Nombre}" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
                                         <Label Text="{Binding Precio, StringFormat='${0:N0}'}" TextColor="Black" FontSize="16"/>

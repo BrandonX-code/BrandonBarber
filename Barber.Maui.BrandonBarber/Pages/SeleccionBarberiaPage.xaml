@@ -7,8 +7,8 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="PrimaryBackground">#0E2A36</Color>
-            <Color x:Key="SecondaryBackground">#1E3A49</Color>
-            <Color x:Key="TertiaryBackground">#2E4A59</Color>
+            <Color x:Key="SecondaryBackground">#28475C</Color>
+            <Color x:Key="TertiaryBackground">#E0F7FA</Color>
             <Color x:Key="TextPrimary">White</Color>
             <Color x:Key="TextSecondary">#A0A0A0</Color>
             <Color x:Key="AccentColor">#FF6F91</Color>
@@ -55,7 +55,7 @@
     </ContentPage.Resources>
 
     <Grid Padding="20" RowDefinitions="Auto, *">
-        <Border Grid.Row="0"  Style="{StaticResource SearchFrameStyle}" Margin="0,0,0,15">
+        <Border Grid.Row="0"  Style="{StaticResource SearchFrameStyle}" Margin="0,0,0,15" StrokeThickness="0">
             <Grid ColumnDefinitions="*, Auto">
                 <Entry x:Name="SearchEntry" Grid.Column="0" Placeholder="Buscar barberías" Style="{StaticResource SearchEntryStyle}" Text="{Binding SearchText}" />
                 <Button Grid.Column="1" Text="✕" BackgroundColor="Transparent" TextColor="{StaticResource TextSecondary}" FontSize="18" WidthRequest="35" HeightRequest="35" Command="{Binding ClearSearchCommand}" IsVisible="{Binding HasSearchText}" />
@@ -67,13 +67,13 @@
                 <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" ItemsSource="{Binding FilteredBarberias}" SelectionMode="None" EmptyView="{Binding EmptyMessage}">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Border Style="{StaticResource BarberiaFrameStyle}"  Margin="0,0,0,10">
+                            <Border Style="{StaticResource BarberiaFrameStyle}"  Margin="0,0,0,10" StrokeThickness="0">
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="OnBarberiaTapped" />
                                 </Border.GestureRecognizers>
 
                                 <Grid ColumnDefinitions="80, *" ColumnSpacing="15">
-                                    <Border WidthRequest="80" HeightRequest="80" StrokeShape="RoundRectangle 50" BackgroundColor="{StaticResource TertiaryBackground}" VerticalOptions="Center" HorizontalOptions="Center">
+                                    <Border WidthRequest="80" HeightRequest="80" StrokeShape="RoundRectangle 50" BackgroundColor="{StaticResource TertiaryBackground}" VerticalOptions="Center" HorizontalOptions="Center" StrokeThickness="0">
                                         <Image Source="{Binding LogoUrl, TargetNullValue='picture.png'}" Aspect="AspectFill">
                                         </Image>
                                     </Border>

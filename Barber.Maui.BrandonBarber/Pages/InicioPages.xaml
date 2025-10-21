@@ -45,7 +45,7 @@
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Border StrokeShape="20"  BackgroundColor="#90A4AE" Padding="-1" HeightRequest="220" WidthRequest="170"  >
+                                        <Border StrokeShape="20"  BackgroundColor="#90A4AE" Padding="-1" HeightRequest="220" WidthRequest="170"  StrokeThickness="0">
 
                                             <Grid RowSpacing="0">
                                                 <Grid.RowDefinitions>
@@ -54,7 +54,7 @@
                                                 </Grid.RowDefinitions>
 
                                                 <!-- Imagen centrada -->
-                                                <Border Grid.Row="0" BackgroundColor="White" StrokeShape="6"  HeightRequest="175"  WidthRequest="175"  HorizontalOptions="Center"  Padding="0">
+                                                <Border Grid.Row="0" BackgroundColor="White" StrokeShape="6"  HeightRequest="175"  WidthRequest="175"  HorizontalOptions="Center"  Padding="0" StrokeThickness="0">
                                                     <Image Grid.Row="0" Source="{Binding Imagen}" Aspect="AspectFill" HeightRequest="175" WidthRequest="175">
                                                         <Image.Clip>
                                                             <RoundRectangleGeometry CornerRadius="6" Rect="0,0,175,175"/>
@@ -83,7 +83,7 @@
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Border BackgroundColor="#90A4AE" StrokeShape="20" Padding="20" HeightRequest="300" WidthRequest="182">
+                                        <Border BackgroundColor="#90A4AE" StrokeShape="20" Padding="20" HeightRequest="300" WidthRequest="182" StrokeThickness="0">
                                             <Border.GestureRecognizers>
                                                 <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
                                             </Border.GestureRecognizers>
@@ -96,7 +96,7 @@
                                                     <RowDefinition Height="Auto"/>
                                                 </Grid.RowDefinitions>
 
-                                                <Border Grid.Row="0" BackgroundColor="#F0F0F0" StrokeShape="6"  HeightRequest="170"  WidthRequest="140"  HorizontalOptions="Center"  Padding="0">
+                                                <Border Grid.Row="0" BackgroundColor="#F0F0F0" StrokeShape="6"  HeightRequest="170"  WidthRequest="140"  HorizontalOptions="Center"  Padding="0" StrokeThickness="0">
                                                     <Image Source="{Binding ImagenPath}"  HeightRequest="170"  WidthRequest="140"  Aspect="AspectFill"/>
                                                     <Border.GestureRecognizers>
                                                         <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
@@ -155,7 +155,7 @@
       
                         </VerticalStackLayout>
 
-                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="BuscarCitas" />
                             </Border.GestureRecognizers> 
@@ -181,7 +181,7 @@
                     <VerticalStackLayout x:Name="BarberoView" IsVisible="false" Padding="20" Spacing="20">
                         <Label Text="Panel de Barbero" FontSize="24" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
 
-                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  StrokeThickness="0">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="CitasList" />
                             </Border.GestureRecognizers>
@@ -191,7 +191,7 @@
                                 <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
                             </Grid>
                         </Border>
-                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15">
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="GestionarCitasBarbero" />
                             </Border.GestureRecognizers>
@@ -202,7 +202,7 @@
                             </Grid>
                         </Border>
 
-                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="GestionarDisponibilidad" />
                             </Border.GestureRecognizers>
@@ -212,7 +212,7 @@
                                 <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
                             </Grid>
                         </Border>
-                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="AddGaleri" />
                             </Border.GestureRecognizers>
@@ -230,7 +230,7 @@
                        
                         <!-- Nueva sección de Métricas -->
                         <Label Text="Métricas y Estadísticas" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
-                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="VerMetricas" />
                             </Border.GestureRecognizers>
@@ -244,7 +244,7 @@
                         <!-- Gestión de Barberos -->
                         <Label Text="Gestión de Barberos" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" />
 
-                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="AgregarBarbero" />
                             </Border.GestureRecognizers>
@@ -255,7 +255,7 @@
                             </Grid>
                         </Border>
 
-                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="ListarBarberos" />
                             </Border.GestureRecognizers>
@@ -269,7 +269,7 @@
                         <!-- Gestión de Clientes -->
                         <Label Text="Gestión de Clientes" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
 
-                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="ListarClientes" />
                             </Border.GestureRecognizers>
@@ -283,7 +283,7 @@
                         <!-- Reportes -->
                         <Label Text="Reportes" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
 
-                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="VerCitas" />
                             </Border.GestureRecognizers>
@@ -296,7 +296,7 @@
 
                         <Label Text="Servicios" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
 
-                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="GestionDeServicios" />
                             </Border.GestureRecognizers>
@@ -307,7 +307,7 @@
                             </Grid>
                         </Border>
                         <Label Text="Barberias" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
-                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15"  >
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="GestionDeBarberias" />
                             </Border.GestureRecognizers>

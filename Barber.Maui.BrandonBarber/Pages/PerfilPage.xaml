@@ -20,7 +20,7 @@
                 </StackLayout>
             </Grid>
             <VerticalStackLayout Grid.Row="1" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
-                <Border Grid.Column="0"  BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" HeightRequest="180" WidthRequest="150">
+                <Border Grid.Column="0"  BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" HeightRequest="180" WidthRequest="150" StrokeThickness="0">
                     <Image x:Name="PerfilImage" Aspect="AspectFill">
                         <Image.Clip>
                             <RoundRectangleGeometry CornerRadius="10" Rect="0,0,150,180" />

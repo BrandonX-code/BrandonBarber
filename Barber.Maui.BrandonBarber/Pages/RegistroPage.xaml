@@ -28,7 +28,7 @@
             </Style>
             <Style x:Key="BarberiaCardStyle" TargetType="Border">
                 <Setter Property="StrokeShape" Value="10" />
-                <Setter Property="BackgroundColor" Value="#1E3A49" />
+                <Setter Property="BackgroundColor" Value="#28475C" />
                 <Setter Property="Padding" Value="15" />
                 <Setter Property="Margin" Value="0,0,0,10" />
             </Style>
@@ -51,7 +51,7 @@
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Seleccionar Barbería" TextColor="White" FontSize="16" />
 
-                    <Border Style="{StaticResource BarberiaCardStyle}" StrokeShape="10" Padding="15" Margin="0,0,0,10">
+                    <Border Style="{StaticResource BarberiaCardStyle}" StrokeShape="10" Padding="15" Margin="0,0,0,10" StrokeThickness="0">
                         <Border.GestureRecognizers>
                             <TapGestureRecognizer Tapped="OnSelectBarberiaTapped" />
                         </Border.GestureRecognizers>
@@ -62,9 +62,9 @@
                     </Border>
 
                     <!-- Frame para mostrar la barbería seleccionada (inicialmente oculto) -->
-                    <Border x:Name="SelectedBarberiaFrame" StrokeShape="10" BackgroundColor="#1E3A49" Padding="20" IsVisible="False">
+                    <Border x:Name="SelectedBarberiaFrame" StrokeShape="10" BackgroundColor="#28475C" Padding="20" IsVisible="False" StrokeThickness="0">
                         <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
-                            <Border WidthRequest="80" HeightRequest="80" StrokeShape="RoundRectangle 50" VerticalOptions="Center" HorizontalOptions="Center">
+                            <Border WidthRequest="80" HeightRequest="80" StrokeShape="RoundRectangle 50" VerticalOptions="Center" HorizontalOptions="Center" StrokeThickness="0">
                                 <Image x:Name="SelectedBarberiaImage" Aspect="AspectFill"/>
                             </Border>
 

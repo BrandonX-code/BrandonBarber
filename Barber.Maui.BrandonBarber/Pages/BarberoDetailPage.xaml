@@ -18,7 +18,7 @@
 						<ColumnDefinition Width="*"/>
 					</Grid.ColumnDefinitions>
 
-                    <Border Grid.Column="0" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" HeightRequest="180" WidthRequest="150">
+                    <Border Grid.Column="0" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" HeightRequest="180" WidthRequest="150" StrokeThickness="0">
 						<Image x:Name="BarberoImage" Aspect="AspectFill"/>
 					</Border>
 
@@ -39,7 +39,7 @@
                     <Label x:Name="DescripcionLabel" TextColor="White" FontSize="14" LineHeight="1.4"/>
                 </VerticalStackLayout>
 
-                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0">
+                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" StrokeThickness="0">
                     <VerticalStackLayout Spacing="0">
                         <Label Text="Calendario De Disponibilidad" Padding="20" TextColor="Black" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
                         

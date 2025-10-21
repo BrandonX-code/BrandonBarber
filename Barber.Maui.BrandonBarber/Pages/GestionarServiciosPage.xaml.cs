@@ -69,10 +69,12 @@
                         {
                             PreviewImage.Source = _servicioEditando.Imagen;
                             PreviewImage.IsVisible = true;
+                            PreviewImageBorder.IsVisible = true;
                         }
                         else
                         {
                             PreviewImage.IsVisible = false;
+                            PreviewImageBorder.IsVisible = false;
                         }
 
                         AgregarBtn.IsVisible = false;
@@ -189,10 +191,12 @@
             {
                 PreviewImage.Source = servicio.Imagen;
                 PreviewImage.IsVisible = true;
+                PreviewImageBorder.IsVisible = true;
             }
             else
             {
                 PreviewImage.IsVisible = false;
+                PreviewImageBorder.IsVisible = false;
             }
 
             _imagenSeleccionada = null; // Se debe volver a seleccionar si se quiere cambiar
@@ -275,6 +279,7 @@
             PrecioEntry.Text = "";
             PreviewImage.Source = null;
             PreviewImage.IsVisible = false;
+            PreviewImageBorder.IsVisible = false;
             _imagenSeleccionada = null;
             _servicioEditando = null;
             AgregarBtn.IsVisible = true;
@@ -310,6 +315,7 @@
                     // Asignar la imagen y hacerla visible
                     PreviewImage.Source = ImageSource.FromStream(() => new MemoryStream(memoryStream.ToArray()));
                     PreviewImage.IsVisible = true;
+                    PreviewImageBorder.IsVisible = true;
                 }
             }
             catch (Exception ex)

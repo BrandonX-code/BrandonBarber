@@ -19,7 +19,7 @@
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Grid.Row="1">
             <VerticalStackLayout Padding="20" Spacing="20">
                 <!-- Calendario -->
-                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
+                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
                     <VerticalStackLayout Spacing="15">
                         <Label Text="Selecciona fecha" TextColor="Black" FontSize="18" />
                         <DatePicker x:Name="FechaSelector" Format="D" TextColor="Black" MinimumDate="{Binding MinimumDate}" DateSelected="OnDateSelected" />
@@ -27,7 +27,7 @@
                 </Border>
 
                 <!-- Horarios Disponibles -->
-                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
+                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
                     <VerticalStackLayout Spacing="15">
                         <Label Text="Horarios Disponibles" TextColor="Black" FontSize="18" />
                         <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="10">
@@ -53,7 +53,7 @@
                     </VerticalStackLayout>
                 </Border>
                 <!-- Después del Border de "Horarios Disponibles" y antes del ScrollView de "Citas Existentes" -->
-                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
+                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
                     <VerticalStackLayout Spacing="15">
                         <Label Text="Plantilla Semanal" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
                         <Button Text="Configurar Plantilla Semanal" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" Clicked="OnConfigurarPlantillaClicked"/>
@@ -63,13 +63,13 @@
 
                 <!-- Citas Existentes -->
                 <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
-                    <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
+                    <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Citas Programadas" TextColor="Black" FontSize="18" />
                             <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="CitasCollection" HeightRequest="260" HorizontalOptions="Center" EmptyView="No hay citas programadas para esta fecha.">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Margin="0,5" BackgroundColor="#0E2A36" Padding="10" StrokeShape="RoundRectangle 10">
+                                        <Border Margin="0,5" BackgroundColor="#0E2A36" Padding="10" StrokeShape="RoundRectangle 10" StrokeThickness="0">
                                             <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
                                                 <Label Text="{Binding Nombre}" TextColor="White" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" />
                                                 <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" TextColor="White" Grid.Row="1" Grid.Column="0" />

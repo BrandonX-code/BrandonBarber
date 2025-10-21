@@ -8,17 +8,17 @@
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <Grid RowDefinitions="Auto, Auto, *" Padding="20">
                 <VerticalStackLayout Spacing="15">
-                    <Border BackgroundColor="#1E3A49" StrokeShape="10" Padding="15">
+                    <Border BackgroundColor="#1E3A49" StrokeShape="10" Padding="15" StrokeThickness="0">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Citas Agendadas" TextColor="White" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center" />
                             <!-- Selector de Barbería -->
                             <VerticalStackLayout x:Name="PickerSection" Spacing="10" IsVisible="False">
 
-                                <Border StrokeShape="12" Padding="3" BackgroundColor="#90A4AE" WidthRequest="260" HorizontalOptions="Center">
+                                <Border StrokeShape="12" Padding="3" BackgroundColor="#90A4AE" WidthRequest="260" HorizontalOptions="Center" StrokeThickness="0">
                                     <Picker x:Name="BarberiaPicker" SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}"  Title="Seleccionar Barbería"  TitleColor="Gray"  TextColor="Black"  FontSize="16"   FontAttributes="Bold"  HeightRequest="45"  VerticalOptions="Center"  Margin="10,0" />
                                 </Border>
                             </VerticalStackLayout>
-                            <Border StrokeShape="12" Padding="3" BackgroundColor="#90A4AE" WidthRequest="260" HorizontalOptions="Center">
+                            <Border StrokeShape="12" Padding="3" BackgroundColor="#90A4AE" WidthRequest="260" HorizontalOptions="Center" StrokeThickness="0">
                                 <DatePicker x:Name="datePicker" Date="{Binding FechaSeleccionada, Mode=TwoWay}" Format="dd/MM/yyyy" TextColor="Black" WidthRequest="250" FontSize="20" FontAttributes="Bold" HeightRequest="65" />
                             </Border>
 
@@ -28,7 +28,7 @@
                         </VerticalStackLayout>
                     </Border>
 
-                    <Border BackgroundColor="#1E3A49" StrokeShape="10" Padding="15">
+                    <Border BackgroundColor="#1E3A49" StrokeShape="10" Padding="15" StrokeThickness="0">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Citas" TextColor="White" FontSize="18" />
                             <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="ResultadosCollection" HeightRequest="420">
@@ -37,7 +37,7 @@
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Border Padding="5" Margin="0,7" BackgroundColor="#90A4AE" StrokeShape="12">
+                                        <Border Padding="5" Margin="0,7" BackgroundColor="#90A4AE" StrokeShape="12" StrokeThickness="0">
                                             <Grid ColumnDefinitions="*, Auto">
                                                 <VerticalStackLayout Spacing="10">
                                                     <HorizontalStackLayout Spacing="5">
