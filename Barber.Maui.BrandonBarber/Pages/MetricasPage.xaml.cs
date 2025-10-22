@@ -532,15 +532,4 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
         }
     }
-
-    public class ClienteFrecuenteExtendido : ClienteFrecuente
-    {
-        public string? Position { get; set; }
-    }
-
-    public class ClienteFrecuente
-    {
-        public string? Nombre { get; set; }
-        public int Visitas { get; set; }
-    }
 }

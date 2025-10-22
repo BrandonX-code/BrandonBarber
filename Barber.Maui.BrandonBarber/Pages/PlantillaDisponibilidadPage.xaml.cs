@@ -3,8 +3,8 @@
     public partial class PlantillaDisponibilidadPage : ContentPage
     {
         private readonly DisponibilidadService _disponibilidadService;
-        private readonly Dictionary<string, Dictionary<string, CheckBox>> _checkboxesPorDia = new();
-        private readonly string[] _diasSemana = { "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo" };
+        private readonly Dictionary<string, Dictionary<string, CheckBox>> _checkboxesPorDia = [];
+        private readonly string[] _diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
         private readonly string[] _horarios =
         {
             "6:00 AM - 12:00 PM",

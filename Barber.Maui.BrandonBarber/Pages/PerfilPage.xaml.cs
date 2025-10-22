@@ -116,7 +116,4 @@ namespace Barber.Maui.BrandonBarber.Pages
 
     }
 }
-public class PerfilActualizadoMessage : ValueChangedMessage<UsuarioModels>
-{
-    public PerfilActualizadoMessage(UsuarioModels value) : base(value) { }
-}
+

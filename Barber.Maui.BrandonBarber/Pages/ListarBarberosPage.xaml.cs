@@ -36,7 +36,7 @@
         {
             try
             {
-                long idAdministrador = AuthService.CurrentUser.Cedula;
+                long idAdministrador = AuthService.CurrentUser!.Cedula;
                 _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
 
                 BarberiaPicker.ItemsSource = _barberias;
@@ -103,7 +103,7 @@
                         return;
                     }
 
-                    var barberos = usuarios?.Where(u => u.Rol.ToLower() == "barbero" && u.IdBarberia == _barberiaSeleccionadaId).ToList() ?? [];
+                    var barberos = usuarios?.Where(u => u.Rol!.ToLower() == "barbero" && u.IdBarberia == _barberiaSeleccionadaId).ToList() ?? [];
                     _todosLosBarberos.Clear();
                     _barberosFiltrados.Clear();
 
