@@ -6,13 +6,11 @@
 
     <Grid Padding="20" RowDefinitions="Auto, Auto, *">
 
-        <!-- Header con botón agregar -->
         <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
             <Label Grid.Column="0" Text="Mis Barberías" FontSize="24" FontAttributes="Bold" TextColor="White" VerticalOptions="Center"/>
             <Button Grid.Column="1" Text="+ Agregar" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="20" FontAttributes="Bold"  Clicked="AgregarButton_Clicked" WidthRequest="100"  HeightRequest="40"/>
         </Grid>
 
-        <!-- Barra de búsqueda -->
         <Border Grid.Row="1"  BackgroundColor="#28475C" StrokeShape="25" Margin="0,0,0,30" StrokeThickness="0" HeightRequest="50">
             <Grid ColumnDefinitions="*, Auto">
                 <Entry Grid.Column="0"  Placeholder="Buscar barberías..." Margin="10,0,0,0" VerticalOptions="Center" PlaceholderColor="#A0A0A0" TextColor="White" BackgroundColor="Transparent" Text="{Binding SearchText}"  FontSize="16"/>
@@ -32,19 +30,16 @@
                 <DataTemplate>
                     <Border Padding="15" Margin="0,0,0,15" BackgroundColor="#90A4AE" StrokeShape="15" StrokeThickness="0">
                         <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="80, *, Auto">
-                            <!-- Logo -->
                             <Border WidthRequest="80" HeightRequest="80" StrokeShape="RoundRectangle 10" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center" StrokeThickness="0">
                                 <Image Source="{Binding LogoUrl, TargetNullValue='picture.png'}" Aspect="AspectFill">
                                 </Image>
                             </Border>
-                            <!-- Información -->
                             <StackLayout Grid.Row="0" Grid.Column="1"  VerticalOptions="Start"  Margin="15,0,0,0">
                                 <Label Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold" TextColor="Black"  LineBreakMode="TailTruncation"/>
                                 <Label Text="{Binding Direccion}" FontSize="14" TextColor="Black" LineBreakMode="TailTruncation"/>
                                 <Label Text="{Binding Telefono}" FontSize="14" TextColor="Black"/>
                                 <Label Text="{Binding Email}" FontSize="14" TextColor="Black"/>
                             </StackLayout>
-                            <!-- Botones de acción -->
                             <StackLayout Grid.Row="0" Grid.Column="2"  Orientation="Vertical"   Spacing="5"  VerticalOptions="Center">
                                 <Button ImageSource="editar.png" HeightRequest="10" WidthRequest="10" Grid.Column="2" Clicked="OnEditarBtnClicked" CommandParameter="{Binding .}" BackgroundColor="Transparent" Padding="5,0"/>
                                 <Button ImageSource="delete.png" HeightRequest="10" WidthRequest="10" Grid.Column="3" Clicked="OnEliminarBtnClicked" CommandParameter="{Binding .}" BackgroundColor="Transparent"  Padding="5,0"/>

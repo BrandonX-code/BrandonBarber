@@ -31,6 +31,7 @@
                     BackgroundColor = Color.FromArgb("#90A4AE"),
                     StrokeShape = new RoundRectangle { CornerRadius = 10 },
                     Padding = 15,
+                    StrokeThickness = 0,
                     Margin = new Thickness(0, 0, 0, 10)
                 };
 

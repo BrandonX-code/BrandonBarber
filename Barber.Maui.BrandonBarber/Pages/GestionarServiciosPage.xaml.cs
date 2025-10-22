@@ -252,7 +252,7 @@
         private async void OnEliminarBtnClicked(object sender, EventArgs e)
         {
             if ((sender as Button)?.CommandParameter is not ServicioModel servicio) return;
-            var popup = new CustomAlertPopup($"¿Quieres Eliminar el servicio '{servicio.Nombre}'?");
+            var popup = new CustomAlertPopup($"¿Quieres Eliminar el servicio ' {servicio.Nombre}'?");
             bool confirm = await popup.ShowAsync(this);
             if (!confirm) return;
 

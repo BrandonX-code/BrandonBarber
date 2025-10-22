@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Barber.Maui.BrandonBarber.Mobal.DetallesBarberoPage" BackgroundColor="#90A4AE">
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Barber.Maui.BrandonBarber.Mobal.DetallesBarberoPage" BackgroundColor="#0E2A36">
     <ContentPage.Content>
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
             <Grid>
-                <BoxView BackgroundColor="Black" Opacity="0.5"/>
-                <Border BackgroundColor="White" StrokeShape="20" Margin="20" Padding="0" VerticalOptions="Center">
+                <BoxView BackgroundColor="Transparent"/>
+                <Border BackgroundColor="White" StrokeShape="20" Margin="20" Padding="0" VerticalOptions="Center" StrokeThickness="0">
                     <StackLayout Spacing="0">
                         <Border BackgroundColor="#2C3E50" StrokeShape="RoundRectangle 20,20,0,0" HeightRequest="80">
                             <Grid>
@@ -19,12 +19,12 @@
                             </Grid>
                         </Border>
                         <StackLayout Padding="25" Spacing="20">
-                            <Border BackgroundColor="#E8E8E8" StrokeShape="RoundRectangle 50" WidthRequest="100" HeightRequest="100" HorizontalOptions="Center">
+                            <Border BackgroundColor="#E8E8E8" StrokeShape="RoundRectangle 50" WidthRequest="100" HeightRequest="100" HorizontalOptions="Center" StrokeThickness="0">
                                 <Grid>
-                                    <Border StrokeShape="RoundRectangle 50" WidthRequest="100" HeightRequest="100" IsVisible="{Binding TieneImagen}">
+                                    <Border StrokeShape="RoundRectangle 50" WidthRequest="100" HeightRequest="100" IsVisible="{Binding TieneImagen}" StrokeThickness="0">
                                         <Image Source="{Binding ImagenPath}" Aspect="AspectFill" />
                                     </Border>
-                                    <Border BackgroundColor="#3498DB" StrokeShape="RoundRectangle 50" WidthRequest="100" HeightRequest="100" IsVisible="{Binding NoTieneImagen}">
+                                    <Border BackgroundColor="#3498DB" StrokeShape="RoundRectangle 50" WidthRequest="100" HeightRequest="100" IsVisible="{Binding NoTieneImagen}" StrokeThickness="0">
                                         <Label Text="{Binding InicialNombre}" FontSize="32" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" VerticalOptions="Center" />
                                     </Border>
                                 </Grid>

@@ -14,7 +14,9 @@
         <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="10" Margin="0,20,0,0" StrokeThickness="0">
             <Editor x:Name="ComentarioEditor" Placeholder="Escribe un comentario (opcional)" HeightRequest="80" TextColor="White" BackgroundColor="Transparent"/>
         </Border>
-
-        <Button Text="Enviar Calificación" BackgroundColor="#FF6F91" TextColor="Black" FontSize="18" FontAttributes="Bold" CornerRadius="30" HeightRequest="55" Clicked="OnEnviarCalificacionClicked"/>
+        <Grid>
+            <Button Grid.ColumnSpan="2" Text="Enviar Calificación" BackgroundColor="#FF6F91" TextColor="Black" FontSize="18" FontAttributes="Bold" CornerRadius="30" HeightRequest="50" HorizontalOptions="Center" Clicked="OnEnviarCalificacionClicked"/>
+        </Grid>
+        
     </VerticalStackLayout>
 </ContentPage>

@@ -57,7 +57,7 @@
                         </Border.GestureRecognizers>
                         <HorizontalStackLayout Spacing="5" HeightRequest="30">
                             <Image Source="barber.png" WidthRequest="30" HeightRequest="30" />
-                            <Label x:Name="SelectedBarberiaPlaceholder" Text="Seleccionar Barbería" TextColor="White" FontSize="16" VerticalOptions="Center"/>
+                            <Label x:Name="SelectedBarberiaPlaceholder" Text="Seleccione La Barbería" TextColor="White" FontSize="16" VerticalOptions="Center"/>
                         </HorizontalStackLayout>
                     </Border>
 

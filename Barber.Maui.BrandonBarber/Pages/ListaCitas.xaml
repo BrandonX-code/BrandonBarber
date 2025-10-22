@@ -14,12 +14,12 @@
                             <!-- Selector de Barbería -->
                             <VerticalStackLayout x:Name="PickerSection" Spacing="10" IsVisible="False">
 
-                                <Border StrokeShape="12" Padding="3" BackgroundColor="#90A4AE" WidthRequest="260" HorizontalOptions="Center" StrokeThickness="0">
-                                    <Picker x:Name="BarberiaPicker" SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}"  Title="Seleccionar Barbería"  TitleColor="Gray"  TextColor="Black"  FontSize="16"   FontAttributes="Bold"  HeightRequest="45"  VerticalOptions="Center"  Margin="10,0" />
+                                <Border StrokeShape="12" Padding="3" BackgroundColor="#90A4AE" HorizontalOptions="Center" StrokeThickness="0">
+                                    <Picker x:Name="BarberiaPicker" SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}" WidthRequest="320" Title="Seleccionar Barbería"  TitleColor="Gray"  TextColor="Black"  FontSize="16"   FontAttributes="Bold"  HeightRequest="45"  VerticalOptions="Center"  Margin="10,0" />
                                 </Border>
                             </VerticalStackLayout>
-                            <Border StrokeShape="12" Padding="3" BackgroundColor="#90A4AE" WidthRequest="260" HorizontalOptions="Center" StrokeThickness="0">
-                                <DatePicker x:Name="datePicker" Date="{Binding FechaSeleccionada, Mode=TwoWay}" Format="dd/MM/yyyy" TextColor="Black" WidthRequest="250" FontSize="20" FontAttributes="Bold" HeightRequest="65" />
+                            <Border StrokeShape="12" Padding="3" BackgroundColor="#90A4AE"  HorizontalOptions="Center" StrokeThickness="0">
+                                <DatePicker x:Name="datePicker" Date="{Binding FechaSeleccionada, Mode=TwoWay}" Format="dd/MM/yyyy" TextColor="Black" WidthRequest="320" FontSize="17" FontAttributes="Bold" HeightRequest="65" Margin="10,0"/>
                             </Border>
 
                             <HorizontalStackLayout Grid.Row="1" HorizontalOptions="Center" Spacing="10" Margin="0,10">

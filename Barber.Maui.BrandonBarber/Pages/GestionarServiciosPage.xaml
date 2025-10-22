@@ -12,7 +12,6 @@
                     </Border>
                 </Border>
             </VerticalStackLayout>
-            <!-- Formulario de Servicio -->
             <Border StrokeThickness="0" Background="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
                 <VerticalStackLayout Spacing="10">
                     <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
@@ -25,22 +24,15 @@
                         <Image x:Name="PreviewImage" HeightRequest="100" WidthRequest="100" Aspect="AspectFill"/>
                     </Border>
 
-
                     <Button Text="Seleccionar Imagen" Clicked="OnSeleccionarImagen" BackgroundColor="#0E2A36" TextColor="White"/>
 
                     <Grid ColumnDefinitions="Auto, *, Auto">
-                        <Button x:Name="AgregarBtn" Text="Agregar" Clicked="OnAgregarServicio"
-                    BackgroundColor="#0E2A36" TextColor="White"
-                    HorizontalOptions="Center" Grid.Column="1"/>
+                        <Button x:Name="AgregarBtn" Text="Agregar" Clicked="OnAgregarServicio" BackgroundColor="#0E2A36" TextColor="White"  HorizontalOptions="Center" Grid.Column="1"/>
                     </Grid>
 
                     <Grid ColumnDefinitions="*, *" ColumnSpacing="10" HorizontalOptions="Center">
-                        <Button x:Name="EditarBtn" Text="Guardar Cambios" Clicked="OnEditarServicio"
-                    BackgroundColor="#FF6F91" TextColor="Black"
-                    IsVisible="False" Grid.Column="0"/>
-                        <Button x:Name="CancelarBtn" Text="Cancelar" Clicked="OnCancelarEdicion"
-                    BackgroundColor="#828282" TextColor="Black"
-                    IsVisible="False" Grid.Column="1"/>
+                        <Button x:Name="EditarBtn" Text="Guardar Cambios" Clicked="OnEditarServicio" BackgroundColor="#FF6F91" TextColor="Black" IsVisible="False" Grid.Column="0"/>
+                        <Button x:Name="CancelarBtn" Text="Cancelar" Clicked="OnCancelarEdicion" BackgroundColor="#828282" TextColor="Black" IsVisible="False" Grid.Column="1"/>
                     </Grid>
                 </VerticalStackLayout>
             </Border>
