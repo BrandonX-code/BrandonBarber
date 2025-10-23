@@ -13,9 +13,11 @@
                     <DataTemplate>
                         <Border Padding="15" Margin="5" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 15" StrokeThickness="0">
                             <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,*" RowSpacing="10">
-
-                                <Label Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
-
+                                <HorizontalStackLayout Spacing="5">
+                                    <Image Source="id.png" WidthRequest="20" HeightRequest="20" />
+                                    <Label Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
+                                </HorizontalStackLayout>
+                                
                                 <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="5">
                                     <Image Source="calendar.png" WidthRequest="20" HeightRequest="20"/>
                                     <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy - hh:mm tt}'}" TextColor="Black"/>

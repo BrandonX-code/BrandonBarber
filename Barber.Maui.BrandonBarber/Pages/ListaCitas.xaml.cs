@@ -8,9 +8,13 @@
         private readonly BarberiaService? _barberiaService;
         private List<Barberia>? _barberias;
         private int? _barberiaSeleccionadaId = null;
+        public bool MostrarBarberoInfo { get; set; }
+
         public ListaCitas(ReservationService reservationService)
         {
             InitializeComponent();
+            var user = AuthService.CurrentUser;
+            MostrarBarberoInfo = user != null && (user.Rol?.ToLower() == "admin" || user.Rol?.ToLower() == "administrador" || user.Rol?.ToLower() == "cliente");
             BindingContext = this;
             ResultadosCollection.ItemsSource = CitasFiltradas;
             _reservationService = reservationService;
@@ -104,6 +108,7 @@
                 {
                     foreach (var reserva in listaReservas)
                     {
+                        reserva.MostrarBarberoInfo = MostrarBarberoInfo;
                         CitasFiltradas.Add(reserva);
                     }
                 }

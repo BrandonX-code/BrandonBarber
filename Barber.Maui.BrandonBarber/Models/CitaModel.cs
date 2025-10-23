@@ -29,6 +29,8 @@
                 };
             }
         }
+
+        public bool MostrarBarberoInfo { get; set; }
     }
 
 }
