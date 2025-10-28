@@ -178,23 +178,33 @@ namespace Barber.Maui.BrandonBarber.Pages
                 // Mostrar la vista correspondiente según el rol
                 switch (AuthService.CurrentUser.Rol!.ToLower())
                 {
+                    case "superadmin":
+                        SuperAdminView.IsVisible = true;
+                        ClienteView.IsVisible = false;
+                        BarberoView.IsVisible = false;
+                        AdminView.IsVisible = false;
+                        GaleriaClienteBorder.IsVisible = false;
+                        break;
                     case "cliente":
+                        SuperAdminView.IsVisible = false;
                         ClienteView.IsVisible = true;
                         BarberoView.IsVisible = false;
-                        AdminView.IsVisible = false; // Ocultar panel admin
+                        AdminView.IsVisible = false;
                         GaleriaClienteBorder.IsVisible = true;
                         CargarServicios();
                         CargarBarberos();
                         break;
 
                     case "barbero":
+                        SuperAdminView.IsVisible = false;
                         ClienteView.IsVisible = false;
                         BarberoView.IsVisible = true;
-                        AdminView.IsVisible = false; // Ocultar panel admin
+                        AdminView.IsVisible = false;
                         GaleriaClienteBorder.IsVisible = false;
                         break;
 
                     case "administrador":
+                        SuperAdminView.IsVisible = false;
                         ClienteView.IsVisible = false;
                         BarberoView.IsVisible = false;
                         AdminView.IsVisible = true; // Mostrar panel admin
@@ -202,6 +212,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                         break;
 
                     default:
+                        SuperAdminView.IsVisible = false;
                         ClienteView.IsVisible = false;
                         BarberoView.IsVisible = false;
                         AdminView.IsVisible = false;
@@ -335,6 +346,11 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                 await Navigation.PushAsync(new BarberoDetailPage(barbero));
             }
+        }
+
+        private async void VerSolicitudesAdmin(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new GestionSolicitudesPage());
         }
     }
 }

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Barber.Maui.BrandonBarber.Pages.SolicitarAdminPage"
+             BackgroundColor="#0E2A36"
+             Title="Solicitar Cuenta Administrador">
+
+    <ScrollView Padding="20">
+        <VerticalStackLayout Spacing="15">
+            <Label Text="Solicitud de Cuenta Administrador" 
+                   FontSize="24" 
+                   TextColor="White" 
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   Margin="0,20,0,20"/>
+            <Border StrokeShape="10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" >
+                <Entry x:Name="CedulaEntry" 
+                   Placeholder="Cédula" 
+                   Keyboard="Numeric"
+                   Style="{StaticResource LoginEntryStyle}"/>
+            </Border>
+            <Border StrokeShape="10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" >
+                <Entry x:Name="NombreEntry" 
+                   Placeholder="Nombre completo"
+                   Style="{StaticResource LoginEntryStyle}"/>
+            </Border>
+            <Border StrokeShape="10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" >
+                <Entry x:Name="EmailEntry" 
+                   Placeholder="Email"
+                   Keyboard="Email"
+                   Style="{StaticResource LoginEntryStyle}"/>
+            </Border>
+            <Border StrokeShape="10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" >
+                <Entry x:Name="TelefonoEntry" 
+                   Placeholder="Teléfono"
+                   Keyboard="Telephone"
+                   Style="{StaticResource LoginEntryStyle}"/>
+            </Border>
+            <Editor x:Name="JustificacionEditor"
+                    Placeholder="Justificación (¿Por qué necesitas una cuenta de administrador?)"
+                    HeightRequest="120"
+                    BackgroundColor="#E0F7FA"
+                    TextColor="#0E2A36"/>
+
+            <Button Text="Enviar Solicitud"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    Clicked="OnEnviarSolicitudClicked"/>
+
+            <ActivityIndicator x:Name="LoadingIndicator" 
+                             IsRunning="False" 
+                             IsVisible="False" 
+                             Color="White"/>
+
+            <Label x:Name="MessageLabel" 
+                   TextColor="#FF6F91" 
+                   IsVisible="False"
+                   HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

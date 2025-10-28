@@ -104,5 +104,9 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             await Navigation.PushAsync(new ForgotPasswordPage());
         }
+        private async void OnSolicitarAdminClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new SolicitarAdminPage());
+        }
     }
 }

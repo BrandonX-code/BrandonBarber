@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Barber.Maui.BrandonBarber.Pages.GestionSolicitudesPage"
+             BackgroundColor="#0E2A36"
+             Title="Gestión de Solicitudes">
+
+    <Grid>
+        <CollectionView x:Name="SolicitudesCollection" Margin="20">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border BackgroundColor="#90A4AE" 
+                            StrokeShape="RoundRectangle 10"
+                            Padding="15"
+                            Margin="0,0,0,10">
+                        <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
+                            <Label Grid.Row="0" Text="{Binding NombreSolicitante}" 
+                                   FontAttributes="Bold" FontSize="18"/>
+                            <Label Grid.Row="1" Text="{Binding EmailSolicitante}" FontAttributes="Bold"/>
+                            <Label Grid.Row="2" Text="{Binding Justificacion}" 
+                                   LineBreakMode="WordWrap"/>
+                            <Label Grid.Row="3" Text="{Binding FechaSolicitud, StringFormat='{0:dd/MM/yyyy}'}"/>
+                            <HorizontalStackLayout Grid.Row="4" Spacing="10" Margin="0,10,0,0" HorizontalOptions="Center">
+                                <Button Text="Aprobar" 
+                                        BackgroundColor="#4CAF50"
+                                        Clicked="OnAprobarClicked"
+                                        CommandParameter="{Binding .}"/>
+                                <Button Text="Rechazar" 
+                                        BackgroundColor="#F44336"
+                                        Clicked="OnRechazarClicked"
+                                        CommandParameter="{Binding .}"/>
+                            </HorizontalStackLayout>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

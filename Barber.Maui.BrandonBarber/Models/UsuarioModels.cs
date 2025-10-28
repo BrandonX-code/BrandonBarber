@@ -24,6 +24,10 @@ namespace Barber.Maui.BrandonBarber.Models
 
         [StringLength(200)]
         public string? Direccion { get; set; }
+        public string? EstadoSolicitud { get; set; } // "Pendiente", "Aprobado", "Rechazado"
+        public DateTime? FechaSolicitud { get; set; }
+        [JsonIgnore]
+        public bool IsSuperAdmin => Rol?.ToLower() == "superadministrador";
 
         [JsonIgnore]
         public bool IsAdmin => Rol?.ToLower() == "admin";
@@ -44,6 +48,21 @@ namespace Barber.Maui.BrandonBarber.Models
         public int? IdBarberia { get; set; }
 
 
+    }
+    // Agregar esta clase al final del archivo UsuarioModels.cs
+    public class SolicitudAdministrador
+    {
+        public int Id { get; set; }
+        public long CedulaSolicitante { get; set; }
+        public string? NombreSolicitante { get; set; }
+        public string? EmailSolicitante { get; set; }
+        public string? TelefonoSolicitante { get; set; }
+        public string? Justificacion { get; set; }
+        public string Estado { get; set; } = "Pendiente";
+        public DateTime FechaSolicitud { get; set; } = DateTime.Now;
+        public DateTime? FechaRespuesta { get; set; }
+        public long? CedulaRevisor { get; set; }
+        public string? MotivoRechazo { get; set; }
     }
     public class LoginRequest
     {
