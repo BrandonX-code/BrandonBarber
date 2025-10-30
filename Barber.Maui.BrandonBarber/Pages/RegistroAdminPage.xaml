@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+ xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+ x:Class="Barber.Maui.BrandonBarber.Pages.RegistroAdminPage"
+ Title="Registro de Administrador"
+ BackgroundColor="#0E2A36">
+	<ScrollView>
+		<VerticalStackLayout Padding="30" Spacing="20">
+			<Label Text="Registro de Administrador" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+			<Entry x:Name="NombreEntry" Placeholder="Nombre completo"/>
+			<Entry x:Name="EmailEntry" Placeholder="Correo electrónico" Keyboard="Email"/>
+			<Entry x:Name="TelefonoEntry" Placeholder="Teléfono" Keyboard="Telephone"/>
+			<Entry x:Name="DireccionEntry" Placeholder="Dirección"/>
+			<Entry x:Name="PasswordEntry" Placeholder="Contraseña" IsPassword="True"/>
+			<Entry x:Name="ConfirmPasswordEntry" Placeholder="Confirmar contraseña" IsPassword="True"/>
+			<Label x:Name="ErrorLabel" TextColor="Red" IsVisible="False"/>
+			<Button Text="Registrar" Clicked="OnRegistrarClicked" BackgroundColor="#4CAF50" TextColor="White"/>
+		</VerticalStackLayout>
+	</ScrollView>
+</ContentPage>

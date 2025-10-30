@@ -1,5 +1,6 @@
 ﻿using Barber.Maui.API.Data;
 using Barber.Maui.API.Models;
+using Barber.Maui.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +11,14 @@ namespace Barber.Maui.API.Controllers
     public class SolicitudesController : ControllerBase
     {
         private readonly AppDbContext _context;
+        private readonly IEmailService _emailService;
+        private readonly IConfiguration _configuration;
 
-        public SolicitudesController(AppDbContext context)
+        public SolicitudesController(AppDbContext context, IEmailService emailService, IConfiguration configuration)
         {
             _context = context;
+            _emailService = emailService;
+            _configuration = configuration;
         }
 
         [HttpPost("crear")]
@@ -59,21 +64,20 @@ namespace Barber.Maui.API.Controllers
             solicitud.FechaRespuesta = DateTime.Now;
             solicitud.CedulaRevisor = request.CedulaRevisor;
 
-            // Crear usuario administrador
-            var nuevoAdmin = new Auth
-            {
-                Cedula = solicitud.CedulaSolicitante,
-                Nombre = solicitud.NombreSolicitante,
-                Email = solicitud.EmailSolicitante,
-                Telefono = solicitud.TelefonoSolicitante,
-                Contraseña = "Admin123", // Contraseña temporal
-                Rol = "administrador"
-            };
-
-            _context.UsuarioPerfiles.Add(nuevoAdmin);
             await _context.SaveChangesAsync();
 
-            return Ok(new { Message = "Solicitud aprobada y usuario creado" });
+            // Generar link CORRECTO con tu IP
+            var baseUrl = $"{Request.Scheme}://{Request.Host}"; // Esto toma automáticamente la URL del servidor
+            var linkRegistro = $"{baseUrl}/AdminRegister?solicitudId={solicitud.Id}";
+
+            // Enviar correo
+            await _emailService.SendSolicitudAprobadaEmailAsync(
+                solicitud.EmailSolicitante!,
+                solicitud.NombreSolicitante!,
+                linkRegistro
+            );
+
+            return Ok(new { Message = "Solicitud aprobada y correo enviado" });
         }
 
         [HttpPut("{id}/rechazar")]
@@ -91,7 +95,14 @@ namespace Barber.Maui.API.Controllers
 
             await _context.SaveChangesAsync();
 
-            return Ok(new { Message = "Solicitud rechazada" });
+            // Enviar correo de rechazo
+            await _emailService.SendSolicitudRechazadaEmailAsync(
+                solicitud.EmailSolicitante!,
+                solicitud.NombreSolicitante!,
+                request.MotivoRechazo ?? ""
+            );
+
+            return Ok(new { Message = "Solicitud rechazada y correo enviado" });
         }
     }
 

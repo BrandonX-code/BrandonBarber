@@ -38,5 +38,6 @@ namespace Barber.Maui.API.Models
 
         [StringLength(200)]
         public string? MotivoRechazo { get; set; }
+        public bool RegistroCompletado { get; set; } = false;
     }
 }

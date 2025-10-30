@@ -2,60 +2,100 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Barber.Maui.BrandonBarber.Pages.SolicitarAdminPage"
-             BackgroundColor="#0E2A36"
-             Title="Solicitar Cuenta Administrador">
+             BackgroundColor="#0E2A36">
 
-    <ScrollView Padding="20">
-        <VerticalStackLayout Spacing="15">
-            <Label Text="Solicitud de Cuenta Administrador" 
-                   FontSize="24" 
+    <ScrollView Padding="25">
+        <VerticalStackLayout Spacing="20" VerticalOptions="Center">
+
+            <!-- Título -->
+            <Label Text="Solicitud de Cuenta de Administrador" 
+                   FontSize="20" 
                    TextColor="White" 
                    FontAttributes="Bold"
                    HorizontalOptions="Center"
-                   Margin="0,20,0,20"/>
-            <Border StrokeShape="10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" >
-                <Entry x:Name="CedulaEntry" 
-                   Placeholder="Cédula" 
-                   Keyboard="Numeric"
-                   Style="{StaticResource LoginEntryStyle}"/>
-            </Border>
-            <Border StrokeShape="10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" >
-                <Entry x:Name="NombreEntry" 
-                   Placeholder="Nombre completo"
-                   Style="{StaticResource LoginEntryStyle}"/>
-            </Border>
-            <Border StrokeShape="10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" >
-                <Entry x:Name="EmailEntry" 
-                   Placeholder="Email"
-                   Keyboard="Email"
-                   Style="{StaticResource LoginEntryStyle}"/>
-            </Border>
-            <Border StrokeShape="10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" >
-                <Entry x:Name="TelefonoEntry" 
-                   Placeholder="Teléfono"
-                   Keyboard="Telephone"
-                   Style="{StaticResource LoginEntryStyle}"/>
-            </Border>
-            <Editor x:Name="JustificacionEditor"
-                    Placeholder="Justificación (¿Por qué necesitas una cuenta de administrador?)"
-                    HeightRequest="120"
-                    BackgroundColor="#E0F7FA"
-                    TextColor="#0E2A36"/>
+                   Margin="0,0,0,10"/>
 
+            <!-- Campos de entrada -->
+            <VerticalStackLayout Spacing="15">
+
+                <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45">
+                    <Entry x:Name="CedulaEntry" 
+                           Placeholder="Cédula"
+                           Keyboard="Numeric"
+                           TextColor="#0E2A36"
+                           Margin="10,0"/>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45">
+                    <Entry x:Name="NombreEntry" 
+                           Placeholder="Nombre completo"
+                           TextColor="#0E2A36"
+                           Margin="10,0"/>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45">
+                    <Entry x:Name="EmailEntry" 
+                           Placeholder="Email"
+                           Keyboard="Email"
+                           TextColor="#0E2A36"
+                           Margin="10,0"/>
+                </Border>
+
+                <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45">
+                    <Entry x:Name="TelefonoEntry" 
+                           Placeholder="Teléfono"
+                           Keyboard="Telephone"
+                           TextColor="#0E2A36"
+                           Margin="10,0"/>
+                </Border>
+
+                <!-- Justificación -->
+                <Border StrokeShape="RoundRectangle 15" BackgroundColor="#E0F7FA">
+                    <Editor x:Name="JustificacionEditor"
+                            Placeholder="Justificación (¿Por qué necesitas una cuenta de administrador?)"
+                            HeightRequest="120"
+                            BackgroundColor="Transparent"
+                            TextColor="#0E2A36"
+                            Margin="10,5" />
+                </Border>
+
+            </VerticalStackLayout>
+
+            <!-- Botón principal -->
             <Button Text="Enviar Solicitud"
-                    BackgroundColor="#4CAF50"
-                    TextColor="White"
+                    BackgroundColor="#FF6F91"
+                    TextColor="Black"
+                    FontAttributes="Bold"
+                    CornerRadius="25"
+                    HeightRequest="50"
+                    Margin="0,10,0,0"
                     Clicked="OnEnviarSolicitudClicked"/>
 
+            <!-- Indicador de carga -->
             <ActivityIndicator x:Name="LoadingIndicator" 
-                             IsRunning="False" 
-                             IsVisible="False" 
-                             Color="White"/>
+                               IsRunning="False" 
+                               IsVisible="False" 
+                               Color="White"
+                               Margin="0,10,0,0"/>
 
+            <!-- Mensaje de resultado -->
             <Label x:Name="MessageLabel" 
                    TextColor="#FF6F91" 
                    IsVisible="False"
-                   HorizontalOptions="Center"/>
+                   HorizontalOptions="Center"
+                   FontAttributes="Bold"
+                   FontSize="16"/>
+
+            <!-- Enlace regresar -->
+            <!--<HorizontalStackLayout HorizontalOptions="Center" Margin="0,15,0,0">
+                <Label Text="¿Ya tienes cuenta?" TextColor="#B0BEC5" FontSize="14"/>
+                <Label Text=" Inicia sesión" TextColor="#FF6F91" FontAttributes="Bold" FontSize="14">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnVolverLoginClicked"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </HorizontalStackLayout>-->
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

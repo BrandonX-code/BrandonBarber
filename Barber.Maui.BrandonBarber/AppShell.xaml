@@ -9,4 +9,8 @@
         ContentTemplate="{DataTemplate local:InicioPages}"
         Route="MainPage" />
 
+    <ShellContent
+        ContentTemplate="{DataTemplate local:RegistroAdminPage}"
+        Route="admin-register" />
+
 </Shell>

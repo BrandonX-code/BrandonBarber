@@ -307,6 +307,47 @@ namespace Barber.Maui.API.Controllers
             return Ok(usuario);
         }
 
+        [HttpPost("register-admin")]
+        public async Task<IActionResult> RegistrarAdministrador([FromBody] RegistroAdminDto dto)
+        {
+            if (dto == null || dto.SolicitudId <= 0 || string.IsNullOrWhiteSpace(dto.Email) || string.IsNullOrWhiteSpace(dto.Contraseña))
+                return BadRequest(new { message = "Datos inválidos." });
+
+            var solicitud = await _context.SolicitudesAdmin.FindAsync(dto.SolicitudId);
+            if (solicitud == null || solicitud.Estado != "Aprobado")
+                return BadRequest(new { message = "La solicitud no existe o no está aprobada." });
+
+            // Verifica si ya existe un usuario con esa cédula o email
+            var existe = await _context.UsuarioPerfiles.AnyAsync(u => u.Cedula == solicitud.CedulaSolicitante || u.Email == dto.Email);
+            if (existe)
+                return Conflict(new { message = "Ya existe un usuario con este email o cédula." });
+
+            var nuevoAdmin = new Auth
+            {
+                Cedula = solicitud.CedulaSolicitante,
+                Nombre = dto.Nombre,
+                Email = dto.Email,
+                Telefono = dto.Telefono,
+                Direccion = dto.Direccion,
+                Contraseña = dto.Contraseña,
+                Rol = "administrador"
+            };
+            _context.UsuarioPerfiles.Add(nuevoAdmin);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Registro de administrador exitoso." });
+        }
+
+        public class RegistroAdminDto
+        {
+            public int SolicitudId { get; set; }
+            public string? Nombre { get; set; }
+            public string? Email { get; set; }
+            public string? Telefono { get; set; }
+            public string? Direccion { get; set; }
+            public string? Contraseña { get; set; }
+        }
+
         // Método auxiliar para generar token
         private static string GenerateRecoveryToken()
         {

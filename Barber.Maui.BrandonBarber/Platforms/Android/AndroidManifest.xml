@@ -1,6 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-	<application android:allowBackup="true" android:supportsRtl="true" android:icon="@mipmap/barbericons"></application>
+	<application android:allowBackup="true" android:supportsRtl="true" android:icon="@mipmap/barbericons">
+		<activity android:name="crc64a5b8c5b6a7b1c1c3.MainActivity" android:exported="true">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="http" android:host="192.168.0.28" android:pathPrefix="/admin-register" />
+				<data android:scheme="https" android:host="192.168.0.28" android:pathPrefix="/admin-register" />
+			</intent-filter>
+		</activity>
+	</application>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 </manifest>

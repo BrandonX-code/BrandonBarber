@@ -329,7 +329,7 @@
                                 <TapGestureRecognizer Tapped="VerSolicitudesAdmin" />
                             </Border.GestureRecognizers>
                             <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
-                                <Image Grid.Column="0" Source="solicitudesadmin.png" WidthRequest="40" HeightRequest="40" />
+                                <Image Grid.Column="0" Source="person.png" WidthRequest="40" HeightRequest="40" />
                                 <Label Grid.Column="1" Text="Ver Solicitudes" TextColor="Black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
                                 <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
                             </Grid>

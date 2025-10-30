@@ -49,6 +49,70 @@ namespace Barber.Maui.API.Services
             }
         }
 
+        public async Task<bool> SendSolicitudAprobadaEmailAsync(string toEmail, string nombre, string linkRegistro)
+        {
+            try
+            {
+                var smtpSettings = _configuration.GetSection("EmailSettings");
+                using var client = new SmtpClient(smtpSettings["SmtpServer"])
+                {
+                    Port = int.Parse(smtpSettings["Port"]!),
+                    Credentials = new NetworkCredential(
+                        smtpSettings["Username"],
+                        smtpSettings["Password"]
+                    ),
+                    EnableSsl = bool.Parse(smtpSettings["EnableSsl"]!)
+                };
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress(smtpSettings["FromEmail"]!, smtpSettings["FromName"]),
+                    Subject = "Solicitud de Administrador Aprobada - Brandon Barber",
+                    Body = GetSolicitudAprobadaTemplate(nombre, linkRegistro),
+                    IsBodyHtml = true
+                };
+                mailMessage.To.Add(toEmail);
+                await client.SendMailAsync(mailMessage);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error sending approval email: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> SendSolicitudRechazadaEmailAsync(string toEmail, string nombre, string motivo)
+        {
+            try
+            {
+                var smtpSettings = _configuration.GetSection("EmailSettings");
+                using var client = new SmtpClient(smtpSettings["SmtpServer"])
+                {
+                    Port = int.Parse(smtpSettings["Port"]!),
+                    Credentials = new NetworkCredential(
+                        smtpSettings["Username"],
+                        smtpSettings["Password"]
+                    ),
+                    EnableSsl = bool.Parse(smtpSettings["EnableSsl"]!)
+                };
+                var mailMessage = new MailMessage
+                {
+                    From = new MailAddress(smtpSettings["FromEmail"]!, smtpSettings["FromName"]),
+                    Subject = "Solicitud de Administrador Rechazada - Brandon Barber",
+                    Body = GetSolicitudRechazadaTemplate(nombre, motivo),
+                    IsBodyHtml = true
+                };
+                mailMessage.To.Add(toEmail);
+                await client.SendMailAsync(mailMessage);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error sending rejection email: {ex.Message}");
+                return false;
+            }
+        }
+
         private string GetEmailTemplate(string userName, string resetToken)
         {
             return $@"
@@ -101,6 +165,37 @@ namespace Barber.Maui.API.Services
                         </div>
                     </body>
                     </html>";
+        }
+
+        private string GetSolicitudAprobadaTemplate(string nombre, string linkRegistro)
+        {
+            return $@"
+             <html>
+             <body>
+             <h2>¡Hola {nombre}!</h2>
+             <p>Tu solicitud para ser administrador ha sido <b>aprobada</b>.</p>
+             <p>Haz clic en el siguiente enlace para completar tu registro como administrador y crear tu cuenta:</p>
+             <a href='{linkRegistro}' style='background:#4CAF50;color:white;padding:10px20px;text-decoration:none;border-radius:5px;'>Registrarse como Administrador</a>
+             <p>Si tienes dudas, responde a este correo.</p>
+             <br>
+             <small>Brandon Barber App</small>
+             </body>
+             </html>";
+        }
+
+        private string GetSolicitudRechazadaTemplate(string nombre, string motivo)
+        {
+            return $@"
+             <html>
+             <body>
+             <h2>¡Hola {nombre}!</h2>
+             <p>Lamentamos informarte que tu solicitud para ser administrador ha sido <b>rechazada</b>.</p>
+             <p>Motivo: <b>{motivo}</b></p>
+             <p>Si tienes dudas, responde a este correo.</p>
+             <br>
+             <small>Brandon Barber App</small>
+             </body>
+             </html>";
         }
     }
 }

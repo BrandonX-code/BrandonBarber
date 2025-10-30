@@ -1,4 +1,7 @@
-﻿namespace Barber.Maui.BrandonBarber
+﻿using Microsoft.Maui.Controls;
+using System;
+
+namespace Barber.Maui.BrandonBarber
 {
     public partial class App : Application
     {
@@ -27,6 +30,17 @@
             {
                 MainPage = new NavigationPage(new LoginPage());
             }
+        }
+
+        protected override void OnAppLinkRequestReceived(Uri uri)
+        {
+            var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+            var solicitudId = query["solicitudId"];
+            if (uri.AbsolutePath.Contains("admin-register") && !string.IsNullOrEmpty(solicitudId))
+            {
+                Shell.Current.GoToAsync($"/admin-register?solicitudId={solicitudId}");
+            }
+            base.OnAppLinkRequestReceived(uri);
         }
     }
 }
