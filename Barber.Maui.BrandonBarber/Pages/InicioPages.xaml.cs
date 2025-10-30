@@ -259,7 +259,8 @@ namespace Barber.Maui.BrandonBarber.Pages
                 }
                 else
                 {
-                    await DisplayAlert("Error", "No se pudieron cargar los barberos", "OK");
+                    await AppUtils.MostrarSnackbar("No se pudieron cargar los barberos", Colors.Red, Colors.White);
+                    //await DisplayAlert("Error", "No se pudieron cargar los barberos", "OK");
                 }
             }
             catch (Exception ex)
@@ -328,7 +329,8 @@ namespace Barber.Maui.BrandonBarber.Pages
                 }
                 else
                 {
-                    await DisplayAlert("Error", "No se pudieron cargar los barberos", "OK");
+                    await AppUtils.MostrarSnackbar("No se pudieron cargar los barberos", Colors.Red, Colors.White);
+                    //await DisplayAlert("Error", "No se pudieron cargar los barberos", "OK");
                 }
             }
             catch (Exception ex)

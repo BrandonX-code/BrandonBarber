@@ -29,7 +29,20 @@ namespace Barber.Maui.BrandonBarber.Pages
                     var json = await response.Content.ReadAsStringAsync();
                     var solicitudes = JsonSerializer.Deserialize<List<SolicitudAdministrador>>(json,
                         new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
                     SolicitudesCollection.ItemsSource = solicitudes;
+
+                    // Mostrar/ocultar mensaje de lista vacía
+                    if (solicitudes == null || solicitudes.Count == 0)
+                    {
+                        SolicitudesCollection.IsVisible = false;
+                        EmptyStateLayout.IsVisible = true;
+                    }
+                    else
+                    {
+                        SolicitudesCollection.IsVisible = true;
+                        EmptyStateLayout.IsVisible = false;
+                    }
                 }
             }
             catch (Exception ex)
@@ -38,15 +51,23 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
         }
 
+        private void MostrarLoader(bool mostrar)
+        {
+            LoaderOverlay.IsVisible = mostrar;
+        }
+
         private async void OnAprobarClicked(object sender, EventArgs e)
         {
             var button = (Button)sender;
             var solicitud = (SolicitudAdministrador)button.CommandParameter;
 
-            bool confirm = await DisplayAlert("Confirmar",
-                $"¿Aprobar solicitud de {solicitud.NombreSolicitante}?", "Sí", "No");
+            var popup = new CustomAlertPopup($"¿Aprobar solicitud de {solicitud.NombreSolicitante}?");
+            bool confirmacion = await popup.ShowAsync(this);
 
-            if (!confirm) return;
+            if (!confirmacion) return;
+
+            // Mostrar loader
+            MostrarLoader(true);
 
             try
             {
@@ -58,13 +79,22 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                 if (response.IsSuccessStatusCode)
                 {
-                    await DisplayAlert("Éxito", "Solicitud aprobada", "OK");
+                    await AppUtils.MostrarSnackbar("Solicitud aprobada", Colors.Green, Colors.White);
                     await CargarSolicitudes();
+                }
+                else
+                {
+                    await DisplayAlert("Error", "No se pudo aprobar la solicitud", "OK");
                 }
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Error", ex.Message, "OK");
+            }
+            finally
+            {
+                // Ocultar loader
+                MostrarLoader(false);
             }
         }
 
@@ -77,6 +107,9 @@ namespace Barber.Maui.BrandonBarber.Pages
                 "Motivo del rechazo:", "Enviar", "Cancelar");
 
             if (string.IsNullOrWhiteSpace(motivo)) return;
+
+            // Mostrar loader
+            MostrarLoader(true);
 
             try
             {
@@ -92,13 +125,22 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                 if (response.IsSuccessStatusCode)
                 {
-                    await DisplayAlert("Éxito", "Solicitud rechazada", "OK");
+                    await AppUtils.MostrarSnackbar("Solicitud rechazada", Colors.Green, Colors.White);
                     await CargarSolicitudes();
+                }
+                else
+                {
+                    await DisplayAlert("Error", "No se pudo rechazar la solicitud", "OK");
                 }
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Error", ex.Message, "OK");
+            }
+            finally
+            {
+                // Ocultar loader
+                MostrarLoader(false);
             }
         }
     }

@@ -79,12 +79,12 @@
                                Margin="0,10,0,0"/>
 
             <!-- Mensaje de resultado -->
-            <Label x:Name="MessageLabel" 
+            <!--<Label x:Name="MessageLabel" 
                    TextColor="#FF6F91" 
                    IsVisible="False"
                    HorizontalOptions="Center"
                    FontAttributes="Bold"
-                   FontSize="16"/>
+                   FontSize="16"/>-->
 
             <!-- Enlace regresar -->
             <!--<HorizontalStackLayout HorizontalOptions="Center" Margin="0,15,0,0">

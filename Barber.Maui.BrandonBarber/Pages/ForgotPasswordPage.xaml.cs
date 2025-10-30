@@ -29,7 +29,8 @@ namespace Barber.Maui.BrandonBarber.Pages
                 ShowError("Por favor, ingresa un email válido");
                 return;
             }
-
+            ((Button)sender).IsEnabled = false;
+            this.IsEnabled = false;
             SetLoadingState(true);
             HideMessages();
 
@@ -61,6 +62,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             finally
             {
+                ((Button)sender).IsEnabled = true;
+                this.IsEnabled = true;
                 SetLoadingState(false);
             }
         }
@@ -72,7 +75,8 @@ namespace Barber.Maui.BrandonBarber.Pages
 
             SetLoadingState(true);
             HideMessages();
-
+            ((Button)sender).IsEnabled = false;
+            this.IsEnabled = false;
             try
             {
                 var response = await _authService.ResetPassword(
@@ -100,6 +104,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             finally
             {
+                ((Button)sender).IsEnabled = true;
+                this.IsEnabled = true;
                 SetLoadingState(false);
             }
         }
@@ -108,7 +114,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             SetLoadingState(true);
             HideMessages();
-
+            ((Button)sender).IsEnabled = false;
+            this.IsEnabled = false;
             try
             {
                 var response = await _authService.ForgotPassword(_currentEmail);
@@ -130,6 +137,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             finally
             {
+                ((Button)sender).IsEnabled = true;
+                this.IsEnabled = true;
                 SetLoadingState(false);
             }
         }

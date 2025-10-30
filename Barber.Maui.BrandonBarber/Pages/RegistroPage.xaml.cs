@@ -80,7 +80,7 @@
             // Validar que se haya seleccionado una barbería
             if (_selectedBarberia == null)
             {
-                await DisplayAlert("Error", "Debe seleccionar una barbería", "OK");
+                await AppUtils.MostrarSnackbar("Debe seleccionar una barbería", Colors.Orange, Colors.White);
                 return;
             }
             if (!ValidarFormulario())
@@ -107,7 +107,7 @@
                     Telefono = TelefonoEntry.Text,
                     Direccion = DireccionEntry.Text,
                     IdBarberia = _selectedBarberia.Idbarberia,
-                    Rol = "cliente" // Siempre cliente en registro público
+                    Rol = "cliente"
                 };
 
                 var response = await _authService.Register(registroRequest);
@@ -115,7 +115,7 @@
 
                 if (response.IsSuccess)
                 {
-                    await DisplayAlert("Registro Exitoso", response.Message, "OK");
+                    await AppUtils.MostrarSnackbar("Registro Exitoso", Colors.Green, Colors.White);
                     await Navigation.PushAsync(new LoginPage());
                 }
                 else

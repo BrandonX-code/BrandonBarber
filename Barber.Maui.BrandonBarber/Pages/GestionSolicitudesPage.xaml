@@ -4,36 +4,58 @@
              x:Class="Barber.Maui.BrandonBarber.Pages.GestionSolicitudesPage"
              BackgroundColor="#0E2A36"
              Title="Gestión de Solicitudes">
-
     <Grid>
+        <!-- CollectionView de Solicitudes -->
         <CollectionView x:Name="SolicitudesCollection" Margin="20">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Border BackgroundColor="#90A4AE" 
-                            StrokeShape="RoundRectangle 10"
-                            Padding="15"
-                            Margin="0,0,0,10">
+                    <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0" Margin="0,0,0,10">
                         <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
-                            <Label Grid.Row="0" Text="{Binding NombreSolicitante}" 
-                                   FontAttributes="Bold" FontSize="18"/>
-                            <Label Grid.Row="1" Text="{Binding EmailSolicitante}" FontAttributes="Bold"/>
-                            <Label Grid.Row="2" Text="{Binding Justificacion}" 
-                                   LineBreakMode="WordWrap"/>
-                            <Label Grid.Row="3" Text="{Binding FechaSolicitud, StringFormat='{0:dd/MM/yyyy}'}"/>
+                            <HorizontalStackLayout Grid.Row="0" Spacing="5">
+                                <Image Source="id.png" WidthRequest="20" HeightRequest="20" />
+                                <Label Text="{Binding NombreSolicitante}" FontAttributes="Bold" FontSize="18"/>
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Grid.Row="1" Spacing="5">
+                                <Image Source="email.png" WidthRequest="20" HeightRequest="20" />
+                                <Label Text="{Binding EmailSolicitante}" FontAttributes="Bold"/>
+                            </HorizontalStackLayout>
+                            <VerticalStackLayout Grid.Row="2" Spacing="5">
+                                <HorizontalStackLayout Spacing="5">
+                                    <Image Source="description.png" WidthRequest="20" HeightRequest="20" />
+                                    <Label Text="Justificación:" FontAttributes="Bold" />
+                                </HorizontalStackLayout>
+                                <Label Text="{Binding Justificacion}" LineBreakMode="WordWrap" VerticalOptions="Start" HorizontalOptions="Fill" FontSize="14" />
+                            </VerticalStackLayout>
+                            <HorizontalStackLayout Grid.Row="3" Spacing="5">
+                                <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
+                                <Label Text="{Binding FechaSolicitud, StringFormat='{0:dd/MM/yyyy}'}" FontAttributes="Bold"/>
+                            </HorizontalStackLayout>
                             <HorizontalStackLayout Grid.Row="4" Spacing="10" Margin="0,10,0,0" HorizontalOptions="Center">
-                                <Button Text="Aprobar" 
-                                        BackgroundColor="#4CAF50"
-                                        Clicked="OnAprobarClicked"
-                                        CommandParameter="{Binding .}"/>
-                                <Button Text="Rechazar" 
-                                        BackgroundColor="#F44336"
-                                        Clicked="OnRechazarClicked"
-                                        CommandParameter="{Binding .}"/>
+                                <Button Text="Aprobar" BackgroundColor="#FF6F91" Clicked="OnAprobarClicked" CommandParameter="{Binding .}" TextColor="Black"/>
+                                <Button Text="Rechazar" BackgroundColor="#717d7e" Clicked="OnRechazarClicked" CommandParameter="{Binding .}" TextColor="Black"/>
                             </HorizontalStackLayout>
                         </Grid>
                     </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+
+        <!-- Mensaje cuando no hay solicitudes -->
+        <VerticalStackLayout x:Name="EmptyStateLayout" IsVisible="False" VerticalOptions="Center"  HorizontalOptions="Center" Spacing="15">
+            <Image Source="chat.png" WidthRequest="80" HeightRequest="80" Opacity="0.6"/>
+            <Label Text="No hay solicitudes pendientes" FontSize="18" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+            <Label Text="Las nuevas solicitudes aparecerán aquí" FontSize="14" TextColor="#90A4AE"
+                   HorizontalTextAlignment="Center"/>
+        </VerticalStackLayout>
+
+        <!-- Loader Overlay -->
+        <Grid x:Name="LoaderOverlay" IsVisible="False" BackgroundColor="#80000000" InputTransparent="False">
+            <Border BackgroundColor="#0E2A36" StrokeShape="RoundRectangle 15" Padding="30" WidthRequest="150" HeightRequest="150" HorizontalOptions="Center" VerticalOptions="Center" StrokeThickness="0">
+                <VerticalStackLayout Spacing="15" HorizontalOptions="Center" VerticalOptions="Center">
+                    <ActivityIndicator IsRunning="True" Color="#FF6F91" WidthRequest="50" HeightRequest="50"/>
+                    <Label Text="Procesando..."  TextColor="White" FontSize="16" HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
     </Grid>
 </ContentPage>
