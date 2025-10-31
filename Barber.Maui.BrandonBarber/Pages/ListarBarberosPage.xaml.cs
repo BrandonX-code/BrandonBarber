@@ -8,6 +8,7 @@
         private readonly BarberiaService? _barberiaService;
         private List<Barberia>? _barberias;
         private int? _barberiaSeleccionadaId = null;
+        private bool _isNavigating = false;
         public Command RefreshCommand { get; }
         public ObservableCollection<UsuarioModels> BarberosFiltrados
         {
@@ -163,39 +164,57 @@
         }
         private async void OnVerDetallesClicked(object sender, EventArgs e)
         {
-            if (sender is Button button && button.CommandParameter is UsuarioModels barbero)
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
             {
-                var detallesPage = new DetallesBarberoPage(barbero);
-                await Navigation.PushModalAsync(detallesPage);
+                if (sender is Button button && button.CommandParameter is UsuarioModels barbero)
+                {
+                    var detallesPage = new DetallesBarberoPage(barbero);
+                    await Navigation.PushModalAsync(detallesPage);
+                }
+            }
+            finally
+            {
+                _isNavigating = false;
             }
         }
         private async void OnEliminarBarberoClicked(object sender, EventArgs e)
         {
-            if (sender is Image image &&
-                image.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tap &&
-                tap.CommandParameter is UsuarioModels barbero)
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
             {
-                var popup = new CustomAlertPopup($"¿Está seguro de que desea eliminar al barbero {barbero.Nombre}?");
-                bool confirm = await popup.ShowAsync(this);
-                if (confirm)
+                if (sender is Image image &&
+                    image.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tap &&
+                    tap.CommandParameter is UsuarioModels barbero)
                 {
-                    try
+                    var popup = new CustomAlertPopup($"¿Está seguro de que desea eliminar al barbero {barbero.Nombre}?");
+                    bool confirm = await popup.ShowAsync(this);
+                    if (confirm)
                     {
-                        await _authService.EliminarUsuario(barbero.Cedula);
+                        try
+                        {
+                            await _authService.EliminarUsuario(barbero.Cedula);
 
-                        _todosLosBarberos.Remove(barbero);
-                        _barberosFiltrados.Remove(barbero);
+                            _todosLosBarberos.Remove(barbero);
+                            _barberosFiltrados.Remove(barbero);
 
-                        UpdateStats();
-                        EmptyStateFrame.IsVisible = !_barberosFiltrados.Any();
+                            UpdateStats();
+                            EmptyStateFrame.IsVisible = !_barberosFiltrados.Any();
 
-                        await AppUtils.MostrarSnackbar("Barbero eliminado correctamente", Colors.Green, Colors.White);
-                    }
-                    catch (Exception ex)
-                    {
-                        await AppUtils.MostrarSnackbar($"Error al eliminar barbero: {ex.Message}", Colors.Red, Colors.White);
+                            await AppUtils.MostrarSnackbar("Barbero eliminado correctamente", Colors.Green, Colors.White);
+                        }
+                        catch (Exception ex)
+                        {
+                            await AppUtils.MostrarSnackbar($"Error al eliminar barbero: {ex.Message}", Colors.Red, Colors.White);
+                        }
                     }
                 }
+            }
+            finally
+            {
+                _isNavigating = false;
             }
         }
 

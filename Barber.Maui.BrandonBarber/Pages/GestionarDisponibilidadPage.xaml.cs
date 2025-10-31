@@ -7,7 +7,7 @@
         private DateTime _selectedDate;
         private readonly ObservableCollection<CitaModel> _citas;
         private Dictionary<string, bool> _horariosDisponibles;
-
+        private bool _isNavigating = false;
         public static DateTime MinimumDate => DateTime.Today;
 
         public GestionarDisponibilidadPage(DisponibilidadService disponibilidadService, ReservationService reservationService)
@@ -169,6 +169,8 @@
         // En GestionarDisponibilidadPage.xaml.cs, modifica el método OnGuardarClicked
         private async void OnGuardarClicked(object sender, EventArgs e)
         {
+            if (_isNavigating) return;
+            _isNavigating = true;
             try
             {
                 long idBarbero = Convert.ToInt64(await SecureStorage.Default.GetAsync("user_cedula"));
@@ -207,19 +209,30 @@
             {
                 await DisplayAlert("Error", $"Error al guardar: {ex.Message}", "Aceptar");
             }
-        }
-
-        private async void OnBackClicked(object sender, EventArgs e)
-        {
-            await Navigation.PopAsync();
+            finally
+            {
+                _isNavigating = false;
+            }
         }
         private async void OnConfigurarPlantillaClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new PlantillaDisponibilidadPage(_disponibilidadService));
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
+            {
+                await Navigation.PushAsync(new PlantillaDisponibilidadPage(_disponibilidadService));
+            }
+            finally
+            {
+                _isNavigating = false;
+            }
+            
         }
 
         private async void OnAplicarPlantillaMesClicked(object sender, EventArgs e)
         {
+            if (_isNavigating) return;
+            _isNavigating = true;
             try
             {
                 var barberoId = AuthService.CurrentUser?.Cedula ?? 0;
@@ -256,6 +269,10 @@
             catch (Exception ex)
             {
                 await DisplayAlert("Error", $"Error: {ex.Message}", "OK");
+            }
+            finally
+            {
+                _isNavigating = false;
             }
         }
     }

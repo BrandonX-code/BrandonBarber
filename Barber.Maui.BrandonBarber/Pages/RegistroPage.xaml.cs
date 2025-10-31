@@ -2,6 +2,7 @@
 {
     public partial class RegistroPage : ContentPage
     {
+        private bool _isNavigating = false;
         private readonly AuthService _authService;
         private readonly BarberiaService _barberiaService;
         private Barberia? _selectedBarberia;
@@ -57,84 +58,102 @@
         }
         private async void OnSelectBarberiaTapped(object sender, EventArgs e)
         {
-            // Crea la instancia de la página de selección
-            var selectionPage = new SeleccionBarberiaPage();
-
-            // Suscribe el evento ANTES de navegar
-            selectionPage.BarberiaSeleccionada += (s, barberia) =>
-            {
-                _selectedBarberia = barberia;
-                SelectedBarberiaFrame.IsVisible = true;
-                SelectedBarberiaName.Text = barberia.Nombre;
-                SelectedBarberiaEmail.Text = barberia.Email;
-                SelectedBarberiaTelefono.Text = barberia.Telefono;
-                SelectedBarberiaAddress.Text = barberia.Direccion;
-                SelectedBarberiaImage.Source = barberia.LogoUrl ?? "picture.png";
-            };
-
-            // Navega a la MISMA instancia a la que te suscribiste
-            await Navigation.PushAsync(selectionPage); // Cambiado a PushAsync
-        }
-        private async void OnRegistrarClicked(object sender, EventArgs e)
-        {
-            // Validar que se haya seleccionado una barbería
-            if (_selectedBarberia == null)
-            {
-                await AppUtils.MostrarSnackbar("Debe seleccionar una barbería", Colors.Orange, Colors.White);
-                return;
-            }
-            if (!ValidarFormulario())
-            {
-                return;
-            }
-
-            LoadingIndicator.IsVisible = true;
-            LoadingIndicator.IsRunning = true;
-            ErrorLabel.IsVisible = false;
-
-            var registroButton = (Button)sender;
-            registroButton.IsEnabled = false;
-
+            if (_isNavigating) return;
+            _isNavigating = true;
             try
             {
-                var registroRequest = new RegistroRequest
+                // Crea la instancia de la página de selección
+                var selectionPage = new SeleccionBarberiaPage();
+
+                // Suscribe el evento ANTES de navegar
+                selectionPage.BarberiaSeleccionada += (s, barberia) =>
                 {
-                    Nombre = NombreEntry.Text,
-                    Cedula = long.Parse(CedulaEntry.Text),
-                    Email = EmailEntry.Text,
-                    Contraseña = PasswordEntry.Text,
-                    ConfirmContraseña = ConfirmPasswordEntry.Text,
-                    Telefono = TelefonoEntry.Text,
-                    Direccion = DireccionEntry.Text,
-                    IdBarberia = _selectedBarberia.Idbarberia,
-                    Rol = "cliente"
+                    _selectedBarberia = barberia;
+                    SelectedBarberiaFrame.IsVisible = true;
+                    SelectedBarberiaName.Text = barberia.Nombre;
+                    SelectedBarberiaEmail.Text = barberia.Email;
+                    SelectedBarberiaTelefono.Text = barberia.Telefono;
+                    SelectedBarberiaAddress.Text = barberia.Direccion;
+                    SelectedBarberiaImage.Source = barberia.LogoUrl ?? "picture.png";
                 };
 
-                var response = await _authService.Register(registroRequest);
-                Console.WriteLine($"Respuesta de registro: Success = {response.IsSuccess}, Message = {response.Message}");
-
-                if (response.IsSuccess)
-                {
-                    await AppUtils.MostrarSnackbar("Registro Exitoso", Colors.Green, Colors.White);
-                    await Navigation.PushAsync(new LoginPage());
-                }
-                else
-                {
-                    ErrorLabel.Text = response.Message;
-                    ErrorLabel.IsVisible = true;
-                }
-
-            }
-            catch (Exception ex)
-            {
-                ErrorLabel.Text = $"Error: {ex.Message}";
-                ErrorLabel.IsVisible = true;
+                // Navega a la MISMA instancia a la que te suscribiste
+                await Navigation.PushAsync(selectionPage); // Cambiado a PushAsync
             }
             finally
             {
-                LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsRunning = false;
-                registroButton.IsEnabled = true;
+                _isNavigating = false;
+            }
+        }
+        private async void OnRegistrarClicked(object sender, EventArgs e)
+        {
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
+            {
+                // Validar que se haya seleccionado una barbería
+                if (_selectedBarberia == null)
+                {
+                    await AppUtils.MostrarSnackbar("Debe seleccionar una barbería", Colors.Orange, Colors.White);
+                    return;
+                }
+                if (!ValidarFormulario())
+                {
+                    return;
+                }
+
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsRunning = true;
+                ErrorLabel.IsVisible = false;
+
+                var registroButton = (Button)sender;
+                registroButton.IsEnabled = false;
+
+                try
+                {
+                    var registroRequest = new RegistroRequest
+                    {
+                        Nombre = NombreEntry.Text,
+                        Cedula = long.Parse(CedulaEntry.Text),
+                        Email = EmailEntry.Text,
+                        Contraseña = PasswordEntry.Text,
+                        ConfirmContraseña = ConfirmPasswordEntry.Text,
+                        Telefono = TelefonoEntry.Text,
+                        Direccion = DireccionEntry.Text,
+                        IdBarberia = _selectedBarberia.Idbarberia,
+                        Rol = "cliente"
+                    };
+
+                    var response = await _authService.Register(registroRequest);
+                    Console.WriteLine($"Respuesta de registro: Success = {response.IsSuccess}, Message = {response.Message}");
+
+                    if (response.IsSuccess)
+                    {
+                        await AppUtils.MostrarSnackbar("Registro Exitoso", Colors.Green, Colors.White);
+                        await Navigation.PushAsync(new LoginPage());
+                    }
+                    else
+                    {
+                        ErrorLabel.Text = response.Message;
+                        ErrorLabel.IsVisible = true;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    ErrorLabel.Text = $"Error: {ex.Message}";
+                    ErrorLabel.IsVisible = true;
+                }
+                finally
+                {
+                    LoadingIndicator.IsVisible = false;
+                    LoadingIndicator.IsRunning = false;
+                    registroButton.IsEnabled = true;
+                }
+            }
+            finally
+            {
+                _isNavigating = false;
             }
         }
 

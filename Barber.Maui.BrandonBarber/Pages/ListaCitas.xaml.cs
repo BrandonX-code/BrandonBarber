@@ -9,6 +9,7 @@
         private List<Barberia>? _barberias;
         private int? _barberiaSeleccionadaId = null;
         public bool MostrarBarberoInfo { get; set; }
+        private bool _isNavigating = false;
 
         public ListaCitas(ReservationService reservationService)
         {
@@ -66,6 +67,9 @@
 
         private async void RecuperarCitasPorFecha(object sender, EventArgs e)
         {
+            if (_isNavigating) return; // Sale si ya está navegando
+
+            _isNavigating = true;
             try
             {
                 MostrarLoader(true);
@@ -119,6 +123,7 @@
             }
             finally
             {
+                _isNavigating = false;
                 MostrarLoader(false);
             }
         }

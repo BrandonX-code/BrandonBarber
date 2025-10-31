@@ -5,6 +5,7 @@
         private readonly ImagenGaleriaModel _imagen;
         private readonly string? _imageUrl;
         private readonly string _baseUrl;
+        private bool _isNavigating = false;
 
         private bool _isZoomed = false;
         private double _xOffset, _yOffset;
@@ -31,28 +32,38 @@
 
         private async void OnEditarClicked(object sender, EventArgs e)
         {
-            string nuevaDescripcion = await DisplayPromptAsync(
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
+            {
+                string nuevaDescripcion = await DisplayPromptAsync(
                 "Editar descripción",
                 "Modifica la descripción de la imagen:",
                 initialValue: _imagen.Descripcion ?? "",
                 maxLength: 500
             );
 
-            if (nuevaDescripcion == null)
-                return;
+                if (nuevaDescripcion == null)
+                    return;
 
-            var galeriaService = Application.Current!.Handler.MauiContext!.Services.GetService<GaleriaService>();
-            bool actualizado = await galeriaService!.ActualizarImagen(_imagen.Id, nuevaDescripcion);
+                var galeriaService = Application.Current!.Handler.MauiContext!.Services.GetService<GaleriaService>();
+                bool actualizado = await galeriaService!.ActualizarImagen(_imagen.Id, nuevaDescripcion);
 
-            if (actualizado)
-            {
-                await AppUtils.MostrarSnackbar("Descripción actualizada.", Colors.Green, Colors.White);
-                _imagen.Descripcion = nuevaDescripcion;
+                if (actualizado)
+                {
+                    await AppUtils.MostrarSnackbar("Descripción actualizada.", Colors.Green, Colors.White);
+                    _imagen.Descripcion = nuevaDescripcion;
+                }
+                else
+                {
+                    await AppUtils.MostrarSnackbar("No se pudo actualizar la descripción.", Colors.Red, Colors.White);
+                }
             }
-            else
+            finally
             {
-                await AppUtils.MostrarSnackbar("No se pudo actualizar la descripción.", Colors.Red, Colors.White);
+                _isNavigating = false;
             }
+            
         }
 
         private async void OnCompartirClicked(object sender, EventArgs e)

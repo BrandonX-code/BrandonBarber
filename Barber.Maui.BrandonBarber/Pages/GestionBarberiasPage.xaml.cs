@@ -6,6 +6,7 @@ namespace Barber.Maui.BrandonBarber.Pages
     {
         private readonly long _idAdministrador;
         private readonly BarberiaService? _barberiaService;
+        private bool _isNavigating = false;
 
         public ObservableCollection<Barberia> Barberias { get; } = [];
         public ObservableCollection<Barberia> FilteredBarberias { get; } = [];
@@ -183,30 +184,39 @@ namespace Barber.Maui.BrandonBarber.Pages
 
         private async Task EliminarBarberia(Barberia barberia)
         {
-            if (barberia == null) return;
-            var popup = new CustomAlertPopup($"¿Quieres Eliminar La Barbería '{barberia.Nombre}'?");
-            bool confirmar = await popup.ShowAsync(this);
-
-            if (!confirmar) return;
-
+            if (_isNavigating) return;
+            _isNavigating = true;
             try
             {
-                IsBusy = true;
-                bool success = await _barberiaService!.DeleteBarberiaAsync(barberia.Idbarberia);
+                if (barberia == null) return;
+                var popup = new CustomAlertPopup($"¿Quieres Eliminar La Barbería '{barberia.Nombre}'?");
+                bool confirmar = await popup.ShowAsync(this);
 
-                if (success)
+                if (!confirmar) return;
+
+                try
                 {
-                    await DisplayAlert("Éxito", "Barbería eliminada correctamente", "OK");
-                    await LoadBarberias();
+                    IsBusy = true;
+                    bool success = await _barberiaService!.DeleteBarberiaAsync(barberia.Idbarberia);
+
+                    if (success)
+                    {
+                        await DisplayAlert("Éxito", "Barbería eliminada correctamente", "OK");
+                        await LoadBarberias();
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Error", $"Error al eliminar barbería: {ex.Message}", "OK");
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Error", $"Error al eliminar barbería: {ex.Message}", "OK");
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
             }
             finally
             {
-                IsBusy = false;
+                _isNavigating = false;
             }
         }
 

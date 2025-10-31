@@ -10,6 +10,7 @@ namespace Barber.Maui.BrandonBarber.Pages
         private readonly BarberiaService? _barberiaService;
         private List<Barberia>? _barberias;
         private int? _barberiaSeleccionadaId = null;
+        private bool _isNavigating = false;
         public Command RefreshCommand { get; }
         public ObservableCollection<UsuarioModels> ClientesFiltrados
         {
@@ -169,41 +170,59 @@ namespace Barber.Maui.BrandonBarber.Pages
 
         private async void OnVerDetallesClicked(object sender, EventArgs e)
         {
-            if (sender is Button button && button.CommandParameter is UsuarioModels barbero)
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
             {
-                var detallesPage = new DetalleClientePage(barbero);
-                await Navigation.PushModalAsync(detallesPage);
+                if (sender is Button button && button.CommandParameter is UsuarioModels barbero)
+                {
+                    var detallesPage = new DetalleClientePage(barbero);
+                    await Navigation.PushModalAsync(detallesPage);
+                }
+            }
+            finally
+            {
+                _isNavigating = false;
             }
         }
 
         private async void OnEliminarClienteClicked(object sender, EventArgs e)
         {
-            if (sender is Image image &&
-                image.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tap &&
-                tap.CommandParameter is UsuarioModels cliente)
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
             {
-
-                var popup = new CustomAlertPopup($"¿Está seguro de que desea eliminar al cliente {cliente.Nombre}?");
-                bool confirm = await popup.ShowAsync(this);
-                if (confirm)
+                if (sender is Image image &&
+                    image.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tap &&
+                    tap.CommandParameter is UsuarioModels cliente)
                 {
-                    try
+
+                    var popup = new CustomAlertPopup($"¿Está seguro de que desea eliminar al cliente {cliente.Nombre}?");
+                    bool confirm = await popup.ShowAsync(this);
+                    if (confirm)
                     {
-                        await _authService.EliminarUsuario(cliente.Cedula);
+                        try
+                        {
+                            await _authService.EliminarUsuario(cliente.Cedula);
 
-                        _todosLosClientes.Remove(cliente);
-                        _clientesFiltrados.Remove(cliente);
+                            _todosLosClientes.Remove(cliente);
+                            _clientesFiltrados.Remove(cliente);
 
-                        UpdateStats();
-                        EmptyStateFrame.IsVisible = !_clientesFiltrados.Any();
+                            UpdateStats();
+                            EmptyStateFrame.IsVisible = !_clientesFiltrados.Any();
 
-                        await AppUtils.MostrarSnackbar("Cliente eliminado correctamente", Colors.Green, Colors.White);
-                    }
-                    catch (Exception ex)
-                    {
-                        await AppUtils.MostrarSnackbar($"Error al eliminar cliente: {ex.Message}", Colors.Red, Colors.White);
+                            await AppUtils.MostrarSnackbar("Cliente eliminado correctamente", Colors.Green, Colors.White);
+                        }
+                        catch (Exception ex)
+                        {
+                            await AppUtils.MostrarSnackbar($"Error al eliminar cliente: {ex.Message}", Colors.Red, Colors.White);
+                        }
                     }
                 }
+            }
+            finally
+            {
+                _isNavigating = false;
             }
         }
 

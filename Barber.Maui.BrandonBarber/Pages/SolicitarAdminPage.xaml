@@ -7,7 +7,6 @@
     <ScrollView Padding="25">
         <VerticalStackLayout Spacing="20" VerticalOptions="Center">
 
-            <!-- Título -->
             <Label Text="Solicitud de Cuenta de Administrador" 
                    FontSize="20" 
                    TextColor="White" 
@@ -15,7 +14,6 @@
                    HorizontalOptions="Center"
                    Margin="0,0,0,10"/>
 
-            <!-- Campos de entrada -->
             <VerticalStackLayout Spacing="15">
 
                 <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45">
@@ -23,14 +21,14 @@
                            Placeholder="Cédula"
                            Keyboard="Numeric"
                            TextColor="#0E2A36"
-                           Margin="10,0"/>
+                           Margin="10,0" MaxLength="10"/>
                 </Border>
 
                 <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45">
                     <Entry x:Name="NombreEntry" 
                            Placeholder="Nombre completo"
                            TextColor="#0E2A36"
-                           Margin="10,0"/>
+                           Margin="10,0" MaxLength="50"/>
                 </Border>
 
                 <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45">
@@ -38,7 +36,7 @@
                            Placeholder="Email"
                            Keyboard="Email"
                            TextColor="#0E2A36"
-                           Margin="10,0"/>
+                           Margin="10,0" MaxLength="80"/>
                 </Border>
 
                 <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45">
@@ -46,22 +44,20 @@
                            Placeholder="Teléfono"
                            Keyboard="Telephone"
                            TextColor="#0E2A36"
-                           Margin="10,0"/>
+                           Margin="10,0" MaxLength="15"/>
                 </Border>
 
-                <!-- Justificación -->
                 <Border StrokeShape="RoundRectangle 15" BackgroundColor="#E0F7FA">
                     <Editor x:Name="JustificacionEditor"
                             Placeholder="Justificación (¿Por qué necesitas una cuenta de administrador?)"
-                            HeightRequest="120"
+                            HeightRequest="140"
                             BackgroundColor="Transparent"
                             TextColor="#0E2A36"
-                            Margin="10,5" />
+                            Margin="10,5" MaxLength="300"/>
                 </Border>
 
             </VerticalStackLayout>
 
-            <!-- Botón principal -->
             <Button Text="Enviar Solicitud"
                     BackgroundColor="#FF6F91"
                     TextColor="Black"
@@ -71,30 +67,19 @@
                     Margin="0,10,0,0"
                     Clicked="OnEnviarSolicitudClicked"/>
 
-            <!-- Indicador de carga -->
             <ActivityIndicator x:Name="LoadingIndicator" 
                                IsRunning="False" 
                                IsVisible="False" 
                                Color="White"
                                Margin="0,10,0,0"/>
-
-            <!-- Mensaje de resultado -->
-            <!--<Label x:Name="MessageLabel" 
-                   TextColor="#FF6F91" 
-                   IsVisible="False"
-                   HorizontalOptions="Center"
-                   FontAttributes="Bold"
-                   FontSize="16"/>-->
-
-            <!-- Enlace regresar -->
-            <!--<HorizontalStackLayout HorizontalOptions="Center" Margin="0,15,0,0">
+            <HorizontalStackLayout HorizontalOptions="Center" Margin="0,15,0,0">
                 <Label Text="¿Ya tienes cuenta?" TextColor="#B0BEC5" FontSize="14"/>
                 <Label Text=" Inicia sesión" TextColor="#FF6F91" FontAttributes="Bold" FontSize="14">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnVolverLoginClicked"/>
                     </Label.GestureRecognizers>
                 </Label>
-            </HorizontalStackLayout>-->
+            </HorizontalStackLayout>
 
         </VerticalStackLayout>
     </ScrollView>

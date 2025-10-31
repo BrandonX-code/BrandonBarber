@@ -2,6 +2,7 @@
 {
     public partial class PlantillaDisponibilidadPage : ContentPage
     {
+        private bool _isNavigating = false;
         private readonly DisponibilidadService _disponibilidadService;
         private readonly Dictionary<string, Dictionary<string, CheckBox>> _checkboxesPorDia = [];
         private readonly string[] _diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
@@ -140,6 +141,8 @@
         }
         private async void OnGuardarPlantillaClicked(object sender, EventArgs e)
         {
+            if (_isNavigating) return;
+            _isNavigating = true;
             try
             {
                 var barberoId = AuthService.CurrentUser?.Cedula ?? 0;
@@ -222,6 +225,10 @@
             catch (Exception ex)
             {
                 await DisplayAlert("Error", $"Error: {ex.Message}", "OK");
+            }
+            finally
+            {
+                _isNavigating = false;
             }
         }
     }

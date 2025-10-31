@@ -2,6 +2,7 @@
 {
     public partial class GaleriaPage : ContentPage
     {
+        private bool _isNavigating = false;
         private readonly AuthService _authService;
         private List<UsuarioModels>? _todosLosBarberos;
         public List<UsuarioModels>? TodosLosBarberos
@@ -330,6 +331,8 @@
         // Método para eliminar una imagen
         private async Task DeleteImage(int imagenId)
         {
+            if (_isNavigating) return;
+            _isNavigating = true;
             try
             {
                 var popup = new CustomAlertPopup("¿Quieres Eliminar Esta Imagen?");
@@ -362,6 +365,7 @@
             }
             finally
             {
+                _isNavigating = false;
                 LoadingIndicator.IsRunning = false;
                 LoadingIndicator.IsVisible = false;
             }
@@ -385,6 +389,8 @@
         // Evento del botón para agregar una nueva imagen
         private async void OnAgregarImagenClicked(object sender, EventArgs e)
         {
+            if (_isNavigating) return;
+            _isNavigating = true;
             try
             {
                 LoadingIndicator.IsVisible = true;
@@ -438,6 +444,7 @@
             }
             finally
             {
+                _isNavigating = false;
                 LoadingIndicator.IsRunning = false;
                 LoadingIndicator.IsVisible = false;
             }

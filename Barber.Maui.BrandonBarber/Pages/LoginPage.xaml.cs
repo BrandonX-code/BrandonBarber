@@ -4,6 +4,7 @@ namespace Barber.Maui.BrandonBarber.Pages
     public partial class LoginPage : ContentPage
     {
         private readonly AuthService _authService;
+        private bool _isNavigating = false;
 
         public LoginPage()
         {
@@ -83,7 +84,18 @@ namespace Barber.Maui.BrandonBarber.Pages
 
         private async void OnRegistroClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new RegistroPage());
+
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
+            {
+                await Navigation.PushAsync(new RegistroPage());
+            }
+            finally
+            {
+                _isNavigating = false;
+            }
+            
         }
 
         private void NavigateToMainPage()
@@ -102,11 +114,31 @@ namespace Barber.Maui.BrandonBarber.Pages
         }
         private async void OnForgotPasswordClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new ForgotPasswordPage());
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
+            {
+                await Navigation.PushAsync(new ForgotPasswordPage());
+            }
+            finally
+            {
+                _isNavigating = false;
+            }
+            
         }
         private async void OnSolicitarAdminClicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new SolicitarAdminPage());
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
+            {
+                await Navigation.PushAsync(new SolicitarAdminPage());
+            }
+            finally
+            {
+                _isNavigating = false;
+            }
+            
         }
     }
 }

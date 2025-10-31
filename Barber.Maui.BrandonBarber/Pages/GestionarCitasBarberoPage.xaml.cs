@@ -8,6 +8,7 @@ namespace Barber.Maui.BrandonBarber.Pages
 {
     public partial class GestionarCitasBarberoPage : ContentPage
     {
+        private bool _isNavigating = false;
         private readonly ReservationService _reservationService;
 
         public GestionarCitasBarberoPage(ReservationService reservationService)
@@ -66,24 +67,44 @@ namespace Barber.Maui.BrandonBarber.Pages
 
         private async void OnCompletadaClicked(object sender, EventArgs e)
         {
-            if (sender is Button button && button.CommandParameter is CitaModel cita)
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
             {
-                await ActualizarEstado(cita, "Completada");
+                if (sender is Button button && button.CommandParameter is CitaModel cita)
+                {
+                    await ActualizarEstado(cita, "Completada");
+                }
             }
+            finally
+            {
+                _isNavigating = false;
+            }
+            
         }
 
         private async void OnCanceladaClicked(object sender, EventArgs e)
         {
-            if (sender is Button button && button.CommandParameter is CitaModel cita)
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
             {
-                var popup = new CustomAlertPopup($"¿Confirmar cancelación de la cita de {cita.Nombre}?");
-                bool confirmacion = await popup.ShowAsync(this);
-
-                if (confirmacion)
+                if (sender is Button button && button.CommandParameter is CitaModel cita)
                 {
-                    await ActualizarEstado(cita, "Cancelada");
+                    var popup = new CustomAlertPopup($"¿Confirmar cancelación de la cita de {cita.Nombre}?");
+                    bool confirmacion = await popup.ShowAsync(this);
+
+                    if (confirmacion)
+                    {
+                        await ActualizarEstado(cita, "Cancelada");
+                    }
                 }
             }
+            finally
+            {
+                _isNavigating = false;
+            }
+            
         }
 
         private async Task ActualizarEstado(CitaModel cita, string nuevoEstado)

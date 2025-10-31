@@ -9,6 +9,7 @@
         private List<Barberia>? _barberias;
         private int _barberiaSeleccionadaId;
         bool _isUpdatingText = false;
+        private bool _isNavigating = false;
 
         public GestionarServiciosPage(ServicioService servicioService)
         {
@@ -105,53 +106,62 @@
 
         private async void OnAgregarServicio(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(NombreEntry.Text) || _imagenSeleccionada == null || string.IsNullOrWhiteSpace(PrecioEntry.Text))
-            {
-                _ = AppUtils.MostrarSnackbar("Todos los campos son obligatorios", Colors.Red, Colors.White);
-                return;
-            }
-
-            // Verificar que hay una barbería seleccionada
-            if (_barberiaSeleccionadaId == 0)
-            {
-                await DisplayAlert("Validación", "Debe seleccionar una barbería.", "OK");
-                return;
-            }
-
-            string precioTexto = PrecioEntry.Text?.Replace("$", "").Replace(",", "")!;
-            if (!decimal.TryParse(precioTexto, out decimal precio))
-            {
-                await DisplayAlert("Validación", "El precio debe ser un número válido.", "OK");
-                return;
-            }
-
-            // Guardar la imagen en el almacenamiento local de la app
-            string fileName = System.IO.Path.GetFileName(_imagenSeleccionada.FullPath);
-            string localPath = System.IO.Path.Combine(FileSystem.AppDataDirectory, fileName);
-
-            using (var stream = await _imagenSeleccionada.OpenReadAsync())
-            using (var fileStream = File.OpenWrite(localPath))
-            {
-                await stream.CopyToAsync(fileStream);
-            }
-
-            var nuevoServicio = new ServicioModel
-            {
-                Nombre = NombreEntry.Text,
-                Imagen = localPath, // Guarda la ruta local
-                Precio = precio,
-                IdBarberia = _barberiaSeleccionadaId // Usar la barbería seleccionada
-            };
-
+            if (_isNavigating) return;
+            _isNavigating = true;
             try
             {
-                await _servicioService.CrearServicioAsync(nuevoServicio);
-                LimpiarFormulario();
-                await CargarServicios(_barberiaSeleccionadaId); // Pasar el ID de la barbería
+                if (string.IsNullOrWhiteSpace(NombreEntry.Text) || _imagenSeleccionada == null || string.IsNullOrWhiteSpace(PrecioEntry.Text))
+                {
+                    _ = AppUtils.MostrarSnackbar("Todos los campos son obligatorios", Colors.Red, Colors.White);
+                    return;
+                }
+
+                // Verificar que hay una barbería seleccionada
+                if (_barberiaSeleccionadaId == 0)
+                {
+                    await DisplayAlert("Validación", "Debe seleccionar una barbería.", "OK");
+                    return;
+                }
+
+                string precioTexto = PrecioEntry.Text?.Replace("$", "").Replace(",", "")!;
+                if (!decimal.TryParse(precioTexto, out decimal precio))
+                {
+                    await DisplayAlert("Validación", "El precio debe ser un número válido.", "OK");
+                    return;
+                }
+
+                // Guardar la imagen en el almacenamiento local de la app
+                string fileName = System.IO.Path.GetFileName(_imagenSeleccionada.FullPath);
+                string localPath = System.IO.Path.Combine(FileSystem.AppDataDirectory, fileName);
+
+                using (var stream = await _imagenSeleccionada.OpenReadAsync())
+                using (var fileStream = File.OpenWrite(localPath))
+                {
+                    await stream.CopyToAsync(fileStream);
+                }
+
+                var nuevoServicio = new ServicioModel
+                {
+                    Nombre = NombreEntry.Text,
+                    Imagen = localPath, // Guarda la ruta local
+                    Precio = precio,
+                    IdBarberia = _barberiaSeleccionadaId // Usar la barbería seleccionada
+                };
+
+                try
+                {
+                    await _servicioService.CrearServicioAsync(nuevoServicio);
+                    LimpiarFormulario();
+                    await CargarServicios(_barberiaSeleccionadaId); // Pasar el ID de la barbería
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Error", "No se pudo agregar el servicio: " + ex.Message, "OK");
+                }
             }
-            catch (Exception ex)
+            finally
             {
-                await DisplayAlert("Error", "No se pudo agregar el servicio: " + ex.Message, "OK");
+                _isNavigating = false;
             }
         }
         private void OnPrecioEntryTextChanged(object sender, TextChangedEventArgs e)
@@ -180,91 +190,118 @@
 
         private void OnEditarBtnClicked(object sender, EventArgs e)
         {
-            if ((sender as Button)?.CommandParameter is not ServicioModel servicio) return;
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
+            {
+                if ((sender as Button)?.CommandParameter is not ServicioModel servicio) return;
 
-            _servicioEditando = servicio;
-            NombreEntry.Text = servicio.Nombre;
-            PrecioEntry.Text = servicio.Precio.ToString();
+                _servicioEditando = servicio;
+                NombreEntry.Text = servicio.Nombre;
+                PrecioEntry.Text = servicio.Precio.ToString();
             
-            // Mostrar la imagen previa si existe
-            if (!string.IsNullOrEmpty(servicio.Imagen))
-            {
-                PreviewImage.Source = servicio.Imagen;
-                PreviewImage.IsVisible = true;
-                PreviewImageBorder.IsVisible = true;
-            }
-            else
-            {
-                PreviewImage.IsVisible = false;
-                PreviewImageBorder.IsVisible = false;
-            }
+                // Mostrar la imagen previa si existe
+                if (!string.IsNullOrEmpty(servicio.Imagen))
+                {
+                    PreviewImage.Source = servicio.Imagen;
+                    PreviewImage.IsVisible = true;
+                    PreviewImageBorder.IsVisible = true;
+                }
+                else
+                {
+                    PreviewImage.IsVisible = false;
+                    PreviewImageBorder.IsVisible = false;
+                }
 
-            _imagenSeleccionada = null; // Se debe volver a seleccionar si se quiere cambiar
+                _imagenSeleccionada = null; // Se debe volver a seleccionar si se quiere cambiar
 
-            AgregarBtn.IsVisible = false;
-            EditarBtn.IsVisible = true;
-            CancelarBtn.IsVisible = true;
+                AgregarBtn.IsVisible = false;
+                EditarBtn.IsVisible = true;
+                CancelarBtn.IsVisible = true;
+            }
+            finally
+            {
+                _isNavigating = false;
+            }
         }
 
         private async void OnEditarServicio(object sender, EventArgs e)
         {
-            if (_servicioEditando == null) return;
-
-            string precioTexto = PrecioEntry.Text?.Replace("$", "").Replace(",", "")!;
-            if (!decimal.TryParse(precioTexto, out decimal precio))
-            {
-                await DisplayAlert("Validación", "El precio debe ser un número válido.", "OK");
-                return;
-            }
-
-            string imagenPath = _servicioEditando.Imagen!;
-
-            if (_imagenSeleccionada != null)
-            {
-                string fileName = System.IO.Path.GetFileName(_imagenSeleccionada.FullPath);
-                string localPath = System.IO.Path.Combine(FileSystem.AppDataDirectory, fileName);
-
-                using (var stream = await _imagenSeleccionada.OpenReadAsync())
-                using (var fileStream = File.OpenWrite(localPath))
-                {
-                    await stream.CopyToAsync(fileStream);
-                }
-                imagenPath = localPath;
-            }
-
-            _servicioEditando.Nombre = NombreEntry.Text;
-            _servicioEditando.Imagen = imagenPath;
-            _servicioEditando.Precio = precio;
-
+            if (_isNavigating) return;
+            _isNavigating = true;
             try
             {
-                await _servicioService.EditarServicioAsync(_servicioEditando);
-                LimpiarFormulario();
-                await CargarServicios(_barberiaSeleccionadaId);
-                _ = AppUtils.MostrarSnackbar("Servicio Editado Con Exito", Colors.Green, Colors.White);
+                if (_servicioEditando == null) return;
+
+                string precioTexto = PrecioEntry.Text?.Replace("$", "").Replace(",", "")!;
+                if (!decimal.TryParse(precioTexto, out decimal precio))
+                {
+                    await DisplayAlert("Validación", "El precio debe ser un número válido.", "OK");
+                    return;
+                }
+
+                string imagenPath = _servicioEditando.Imagen!;
+
+                if (_imagenSeleccionada != null)
+                {
+                    string fileName = System.IO.Path.GetFileName(_imagenSeleccionada.FullPath);
+                    string localPath = System.IO.Path.Combine(FileSystem.AppDataDirectory, fileName);
+
+                    using (var stream = await _imagenSeleccionada.OpenReadAsync())
+                    using (var fileStream = File.OpenWrite(localPath))
+                    {
+                        await stream.CopyToAsync(fileStream);
+                    }
+                    imagenPath = localPath;
+                }
+
+                _servicioEditando.Nombre = NombreEntry.Text;
+                _servicioEditando.Imagen = imagenPath;
+                _servicioEditando.Precio = precio;
+
+                try
+                {
+                    await _servicioService.EditarServicioAsync(_servicioEditando);
+                    LimpiarFormulario();
+                    await CargarServicios(_barberiaSeleccionadaId);
+                    _ = AppUtils.MostrarSnackbar("Servicio Editado Con Exito", Colors.Green, Colors.White);
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Error", "No se pudo editar el servicio: " + ex.Message, "OK");
+                }
             }
-            catch (Exception ex)
+            finally
             {
-                await DisplayAlert("Error", "No se pudo editar el servicio: " + ex.Message, "OK");
+                _isNavigating = false;
             }
         }
 
         private async void OnEliminarBtnClicked(object sender, EventArgs e)
         {
-            if ((sender as Button)?.CommandParameter is not ServicioModel servicio) return;
-            var popup = new CustomAlertPopup($"¿Quieres Eliminar el servicio ' {servicio.Nombre}'?");
-            bool confirm = await popup.ShowAsync(this);
-            if (!confirm) return;
-
+            if (_isNavigating) return;
+            _isNavigating = true;
             try
             {
-                _ = AppUtils.MostrarSnackbar("Servicio Eliminado Con Exito", Colors.Green, Colors.White);
-                await _servicioService.EliminarServicioAsync(servicio.Id);
-                await CargarServicios(_barberiaSeleccionadaId); // Pasar el ID de la barbería
+                if ((sender as Button)?.CommandParameter is not ServicioModel servicio) return;
+                var popup = new CustomAlertPopup($"¿Quieres Eliminar el servicio ' {servicio.Nombre}'?");
+                bool confirm = await popup.ShowAsync(this);
+                if (!confirm) return;
+
+                try
+                {
+                    _ = AppUtils.MostrarSnackbar("Servicio Eliminado Con Exito", Colors.Green, Colors.White);
+                    await _servicioService.EliminarServicioAsync(servicio.Id);
+                    await CargarServicios(_barberiaSeleccionadaId); // Pasar el ID de la barbería
+                }
+                catch (Exception ex)
+                {
+                    await DisplayAlert("Error", "No se pudo eliminar el servicio: " + ex.Message, "OK");
+                }
             }
-            catch (Exception ex)
+            finally
             {
-                await DisplayAlert("Error", "No se pudo eliminar el servicio: " + ex.Message, "OK");
+                _isNavigating = false;
             }
         }
 
@@ -294,33 +331,42 @@
 
         private async void OnSeleccionarImagen(object sender, EventArgs e)
         {
+            if (_isNavigating) return;
+            _isNavigating = true;
             try
             {
-                var result = await FilePicker.PickAsync(new PickOptions
+                try
                 {
-                    PickerTitle = "Selecciona una imagen",
-                    FileTypes = FilePickerFileType.Images
-                });
+                    var result = await FilePicker.PickAsync(new PickOptions
+                    {
+                        PickerTitle = "Selecciona una imagen",
+                        FileTypes = FilePickerFileType.Images
+                    });
 
-                if (result != null)
+                    if (result != null)
+                    {
+                        _imagenSeleccionada = result;
+
+                        // Crear una copia del stream en memoria
+                        using var stream = await result.OpenReadAsync();
+                        var memoryStream = new MemoryStream();
+                        await stream.CopyToAsync(memoryStream);
+                        memoryStream.Position = 0;
+
+                        // Asignar la imagen y hacerla visible
+                        PreviewImage.Source = ImageSource.FromStream(() => new MemoryStream(memoryStream.ToArray()));
+                        PreviewImage.IsVisible = true;
+                        PreviewImageBorder.IsVisible = true;
+                    }
+                }
+                catch (Exception ex)
                 {
-                    _imagenSeleccionada = result;
-
-                    // Crear una copia del stream en memoria
-                    using var stream = await result.OpenReadAsync();
-                    var memoryStream = new MemoryStream();
-                    await stream.CopyToAsync(memoryStream);
-                    memoryStream.Position = 0;
-
-                    // Asignar la imagen y hacerla visible
-                    PreviewImage.Source = ImageSource.FromStream(() => new MemoryStream(memoryStream.ToArray()));
-                    PreviewImage.IsVisible = true;
-                    PreviewImageBorder.IsVisible = true;
+                    await DisplayAlert("Error", "No se pudo seleccionar la imagen: " + ex.Message, "OK");
                 }
             }
-            catch (Exception ex)
+            finally
             {
-                await DisplayAlert("Error", "No se pudo seleccionar la imagen: " + ex.Message, "OK");
+                _isNavigating = false;
             }
         }
     }
