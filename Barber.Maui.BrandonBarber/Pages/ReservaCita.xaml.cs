@@ -5,6 +5,7 @@
         private readonly ReservationService _reservationServices;
         private readonly AuthService _authService;
         private readonly UsuarioModels? _barberoPreseleccionado;
+        private bool _isCancelling = false;
 
         public MainPage(ReservationService reservationService, AuthService authService, UsuarioModels? barberoPreseleccionado = null)
         {
@@ -157,17 +158,35 @@
 
         private async void OnCancelarClicked(object sender, EventArgs e)
         {
+            if (_isCancelling)
+                return; // Evita clics múltiples
+
+            _isCancelling = true;
+
             if (sender is Button button)
-                await MainPage.AnimateButtonClick(button);
-
-            var popup = new CustomAlertPopup("¿Está seguro que desea cancelar la reserva?");
-            bool confirm = await popup.ShowAsync(this);
-
-            if (confirm)
             {
-                await AnimarSalida();
-                Limpiarcampos();
-                await Navigation.PopToRootAsync();
+                button.IsEnabled = false;
+                await MainPage.AnimateButtonClick(button);
+            }
+
+            try
+            {
+                var popup = new CustomAlertPopup("¿Está seguro que desea cancelar la reserva?");
+                bool confirm = await popup.ShowAsync(this);
+
+                if (confirm)
+                {
+                    await AnimarSalida();
+                    Limpiarcampos();
+                    await Navigation.PopToRootAsync();
+                }
+            }
+            finally
+            {
+                _isCancelling = false;
+
+                if (sender is Button btn)
+                    btn.IsEnabled = true;
             }
         }
 

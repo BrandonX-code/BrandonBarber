@@ -7,6 +7,7 @@ namespace Barber.Maui.BrandonBarber.Pages
     {
         private UsuarioModels? _perfilData;
         private readonly PerfilUsuarioService? _perfilService;
+        private bool _isClosingSession = false;
 
         public PerfilPage()
         {
@@ -101,16 +102,33 @@ namespace Barber.Maui.BrandonBarber.Pages
         }
         private async void OnCerrarSesionClicked(object sender, EventArgs e)
         {
-            var popup = new CustomAlertPopup("¿Quieres Cerrar Sesión?");
-            bool confirmacion = await popup.ShowAsync(this);
+            if (_isClosingSession)
+                return; // Evita múltiples clics
 
-            if (confirmacion)
+            _isClosingSession = true;
+
+            var button = sender as Button;
+            if (button != null)
+                button.IsEnabled = false;
+
+            try
             {
-                Preferences.Remove("isLoggedIn");
-                Preferences.Remove("currentUser");
+                var popup = new CustomAlertPopup("¿Quieres Cerrar Sesión?");
+                bool confirmacion = await popup.ShowAsync(this);
 
-                Application.Current!.Windows[0].Page = new NavigationPage(new LoginPage());
+                if (confirmacion)
+                {
+                    Preferences.Remove("isLoggedIn");
+                    Preferences.Remove("currentUser");
 
+                    Application.Current!.Windows[0].Page = new NavigationPage(new LoginPage());
+                }
+            }
+            finally
+            {
+                _isClosingSession = false;
+                if (button != null)
+                    button.IsEnabled = true;
             }
         }
 
