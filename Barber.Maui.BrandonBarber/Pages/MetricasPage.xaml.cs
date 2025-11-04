@@ -110,13 +110,16 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var citasDelMes = todasLasCitas.Where(c =>
                     c.Fecha.Month == mes && c.Fecha.Year == anio).ToList();
 
+                // Solo contar las gestionadas (completada o cancelada)
+                var citasGestionadasMes = citasDelMes.Count(c => c.Estado?.ToLower() == "completada" || c.Estado?.ToLower() == "cancelada");
+                var citasCompletadasMes = citasDelMes.Count(c => c.Estado?.ToLower() == "completada");
+
+                var tasaAsistencia = citasGestionadasMes >0
+                    ? (double)citasCompletadasMes / citasGestionadasMes *100
+                    :0;
+
                 // Actualizar estadísticas generales
                 TotalCitasLabel.Text = citasHoy.Count.ToString(); // ← CITAS DE HOY
-
-                var tasaAsistencia = citasDelMes.Count > 0
-                    ? (double)citasDelMes.Count(c => c.Estado?.ToLower() == "completada") / citasDelMes.Count * 100
-                    : 0;
-
                 TasaAsistenciaLabel.Text = $"{tasaAsistencia:F1}%"; // ← TASA DEL MES
 
                 // Los gráficos y rankings SIEMPRE muestran datos históricos (últimos 6 meses)

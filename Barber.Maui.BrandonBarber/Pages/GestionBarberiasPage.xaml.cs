@@ -81,7 +81,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error cargando barberías: {ex.Message}", "OK");
+                await AppUtils.MostrarSnackbar($"Error cargando barberías: {ex.Message}", Colors.Red, Colors.White);
             }
             finally
             {
@@ -148,7 +148,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 if (Navigation == null)
                 {
-                    await DisplayAlert("Error", "No se puede navegar en este momento", "OK");
+                    await AppUtils.MostrarSnackbar("No se puede navegar en este momento", Colors.Red, Colors.White);
                     return;
                 }
 
@@ -162,7 +162,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al abrir formulario: {ex.Message}", "OK");
+                await AppUtils.MostrarSnackbar($"Error al abrir formulario: {ex.Message}", Colors.Red, Colors.White);
             }
         }
 
@@ -178,7 +178,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al abrir formulario: {ex.Message}", "OK");
+                await AppUtils.MostrarSnackbar($"Error al abrir formulario: {ex.Message}", Colors.Red, Colors.White);
             }
         }
 
@@ -201,13 +201,13 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                     if (success)
                     {
-                        await DisplayAlert("Éxito", "Barbería eliminada correctamente", "OK");
+                        await AppUtils.MostrarSnackbar("Barbería eliminada correctamente", Colors.Green, Colors.White);
                         await LoadBarberias();
                     }
                 }
                 catch (Exception ex)
                 {
-                    await DisplayAlert("Error", $"Error al eliminar barbería: {ex.Message}", "OK");
+                    await AppUtils.MostrarSnackbar($"Error al eliminar barbería:", Colors.Red, Colors.White);
                 }
                 finally
                 {

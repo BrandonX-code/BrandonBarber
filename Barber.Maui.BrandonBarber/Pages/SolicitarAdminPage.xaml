@@ -27,7 +27,7 @@
                 <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45">
                     <Entry x:Name="NombreEntry" 
                            Placeholder="Nombre completo"
-                           TextColor="#0E2A36"
+                           TextColor="#0E2A36" Keyboard="Text"
                            Margin="10,0" MaxLength="50"/>
                 </Border>
 

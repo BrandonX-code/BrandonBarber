@@ -18,5 +18,6 @@ namespace Barber.Maui.API.Models
 
         public string? Email { get; set; }
         public string? LogoUrl { get; internal set; }
+        public bool Activo { get; set; } = true;
     }
 }

@@ -37,6 +37,7 @@ namespace Barber.Maui.API.Controllers
         public async Task<ActionResult<IEnumerable<Barberia>>> GetBarberias()
         {
             return await _context.Barberias
+                .Where(b => b.Activo)
                 .Select(b => BarberiaToDto(b))
                 .ToListAsync();
         }
@@ -46,7 +47,7 @@ namespace Barber.Maui.API.Controllers
         public async Task<ActionResult<IEnumerable<Barberia>>> GetBarberiasByAdministrador(long idAdministrador)
         {
             var barberias = await _context.Barberias
-                .Where(b => b.Idadministrador == idAdministrador)
+                .Where(b => b.Idadministrador == idAdministrador && b.Activo)
                 .Select(b => BarberiaToDto(b))
                 .ToListAsync();
 
@@ -148,12 +149,23 @@ namespace Barber.Maui.API.Controllers
                 await EliminarLogoCloudinary(barberia.LogoUrl);
             }
 
-            _context.Barberias.Remove(barberia);
+            // Eliminación lógica
+            barberia.Activo = false;
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
+        [HttpPut("{id}/activar")]
+        public async Task<IActionResult> ActivarBarberia(int id)
+        {
+            var barberia = await _context.Barberias.FindAsync(id);
+            if (barberia == null)
+                return NotFound();
 
+            barberia.Activo = true;
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
         // POST: api/barberias/5/logo
         [HttpPost("{id}/logo")]
         public async Task<ActionResult> UploadLogo(int id, IFormFile file)
