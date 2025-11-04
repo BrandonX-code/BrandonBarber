@@ -83,7 +83,6 @@ namespace Barber.Maui.BrandonBarber.Pages
         private void UpdateStats()
         {
             TotalUsuariosLabel.Text = _todosLosUsuarios.Count.ToString();
-            UsuariosActivosLabel.Text = _todosLosUsuarios.Count.ToString();
         }
 
         private void OnSearchTextChanged(object sender, TextChangedEventArgs e)

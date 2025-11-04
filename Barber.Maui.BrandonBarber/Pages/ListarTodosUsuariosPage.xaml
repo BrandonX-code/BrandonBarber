@@ -2,74 +2,71 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
  xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
  x:Class="Barber.Maui.BrandonBarber.Pages.ListarTodosUsuariosPage" BackgroundColor="#0E2A36">
-	<RefreshView x:Name="UsuariosRefreshView" Command="{Binding RefreshCommand}">
-		<Grid Grid.Row="1" Padding="20">
-			<ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" IsVisible="True" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" />
-			<ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="ContentContainer" IsVisible="False">
-				<VerticalStackLayout Spacing="15">
-					<Grid Grid.Row="0" Padding="20,30,40,0">
-						<Label Grid.Column="1" Text="Todos los Usuarios" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" />
-					</Grid>
-					<Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="5" StrokeThickness="0">
-						<SearchBar x:Name="SearchBar" Placeholder="Buscar usuario por nombre, email o rol..." PlaceholderColor="Black" TextColor="Black" BackgroundColor="#90A4AE" TextChanged="OnSearchTextChanged" />
-					</Border>
-					<Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="10" StrokeThickness="0">
-						<Grid ColumnDefinitions="*,*">
-							<VerticalStackLayout Grid.Column="0" HorizontalOptions="Start" VerticalOptions="Center">
-								<Label x:Name="TotalUsuariosLabel" Text="0" FontSize="24" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" />
-								<Label Text="Total Usuarios" FontSize="12" TextColor="Black" HorizontalOptions="Center" />
-							</VerticalStackLayout>
-							<VerticalStackLayout Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
-								<Label x:Name="UsuariosActivosLabel" Text="0" FontSize="24" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" />
-								<Label Text="Activos" FontSize="12" TextColor="Black" HorizontalOptions="Center" />
-							</VerticalStackLayout>
-						</Grid>
-					</Border>
-					<CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="UsuariosCollectionView" ItemsSource="{Binding UsuariosFiltrados}" BackgroundColor="Transparent" Margin="0,0,0,10">
-						<CollectionView.ItemsLayout>
-							<LinearItemsLayout Orientation="Vertical"/>
-						</CollectionView.ItemsLayout>
-						<CollectionView.ItemTemplate>
-							<DataTemplate>
-								<Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="10" Margin="0,10" StrokeThickness="0">
-									<Grid>
-										<Grid.RowDefinitions>
-											<RowDefinition Height="Auto" />
-											<RowDefinition Height="Auto" />
-											<RowDefinition Height="Auto" />
-										</Grid.RowDefinitions>
-										<Grid.ColumnDefinitions>
-											<ColumnDefinition Width="*" />
-											<ColumnDefinition Width="Auto" />
-										</Grid.ColumnDefinitions>
-										<VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="5">
-											<Label Text="{Binding Nombre}" FontSize="18" TextColor="Black" FontAttributes="Bold" />
-											<Label Text="{Binding Email}" FontSize="14" TextColor="Black" />
-                                            <Label Text="{Binding Rol}" FontSize="13" TextColor="Black" FontAttributes="Bold"/>
-										</VerticalStackLayout>
-										<VerticalStackLayout Grid.Row="0" Grid.Column="1" Padding="10,5" VerticalOptions="Start">
-											<Label Text="{Binding Cedula}" FontSize="15" TextColor="Black" FontAttributes="Bold" />
-										</VerticalStackLayout>
-                                        <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="15" Margin="0,10,0,0">
-                                            <HorizontalStackLayout Spacing="5">
-                                                <Image Source="id.png" WidthRequest="16" HeightRequest="16" />
-                                                <Label Text="{Binding Cedula}" FontSize="14" TextColor="Black" />
-                                            </HorizontalStackLayout>
+    <RefreshView x:Name="UsuariosRefreshView" Command="{Binding RefreshCommand}">
+        <Grid Grid.Row="1" Padding="20">
+            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" IsVisible="True" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" />
+            <Grid x:Name="ContentContainer" IsVisible="False">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid>
+                    <Label Grid.Column="1" Text="Todos los Usuarios" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Start" />
+                </Grid>
+
+                <Border Grid.Row="1" BackgroundColor="#90A4AE" StrokeShape="10" Padding="5" StrokeThickness="0" Margin="0,15,0,15">
+                    <SearchBar x:Name="SearchBar" Placeholder="Buscar usuario por nombre, email o rol..." PlaceholderColor="Black" TextColor="Black" BackgroundColor="#90A4AE" TextChanged="OnSearchTextChanged" />
+                </Border>
+                <VerticalStackLayout Grid.Column="0" HorizontalOptions="End" VerticalOptions="Center">
+                    <Label x:Name="TotalUsuariosLabel" Text="0" FontSize="24" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
+                    <Label Text="Total Clientes" FontSize="12" TextColor="White" HorizontalOptions="Center" />
+                </VerticalStackLayout>
+                <CollectionView Grid.Row="2" VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="UsuariosCollectionView" ItemsSource="{Binding UsuariosFiltrados}" BackgroundColor="Transparent">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="10" Margin="0,10" StrokeThickness="0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="5">
+                                        <Label Text="{Binding Nombre}" FontSize="18" TextColor="Black" FontAttributes="Bold" />
+                                        <Label Text="{Binding Email}" FontSize="14" TextColor="Black" />
+                                    </VerticalStackLayout>
+                                    <VerticalStackLayout Grid.Row="0" Grid.Column="1" Padding="10,5" VerticalOptions="Start">
+                                        <Label Text="{Binding Rol}" FontSize="15" TextColor="Black" FontAttributes="Bold" />
+                                    </VerticalStackLayout>
+                                    <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="15" Margin="0,10,0,0">
+                                        <HorizontalStackLayout Spacing="5">
+                                            <Image Source="id.png" WidthRequest="16" HeightRequest="16" />
+                                            <Label Text="{Binding Cedula}" FontSize="14" TextColor="Black" />
                                         </HorizontalStackLayout>
-                                    </Grid>
-								</Border>
-							</DataTemplate>
-						</CollectionView.ItemTemplate>
-					</CollectionView>
-					<Border x:Name="EmptyStateFrame" BackgroundColor="#90A4AE" StrokeShape="10" Padding="30" IsVisible="False" StrokeThickness="0">
-						<VerticalStackLayout Spacing="15" HorizontalOptions="Center">
-							<Image Source="users.png" WidthRequest="64" HeightRequest="64" />
-							<Label Text="No hay usuarios registrados" FontSize="18" TextColor="Black" HorizontalOptions="Center" />
-							<Label Text="Los usuarios aparecerán aquí cuando se registren en la aplicación" FontSize="14" TextColor="#666666" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
-						</VerticalStackLayout>
-					</Border>
-				</VerticalStackLayout>
-			</ScrollView>
-		</Grid>
-	</RefreshView>
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <Border Grid.Row="2" x:Name="EmptyStateFrame" BackgroundColor="#90A4AE" StrokeShape="10" Padding="30" IsVisible="False" StrokeThickness="0" VerticalOptions="Start" Margin="0,20,0,0">
+                    <VerticalStackLayout Spacing="15" HorizontalOptions="Center">
+                        <Image Source="users.png" WidthRequest="64" HeightRequest="64" />
+                        <Label Text="No hay usuarios registrados" FontSize="18" TextColor="Black" HorizontalOptions="Center" />
+                        <Label Text="Los usuarios aparecerán aquí cuando se registren en la aplicación" FontSize="14" TextColor="#666666" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+        </Grid>
+    </RefreshView>
 </ContentPage>

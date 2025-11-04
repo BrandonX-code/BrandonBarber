@@ -7,92 +7,106 @@
         <Grid Grid.Row="1" Padding="20">
             <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" IsVisible="True" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" />
 
-            <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="ContentContainer" IsVisible="False">
-                <VerticalStackLayout Spacing="15">
-                    <Grid Grid.Row="0" Padding="20,30,40,0">
-                        <Label Grid.Column="1" Text="Lista de Barberos" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" />
-                    </Grid>
-                    <!-- Selector de Barbería -->
-                    <VerticalStackLayout x:Name="PickerSection" Spacing="5" IsVisible="False">
-                        <Label Text="Seleccionar Barbería" TextColor="White" FontSize="16" />
-                        <Border StrokeShape="10" Padding="0" BackgroundColor="#90A4AE" HeightRequest="45" StrokeThickness="0">
-                            <Picker x:Name="BarberiaPicker" SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}"  Title="Seleccionar Barbería"  TitleColor="Gray"  TextColor="Black"  FontSize="16"  HeightRequest="45"  VerticalOptions="Center"  Margin="10,0" />
-                        </Border>
-                    </VerticalStackLayout>
-                    <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="5" StrokeThickness="0">
-                        <SearchBar x:Name="SearchBar" Placeholder="Buscar barbero por nombre o email..." PlaceholderColor="Black" TextColor="Black" BackgroundColor="#90A4AE" TextChanged="OnSearchTextChanged" />
+            <Grid x:Name="ContentContainer" IsVisible="False">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Título -->
+                <Grid Grid.Row="0" Padding="0,10,20,0">
+                    <Label Grid.Column="1" Text="Lista de Barberos" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" />
+                </Grid>
+
+                <!-- Selector de Barbería -->
+                <VerticalStackLayout Grid.Row="1" x:Name="PickerSection" Spacing="5" IsVisible="False" Margin="0,15,0,0">
+                    <Label Text="Seleccionar Barbería" TextColor="White" FontSize="16" />
+                    <Border StrokeShape="10" Padding="0" BackgroundColor="#90A4AE" HeightRequest="45" StrokeThickness="0">
+                        <Picker x:Name="BarberiaPicker" SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}"  Title="Seleccionar Barbería"  TitleColor="Gray"  TextColor="Black"  FontSize="16"  HeightRequest="45"  VerticalOptions="Center"  Margin="10,0" />
                     </Border>
-                    <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="10" StrokeThickness="0">
-                        <Grid ColumnDefinitions="*,*">
-                            <VerticalStackLayout Grid.Column="0" HorizontalOptions="Start" VerticalOptions="Center">
-                                <Label x:Name="TotalBarberosLabel" Text="0" FontSize="24" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" />
-                                <Label Text="Total Barberos" FontSize="12" TextColor="Black" HorizontalOptions="Center" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
-                                <Label x:Name="BarberosActivosLabel" Text="0" FontSize="24" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" />
-                                <Label Text="Activos" FontSize="12" TextColor="Black" HorizontalOptions="Center" />
-                            </VerticalStackLayout>
-                        </Grid>
-                    </Border>
-                    <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="BarberosCollectionView" ItemsSource="{Binding BarberosFiltrados}" BackgroundColor="Transparent" Margin="0,0,0,10">
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Vertical"/>
-                        </CollectionView.ItemsLayout>
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate>
-                                <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="10" Margin="0,10" StrokeThickness="0">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
-
-                                        <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="5">
-                                            <Label Text="{Binding Nombre}" FontSize="18" TextColor="Black" FontAttributes="Bold" />
-                                            <Label Text="{Binding Email}" FontSize="14" TextColor="Black" />
-                                        </VerticalStackLayout>
-
-                                        <VerticalStackLayout Grid.Row="0" Grid.Column="1"  Padding="10,5" VerticalOptions="Start">
-                                            <Label Text="{Binding Rol}" FontSize="15" TextColor="Black" FontAttributes="Bold" />
-                                        </VerticalStackLayout>
-
-                                        <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="15" Margin="0,10,0,0">
-                                            <HorizontalStackLayout Spacing="5">
-                                                <Image Source="id.png" WidthRequest="16" HeightRequest="16" />
-                                                <Label Text="{Binding Cedula}" FontSize="12" TextColor="Black" />
-                                            </HorizontalStackLayout>
-                                        </HorizontalStackLayout>
-
-                                        <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="10" Margin="0,15,0,0" HorizontalOptions="End">
-                                            <Button Text="Ver Detalles" FontSize="10" BackgroundColor="#264570" TextColor="White" CornerRadius="15" Padding="15,0" Clicked="OnVerDetallesClicked" CommandParameter="{Binding}" />
-                                            <Image Source="delete.png"  WidthRequest="30" HeightRequest="30" Aspect="AspectFit">
-                                                <Image.GestureRecognizers>
-                                                    <TapGestureRecognizer Tapped="OnEliminarBarberoClicked" CommandParameter="{Binding}" />
-                                                </Image.GestureRecognizers>
-                                            </Image>
-                                        </HorizontalStackLayout>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-
-
-                    <Border x:Name="EmptyStateFrame" BackgroundColor="#90A4AE" StrokeShape="10" Padding="30" IsVisible="False" StrokeThickness="0">
-                        <VerticalStackLayout Spacing="15" HorizontalOptions="Center">
-                            <Image Source="listarbarbero.png"  WidthRequest="64" HeightRequest="64" />
-                            <Label Text="No hay barberos registrados" FontSize="18" TextColor="Black" HorizontalOptions="Center" />
-                            <Label Text="Los barberos aparecerán aquí cuando se registren en la aplicación" FontSize="14" TextColor="#666666"  HorizontalOptions="Center" HorizontalTextAlignment="Center" />
-                        </VerticalStackLayout>
-                    </Border>
-
                 </VerticalStackLayout>
-            </ScrollView>
+
+                <!-- Barra de búsqueda -->
+                <Border Grid.Row="2" BackgroundColor="#90A4AE" StrokeShape="10" Padding="5" StrokeThickness="0" Margin="0,15,0,0">
+                    <SearchBar x:Name="SearchBar" Placeholder="Buscar barbero por nombre o email..." PlaceholderColor="Black" TextColor="Black" BackgroundColor="#90A4AE" TextChanged="OnSearchTextChanged" />
+                </Border>
+
+                <!-- Estadísticas -->
+                <Border Grid.Row="3" BackgroundColor="#90A4AE" StrokeShape="10" Padding="10" StrokeThickness="0" Margin="0,15,0,15">
+                    <Grid ColumnDefinitions="*,*">
+                        <VerticalStackLayout Grid.Column="0" HorizontalOptions="Start" VerticalOptions="Center">
+                            <Label x:Name="TotalBarberosLabel" Text="0" FontSize="24" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="Total Barberos" FontSize="12" TextColor="Black" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
+                            <Label x:Name="BarberosActivosLabel" Text="0" FontSize="24" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="Activos" FontSize="12" TextColor="Black" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Border>
+
+                <!-- CollectionView con scroll -->
+                <CollectionView Grid.Row="4" VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="BarberosCollectionView" ItemsSource="{Binding BarberosFiltrados}" BackgroundColor="Transparent">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="10" Margin="0,10" StrokeThickness="0">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="5">
+                                        <Label Text="{Binding Nombre}" FontSize="18" TextColor="Black" FontAttributes="Bold" />
+                                        <Label Text="{Binding Email}" FontSize="14" TextColor="Black" />
+                                    </VerticalStackLayout>
+
+                                    <VerticalStackLayout Grid.Row="0" Grid.Column="1"  Padding="10,5" VerticalOptions="Start">
+                                        <Label Text="{Binding Rol}" FontSize="15" TextColor="Black" FontAttributes="Bold" />
+                                    </VerticalStackLayout>
+
+                                    <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="15" Margin="0,10,0,0">
+                                        <HorizontalStackLayout Spacing="5">
+                                            <Image Source="id.png" WidthRequest="16" HeightRequest="16" />
+                                            <Label Text="{Binding Cedula}" FontSize="12" TextColor="Black" />
+                                        </HorizontalStackLayout>
+                                    </HorizontalStackLayout>
+
+                                    <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="10" Margin="0,15,0,0" HorizontalOptions="End">
+                                        <Button Text="Ver Detalles" FontSize="10" BackgroundColor="#264570" TextColor="White" CornerRadius="15" Padding="15,0" Clicked="OnVerDetallesClicked" CommandParameter="{Binding}" />
+                                        <Image Source="delete.png"  WidthRequest="30" HeightRequest="30" Aspect="AspectFit">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnEliminarBarberoClicked" CommandParameter="{Binding}" />
+                                            </Image.GestureRecognizers>
+                                        </Image>
+                                    </HorizontalStackLayout>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Estado vacío -->
+                <Border Grid.Row="4" x:Name="EmptyStateFrame" BackgroundColor="#90A4AE" StrokeShape="10" Padding="30" IsVisible="False" StrokeThickness="0" VerticalOptions="Start" Margin="0,20,0,0">
+                    <VerticalStackLayout Spacing="15" HorizontalOptions="Center">
+                        <Image Source="listarbarbero.png"  WidthRequest="64" HeightRequest="64" />
+                        <Label Text="No hay barberos registrados" FontSize="18" TextColor="Black" HorizontalOptions="Center" />
+                        <Label Text="Los barberos aparecerán aquí cuando se registren en la aplicación" FontSize="14" TextColor="#666666"  HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </Border>
+
+            </Grid>
         </Grid>
     </RefreshView>
 </ContentPage>

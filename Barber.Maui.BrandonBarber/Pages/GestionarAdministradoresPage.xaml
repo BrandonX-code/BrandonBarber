@@ -4,28 +4,27 @@
  x:Class="Barber.Maui.BrandonBarber.Pages.GestionarAdministradoresPage" BackgroundColor="#0E2A36">
 	<RefreshView x:Name="AdminRefreshView" Command="{Binding RefreshCommand}">
 		<Grid Grid.Row="1" Padding="20">
-			<ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" IsVisible="True" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" IsVisible="True" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" />
 			<ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="ContentContainer" IsVisible="False">
 				<VerticalStackLayout Spacing="15">
-					<Grid Grid.Row="0" Padding="20,30,40,0">
-						<Label Grid.Column="1" Text="Lista de Administradores" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Center" />
-					</Grid>
-					<Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="5" StrokeThickness="0">
-						<SearchBar x:Name="SearchBar" Placeholder="Buscar administrador por nombre o email..." PlaceholderColor="Black" TextColor="Black" BackgroundColor="#90A4AE" TextChanged="OnSearchTextChanged" />
-					</Border>
-					<Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="10" StrokeThickness="0">
-						<Grid ColumnDefinitions="*,*">
-							<VerticalStackLayout Grid.Column="0" HorizontalOptions="Start" VerticalOptions="Center">
-								<Label x:Name="TotalAdminsLabel" Text="0" FontSize="24" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" />
-								<Label Text="Total Administradores" FontSize="12" TextColor="Black" HorizontalOptions="Center" />
-							</VerticalStackLayout>
-							<VerticalStackLayout Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
-								<Label x:Name="AdminsActivosLabel" Text="0" FontSize="24" TextColor="Black" FontAttributes="Bold" HorizontalOptions="Center" />
-								<Label Text="Activos" FontSize="12" TextColor="Black" HorizontalOptions="Center" />
-							</VerticalStackLayout>
-						</Grid>
-					</Border>
-					<CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="AdminsCollectionView" ItemsSource="{Binding AdminsFiltrados}" BackgroundColor="Transparent" Margin="0,0,0,10">
+
+                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="20">
+                        <Label Grid.Column="0" Text="Lista de Administradores" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Start" />
+                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
+                            <Label x:Name="TotalAdminsLabel" Text="0" FontSize="24" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Label Text="Total Administradores" FontSize="12" TextColor="White" HorizontalOptions="Center" />
+                        </VerticalStackLayout>
+                    </Grid>
+                    <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="5" StrokeThickness="0">
+                        <SearchBar x:Name="SearchBar" Placeholder="Buscar administrador por nombre o email..." PlaceholderColor="Black" TextColor="Black" BackgroundColor="#90A4AE" TextChanged="OnSearchTextChanged" />
+                    </Border>
+                    
+                    <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="AdminsCollectionView" ItemsSource="{Binding AdminsFiltrados}" BackgroundColor="Transparent" Margin="0,0,0,10">
 						<CollectionView.ItemsLayout>
 							<LinearItemsLayout Orientation="Vertical"/>
 						</CollectionView.ItemsLayout>
