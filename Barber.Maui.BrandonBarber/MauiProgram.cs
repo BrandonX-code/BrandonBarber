@@ -66,6 +66,8 @@ namespace Barber.Maui.BrandonBarber
             builder.Services.AddSingleton<ServicioService>();
             builder.Services.AddSingleton<CalificacionService>();
             builder.Services.AddSingleton<BarberiaService>();
+            builder.Services.AddSingleton<AdministradorService>();
+
             // Registrar páginas
             builder.Services.AddSingleton<LoginPage>();
             builder.Services.AddTransient<RegistroPage>();

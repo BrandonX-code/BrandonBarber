@@ -72,6 +72,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Mobal\DetalleAdminPage.xaml.cs">
+	    <DependentUpon>DetalleAdminPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Pages\ReservaCita.xaml.cs">
 	    <DependentUpon>ReservaCita.xaml</DependentUpon>
 	  </Compile>
@@ -79,6 +82,9 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Mobal\CustomAlertPopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Mobal\DetalleAdminPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Mobal\DetalleClientePage.xaml">
@@ -142,6 +148,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\ListarClientesPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\ListarTodosUsuariosPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Pages\LoginPage.xaml">

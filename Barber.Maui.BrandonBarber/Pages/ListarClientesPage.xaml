@@ -71,7 +71,7 @@
                                             </HorizontalStackLayout>
                                         </HorizontalStackLayout>
                                         <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="10" Margin="0,15,0,0" HorizontalOptions="End">
-                                            <Button Text="Ver Detalles" FontSize="10" BackgroundColor="#264570" TextColor="White" CornerRadius="15" Padding="6,3" Clicked="OnVerDetallesClicked" CommandParameter="{Binding}" />
+                                            <Button Text="Ver Detalles" FontSize="10" BackgroundColor="#264570" TextColor="White" CornerRadius="15" Padding="15,0" Clicked="OnVerDetallesClicked" CommandParameter="{Binding}" />
                                             <Image Source="delete.png" WidthRequest="30" HeightRequest="30" Aspect="AspectFit">
                                                 <Image.GestureRecognizers>
                                                     <TapGestureRecognizer Tapped="OnEliminarClienteClicked" CommandParameter="{Binding}" />

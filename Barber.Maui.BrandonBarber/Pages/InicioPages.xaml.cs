@@ -569,5 +569,52 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
 
         }
+
+        // Métodos para nuevas opciones de SuperAdminView
+        private async void GestionarAdministradores(object sender, EventArgs e)
+        {
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
+            {
+                await Navigation.PushAsync(new GestionarAdministradoresPage());
+            }
+            finally { _isNavigating = false; }
+        }
+
+        private async void VerTodasBarberias(object sender, EventArgs e)
+        {
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
+            {
+                // TODO: Navegar a la página de todas las barberías
+                await DisplayAlert("SuperAdmin", "Ver Todas las Barberías (pendiente de implementar)", "OK");
+            }
+            finally { _isNavigating = false; }
+        }
+
+        private async void BarberiasReportadas(object sender, EventArgs e)
+        {
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
+            {
+                // TODO: Navegar a la página de barberías reportadas
+                await DisplayAlert("SuperAdmin", "Barberías Reportadas (pendiente de implementar)", "OK");
+            }
+            finally { _isNavigating = false; }
+        }
+
+        private async void TodosUsuarios(object sender, EventArgs e)
+        {
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
+            {
+                await Navigation.PushAsync(new ListarTodosUsuariosPage());
+            }
+            finally { _isNavigating = false; }
+        }
     }
 }
