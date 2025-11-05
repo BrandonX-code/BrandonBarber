@@ -17,7 +17,7 @@
                         <Label Grid.Column="0" Text="Lista de Administradores" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Start" />
                         <VerticalStackLayout Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
                             <Label x:Name="TotalAdminsLabel" Text="0" FontSize="24" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
-                            <Label Text="Total Administradores" FontSize="12" TextColor="White" HorizontalOptions="Center" />
+                            <Label Text="Administradores" FontSize="12" TextColor="White" HorizontalOptions="Center" />
                         </VerticalStackLayout>
                     </Grid>
                     <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="5" StrokeThickness="0">
@@ -43,7 +43,11 @@
 										</Grid.ColumnDefinitions>
 										<VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="5">
 											<Label Text="{Binding Nombre}" FontSize="18" TextColor="Black" FontAttributes="Bold" />
-											<Label Text="{Binding Email}" FontSize="14" TextColor="Black" />
+                                            <HorizontalStackLayout Spacing="5">
+                                                <Image Source="email.png" WidthRequest="16" HeightRequest="16" />
+                                                <Label Text="{Binding Email}" FontSize="14" TextColor="Black" />
+                                            </HorizontalStackLayout>
+                                            
 										</VerticalStackLayout>
 										<VerticalStackLayout Grid.Row="0" Grid.Column="1" Padding="10,5" VerticalOptions="Start">
 											<Label Text="{Binding Rol}" FontSize="15" TextColor="Black" FontAttributes="Bold" />

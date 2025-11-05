@@ -20,6 +20,15 @@ namespace Barber.Maui.API.Controllers
             _emailService = emailService;
             _configuration = configuration;
         }
+        [HttpGet("historial")]
+        public async Task<ActionResult<List<SolicitudAdmin>>> GetHistorial()
+        {
+            var solicitudes = await _context.SolicitudesAdmin
+                .OrderByDescending(s => s.FechaSolicitud)
+                .ToListAsync();
+
+            return Ok(solicitudes);
+        }
 
         [HttpPost("crear")]
         public async Task<ActionResult> CrearSolicitud([FromBody] SolicitudAdmin solicitud)

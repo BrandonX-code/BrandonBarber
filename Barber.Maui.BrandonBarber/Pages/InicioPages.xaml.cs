@@ -588,10 +588,22 @@ namespace Barber.Maui.BrandonBarber.Pages
             _isNavigating = true;
             try
             {
-                // TODO: Navegar a la página de todas las barberías
-                await DisplayAlert("SuperAdmin", "Ver Todas las Barberías (pendiente de implementar)", "OK");
+                await Navigation.PushAsync(new ListarTodasBarberiasPage());
             }
             finally { _isNavigating = false; }
+        }
+        private async void VerHistorialSolicitudes(object sender, EventArgs e)
+        {
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
+            {
+                await Navigation.PushAsync(new HistorialSolicitudesPage());
+            }
+            finally
+            {
+                _isNavigating = false;
+            }
         }
 
         private async void BarberiasReportadas(object sender, EventArgs e)

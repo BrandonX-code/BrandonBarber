@@ -10,9 +10,10 @@ namespace Barber.Maui.BrandonBarber.style
             {
                 return estado.ToLower() switch
                 {
-                    "completada" => Color.FromArgb("#4CAF50"), // Verde
-                    "cancelada" => Color.FromArgb("#F44336"),  // Rojo
-                    _ => Color.FromArgb("#FFA726")             // Naranja para pendiente
+                    "completada" or "aprobado" => Color.FromArgb("#4CAF50"), // Verde
+                    "cancelada" or "rechazado" => Color.FromArgb("#F44336"), // Rojo
+                    "pendiente" => Color.FromArgb("#FFA726"),                // Naranja
+                    _ => Color.FromArgb("#90A4AE")
                 };
             }
             return Color.FromArgb("#90A4AE");

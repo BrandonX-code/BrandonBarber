@@ -15,7 +15,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="20,5,20,10">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -152,13 +152,13 @@
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
                             <Label x:Name="NoBarberosLabel" Text="No hay barberos disponibles en este momento" TextColor="#E0F7FA" FontSize="16" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,20,0,0" IsVisible="False"/>
-      
+
                         </VerticalStackLayout>
 
                         <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="BuscarCitas" />
-                            </Border.GestureRecognizers> 
+                            </Border.GestureRecognizers>
                             <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
                                 <Image Grid.Column="0" Source="busquedacitas.png" WidthRequest="30" HeightRequest="30" />
                                 <Label Grid.Column="1" Text="Buscar Tus Citas" TextColor="Black" FontSize="25" VerticalOptions="Center" Margin="10,0,0,0"/>
@@ -227,7 +227,7 @@
 
                     <!-- AdminView -->
                     <VerticalStackLayout x:Name="AdminView" IsVisible="false" Padding="20" Spacing="17">
-                       
+
                         <!-- Nueva sección de Métricas -->
                         <Label Text="Métricas y Estadísticas" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
                         <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
@@ -334,9 +334,18 @@
                                 <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
                             </Grid>
                         </Border>
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="VerHistorialSolicitudes" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="history.png" WidthRequest="40" HeightRequest="40" />
+                                <Label Grid.Column="1" Text="Historial de Solicitudes" TextColor="Black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
+                        </Border>
 
-                        <!-- NUEVAS OPCIONES SUPERADMIN -->
-                        <Label Text="Gestión de SuperAdmin" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
+                        <Label Text="Gestión de Administradores" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
                         <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="GestionarAdministradores" />
@@ -347,7 +356,8 @@
                                 <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
                             </Grid>
                         </Border>
-                        <!--<Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
+                        <Label Text="Gestión de Barberias" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
+                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="VerTodasBarberias" />
                             </Border.GestureRecognizers>
@@ -356,17 +366,8 @@
                                 <Label Grid.Column="1" Text="Todas las Barberías" TextColor="Black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
                                 <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
                             </Grid>
-                        </Border>-->
-                        <!--<Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="BarberiasReportadas" />
-                            </Border.GestureRecognizers>
-                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
-                                <Image Grid.Column="0" Source="report.png" WidthRequest="40" HeightRequest="40" />
-                                <Label Grid.Column="1" Text="Barberías Reportadas" TextColor="Black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
-                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
-                            </Grid>
-                        </Border>-->
+                        </Border>
+                        <Label Text="Gestión de Usuarios" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
                         <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="TodosUsuarios" />

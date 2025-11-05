@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+ xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+ x:Class="Barber.Maui.BrandonBarber.Pages.HistorialSolicitudesPage" xmlns:local="clr-namespace:Barber.Maui.BrandonBarber.style"
+ BackgroundColor="#0E2A36">
+	<ContentPage.Resources>
+		<ResourceDictionary>
+			<local:EstadoColorConverter x:Key="EstadoColorConverter" />
+		</ResourceDictionary>
+	</ContentPage.Resources>
+	<Grid>
+		<CollectionView x:Name="SolicitudesCollection" ItemsSource="{Binding Solicitudes}" Margin="20">
+			<CollectionView.ItemTemplate>
+				<DataTemplate>
+					<Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="10" StrokeThickness="0" Margin="0,0,0,10">
+						<Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
+							<VerticalStackLayout Grid.Column="0" Spacing="5">
+								<HorizontalStackLayout Spacing="5">
+									<Image Source="id.png" WidthRequest="20" HeightRequest="20" />
+									<Label Text="{Binding NombreSolicitante}" FontAttributes="Bold" FontSize="18"/>
+								</HorizontalStackLayout>
+								<HorizontalStackLayout Spacing="10">
+									<Image Source="email.png" WidthRequest="20" HeightRequest="20" />
+									<Label Text="{Binding EmailSolicitante}" FontAttributes="Bold"/>
+								</HorizontalStackLayout>
+								
+								<HorizontalStackLayout Spacing="10">
+									<Image Source="call.png" WidthRequest="20" HeightRequest="20" />
+									<Label Text="{Binding TelefonoSolicitante}" FontAttributes="Bold"/>
+								</HorizontalStackLayout>
+								
+								<HorizontalStackLayout Spacing="10">
+									<Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
+									<Label Text="{Binding FechaSolicitud, StringFormat='{0:dd/MM/yyyy}'}" FontAttributes="Bold"/>
+								</HorizontalStackLayout>
+							</VerticalStackLayout>
+							<Border Grid.Column="1" Stroke="Transparent" WidthRequest="22" HeightRequest="22" StrokeShape="20" VerticalOptions="Center">
+								<Border.BackgroundColor>
+									<Binding Path="Estado" Converter="{StaticResource EstadoColorConverter}" />
+								</Border.BackgroundColor>
+								<Label Text="{Binding IconoEstado}" TextColor="White" FontSize="10" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/>
+							</Border>
+						</Grid>
+					</Border>
+				</DataTemplate>
+			</CollectionView.ItemTemplate>
+		</CollectionView>
+		<VerticalStackLayout x:Name="EmptyStateLayout" IsVisible="False" VerticalOptions="Center" HorizontalOptions="Center" Spacing="15">
+			<Image Source="chat.png" WidthRequest="80" HeightRequest="80" Opacity="0.6"/>
+			<Label Text="No hay historial de solicitudes" FontSize="18" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+		</VerticalStackLayout>
+	</Grid>
+</ContentPage>

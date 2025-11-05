@@ -135,6 +135,9 @@
 	  <MauiXaml Update="Pages\GestionSolicitudesPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\HistorialSolicitudesPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\InicioPages.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

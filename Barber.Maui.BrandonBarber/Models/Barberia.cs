@@ -13,5 +13,8 @@
         public bool IsSelected { get; set; }
 
         public List<string> ServiciosDestacados { get; set; } = [];
+
+        // Nueva propiedad para mostrar el nombre del administrador
+        public string? NombreAdministrador { get; set; }
     }
 }
