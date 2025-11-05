@@ -68,6 +68,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                             Barberias.Add(barberia);
                         }
                     }
+                    TotalBarberiasLabel.Text = barberias.Count.ToString();
                     FilterBarberias();
                 });
             }

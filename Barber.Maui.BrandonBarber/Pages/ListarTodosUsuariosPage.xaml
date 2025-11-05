@@ -15,9 +15,10 @@
                 <Grid>
                     <Label Grid.Column="1" Text="Todos los Usuarios" FontSize="20" TextColor="White" FontAttributes="Bold" VerticalOptions="Center" HorizontalOptions="Start" />
                 </Grid>
-
-                <Border Grid.Row="1" BackgroundColor="#90A4AE" StrokeShape="10" Padding="5" StrokeThickness="0" Margin="0,15,0,15">
-                    <SearchBar x:Name="SearchBar" Placeholder="Buscar usuario por nombre, email o rol..." PlaceholderColor="Black" TextColor="Black" BackgroundColor="#90A4AE" TextChanged="OnSearchTextChanged" />
+                <Border Grid.Row="1" BackgroundColor="#28475C" StrokeShape="25" Margin="0,20,0,20" StrokeThickness="0" HeightRequest="50">
+                    <Grid ColumnDefinitions="*, Auto">
+                        <Entry Grid.Column="0" Placeholder="Buscar usuario por nombre o email..." Margin="10,0,0,0" VerticalOptions="Center" PlaceholderColor="#A0A0A0" TextColor="White"  TextChanged="OnSearchTextChanged" BackgroundColor="Transparent" x:Name="SearchBar" FontSize="16"/>
+                    </Grid>
                 </Border>
                 <VerticalStackLayout Grid.Column="0" HorizontalOptions="End" VerticalOptions="Center">
                     <Label x:Name="TotalUsuariosLabel" Text="0" FontSize="24" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />

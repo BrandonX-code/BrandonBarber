@@ -144,7 +144,6 @@ namespace Barber.Maui.BrandonBarber.Pages
         private void UpdateStats()
         {
             TotalClientesLabel.Text = _todosLosClientes.Count.ToString();
-            ClientesActivosLabel.Text = _todosLosClientes.Count.ToString(); // Todos los clientes se consideran activos por ahora
         }
 
         private void OnSearchTextChanged(object sender, TextChangedEventArgs e)

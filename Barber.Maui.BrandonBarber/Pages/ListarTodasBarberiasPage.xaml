@@ -3,11 +3,22 @@
          xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
    x:Class="Barber.Maui.BrandonBarber.Pages.ListarTodasBarberiasPage"
     BackgroundColor="#0E2A36">
-	<Grid Padding="20" RowDefinitions="Auto, *">
-		<Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
+	<Grid Padding="20">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+		<Grid Grid.Row="0" Padding="0,10,20,0">
 			<Label Grid.Column="0" Text="Todas las Barberías" FontSize="24" FontAttributes="Bold" TextColor="White" VerticalOptions="Center"/>
 		</Grid>
-		<Border Grid.Row="1" BackgroundColor="#28475C" StrokeShape="25" Margin="0,0,0,20" StrokeThickness="0" HeightRequest="50">
+		<VerticalStackLayout Grid.Column="0" HorizontalOptions="End" VerticalOptions="Center">
+			<Label x:Name="TotalBarberiasLabel" Text="0" FontSize="24" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
+			<Label Text="Total Barberias" FontSize="12" TextColor="White" HorizontalOptions="Center" />
+		</VerticalStackLayout>
+		<Border Grid.Row="1" BackgroundColor="#28475C" StrokeShape="25" Margin="0,20,0,20" StrokeThickness="0" HeightRequest="50">
 			<Grid ColumnDefinitions="*, Auto">
 				<Entry Grid.Column="0" Placeholder="Buscar barberías..." Margin="10,0,0,0" VerticalOptions="Center" PlaceholderColor="#A0A0A0" TextColor="White" BackgroundColor="Transparent" Text="{Binding SearchText}" FontSize="16"/>
 				<Button Grid.Column="1" Text="✕" BackgroundColor="Transparent" TextColor="#A0A0A0" FontSize="16" WidthRequest="30" HeightRequest="30" Command="{Binding ClearSearchCommand}" IsVisible="{Binding HasSearchText}" />

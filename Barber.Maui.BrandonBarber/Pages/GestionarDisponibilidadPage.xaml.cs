@@ -18,7 +18,7 @@
             _selectedDate = DateTime.Today;
             _citas = [];
             _horariosDisponibles = [];
-
+            FechaSelector.MinimumDate = DateTime.Today;
             FechaSelector.Date = _selectedDate;
             CitasCollection.ItemsSource = _citas;
             this.BindingContext = this;

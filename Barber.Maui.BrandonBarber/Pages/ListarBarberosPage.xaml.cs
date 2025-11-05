@@ -137,7 +137,6 @@
         private void UpdateStats()
         {
             TotalBarberosLabel.Text = _todosLosBarberos.Count.ToString();
-            BarberosActivosLabel.Text = _todosLosBarberos.Count.ToString(); // o lógica adicional si hay campo activo
         }
 
 
