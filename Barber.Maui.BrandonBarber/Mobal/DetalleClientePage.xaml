@@ -8,7 +8,7 @@
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
             <Grid>
                 <BoxView BackgroundColor="Transparent" />
-                <Border BackgroundColor="White" StrokeShape="20" Margin="20" Padding="0" VerticalOptions="Center" StrokeThickness="0">
+                <Border BackgroundColor="White" StrokeShape="RoundRectangle 20" Margin="20" Padding="0" VerticalOptions="Center" StrokeThickness="0">
 
                     <StackLayout Spacing="0">
                         <Border BackgroundColor="#2C3E50" StrokeShape="RoundRectangle 20,20,0,0" HeightRequest="80">
@@ -71,7 +71,7 @@
 
                                 <StackLayout>
                                     <Label Text="Rol" FontSize="12" TextColor="#7F8C8D" FontAttributes="Bold" />
-                                    <Border BackgroundColor="#FEF9E7" StrokeShape="10" Padding="10" Margin="0,5,0,0">
+                                    <Border BackgroundColor="#FEF9E7" StrokeShape="RoundRectangle 10" Padding="10" Margin="0,5,0,0">
                                         <Label Text="{Binding Rol}" FontSize="14" TextColor="#E67E22" FontAttributes="Bold" />
                                     </Border>
                                 </StackLayout>

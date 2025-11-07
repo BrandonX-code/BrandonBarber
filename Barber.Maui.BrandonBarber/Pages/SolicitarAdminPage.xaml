@@ -16,7 +16,7 @@
 
             <VerticalStackLayout Spacing="15">
 
-                <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45">
+                <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
                     <Entry x:Name="CedulaEntry" 
                            Placeholder="Cédula"
                            Keyboard="Numeric"
@@ -24,14 +24,14 @@
                            Margin="10,0" MaxLength="10"/>
                 </Border>
 
-                <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45">
+                <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
                     <Entry x:Name="NombreEntry" 
                            Placeholder="Nombre completo"
                            TextColor="#0E2A36" Keyboard="Text"
                            Margin="10,0" MaxLength="50"/>
                 </Border>
 
-                <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45">
+                <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
                     <Entry x:Name="EmailEntry" 
                            Placeholder="Email"
                            Keyboard="Email"
@@ -39,7 +39,7 @@
                            Margin="10,0" MaxLength="80"/>
                 </Border>
 
-                <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45">
+                <Border StrokeShape="RoundRectangle 10" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
                     <Entry x:Name="TelefonoEntry" 
                            Placeholder="Teléfono"
                            Keyboard="Telephone"
@@ -47,7 +47,7 @@
                            Margin="10,0" MaxLength="15"/>
                 </Border>
 
-                <Border StrokeShape="RoundRectangle 15" BackgroundColor="#E0F7FA">
+                <Border StrokeShape="RoundRectangle 15" BackgroundColor="#E0F7FA" StrokeThickness="0">
                     <Editor x:Name="JustificacionEditor"
                             Placeholder="Justificación (¿Por qué necesitas una cuenta de administrador?)"
                             HeightRequest="140"

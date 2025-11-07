@@ -4,7 +4,7 @@
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
             <Grid>
                 <BoxView BackgroundColor="Transparent"/>
-                <Border BackgroundColor="White" StrokeShape="20" Margin="20" Padding="0" VerticalOptions="Center" StrokeThickness="0">
+                <Border BackgroundColor="White" StrokeShape="RoundRectangle 20" Margin="20" Padding="0" VerticalOptions="Center" StrokeThickness="0">
                     <StackLayout Spacing="0">
                         <Border BackgroundColor="#2C3E50" StrokeShape="RoundRectangle 20,20,0,0" HeightRequest="80">
                             <Grid>
@@ -57,19 +57,19 @@
                                 </StackLayout>
                                 <StackLayout>
                                     <Label Text="Especialidades" FontSize="12" TextColor="#7F8C8D" FontAttributes="Bold" />
-                                    <Border BackgroundColor="#E8F6F3" StrokeShape="10" Padding="10" Margin="0,5,0,0">
+                                    <Border BackgroundColor="#E8F6F3" StrokeShape="RoundRectangle 10" Padding="10" Margin="0,5,0,0">
                                         <Label Text="{Binding Especialidades}" FontSize="14" TextColor="#16A085" />
                                     </Border>
                                 </StackLayout>
                                 <StackLayout>
                                     <Label Text="Rol en el Sistema" FontSize="12" TextColor="#7F8C8D" FontAttributes="Bold" />
-                                    <Border BackgroundColor="#FEF9E7" StrokeShape="10" Padding="10" Margin="0,5,0,0">
+                                    <Border BackgroundColor="#FEF9E7" StrokeShape="RoundRectangle 10" Padding="10" Margin="0,5,0,0">
                                         <Label Text="{Binding Rol}" FontSize="14" TextColor="#E67E22" FontAttributes="Bold" />
                                     </Border>
                                 </StackLayout>
                                 <StackLayout>
                                     <Label Text="Calificaciones" FontSize="12" TextColor="#7F8C8D" FontAttributes="Bold" />
-                                    <Border BackgroundColor="#FFF3E0" StrokeShape="10" Padding="10" Margin="0,5,0,0">
+                                    <Border BackgroundColor="#FFF3E0" StrokeShape="RoundRectangle 10" Padding="10" Margin="0,5,0,0">
                                         <Label Text="{Binding CalificacionTexto}" FontSize="14" TextColor="#FF6F00" FontAttributes="Bold" />
                                     </Border>
                                 </StackLayout>

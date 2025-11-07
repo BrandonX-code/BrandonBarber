@@ -11,7 +11,7 @@
             <Button Grid.Column="1" Text="+ Agregar" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="20" FontAttributes="Bold"  Clicked="AgregarButton_Clicked" WidthRequest="100"  HeightRequest="40"/>
         </Grid>
 
-        <Border Grid.Row="1"  BackgroundColor="#28475C" StrokeShape="25" Margin="0,0,0,30" StrokeThickness="0" HeightRequest="50">
+        <Border Grid.Row="1"  BackgroundColor="#28475C" StrokeShape="RoundRectangle 25" Margin="0,0,0,30" StrokeThickness="0" HeightRequest="50">
             <Grid ColumnDefinitions="*, Auto">
                 <Entry Grid.Column="0"  Placeholder="Buscar barberías..." Margin="10,0,0,0" VerticalOptions="Center" PlaceholderColor="#A0A0A0" TextColor="White" BackgroundColor="Transparent" Text="{Binding SearchText}"  FontSize="16"/>
                 <Button Grid.Column="1" Text="✕" BackgroundColor="Transparent" TextColor="#A0A0A0"  FontSize="16" WidthRequest="30"  HeightRequest="30" Command="{Binding ClearSearchCommand}" IsVisible="{Binding HasSearchText}" />
@@ -28,7 +28,7 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <Border Padding="15" Margin="0,0,0,15" BackgroundColor="#90A4AE" StrokeShape="15" StrokeThickness="0">
+                    <Border Padding="15" Margin="0,0,0,15" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 15" StrokeThickness="0">
                         <Grid RowDefinitions="Auto, Auto, Auto" ColumnDefinitions="80, *, Auto">
                             <Border WidthRequest="80" HeightRequest="80" StrokeShape="RoundRectangle 10" BackgroundColor="White" VerticalOptions="Center" HorizontalOptions="Center" StrokeThickness="0">
                                 <Image Source="{Binding LogoUrl, TargetNullValue='picture.png'}" Aspect="AspectFill">

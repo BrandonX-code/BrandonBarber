@@ -12,12 +12,20 @@ namespace Barber.Maui.BrandonBarber.Pages
         private ObservableCollection<UsuarioModels> _adminsFiltrados;
         private bool _isNavigating = false;
         public Command RefreshCommand { get; }
+        //public ObservableCollection<UsuarioModels> AdminsFiltrados
+        //{
+        //    get => _adminsFiltrados;
+        //    set { _adminsFiltrados = value; OnPropertyChanged(); }
+        //}
         public ObservableCollection<UsuarioModels> AdminsFiltrados
         {
             get => _adminsFiltrados;
-            set { _adminsFiltrados = value; OnPropertyChanged(); }
+            set
+            {
+                _adminsFiltrados = value;
+                OnPropertyChanged();
+            }
         }
-
         public GestionarAdministradoresPage()
         {
             InitializeComponent();

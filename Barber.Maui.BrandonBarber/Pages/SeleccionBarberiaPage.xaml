@@ -15,7 +15,7 @@
 
             <Style x:Key="SearchFrameStyle" TargetType="Border">
                 <Setter Property="BackgroundColor" Value="{StaticResource SecondaryBackground}"/>
-                <Setter Property="StrokeShape" Value="25"/>
+                <Setter Property="StrokeShape" Value="RoundRectangle 25"/>
                 <Setter Property="Padding" Value="15,10"/>
             </Style>
 
@@ -28,7 +28,7 @@
 
             <Style x:Key="BarberiaFrameStyle" TargetType="Border">
                 <Setter Property="BackgroundColor" Value="{StaticResource SecondaryBackground}"/>
-                <Setter Property="StrokeShape" Value="25"/>
+                <Setter Property="StrokeShape" Value="RoundRectangle 25"/>
                 <Setter Property="Padding" Value="15"/>
                 <Setter Property="HeightRequest" Value="150"/>
             </Style>

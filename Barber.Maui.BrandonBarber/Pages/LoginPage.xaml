@@ -74,7 +74,7 @@
                     </Label>
                 </HorizontalStackLayout>
                 <BoxView HeightRequest="1" Color="#424E57" />
-                <Border BackgroundColor="#28475C" StrokeShape="15" Padding="15" StrokeThickness="0">
+                <Border BackgroundColor="#28475C" StrokeShape="RoundRectangle 15" Padding="15" StrokeThickness="0">
                     <VerticalStackLayout Spacing="20" HorizontalOptions="Center">
                         <Label Text="¿Eres propietario o gerente de una barbería?" TextColor="White" FontSize="15" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
 

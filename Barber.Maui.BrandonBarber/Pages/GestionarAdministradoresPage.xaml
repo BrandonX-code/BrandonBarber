@@ -20,7 +20,7 @@
                             <Label Text="Administradores" FontSize="12" TextColor="White" HorizontalOptions="Center" />
                         </VerticalStackLayout>
                     </Grid>
-                    <Border Grid.Row="1" BackgroundColor="#28475C" StrokeShape="25" Margin="0,20,0,20" StrokeThickness="0" HeightRequest="50">
+                    <Border Grid.Row="1" BackgroundColor="#28475C" StrokeShape="RoundRectangle 25" Margin="0,20,0,20" StrokeThickness="0" HeightRequest="50">
                         <Grid ColumnDefinitions="*, Auto">
                             <Entry Grid.Column="0" Placeholder="Buscar administrador por nombre o email..." Margin="10,0,0,0" VerticalOptions="Center" PlaceholderColor="#A0A0A0" TextColor="White"  TextChanged="OnSearchTextChanged" BackgroundColor="Transparent" x:Name="SearchBar" FontSize="16"/>
                         </Grid>
@@ -31,7 +31,7 @@
 						</CollectionView.ItemsLayout>
 						<CollectionView.ItemTemplate>
 							<DataTemplate>
-								<Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="10" Margin="0,10" StrokeThickness="0">
+								<Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="10" Margin="0,10" StrokeThickness="0">
 									<Grid>
 										<Grid.RowDefinitions>
 											<RowDefinition Height="Auto" />
@@ -73,7 +73,7 @@
 							</DataTemplate>
 						</CollectionView.ItemTemplate>
 					</CollectionView>
-					<Border x:Name="EmptyStateFrame" BackgroundColor="#90A4AE" StrokeShape="10" Padding="30" IsVisible="False" StrokeThickness="0">
+					<Border x:Name="EmptyStateFrame" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="30" IsVisible="False" StrokeThickness="0">
 						<VerticalStackLayout Spacing="15" HorizontalOptions="Center">
 							<Image Source="administrator.png" WidthRequest="64" HeightRequest="64" />
 							<Label Text="No hay administradores registrados" FontSize="18" TextColor="Black" HorizontalOptions="Center" />

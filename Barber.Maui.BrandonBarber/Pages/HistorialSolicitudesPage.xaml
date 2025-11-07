@@ -19,7 +19,7 @@
         </Grid>
 
         <!-- Barra de búsqueda -->
-        <Border Grid.Row="1" BackgroundColor="#28475C" StrokeShape="25" Margin="20,0,20,10" StrokeThickness="0" HeightRequest="50">
+        <Border Grid.Row="1" BackgroundColor="#28475C" StrokeShape="RoundRectangle 25" Margin="20,0,20,10" StrokeThickness="0" HeightRequest="50">
             <Grid ColumnDefinitions="*, Auto">
                 <Entry Grid.Column="0" Placeholder="Buscar por nombre, email o teléfono..." Margin="10,0,0,0" VerticalOptions="Center" PlaceholderColor="#A0A0A0" TextColor="White" TextChanged="OnSearchTextChanged" BackgroundColor="Transparent" x:Name="SearchBar" FontSize="16"/>
                 <Image Grid.Column="1" Source="search.png" WidthRequest="24" HeightRequest="24" Margin="0,0,15,0" VerticalOptions="Center" Opacity="0.6"/>
@@ -31,7 +31,7 @@
             <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="SolicitudesCollection" ItemsSource="{Binding SolicitudesFiltradas}" Margin="20,0,20,20">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border BackgroundColor="#90A4AE" StrokeShape="10" Padding="10" StrokeThickness="0" Margin="0,0,0,10">
+                        <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="10" StrokeThickness="0" Margin="0,0,0,10">
                             <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
                                 <VerticalStackLayout Grid.Column="0" Spacing="5">
                                     <HorizontalStackLayout Spacing="5">
@@ -64,7 +64,7 @@
                                     </Grid>
 
                                 </VerticalStackLayout>
-                                <Border Grid.Column="1" Stroke="Transparent" WidthRequest="22" HeightRequest="22" StrokeShape="20" VerticalOptions="Center">
+                                <Border Grid.Column="1" Stroke="Transparent" WidthRequest="22" HeightRequest="22" StrokeShape="RoundRectangle 20" VerticalOptions="Center">
                                     <Border.BackgroundColor>
                                         <Binding Path="Estado" Converter="{StaticResource EstadoColorConverter}" />
                                     </Border.BackgroundColor>
