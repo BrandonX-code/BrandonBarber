@@ -303,7 +303,7 @@
                                     <Label Grid.Column="1" Text="Ver Todas las Citas" TextColor="black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
                                     <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
                                 </Grid>
-                                <Border x:Name="BadgeVerCitasMes" IsVisible="False" BackgroundColor="Red" StrokeShape="RoundRectangle 20" Padding="5,0" StrokeThickness="0" HorizontalOptions="End" VerticalOptions="Start">
+                                <Border x:Name="BadgeVerCitasMes" IsVisible="False" BackgroundColor="Red" StrokeShape="RoundRectangle20" Padding="5,0" StrokeThickness="0" HorizontalOptions="End" VerticalOptions="Start">
                                     <Label x:Name="NumeroVerCitasMes" Text="0" TextColor="White" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/>
                                 </Border>
                             </Grid>
