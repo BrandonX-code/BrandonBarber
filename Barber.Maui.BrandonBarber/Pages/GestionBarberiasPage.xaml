@@ -8,7 +8,7 @@
 
         <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,20">
             <Label Grid.Column="0" Text="Mis Barberías" FontSize="24" FontAttributes="Bold" TextColor="White" VerticalOptions="Center"/>
-            <Button Grid.Column="1" Text="+ Agregar" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="20" FontAttributes="Bold"  Clicked="AgregarButton_Clicked" WidthRequest="100"  HeightRequest="40"/>
+            <Button Grid.Column="1" Text="+ Agregar" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="15" FontAttributes="Bold"  Clicked="AgregarButton_Clicked" />
         </Grid>
 
         <Border Grid.Row="1"  BackgroundColor="#28475C" StrokeShape="RoundRectangle 25" Margin="0,0,0,30" StrokeThickness="0" HeightRequest="50">
@@ -35,8 +35,8 @@
                                 </Image>
                             </Border>
                             <StackLayout Grid.Row="0" Grid.Column="1"  VerticalOptions="Start"  Margin="15,0,0,0">
-                                <Label Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold" TextColor="Black"  LineBreakMode="TailTruncation"/>
-                                <Label Text="{Binding Direccion}" FontSize="14" TextColor="Black" LineBreakMode="TailTruncation"/>
+                                <Label Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold" TextColor="Black"  LineBreakMode="WordWrap"/>
+                                <Label Text="{Binding Direccion}" FontSize="14" TextColor="Black" LineBreakMode="WordWrap"/>
                                 <Label Text="{Binding Telefono}" FontSize="14" TextColor="Black"/>
                                 <Label Text="{Binding Email}" FontSize="14" TextColor="Black"/>
                             </StackLayout>

@@ -54,8 +54,8 @@
                 <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
                     <VerticalStackLayout Spacing="15">
                         <Label Text="Plantilla Semanal" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
-                        <Button Text="Configurar Plantilla Semanal" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" Clicked="OnConfigurarPlantillaClicked"/>
-                        <Button Text="Aplicar Plantilla al Mes" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="10" Clicked="OnAplicarPlantillaMesClicked"/>
+                        <Button Text="Configurar Plantilla Semanal" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="15" Clicked="OnConfigurarPlantillaClicked"/>
+                        <Button Text="Aplicar Plantilla al Mes" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="15" Clicked="OnAplicarPlantillaMesClicked"/>
                     </VerticalStackLayout>
                 </Border>
 
@@ -83,7 +83,7 @@
         </ScrollView>
 
         <HorizontalStackLayout Grid.Row="2" Padding="20" HorizontalOptions="Center">
-            <Button Text="Guardar Disponibilidad"  BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="10" Clicked="OnGuardarClicked" />
+            <Button Text="Guardar Disponibilidad"  BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="15" Clicked="OnGuardarClicked" />
         </HorizontalStackLayout>
     </Grid>
 </ContentPage>

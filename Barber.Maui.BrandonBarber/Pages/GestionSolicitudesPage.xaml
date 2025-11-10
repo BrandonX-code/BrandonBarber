@@ -12,43 +12,43 @@
                         <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="10">
 
                             <!-- Nombre -->
-                            <HorizontalStackLayout Grid.Row="0" Spacing="5">
-                                <Image Source="id.png" WidthRequest="20" HeightRequest="20" />
-                                <Label Text="{Binding NombreSolicitante}" FontAttributes="Bold" FontSize="18"/>
-                            </HorizontalStackLayout>
+                            <Grid ColumnDefinitions="Auto,*" Grid.Row="0" ColumnSpacing="5">
+                                <Image Grid.Column="0" Source="id.png" WidthRequest="20" HeightRequest="20" />
+                                <Label Grid.Column="1" Text="{Binding NombreSolicitante}" FontAttributes="Bold" FontSize="18" LineBreakMode="WordWrap"/>
+                            </Grid>
 
                             <!-- Email -->
-                            <HorizontalStackLayout Grid.Row="1" Spacing="5">
-                                <Image Source="email.png" WidthRequest="20" HeightRequest="20" />
-                                <Label Text="{Binding EmailSolicitante}" FontAttributes="Bold"/>
-                            </HorizontalStackLayout>
+                            <Grid ColumnDefinitions="Auto,*" Grid.Row="1" ColumnSpacing="5">
+                                <Image Grid.Column="0" Source="email.png" WidthRequest="20" HeightRequest="20" />
+                                <Label Grid.Column="1" Text="{Binding EmailSolicitante}" FontAttributes="Bold" LineBreakMode="WordWrap"/>
+                            </Grid>
 
                             <!-- Teléfono (movido debajo del email) -->
-                            <HorizontalStackLayout Grid.Row="2" Spacing="5">
-                                <Image Source="call.png" WidthRequest="20" HeightRequest="20" />
-                                <Label Text="{Binding TelefonoSolicitante}" FontAttributes="Bold"/>
-                            </HorizontalStackLayout>
+                            <Grid ColumnDefinitions="Auto,*" Grid.Row="2" ColumnSpacing="5">
+                                <Image Grid.Column="0" Source="call.png" WidthRequest="20" HeightRequest="20" />
+                                <Label Grid.Column="1" Text="{Binding TelefonoSolicitante}" FontAttributes="Bold"/>
+                            </Grid>
 
                             <!-- Justificación -->
                             <VerticalStackLayout Grid.Row="3" Spacing="5">
-                                <HorizontalStackLayout Spacing="5">
-                                    <Image Source="description.png" WidthRequest="20" HeightRequest="20" />
-                                    <Label Text="Justificación:" FontAttributes="Bold" />
-                                </HorizontalStackLayout>
+                                <Grid ColumnDefinitions="Auto,*" Grid.Row="3" ColumnSpacing="5">
+                                    <Image Grid.Column="0" Source="description.png" WidthRequest="20" HeightRequest="20" />
+                                    <Label Grid.Column="1" Text="Justificación:" FontAttributes="Bold" />
+                                </Grid>
                                 <Label Text="{Binding Justificacion}" LineBreakMode="WordWrap" VerticalOptions="Start" HorizontalOptions="Fill" FontSize="14" />
                             </VerticalStackLayout>
 
                             <!-- Fecha -->
-                            <HorizontalStackLayout Grid.Row="4" Spacing="5">
-                                <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
-                                <Label Text="{Binding FechaSolicitud, StringFormat='{0:dd/MM/yyyy}'}" FontAttributes="Bold"/>
-                            </HorizontalStackLayout>
+                            <Grid ColumnDefinitions="Auto,*" Grid.Row="4" ColumnSpacing="5">
+                                <Image Grid.Column="0" Source="calendar.png" WidthRequest="20" HeightRequest="20" />
+                                <Label Grid.Column="1" Text="{Binding FechaSolicitud, StringFormat='{0:dd/MM/yyyy}'}" FontAttributes="Bold"/>
+                            </Grid>
 
                             <!-- Botones -->
-                            <HorizontalStackLayout Grid.Row="5" Spacing="10" Margin="0,10,0,0" HorizontalOptions="Center">
-                                <Button Text="Aprobar" BackgroundColor="#FF6F91" Clicked="OnAprobarClicked" CommandParameter="{Binding .}" TextColor="Black"/>
-                                <Button Text="Rechazar" BackgroundColor="#717d7e" Clicked="OnRechazarClicked" CommandParameter="{Binding .}" TextColor="Black"/>
-                            </HorizontalStackLayout>
+                            <Grid  ColumnDefinitions="Auto,*" Grid.Row="5" ColumnSpacing="10" Margin="0,10,0,0" HorizontalOptions="Center">
+                                <Button Grid.Column="0" Text="Aprobar" BackgroundColor="#FF6F91" CornerRadius="15" Clicked="OnAprobarClicked" CommandParameter="{Binding .}" TextColor="Black"/>
+                                <Button Grid.Column="1" Text="Rechazar" BackgroundColor="#717d7e" CornerRadius="15" Clicked="OnRechazarClicked" CommandParameter="{Binding .}" TextColor="Black"/>
+                            </Grid>
 
                         </Grid>
                     </Border>

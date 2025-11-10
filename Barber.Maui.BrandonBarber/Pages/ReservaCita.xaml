@@ -70,15 +70,13 @@
 
 
                     <HorizontalStackLayout x:Name="buttonsLayout" Padding="20,10" Spacing="20" HorizontalOptions="Center" Opacity="0">
-                        <Button Text="Cancelar" Clicked="OnCancelarClicked" WidthRequest="130" BackgroundColor="#717d7e" TextColor="Black" 
-                                CornerRadius="10" FontAttributes="Bold">
+                        <Button Text="Cancelar" Clicked="OnCancelarClicked" BackgroundColor="#717d7e" TextColor="Black" CornerRadius="15" FontAttributes="Bold">
                             <Button.Shadow>
                                 <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.6" />
                             </Button.Shadow>
                         </Button>
 
-                        <Button Text="Reservar" Clicked="OnGuardarClicked" WidthRequest="130" BackgroundColor="#FF6F91" TextColor="Black" 
-                                CornerRadius="10" FontAttributes="Bold">
+                        <Button Text="Reservar" Clicked="OnGuardarClicked" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="15" FontAttributes="Bold">
                             <Button.Shadow>
                                 <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.6" />
                             </Button.Shadow>

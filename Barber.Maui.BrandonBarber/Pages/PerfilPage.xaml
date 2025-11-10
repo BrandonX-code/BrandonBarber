@@ -30,7 +30,7 @@
 
                 <Label x:Name="NombreLabel" Text="xxx" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
                 <Label x:Name="TelefonoLabel" Text="###" FontSize="16" TextColor="White" HorizontalOptions="Center" />
-                <Button Text="Editar Perfil" MaximumWidthRequest="150" BackgroundColor="#FF6F91" TextColor="Black" Clicked="OnEditarPerfilClicked"/>
+                <Button Text="Editar Perfil" BackgroundColor="#FF6F91" CornerRadius="15" TextColor="Black" Clicked="OnEditarPerfilClicked"/>
             </VerticalStackLayout>
         </Grid>
     </ScrollView>

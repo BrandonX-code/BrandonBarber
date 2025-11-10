@@ -62,9 +62,8 @@
                     BackgroundColor="#FF6F91"
                     TextColor="Black"
                     FontAttributes="Bold"
-                    CornerRadius="25"
-                    HeightRequest="50"
-                    Margin="0,10,0,0"
+                    CornerRadius="15"
+                    HorizontalOptions="Center"
                     Clicked="OnEnviarSolicitudClicked"/>
 
             <ActivityIndicator x:Name="LoadingIndicator" 

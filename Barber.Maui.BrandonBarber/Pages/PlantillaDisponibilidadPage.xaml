@@ -17,7 +17,7 @@
             <VerticalStackLayout Padding="20" Spacing="15" x:Name="DiasContainer"/>
         </ScrollView>
         <HorizontalStackLayout Grid.Row="2" Padding="20" HorizontalOptions="Center">
-            <Button Text="Guardar Plantilla" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="10" Clicked="OnGuardarPlantillaClicked" />
+            <Button Text="Guardar Plantilla" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="15" Clicked="OnGuardarPlantillaClicked" />
         </HorizontalStackLayout>
     </Grid>
 </ContentPage>

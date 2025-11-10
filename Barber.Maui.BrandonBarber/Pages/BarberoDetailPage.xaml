@@ -30,7 +30,7 @@
 							</HorizontalStackLayout>
 						<Label x:Name="BarberoVisitasLabel" TextColor="White" FontSize="14"/>
                         <Grid>
-                            <Button x:Name="CalificarButton" Grid.ColumnSpan="2" Text="Calificar Barbero" BackgroundColor="#FF6F91" TextColor="Black" FontSize="15"	CornerRadius="15" HeightRequest="30" WidthRequest="170" HorizontalOptions="Start" Margin="0,5,0,0" Clicked="OnCalificarClicked"/>
+                            <Button x:Name="CalificarButton" Grid.ColumnSpan="2" Text="Calificar Barbero" BackgroundColor="#FF6F91" TextColor="Black" FontSize="15"	CornerRadius="15" HorizontalOptions="Fill" Margin="0,5,0,0" Clicked="OnCalificarClicked"/>
                         </Grid>
                     </VerticalStackLayout>
 				</Grid>
@@ -82,7 +82,7 @@
                 </VerticalStackLayout>
 
                 <Grid>
-                    <Button Grid.ColumnSpan="2" Text="Agendar Cita" BackgroundColor="#FF6F91" TextColor="Black" FontSize="16" CornerRadius="15" HeightRequest="50" HorizontalOptions="Center" Clicked="OnMakeAppointmentClicked"/>
+                    <Button Grid.ColumnSpan="2" Text="Agendar Cita" BackgroundColor="#FF6F91" TextColor="Black" FontSize="16" CornerRadius="15" HorizontalOptions="Center" Clicked="OnMakeAppointmentClicked"/>
                 </Grid>
             </VerticalStackLayout>
 		</ScrollView>

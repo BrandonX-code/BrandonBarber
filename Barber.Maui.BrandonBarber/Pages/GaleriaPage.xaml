@@ -9,8 +9,7 @@
                 <Setter Property="BackgroundColor" Value="#FF6F91" />
                 <Setter Property="TextColor" Value="Black" />
                 <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="CornerRadius" Value="10" />
-                <Setter Property="HeightRequest" Value="45" />
+                <Setter Property="CornerRadius" Value="15" />
                 <Setter Property="FontSize" Value="16" />
             </Style>
             <Style x:Key="EntryStyle" TargetType="Entry">
@@ -43,7 +42,7 @@
         </ScrollView>
 
         <VerticalStackLayout Grid.Row="2" Spacing="15" Margin="0,15,0,5">
-            <Button x:Name="AgregarImagenButton" Text="Agregar Imagen" Style="{StaticResource GaleriaButtonStyle}"  Clicked="OnAgregarImagenClicked"  HorizontalOptions="Center"  WidthRequest="200" />
+            <Button x:Name="AgregarImagenButton" Text="Agregar Imagen" Style="{StaticResource GaleriaButtonStyle}"  Clicked="OnAgregarImagenClicked"  HorizontalOptions="Center"/>
             <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" />
         </VerticalStackLayout>
     </Grid>

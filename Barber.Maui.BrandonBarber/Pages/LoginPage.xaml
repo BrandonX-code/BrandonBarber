@@ -18,8 +18,7 @@
                 <Setter Property="BackgroundColor" Value="#FF6F91" />
                 <Setter Property="TextColor" Value="Black" />
                 <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="CornerRadius" Value="10" />
-                <Setter Property="HeightRequest" Value="45" />
+                <Setter Property="CornerRadius" Value="15" />
                 <Setter Property="FontSize" Value="16" />
             </Style>
             <Style x:Key="CancelButtonStyle" TargetType="Button">
@@ -74,11 +73,11 @@
                     </Label>
                 </HorizontalStackLayout>
                 <BoxView HeightRequest="1" Color="#424E57" />
-                <Border BackgroundColor="#28475C" StrokeShape="RoundRectangle 15" Padding="15" StrokeThickness="0">
+                <Border BackgroundColor="#28475C" StrokeShape="RoundRectangle 15" HorizontalOptions="Fill" Padding="15" StrokeThickness="0">
                     <VerticalStackLayout Spacing="20" HorizontalOptions="Center">
                         <Label Text="¿Eres propietario o gerente de una barbería?" TextColor="White" FontSize="15" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
 
-                        <Button Text="Solicitar cuenta de administrador" TextColor="Black" BackgroundColor="#FF6F91" CornerRadius="10" Padding="12,6"  FontSize="14" WidthRequest="250" FontAttributes="Bold" Clicked="OnSolicitarAdminClicked" />
+                        <Button Text="Solicitar cuenta de administrador" TextColor="Black" HorizontalOptions="Fill" BackgroundColor="#FF6F91" CornerRadius="15" FontSize="14" FontAttributes="Bold" Clicked="OnSolicitarAdminClicked" />
                     </VerticalStackLayout>
                 </Border>
 

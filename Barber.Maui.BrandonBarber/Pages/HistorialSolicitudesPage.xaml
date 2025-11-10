@@ -34,24 +34,24 @@
                         <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="10" StrokeThickness="0" Margin="0,0,0,10">
                             <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto,Auto">
                                 <VerticalStackLayout Grid.Column="0" Spacing="5">
-                                    <HorizontalStackLayout Spacing="5">
-                                        <Image Source="id.png" WidthRequest="20" HeightRequest="20" />
-                                        <Label Text="{Binding NombreSolicitante}" FontAttributes="Bold" FontSize="18"/>
-                                    </HorizontalStackLayout>
-                                    <HorizontalStackLayout Spacing="10">
-                                        <Image Source="email.png" WidthRequest="20" HeightRequest="20" />
-                                        <Label Text="{Binding EmailSolicitante}" FontAttributes="Bold"/>
-                                    </HorizontalStackLayout>
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="5">
+                                        <Image Grid.Column="0" Source="id.png" WidthRequest="20" HeightRequest="20" />
+                                        <Label Grid.Column="1" Text="{Binding NombreSolicitante}" FontAttributes="Bold" FontSize="18" LineBreakMode="WordWrap"/>
+                                    </Grid>
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="5">
+                                        <Image Grid.Column="0" Source="email.png" WidthRequest="20" HeightRequest="20" />
+                                        <Label Grid.Column="1" Text="{Binding EmailSolicitante}" FontAttributes="Bold"/>
+                                    </Grid>
 
-                                    <HorizontalStackLayout Spacing="10">
-                                        <Image Source="call.png" WidthRequest="20" HeightRequest="20" />
-                                        <Label Text="{Binding TelefonoSolicitante}" FontAttributes="Bold"/>
-                                    </HorizontalStackLayout>
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="5">
+                                        <Image Grid.Column="0" Source="call.png" WidthRequest="20" HeightRequest="20" />
+                                        <Label Grid.Column="1" Text="{Binding TelefonoSolicitante}" FontAttributes="Bold"/>
+                                    </Grid>
 
-                                    <HorizontalStackLayout Spacing="10">
-                                        <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
-                                        <Label Text="{Binding FechaSolicitud, StringFormat='{0:dd/MM/yyyy}'}" FontAttributes="Bold"/>
-                                    </HorizontalStackLayout>
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="5">
+                                        <Image Grid.Column="0" Source="calendar.png" WidthRequest="20" HeightRequest="20" />
+                                        <Label Grid.Column="1" Text="{Binding FechaSolicitud, StringFormat='{0:dd/MM/yyyy}'}" FontAttributes="Bold"/>
+                                    </Grid>
 
                                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" IsVisible="{Binding EsRechazada}">
                                         <Image Grid.Column="0" Source="rechazar.png" WidthRequest="20" HeightRequest="20" />
