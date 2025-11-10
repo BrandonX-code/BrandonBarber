@@ -258,5 +258,92 @@ namespace Barber.Maui.BrandonBarber.Services
                 return new List<DisponibilidadModel>();
             }
         }
+        // Agregar este método en DisponibilidadService.cs
+
+        public async Task<PlantillaDisponibilidadModel?> ReconstruirPlantillaDesdeDisponibilidades(long barberoId)
+        {
+            try
+            {
+                // Obtener disponibilidades del mes actual
+                var year = DateTime.Today.Year;
+                var month = DateTime.Today.Month;
+
+                var disponibilidades = await GetDisponibilidadPorMes(barberoId, year, month);
+
+                if (disponibilidades == null || !disponibilidades.Any())
+                {
+                    Console.WriteLine("⚠️ No hay disponibilidades guardadas en la BD");
+                    return null;
+                }
+
+                Console.WriteLine($"✅ Se encontraron {disponibilidades.Count} disponibilidades en la BD");
+
+                // Crear la plantilla vacía
+                var plantilla = new PlantillaDisponibilidadModel
+                {
+                    BarberoId = barberoId,
+                    HorariosPorDia = new Dictionary<string, Dictionary<string, bool>>()
+                };
+
+                // Inicializar cada día con horarios vacíos
+                string[] diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
+                foreach (var dia in diasSemana)
+                {
+                    plantilla.HorariosPorDia[dia] = new Dictionary<string, bool>();
+                }
+
+                // Agrupar disponibilidades por día de la semana
+                var disponibilidadesPorDia = disponibilidades
+                    .GroupBy(d => ObtenerDiaSemanaEspanol(d.Fecha.DayOfWeek))
+                    .ToDictionary(g => g.Key, g => g.ToList());
+
+                // Para cada día de la semana que tenga disponibilidades
+                foreach (var grupo in disponibilidadesPorDia)
+                {
+                    var diaSemana = grupo.Key;
+                    var disponibilidadesDia = grupo.Value;
+
+                    Console.WriteLine($"📅 Procesando {diaSemana}: {disponibilidadesDia.Count} registros");
+
+                    // Crear un diccionario temporal para contar ocurrencias de cada horario
+                    var conteoHorarios = new Dictionary<string, int>();
+
+                    // Contar cuántas veces cada horario está disponible
+                    foreach (var disp in disponibilidadesDia)
+                    {
+                        if (disp.HorariosDict != null)
+                        {
+                            foreach (var horario in disp.HorariosDict)
+                            {
+                                if (!conteoHorarios.ContainsKey(horario.Key))
+                                    conteoHorarios[horario.Key] = 0;
+
+                                if (horario.Value) // Si está disponible
+                                    conteoHorarios[horario.Key]++;
+                            }
+                        }
+                    }
+
+                    // Determinar el patrón más común (si más del 50% de las veces está disponible)
+                    var totalRegistros = disponibilidadesDia.Count;
+                    foreach (var horario in conteoHorarios)
+                    {
+                        var porcentajeDisponible = (double)horario.Value / totalRegistros;
+                        plantilla.HorariosPorDia[diaSemana][horario.Key] = porcentajeDisponible > 0.5;
+
+                        Console.WriteLine($"  - {horario.Key}: {horario.Value}/{totalRegistros} veces disponible = {porcentajeDisponible:P0}");
+                    }
+                }
+
+                Console.WriteLine("✅ Plantilla reconstruida exitosamente desde la BD");
+                return plantilla;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error al reconstruir plantilla: {ex.Message}");
+                Console.WriteLine($"❌ StackTrace: {ex.StackTrace}");
+                return null;
+            }
+        }
     }
 }

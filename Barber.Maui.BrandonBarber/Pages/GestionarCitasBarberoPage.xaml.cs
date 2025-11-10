@@ -52,6 +52,9 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                 CitasCollection.ItemsSource = citasGestionar;
 
+                // Mostrar/ocultar el mensaje de estado vacío
+                EmptyStateLayout.IsVisible = citasGestionar.Count == 0;
+
                 if (citasGestionar.Count == 0)
                 {
                     await AppUtils.MostrarSnackbar("No hay citas pendientes para gestionar", Colors.Orange, Colors.White);
@@ -80,7 +83,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 _isNavigating = false;
             }
-            
+
         }
 
         private async void OnCanceladaClicked(object sender, EventArgs e)
@@ -104,7 +107,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 _isNavigating = false;
             }
-            
+
         }
 
         private async Task ActualizarEstado(CitaModel cita, string nuevoEstado)

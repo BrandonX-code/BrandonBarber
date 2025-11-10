@@ -95,19 +95,36 @@
             }
         }
 
+        // Reemplazar el método CargarPlantillaExistente en PlantillaDisponibilidadPage.xaml.cs
+
         private async Task CargarPlantillaExistente()
         {
             try
             {
                 var barberoId = AuthService.CurrentUser?.Cedula ?? 0;
-                var plantilla = await _disponibilidadService.ObtenerPlantillaSemanal(barberoId);
 
+                Console.WriteLine("🔍 Intentando cargar plantilla...");
+
+                // PRIMERO: Intentar reconstruir desde las disponibilidades reales en la BD
+                var plantilla = await _disponibilidadService.ReconstruirPlantillaDesdeDisponibilidades(barberoId);
+
+                // SEGUNDO: Si no hay disponibilidades en BD, cargar desde SecureStorage
+                if (plantilla == null)
+                {
+                    Console.WriteLine("⚠️ No se pudo reconstruir desde BD, intentando SecureStorage...");
+                    plantilla = await _disponibilidadService.ObtenerPlantillaSemanal(barberoId);
+                }
+
+                // Si tampoco hay plantilla en SecureStorage
                 if (plantilla == null || plantilla.HorariosPorDia == null)
                 {
-                    await DisplayAlert("Aviso", "No hay plantilla guardada.", "OK");
+                    await DisplayAlert("Aviso", "No hay plantilla guardada ni disponibilidades configuradas.", "OK");
                     return;
                 }
 
+                Console.WriteLine("✅ Plantilla cargada exitosamente");
+
+                // Aplicar los checkboxes según la plantilla
                 foreach (var dia in _diasSemana)
                 {
                     if (plantilla.HorariosPorDia.TryGetValue(dia, out var horariosDia))
@@ -117,6 +134,7 @@
                             if (horariosDia.TryGetValue(horario, out var disponible))
                             {
                                 _checkboxesPorDia[dia][horario].IsChecked = disponible;
+                                Console.WriteLine($"  ✓ {dia} - {horario}: {disponible}");
                             }
                             else
                             {
@@ -136,6 +154,7 @@
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"❌ Error al cargar plantilla: {ex.Message}");
                 await DisplayAlert("Error", $"No se pudo cargar la plantilla: {ex.Message}", "OK");
             }
         }

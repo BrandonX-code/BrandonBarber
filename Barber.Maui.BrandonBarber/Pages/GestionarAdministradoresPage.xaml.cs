@@ -60,15 +60,29 @@ namespace Barber.Maui.BrandonBarber.Pages
                 LoadingIndicator.IsRunning = true;
                 ContentContainer.IsVisible = false;
 
+                System.Diagnostics.Debug.WriteLine("Iniciando carga de admins...");
                 var lista = await _adminService.GetAdministradoresAsync();
+                System.Diagnostics.Debug.WriteLine($"Admins obtenidos: {lista?.Count ?? 0}");
+
                 _todosLosAdmins.Clear();
                 _adminsFiltrados.Clear();
-                foreach (var admin in lista)
+
+                if (lista != null)
                 {
-                    _todosLosAdmins.Add(admin);
-                    _adminsFiltrados.Add(admin);
+                    foreach (var admin in lista)
+                    {
+                        _todosLosAdmins.Add(admin);
+                        _adminsFiltrados.Add(admin);
+                    }
                 }
+
                 UpdateStats();
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"ERROR en LoadAdmins: {ex.Message}");
+                System.Diagnostics.Debug.WriteLine($"StackTrace: {ex.StackTrace}");
+                await DisplayAlert("Error", $"No se pudieron cargar los administradores: {ex.Message}", "OK");
             }
             finally
             {

@@ -323,16 +323,23 @@
                     <!-- SuperAdminView -->
                     <VerticalStackLayout x:Name="SuperAdminView" IsVisible="false" Padding="20" Spacing="17">
                         <Label Text="Solicitudes de Administrador" FontSize="18" TextColor="#E0F7FA" FontAttributes="Bold" Margin="0,20,0,0" />
-                        <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0" >
+                        <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="VerSolicitudesAdmin" />
                             </Border.GestureRecognizers>
-                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
-                                <Image Grid.Column="0" Source="person.png" WidthRequest="40" HeightRequest="40" />
-                                <Label Grid.Column="1" Text="Ver Solicitudes" TextColor="Black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
-                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+
+                            <Grid>
+                                <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                    <Image Grid.Column="0" Source="person.png" WidthRequest="40" HeightRequest="40" />
+                                    <Label Grid.Column="1" Text="Ver Solicitudes" TextColor="Black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                    <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                                </Grid>
+                                <Border x:Name="BadgeSolicitudes" IsVisible="True" BackgroundColor="Red" StrokeShape="RoundRectangle 20" Padding="5,0" StrokeThickness="0" HorizontalOptions="End" VerticalOptions="Start">
+                                    <Label x:Name="NumeroSolicitudes" Text="1" TextColor="White" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Border>
                             </Grid>
                         </Border>
+
                         <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="VerHistorialSolicitudes" />

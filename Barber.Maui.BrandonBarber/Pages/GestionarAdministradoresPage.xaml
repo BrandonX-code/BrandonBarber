@@ -51,9 +51,8 @@
                                             
 										</VerticalStackLayout>
 										<VerticalStackLayout Grid.Row="0" Grid.Column="1" Padding="10,5" VerticalOptions="Start">
-											<Label Text="{Binding Rol}" FontSize="15" TextColor="Black" FontAttributes="Bold" />
-											<Label Text="{Binding Activo, Converter={StaticResource BoolToEstadoConverter}}" FontSize="13" TextColor="Black" />
-										</VerticalStackLayout>
+                                            <Label Text="{Binding Rol}" FontSize="15" TextColor="Black" FontAttributes="Bold" />
+                                        </VerticalStackLayout>
 										<HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="15" Margin="0,10,0,0">
 											<HorizontalStackLayout Spacing="5">
 												<Image Source="id.png" WidthRequest="16" HeightRequest="16" />

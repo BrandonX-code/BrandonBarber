@@ -24,7 +24,7 @@
 				<Button Grid.Column="1" Text="✕" BackgroundColor="Transparent" TextColor="#A0A0A0" FontSize="16" WidthRequest="30" HeightRequest="30" Command="{Binding ClearSearchCommand}" IsVisible="{Binding HasSearchText}" />
 			</Grid>
 		</Border>
-		<CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Grid.Row="2" ItemsSource="{Binding FilteredBarberias}" SelectionMode="None">
+		<CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Grid.Row="4" ItemsSource="{Binding FilteredBarberias}" SelectionMode="None">
 			<CollectionView.EmptyView>
 				<StackLayout Padding="20" VerticalOptions="Center">
 					<Label Text="🏪" FontSize="48" HorizontalOptions="Center" TextColor="#A0A0A0"/>
@@ -39,8 +39,8 @@
 								<Image Source="{Binding LogoUrl, TargetNullValue='picture.png'}" Aspect="AspectFill"/>
 							</Border>
 							<StackLayout Grid.Row="0" Grid.Column="1" VerticalOptions="Start" Margin="15,0,0,0">
-								<Label Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold" TextColor="Black" LineBreakMode="TailTruncation"/>
-								<Label FontSize="14" TextColor="Black">
+                                <Label Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold" TextColor="Black" LineBreakMode="WordWrap"/>
+                                <Label FontSize="14" TextColor="Black" LineBreakMode="WordWrap">
 									<Label.FormattedText>
 										<FormattedString>
 											<Span Text="Admin: " FontAttributes="Bold" TextColor="Black"/>
@@ -48,9 +48,9 @@
 										</FormattedString>
 									</Label.FormattedText>
 								</Label>
-								<Label Text="{Binding Direccion}" FontSize="14" TextColor="Black" LineBreakMode="TailTruncation"/>
+                                <Label Text="{Binding Direccion}" FontSize="14" TextColor="Black" LineBreakMode="WordWrap"/>
 								<Label Text="{Binding Telefono}" FontSize="14" TextColor="Black"/>
-								<Label Text="{Binding Email}" FontSize="14" TextColor="Black"/>
+                                <Label Text="{Binding Email}" FontSize="14" TextColor="Black" LineBreakMode="WordWrap"/>
 							</StackLayout>
 						</Grid>
 					</Border>

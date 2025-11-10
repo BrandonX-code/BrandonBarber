@@ -14,7 +14,7 @@
             </Style>
             <Style x:Key="ProfileButtonStyle" TargetType="Button">
                 <Setter Property="BackgroundColor" Value="#2b2b2b" />
-                <Setter Property="TextColor" Value="White" />
+                <Setter Property="TextColor" Value="Black" />
                 <Setter Property="FontAttributes" Value="Bold" />
                 <Setter Property="CornerRadius" Value="10" />
                 <Setter Property="HeightRequest" Value="45" />
@@ -46,7 +46,7 @@
                 </Border>
 
 
-                <Button Text="Cambiar imagen"  Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#bfbfbf" TextColor="Black" Clicked="OnCambiarImagenClicked" HorizontalOptions="Center" WidthRequest="200"/>
+                <Button Text="Cambiar imagen"  Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#FF6F91" Clicked="OnCambiarImagenClicked" HorizontalOptions="Center" WidthRequest="200"/>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Nombre completo" Style="{StaticResource ProfileLabelStyle}" />
@@ -92,7 +92,7 @@
             </Grid.ColumnDefinitions>
 
             <Button Text="Cancelar" Grid.Column="0" Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#717d7e" Clicked="OnCancelarClicked"/>
-            <Button Text="Guardar" Grid.Column="1" Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#FF6F91" TextColor="Black" Clicked="OnGuardarClicked"/>
+            <Button Text="Guardar" Grid.Column="1" Style="{StaticResource ProfileButtonStyle}" BackgroundColor="#FF6F91" Clicked="OnGuardarClicked"/>
         </Grid>
     </Grid>
 </ContentPage>

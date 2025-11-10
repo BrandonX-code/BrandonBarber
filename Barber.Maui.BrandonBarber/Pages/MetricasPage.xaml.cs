@@ -299,7 +299,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             var fechaActual = DateTime.Now;
             var colores = new[]
             {
-                SKColor.Parse("#1E3A5F"), // Azul oscuro profundo
+                SKColor.Parse("#3A7C9E"), // Azul oscuro profundo
                 SKColor.Parse("#2E5C8A"), // Azul medio
                 SKColor.Parse("#4A90C8"), // Azul cielo
                 SKColor.Parse("#7FB3D5"), // Azul claro

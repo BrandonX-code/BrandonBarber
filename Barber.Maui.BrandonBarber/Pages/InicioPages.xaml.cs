@@ -4,6 +4,7 @@ namespace Barber.Maui.BrandonBarber.Pages
 {
     public partial class InicioPages : ContentPage
     {
+        private readonly HttpClient _httpClient;
         private readonly AuthService _authService;
         private readonly ServicioService _servicioService;
         private List<UsuarioModels>? _todosLosBarberos;
@@ -26,13 +27,45 @@ namespace Barber.Maui.BrandonBarber.Pages
             _authService = authService;
             _servicioService = servicioService;
             LoadUserInfo();
-
+            _httpClient = App.Current!.Handler.MauiContext!.Services.GetService<AuthService>()!._BaseClient;
             WeakReferenceMessenger.Default.Register<CalificacionEnviadaMessage>(this, async (r, m) =>
             {
                 await LoadBarberos();
             });
         }
+        private async Task ActualizarBadgeSolicitudes()
+        {
+            try
+            {
+                var response = await _httpClient.GetAsync("api/solicitudes/pendientes");
 
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    var solicitudes = JsonSerializer.Deserialize<List<SolicitudAdministrador>>(json,
+                        new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                    if (solicitudes != null && solicitudes.Count > 0)
+                    {
+                        BadgeSolicitudes.IsVisible = true;
+                        NumeroSolicitudes.Text = solicitudes.Count.ToString();
+                    }
+                    else
+                    {
+                        BadgeSolicitudes.IsVisible = false;
+                    }
+                }
+                else
+                {
+                    BadgeSolicitudes.IsVisible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"❌ Error al cargar contador de solicitudes: {ex.Message}");
+                BadgeSolicitudes.IsVisible = false;
+            }
+        }
         protected override void OnAppearing()
         {
             base.OnAppearing();
@@ -41,6 +74,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 _ = LoadBarberos();
             }
+            base.OnAppearing();
+            _ = ActualizarBadgeSolicitudes();
         }
 
         private async void CargarServicios()
@@ -556,18 +591,18 @@ namespace Barber.Maui.BrandonBarber.Pages
 
         private async void VerSolicitudesAdmin(object sender, EventArgs e)
         {
-
             if (_isNavigating) return;
             _isNavigating = true;
             try
             {
                 await Navigation.PushAsync(new GestionSolicitudesPage());
+                // Al volver de la página, actualizar el badge
+                await ActualizarBadgeSolicitudes();
             }
             finally
             {
                 _isNavigating = false;
             }
-
         }
 
         // Métodos para nuevas opciones de SuperAdminView
