@@ -96,6 +96,14 @@ namespace Barber.Maui.BrandonBarber.Pages
                         await AppUtils.MostrarSnackbar("Solicitud enviada. Recibirás un email cuando sea revisada", Colors.Green, Colors.White);
                         await Navigation.PopAsync();
                     }
+                    else if ((int)response.StatusCode == 409)
+                    {
+                        await AppUtils.MostrarSnackbar("Ya tienes una solicitud pendiente. Por favor espera a que sea revisada antes de enviar otra.", Colors.Orange, Colors.White);
+                    }
+                    else
+                    {
+                        await DisplayAlert("Error", $"No se pudo enviar la solicitud. Código: {(int)response.StatusCode}", "OK");
+                    }
                 }
                 catch (Exception ex)
                 {
