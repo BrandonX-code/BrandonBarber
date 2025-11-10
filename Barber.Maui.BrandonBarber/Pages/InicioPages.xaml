@@ -185,20 +185,30 @@
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="CitasList" />
                             </Border.GestureRecognizers>
-                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
-                                <Image Grid.Column="0" Source="history.png" WidthRequest="30" HeightRequest="30" />
-                                <Label Grid.Column="1" Text="Tus Citas" TextColor="Black" FontSize="25" VerticalOptions="Center" Margin="10,0,0,0"/>
-                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            <Grid>
+                                <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                    <Image Grid.Column="0" Source="history.png" WidthRequest="30" HeightRequest="30" />
+                                    <Label Grid.Column="1" Text="Tus Citas" TextColor="Black" FontSize="25" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                    <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                                </Grid>
+                                <Border x:Name="BadgeCitasMes" IsVisible="False" BackgroundColor="Red" StrokeShape="RoundRectangle 20" Padding="5,0" StrokeThickness="0" HorizontalOptions="End" VerticalOptions="Start">
+                                    <Label x:Name="NumeroCitasMes" Text="0" TextColor="White" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Border>
                             </Grid>
                         </Border>
                         <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="GestionarCitasBarbero" />
                             </Border.GestureRecognizers>
-                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
-                                <Image Grid.Column="0" Source="gestioncitas.png" WidthRequest="30" HeightRequest="30" />
-                                <Label Grid.Column="1" Text="Gestionar Citas" TextColor="Black" FontSize="25" VerticalOptions="Center" Margin="10,0,0,0"/>
-                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            <Grid>
+                                <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                    <Image Grid.Column="0" Source="gestioncitas.png" WidthRequest="30" HeightRequest="30" />
+                                    <Label Grid.Column="1" Text="Gestionar Citas" TextColor="Black" FontSize="25" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                    <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                                </Grid>
+                                <Border x:Name="BadgeGestionarCitasMes" IsVisible="False" BackgroundColor="Red" StrokeShape="RoundRectangle 20" Padding="5,0" StrokeThickness="0" HorizontalOptions="End" VerticalOptions="Start">
+                                    <Label x:Name="NumeroGestionarCitasMes" Text="0" TextColor="White" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Border>
                             </Grid>
                         </Border>
 
@@ -287,10 +297,15 @@
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="VerCitas" />
                             </Border.GestureRecognizers>
-                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
-                                <Image Grid.Column="0" Source="todaslascitas.png" WidthRequest="40" HeightRequest="40" />
-                                <Label Grid.Column="1" Text="Ver Todas las Citas" TextColor="black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
-                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            <Grid>
+                                <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                    <Image Grid.Column="0" Source="todaslascitas.png" WidthRequest="40" HeightRequest="40" />
+                                    <Label Grid.Column="1" Text="Ver Todas las Citas" TextColor="black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                    <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                                </Grid>
+                                <Border x:Name="BadgeVerCitasMes" IsVisible="False" BackgroundColor="Red" StrokeShape="RoundRectangle 20" Padding="5,0" StrokeThickness="0" HorizontalOptions="End" VerticalOptions="Start">
+                                    <Label x:Name="NumeroVerCitasMes" Text="0" TextColor="White" FontSize="13" FontAttributes="Bold" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Border>
                             </Grid>
                         </Border>
 

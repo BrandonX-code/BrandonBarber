@@ -74,10 +74,99 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 _ = LoadBarberos();
             }
-            base.OnAppearing();
+            if (BarberoView.IsVisible)
+            {
+                _ = ActualizarBadgeCitasMes();
+                _ = ActualizarBadgeGestionarCitasMes();
+            }
+            if (AdminView.IsVisible)
+            {
+                _ = ActualizarBadgeVerCitasMes();
+            }
             _ = ActualizarBadgeSolicitudes();
         }
 
+        private async Task ActualizarBadgeCitasMes()
+        {
+            try
+            {
+                var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
+                var barbero = AuthService.CurrentUser;
+                if (barbero == null) { BadgeCitasMes.IsVisible = false; return; }
+                var todasCitas = await reservationService.GetReservationsByBarbero(barbero.Cedula);
+                var ahora = DateTime.Now;
+                var citasMes = todasCitas.Where(c => c.Fecha.Year == ahora.Year && c.Fecha.Month == ahora.Month).ToList();
+                if (citasMes.Count >0)
+                {
+                    BadgeCitasMes.IsVisible = true;
+                    NumeroCitasMes.Text = citasMes.Count.ToString();
+                }
+                else
+                {
+                    BadgeCitasMes.IsVisible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ Error al cargar badge de citas del mes: {ex.Message}");
+                BadgeCitasMes.IsVisible = false;
+            }
+        }
+        private async Task ActualizarBadgeGestionarCitasMes()
+        {
+            try
+            {
+                var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
+                var barbero = AuthService.CurrentUser;
+                if (barbero == null) { BadgeGestionarCitasMes.IsVisible = false; return; }
+                var todasCitas = await reservationService.GetReservationsByBarbero(barbero.Cedula);
+                var ahora = DateTime.Now;
+                // Solo citas del mes actual y estado pendiente
+                var citasMes = todasCitas
+                    .Where(c => c.Fecha.Year == ahora.Year && c.Fecha.Month == ahora.Month && c.Estado?.ToLower() == "pendiente")
+                    .ToList();
+                if (citasMes.Count > 0)
+                {
+                    BadgeGestionarCitasMes.IsVisible = true;
+                    NumeroGestionarCitasMes.Text = citasMes.Count.ToString();
+                }
+                else
+                {
+                    BadgeGestionarCitasMes.IsVisible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ Error al cargar badge de gestionar citas del mes: {ex.Message}");
+                BadgeGestionarCitasMes.IsVisible = false;
+            }
+        }
+        private async Task ActualizarBadgeVerCitasMes()
+        {
+            try
+            {
+                var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
+                var admin = AuthService.CurrentUser;
+                if (admin == null) { BadgeVerCitasMes.IsVisible = false; return; }
+                var todasCitas = await reservationService.GetReservationsByBarberia(admin.IdBarberia ?? 0);
+                var ahora = DateTime.Now;
+                var citasMes = todasCitas.Where(c => c.Fecha.Year == ahora.Year && c.Fecha.Month == ahora.Month).ToList();
+                if (citasMes.Count >0)
+                {
+                    BadgeVerCitasMes.IsVisible = true;
+                    NumeroVerCitasMes.Text = citasMes.Count.ToString();
+                }
+                else
+                {
+                    BadgeVerCitasMes.IsVisible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ Error al cargar badge de VerCitas del mes: {ex.Message}");
+                BadgeVerCitasMes.IsVisible = false;
+            }
+        }
         private async void CargarServicios()
         {
             try
@@ -477,7 +566,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                     var usuarios = JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent, _jsonOptions);
 
                     var admin = AuthService.CurrentUser;
-                    var barberos = usuarios?
+                    var barberos =usuarios?
                         .Where(u => u.Rol!.Equals("barbero", StringComparison.CurrentCultureIgnoreCase)
                                     && u.IdBarberia == admin!.IdBarberia)
                         .ToList() ?? [];
