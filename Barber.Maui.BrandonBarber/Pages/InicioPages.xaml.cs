@@ -123,7 +123,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var ahora = DateTime.Now;
                 // Solo citas del mes actual y estado pendiente
                 var citasMes = todasCitas
-                    .Where(c => c.Fecha.Year == ahora.Year && c.Fecha.Month == ahora.Month && c.Estado?.ToLower() == "pendiente")
+                    .Where(c => c.Estado?.ToLower() == "pendiente")
                     .ToList();
                 if (citasMes.Count > 0)
                 {

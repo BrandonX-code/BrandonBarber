@@ -1,16 +1,38 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Barber.Maui.BrandonBarber.Pages.ListaCitas"
+             x:Class="Barber.Maui.BrandonBarber.Pages.ListaCitas" xmlns:local="clr-namespace:Barber.Maui.BrandonBarber.style"
              BackgroundColor="#0E2A36">
-
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:EstadoColorConverter x:Key="EstadoColorConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <AbsoluteLayout>
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <Grid RowDefinitions="Auto, Auto, *" Padding="20">
                 <VerticalStackLayout Spacing="15">
                     <Border BackgroundColor="#1E3A49" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
                         <VerticalStackLayout Spacing="15">
-                            <Label Text="Citas Agendadas" TextColor="White" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center" />
+                            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="20,20,20,10">
+                                <Label Grid.Column="0" 
+                                   Text="Citas Agendadas" 
+                                   FontSize="20" 
+                                   TextColor="White" 
+                                   FontAttributes="Bold" 
+                                   VerticalOptions="Center" 
+                                   x:Name="TituloCitasLabel"
+                                   HorizontalOptions="Center" />
+
+                                <VerticalStackLayout Grid.Column="1" 
+                                     x:Name="ContadorCitasSection"
+                                     HorizontalOptions="End" 
+                                     VerticalOptions="Center">
+                                    <Label x:Name="TotalCitasLabel" Text="0" FontSize="24" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
+                                    <Label Text="Citas Del Mes" FontSize="13" TextColor="White" HorizontalOptions="Center" />
+                                </VerticalStackLayout>
+                            </Grid>
+                            <!--<Label Text="Citas Agendadas" TextColor="White" FontSize="Large" FontAttributes="Bold" HorizontalOptions="Center" />-->
                             <!-- Selector de Barbería -->
                             <VerticalStackLayout x:Name="PickerSection" Spacing="10" IsVisible="False">
 
@@ -63,6 +85,12 @@
                                                         <Label Text="{Binding BarberoNombre}" FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
                                                     </HorizontalStackLayout>
                                                 </VerticalStackLayout>
+                                                <Border Grid.Column="1" Stroke="Transparent" WidthRequest="22"  HeightRequest="22"  StrokeShape="RoundRectangle 20" VerticalOptions="Center">
+                                                    <Border.BackgroundColor>
+                                                        <Binding Path="Estado" Converter="{StaticResource EstadoColorConverter}" />
+                                                    </Border.BackgroundColor>
+                                                    <Label Text="{Binding IconoEstado}" TextColor="White"  FontSize="10"  FontAttributes="Bold"  HorizontalOptions="Center"  VerticalOptions="Center"/>
+                                                </Border>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>

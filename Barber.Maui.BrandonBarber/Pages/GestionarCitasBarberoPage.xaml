@@ -11,11 +11,11 @@
                 <CollectionView x:Name="CitasCollection">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Border Padding="15" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 15" StrokeThickness="0">
+                            <Border Padding="15" Margin="0,0,0,10" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 15" StrokeThickness="0">
                                 <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,*" RowSpacing="10">
                                     <Grid ColumnDefinitions="Auto,*" ColumnSpacing="5">
                                         <Image Grid.Column="0" Source="id.png" WidthRequest="20" HeightRequest="20" />
-                                        <Label Grid.Column="1" Grid.ColumnSpan="2" LineBreakMode="WordWrap" Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
+                                        <Label Grid.Column="1" LineBreakMode="WordWrap" Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
                                     </Grid>
                                     <HorizontalStackLayout Grid.Row="1" Spacing="5">
                                         <Image Source="call.png" WidthRequest="20" HeightRequest="20" />

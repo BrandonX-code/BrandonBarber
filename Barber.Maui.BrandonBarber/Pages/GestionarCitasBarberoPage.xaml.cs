@@ -42,9 +42,9 @@ namespace Barber.Maui.BrandonBarber.Pages
                     }
                 }
 
-                // Filtrar solo citas de hoy y futuras que estén pendientes
+                // Filtrar solo citas pendientes, sin importar la fecha
                 var citasGestionar = citas?
-                    .Where(c => c.Fecha.Date >= DateTime.Today && c.Estado == "Pendiente")
+                    .Where(c => c.Estado == "Pendiente")
                     .OrderBy(c => c.Fecha)
                     .ToList() ?? new List<CitaModel>();
 

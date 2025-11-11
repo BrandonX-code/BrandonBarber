@@ -16,11 +16,14 @@
             InitializeComponent();
             var user = AuthService.CurrentUser;
             MostrarBarberoInfo = user != null && (user.Rol?.ToLower() == "admin" || user.Rol?.ToLower() == "administrador" || user.Rol?.ToLower() == "cliente");
+            bool esAdministrador = user?.Rol?.ToLower() == "admin" || user?.Rol?.ToLower() == "administrador";
+            ContadorCitasSection.IsVisible = !esAdministrador;
+            TituloCitasLabel.HorizontalOptions = esAdministrador ? LayoutOptions.Center : LayoutOptions.Start;
             BindingContext = this;
             ResultadosCollection.ItemsSource = CitasFiltradas;
             _reservationService = reservationService;
             _barberiaService = Application.Current!.Handler.MauiContext!.Services.GetService<BarberiaService>();
-
+            _ = ActualizarContador();
             CargarBarberias();
         }
         private async void CargarBarberias()
@@ -64,7 +67,26 @@
                 CitasFiltradas.Clear();
             }
         }
+        private async Task ActualizarContador()
+        {
+            try
+            {
+                var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
+                var barbero = AuthService.CurrentUser;
+                var todasCitas = await reservationService.GetReservationsByBarbero(barbero!.Cedula);
+                var ahora = DateTime.Now;
+                var citasMes = todasCitas.Where(c => c.Fecha.Year == ahora.Year && c.Fecha.Month == ahora.Month).ToList();
 
+                if (citasMes.Count > 0)
+                {
+                    TotalCitasLabel.Text = citasMes.Count.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"❌ Error al cargar las citas del mes: {ex.Message}");
+            }
+        }
         private async void RecuperarCitasPorFecha(object sender, EventArgs e)
         {
             if (_isNavigating) return; // Sale si ya está navegando
@@ -126,6 +148,7 @@
                 _isNavigating = false;
                 MostrarLoader(false);
             }
+            _= ActualizarContador();
         }
 
 

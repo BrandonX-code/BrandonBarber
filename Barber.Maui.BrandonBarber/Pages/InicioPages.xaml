@@ -45,7 +45,7 @@
                                 </CollectionView.ItemsLayout>
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
-                                        <Border StrokeShape="RoundRectangle 20"  BackgroundColor="#90A4AE" Padding="-1" HeightRequest="220" WidthRequest="170"  StrokeThickness="0">
+                                        <Border StrokeShape="RoundRectangle 20"  BackgroundColor="#90A4AE" Padding="-1" HeightRequest="220" WidthRequest="190"  StrokeThickness="0">
 
                                             <Grid RowSpacing="0">
                                                 <Grid.RowDefinitions>
@@ -54,10 +54,10 @@
                                                 </Grid.RowDefinitions>
 
                                                 <!-- Imagen centrada -->
-                                                <Border Grid.Row="0" BackgroundColor="White" StrokeShape="RoundRectangle 6"  HeightRequest="175"  WidthRequest="175"  HorizontalOptions="Center"  Padding="0" StrokeThickness="0">
-                                                    <Image Grid.Row="0" Source="{Binding Imagen}" Aspect="AspectFill" HeightRequest="175" WidthRequest="175">
+                                                <Border Grid.Row="0" BackgroundColor="White" StrokeShape="RoundRectangle 6"  HeightRequest="175"  WidthRequest="195"  HorizontalOptions="Center"  Padding="0" StrokeThickness="0">
+                                                    <Image Grid.Row="0" Source="{Binding Imagen}" Aspect="AspectFill" HeightRequest="175" WidthRequest="195">
                                                         <Image.Clip>
-                                                            <RoundRectangleGeometry CornerRadius="6" Rect="0,0,175,175"/>
+                                                            <RoundRectangleGeometry CornerRadius="6" Rect="0,0,195,195"/>
                                                         </Image.Clip>
                                                     </Image>
                                                 </Border>
