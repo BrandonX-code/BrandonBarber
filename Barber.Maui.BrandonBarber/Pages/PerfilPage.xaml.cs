@@ -118,7 +118,11 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                 if (confirmacion)
                 {
-                    Preferences.Remove("isLoggedIn");
+                    // Llamar logout para limpiar todo
+                    var authService = Application.Current!.Handler.MauiContext!.Services.GetService<AuthService>()!;
+                    await authService.Logout();
+                    AuthService.CurrentUser = null;
+                    Preferences.Remove("IsLoggedIn");
                     Preferences.Remove("currentUser");
 
                     Application.Current!.Windows[0].Page = new NavigationPage(new LoginPage());

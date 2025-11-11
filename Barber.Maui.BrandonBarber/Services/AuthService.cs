@@ -247,22 +247,33 @@ namespace Barber.Maui.BrandonBarber.Services
             }
         }
 
-        public bool Logout()
+        public async Task<bool> Logout()
         {
             try
             {
-                // Eliminar token del almacenamiento seguro
+                Console.WriteLine("🔷 Iniciando logout...");
+
+                // Eliminar token del almacenamiento seguro de forma asíncrona
                 SecureStorage.Default.Remove("auth_token");
                 SecureStorage.Default.Remove("user_cedula");
+                SecureStorage.Default.Remove("user_nombre");
+                SecureStorage.Default.Remove("user_rol");
+                SecureStorage.Default.Remove("user_email");
+
+                // Limpiar preferences
+                Preferences.Remove("IsLoggedIn");
 
                 // Limpiar headers de autorización
                 _BaseClient.DefaultRequestHeaders.Authorization = null;
                 CurrentUser = null;
 
+                Console.WriteLine("🔷 Logout completado");
+
                 return true;
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"❌ Error en logout: {ex.Message}");
                 Debug.WriteLine($"❌ Error en logout: {ex.Message}");
                 return false;
             }
@@ -289,7 +300,8 @@ namespace Barber.Maui.BrandonBarber.Services
                     new AuthenticationHeaderValue("Bearer", token);
 
                 // Obtener los datos del usuario directamente
-                var userResponse = await _BaseClient.GetAsync($"api/auth/user/{userCedula}");
+                var userResponse = await _BaseClient.GetAsync($"api/auth/usuario/{userCedula}");
+                // Cambia "user" por "usuario" (ya que tu endpoint es /usuario/)
 
                 Console.WriteLine($"🔹 Respuesta del servidor para usuario: {userResponse.StatusCode}");
 

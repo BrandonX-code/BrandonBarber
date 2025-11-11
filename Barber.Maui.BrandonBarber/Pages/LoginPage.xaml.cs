@@ -5,6 +5,7 @@ namespace Barber.Maui.BrandonBarber.Pages
     {
         private readonly AuthService _authService;
         private bool _isNavigating = false;
+        private bool _hasCheckedAuth = false; // 🔥 NUEVO
 
         public LoginPage()
         {
@@ -16,18 +17,42 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             base.OnAppearing();
 
+            if (_hasCheckedAuth || _isNavigating)
+                return;
+
+            _hasCheckedAuth = true;
+
+            Console.WriteLine("🔷 LoginPage - OnAppearing");
+
             LoadingIndicator.IsVisible = true;
             LoadingIndicator.IsRunning = true;
 
-            var isLoggedIn = await _authService.CheckAuthStatus();
-
-            if (isLoggedIn)
+            try
             {
-                NavigateToMainPage();
-            }
+                var isLoggedIn = await _authService.CheckAuthStatus();
+                Console.WriteLine($"🔷 CheckAuthStatus resultado: {isLoggedIn}");
 
-            LoadingIndicator.IsVisible = false;
-            LoadingIndicator.IsRunning = false;
+                // Solo navegar si hay sesión válida y CurrentUser no es null
+                if (isLoggedIn && AuthService.CurrentUser != null)
+                {
+                    Console.WriteLine($"🔷 Usuario logueado: {AuthService.CurrentUser.Nombre}");
+                    NavigateToMainPage();
+                }
+                else
+                {
+                    // Asegura que CurrentUser esté en null si no hay sesión
+                    AuthService.CurrentUser = null;
+                    Console.WriteLine("🔷 No hay sesión válida - mostrando login");
+                    LoadingIndicator.IsVisible = false;
+                    LoadingIndicator.IsRunning = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error en OnAppearing: {ex.Message}");
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsRunning = false;
+            }
         }
 
         private async void OnLoginClicked(object sender, EventArgs e)
@@ -39,7 +64,6 @@ namespace Barber.Maui.BrandonBarber.Pages
                 return;
             }
 
-            // Validar formato del email
             var emailValidator = new EmailAddressAttribute();
             if (!emailValidator.IsValid(EmailEntry.Text))
             {
@@ -81,10 +105,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
         }
 
-
         private async void OnRegistroClicked(object sender, EventArgs e)
         {
-
             if (_isNavigating) return;
             _isNavigating = true;
             try
@@ -95,11 +117,13 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 _isNavigating = false;
             }
-            
         }
 
         private void NavigateToMainPage()
         {
+            if (_isNavigating) return; // 🔥 Evitar navegación múltiple
+            _isNavigating = true;
+
             EmailEntry.Text = string.Empty;
             PasswordEntry.Text = string.Empty;
             Preferences.Set("IsLoggedIn", true);
@@ -111,7 +135,10 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 Application.Current.Windows[0].Page = newPage;
             }
+
+            _isNavigating = false; // 🔥 Resetear flag
         }
+
         private async void OnForgotPasswordClicked(object sender, EventArgs e)
         {
             if (_isNavigating) return;
@@ -124,8 +151,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 _isNavigating = false;
             }
-            
         }
+
         private async void OnSolicitarAdminClicked(object sender, EventArgs e)
         {
             if (_isNavigating) return;
@@ -138,7 +165,6 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 _isNavigating = false;
             }
-            
         }
     }
 }
