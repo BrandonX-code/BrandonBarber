@@ -1,11 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
+
 namespace Barber.Maui.BrandonBarber.Pages
 {
     public partial class LoginPage : ContentPage
     {
         private readonly AuthService _authService;
         private bool _isNavigating = false;
-        private bool _hasCheckedAuth = false; // 🔥 NUEVO
 
         public LoginPage()
         {
@@ -13,46 +13,12 @@ namespace Barber.Maui.BrandonBarber.Pages
             _authService = Application.Current!.Handler.MauiContext!.Services.GetService<AuthService>()!;
         }
 
-        protected override async void OnAppearing()
+        // 🔥 YA NO necesitas verificar sesión en OnAppearing
+        // El SplashPage ya lo hizo
+        protected override void OnAppearing()
         {
             base.OnAppearing();
-
-            if (_hasCheckedAuth || _isNavigating)
-                return;
-
-            _hasCheckedAuth = true;
-
-            Console.WriteLine("🔷 LoginPage - OnAppearing");
-
-            LoadingIndicator.IsVisible = true;
-            LoadingIndicator.IsRunning = true;
-
-            try
-            {
-                var isLoggedIn = await _authService.CheckAuthStatus();
-                Console.WriteLine($"🔷 CheckAuthStatus resultado: {isLoggedIn}");
-
-                // Solo navegar si hay sesión válida y CurrentUser no es null
-                if (isLoggedIn && AuthService.CurrentUser != null)
-                {
-                    Console.WriteLine($"🔷 Usuario logueado: {AuthService.CurrentUser.Nombre}");
-                    NavigateToMainPage();
-                }
-                else
-                {
-                    // Asegura que CurrentUser esté en null si no hay sesión
-                    AuthService.CurrentUser = null;
-                    Console.WriteLine("🔷 No hay sesión válida - mostrando login");
-                    LoadingIndicator.IsVisible = false;
-                    LoadingIndicator.IsRunning = false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Error en OnAppearing: {ex.Message}");
-                LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsRunning = false;
-            }
+            Console.WriteLine("🔷 LoginPage - Mostrando formulario de login");
         }
 
         private async void OnLoginClicked(object sender, EventArgs e)
@@ -84,6 +50,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var response = await _authService.Login(EmailEntry.Text, PasswordEntry.Text);
                 if (response.IsSuccess)
                 {
+                    Console.WriteLine("🔷 Login exitoso - Navegando a MainPage");
                     NavigateToMainPage();
                 }
                 else
@@ -121,22 +88,33 @@ namespace Barber.Maui.BrandonBarber.Pages
 
         private void NavigateToMainPage()
         {
-            if (_isNavigating) return; // 🔥 Evitar navegación múltiple
+            if (_isNavigating) return;
             _isNavigating = true;
 
-            EmailEntry.Text = string.Empty;
-            PasswordEntry.Text = string.Empty;
-            Preferences.Set("IsLoggedIn", true);
-
-            var serviciosService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ServicioService>();
-            var newPage = new NavigationPage(new InicioPages(_authService, serviciosService));
-
-            if (Application.Current?.Windows.Count > 0)
+            try
             {
-                Application.Current.Windows[0].Page = newPage;
-            }
+                EmailEntry.Text = string.Empty;
+                PasswordEntry.Text = string.Empty;
+                Preferences.Set("IsLoggedIn", true);
 
-            _isNavigating = false; // 🔥 Resetear flag
+                var serviciosService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ServicioService>();
+                var newPage = new NavigationPage(new InicioPages(_authService, serviciosService));
+
+                if (Application.Current?.Windows.Count > 0)
+                {
+                    Application.Current.Windows[0].Page = newPage;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error en NavigateToMainPage: {ex.Message}");
+                ErrorLabel.Text = "Error al navegar. Intenta nuevamente.";
+                ErrorLabel.IsVisible = true;
+            }
+            finally
+            {
+                _isNavigating = false;
+            }
         }
 
         private async void OnForgotPasswordClicked(object sender, EventArgs e)

@@ -247,27 +247,35 @@ namespace Barber.Maui.BrandonBarber.Services
             }
         }
 
+        // En AuthService.cs - Reemplaza el método Logout existente
+
         public async Task<bool> Logout()
         {
             try
             {
                 Console.WriteLine("🔷 Iniciando logout...");
 
-                // Eliminar token del almacenamiento seguro de forma asíncrona
+                // Eliminar todos los tokens del almacenamiento seguro
                 SecureStorage.Default.Remove("auth_token");
                 SecureStorage.Default.Remove("user_cedula");
                 SecureStorage.Default.Remove("user_nombre");
                 SecureStorage.Default.Remove("user_rol");
                 SecureStorage.Default.Remove("user_email");
 
-                // Limpiar preferences
+                // Limpiar preferences adicionales
                 Preferences.Remove("IsLoggedIn");
+                Preferences.Remove("currentUser");
 
                 // Limpiar headers de autorización
                 _BaseClient.DefaultRequestHeaders.Authorization = null;
+
+                // Limpiar usuario actual
                 CurrentUser = null;
 
-                Console.WriteLine("🔷 Logout completado");
+                Console.WriteLine("🔷 Logout completado exitosamente");
+
+                // Pequeña espera para asegurar que todo se limpió
+                await Task.Delay(100);
 
                 return true;
             }

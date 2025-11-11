@@ -118,15 +118,48 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                 if (confirmacion)
                 {
-                    // Llamar logout para limpiar todo
-                    var authService = Application.Current!.Handler.MauiContext!.Services.GetService<AuthService>()!;
-                    await authService.Logout();
-                    AuthService.CurrentUser = null;
-                    Preferences.Remove("IsLoggedIn");
-                    Preferences.Remove("currentUser");
+                    Console.WriteLine("🔷 Usuario confirmó cerrar sesión");
 
-                    Application.Current!.Windows[0].Page = new NavigationPage(new LoginPage());
+                    // Obtener el AuthService
+                    var authService = Application.Current!.Handler.MauiContext!.Services.GetService<AuthService>()!;
+
+                    // Llamar logout para limpiar todo
+                    var logoutSuccess = await authService.Logout();
+
+                    if (logoutSuccess)
+                    {
+                        Console.WriteLine("🔷 Limpieza completada - Redirigiendo a Login");
+
+                        // Asegurarse de que CurrentUser esté en null
+                        AuthService.CurrentUser = null;
+
+                        // Limpiar preferences adicionales (por si acaso)
+                        Preferences.Remove("IsLoggedIn");
+                        Preferences.Remove("currentUser");
+
+                        // Navegar a LoginPage
+                        await MainThread.InvokeOnMainThreadAsync(() =>
+                        {
+                            Application.Current!.MainPage = new NavigationPage(new LoginPage());
+                        });
+
+                        Console.WriteLine("🔷 Navegación a Login completada");
+                    }
+                    else
+                    {
+                        Console.WriteLine("❌ Error al hacer logout");
+                        await DisplayAlert("Error", "No se pudo cerrar la sesión correctamente", "OK");
+                    }
                 }
+                else
+                {
+                    Console.WriteLine("🔷 Usuario canceló el cierre de sesión");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Excepción en OnCerrarSesionClicked: {ex.Message}");
+                await DisplayAlert("Error", $"Ocurrió un error al cerrar sesión: {ex.Message}", "OK");
             }
             finally
             {
