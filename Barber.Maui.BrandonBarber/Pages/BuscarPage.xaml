@@ -1,42 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Barber.Maui.BrandonBarber.Pages.BuscarPage" xmlns:local="clr-namespace:Barber.Maui.BrandonBarber.style"
+             x:Class="Barber.Maui.BrandonBarber.Pages.BuscarPage"
              Background="#0E2A36">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <local:EstadoColorConverter x:Key="EstadoColorConverter" />
-            <Style x:Key="EntryStyle" TargetType="Entry">
-                <Setter Property="BackgroundColor" Value="#2b2b2b" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="VisualStateManager.VisualStateGroups">
-                    <VisualStateGroupList>
-                        <VisualStateGroup x:Name="CommonStates">
-                            <VisualState x:Name="Normal">
-                                <VisualState.Setters>
-                                    <Setter Property="Scale" Value="1" />
-                                </VisualState.Setters>
-                            </VisualState>
-                            <VisualState x:Name="Focused">
-                                <VisualState.Setters>
-                                    <Setter Property="Scale" Value="1.02" />
-                                </VisualState.Setters>
-                            </VisualState>
-                        </VisualStateGroup>
-                    </VisualStateGroupList>
-                </Setter>
-            </Style>
-
-            <Style x:Key="SectionHeaderStyle" TargetType="Label">
-                <Setter Property="FontSize" Value="16" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="TextColor" Value="White" />
-                <Setter Property="Margin" Value="0,5,0,2" />
-                <Setter Property="HorizontalOptions" Value="Start" />
-            </Style>
-        </ResourceDictionary>
-    </ContentPage.Resources>
 
     <AbsoluteLayout>
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">

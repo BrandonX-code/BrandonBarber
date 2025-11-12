@@ -3,22 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Barber.Maui.BrandonBarber.Pages.GaleriaPage"
              BackgroundColor="#0E2A36">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <Style x:Key="GaleriaButtonStyle" TargetType="Button">
-                <Setter Property="BackgroundColor" Value="#FF6F91" />
-                <Setter Property="TextColor" Value="Black" />
-                <Setter Property="FontAttributes" Value="Bold" />
-                <Setter Property="CornerRadius" Value="15" />
-                <Setter Property="FontSize" Value="16" />
-            </Style>
-            <Style x:Key="EntryStyle" TargetType="Entry">
-                <Setter Property="BackgroundColor" Value="#90A4AE" />
-                <Setter Property="TextColor" Value="Black" />
-                <Setter Property="FontSize" Value="16" />
-            </Style>
-        </ResourceDictionary>
-    </ContentPage.Resources>
+    
     <Grid Padding="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -33,7 +18,7 @@
         <VerticalStackLayout x:Name="PickerSection" Grid.Row="0"  Spacing="5"  Margin="0,100,0,10" IsVisible="False">
             <Label Text="Seleccione el Barbero Para Ver Su Galeria" TextColor="White"  FontSize="16"  HorizontalOptions="Center" />
             <Border BackgroundColor="#90A4AE" Padding="15" StrokeShape="RoundRectangle 10" HeightRequest="100" StrokeThickness="0">
-                <Picker x:Name="Picker" SelectedIndexChanged="Picker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}" Title="Seleccionar Barbero" TitleColor="Black" Style="{StaticResource EntryStyle}"  VerticalOptions="Center" />
+                <Picker x:Name="Picker" SelectedIndexChanged="Picker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}" Title="Seleccionar Barbero" TitleColor="Black" Style="{StaticResource EntryStyleGaleriaPage}"  VerticalOptions="Center" />
             </Border>
         </VerticalStackLayout>
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Grid.Row="1" Orientation="Vertical">

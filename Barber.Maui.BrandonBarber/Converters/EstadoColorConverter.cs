@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace Barber.Maui.BrandonBarber.style
+namespace Barber.Maui.BrandonBarber.Converters
 {
     public class EstadoColorConverter : IValueConverter
     {

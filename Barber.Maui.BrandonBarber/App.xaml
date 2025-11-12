@@ -2,13 +2,16 @@
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Barber.Maui.BrandonBarber"
-             x:Class="Barber.Maui.BrandonBarber.App">
+             x:Class="Barber.Maui.BrandonBarber.App"  xmlns:converters="clr-namespace:Barber.Maui.BrandonBarber.Converters">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <converters:EstadoColorConverter x:Key="EstadoColorConverter" />
+            <converters:DisponibilidadColorConverter x:Key="DisponibilidadColorConverter" />
+            <converters:LessThanConverter x:Key="LessThanConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

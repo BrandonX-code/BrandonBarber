@@ -1,14 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"  
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Barber.Maui.BrandonBarber.Pages.InicioPages"  
-             xmlns:local="clr-namespace:Barber.Maui.BrandonBarber.style">
-    <ContentPage.Resources>
-        <ResourceDictionary>
-            <local:DisponibilidadColorConverter x:Key="DisponibilidadColorConverter" />
-            <local:LessThanConverter x:Key="LessThanConverter" />
-        </ResourceDictionary>
-    </ContentPage.Resources>
+             x:Class="Barber.Maui.BrandonBarber.Pages.InicioPages">
 
     <Grid BackgroundColor="#0E2A36">
         <Grid.RowDefinitions>

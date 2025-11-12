@@ -212,11 +212,8 @@
                 seleccionPage.BarberiaSeleccionada += async (s, barberia) =>
                 {
                     var authService = Application.Current!.Handler.MauiContext!.Services.GetService<AuthService>()!;
+                    var servicioService = Application.Current!.Handler.MauiContext!.Services.GetService<ServicioService>()!;
 
-                    //bool confirmado = await DisplayAlert(
-                    //    "Confirmar cambio",
-                    //    $"¿Deseas cambiar a la barbería '{barberia.Nombre}'?",
-                    //    "Sí", "No");
                     var popup = new CustomAlertPopup($"¿Deseas cambiar a la barbería '{barberia.Nombre}'?");
                     bool confirmacion = await popup.ShowAsync(this);
 
@@ -228,10 +225,13 @@
                         {
                             _perfilData.IdBarberia = barberia.Idbarberia;
 
-                            // Actualizar la UI con la nueva barbería
+                            // Actualizar UI de barbería actual
                             await CargarInformacionBarberia(barberia.Idbarberia);
 
                             await AppUtils.MostrarSnackbar($"Cambiado a {barberia.Nombre}", Colors.Green, Colors.White);
+
+                            // 🔹 Ir directamente a la página de Inicio
+                            await Navigation.PushAsync(new InicioPages(authService, servicioService));
                         }
                         else
                         {
@@ -247,6 +247,7 @@
                 _isNavigating = false;
             }
         }
+
 
     }
 }
