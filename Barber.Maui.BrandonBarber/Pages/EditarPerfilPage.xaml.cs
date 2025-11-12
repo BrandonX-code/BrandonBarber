@@ -34,12 +34,16 @@
             bool esBarbero = _perfilData.Rol?.Equals("Barbero", StringComparison.OrdinalIgnoreCase) ?? false;
             bool esCliente = _perfilData.Rol?.Equals("Cliente", StringComparison.OrdinalIgnoreCase) ?? false;
 
+            // Configurar especialidades (solo barberos)
             EspecialidadesContainer.IsVisible = esBarbero;
 
-            // Mostrar información de barbería solo a clientes
+            // Configurar sección de barbería actual (solo clientes con barbería asignada)
             BarberiaActualContainer.IsVisible = esCliente && _perfilData.IdBarberia.HasValue;
 
-            // Cargar información de la barbería si es cliente
+            // Configurar botón de cambiar barbería (solo clientes)
+            CambiarBarberiaContainer.IsVisible = esCliente;
+
+            // Cargar información de la barbería si es cliente y tiene una asignada
             if (esCliente && _perfilData.IdBarberia.HasValue)
             {
                 await CargarInformacionBarberia(_perfilData.IdBarberia.Value);
