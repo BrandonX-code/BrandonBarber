@@ -3,17 +3,18 @@
     public partial class EditarPerfilPage : ContentPage
     {
         private readonly UsuarioModels _perfilData;
+        private readonly BarberiaService _barberiaService;
 
         private readonly PerfilUsuarioService _perfilService;
 
         private bool _imagenModificada = false;
-
+        private bool _isNavigating = false;
         public EditarPerfilPage(UsuarioModels? perfilData = null)
         {
             InitializeComponent();
 
             _perfilService = Application.Current!.Handler.MauiContext!.Services.GetService<PerfilUsuarioService>()!;
-
+            _barberiaService = Application.Current!.Handler.MauiContext!.Services.GetService<BarberiaService>()!; // NUEVO
             _perfilData = perfilData ?? new UsuarioModels
             {
                 Nombre = "Carlos Álvarez",
@@ -25,17 +26,67 @@
             };
 
             CargarDatosPerfil();
-            ConfigurarVisibilidadPorRol();
+            _= ConfigurarVisibilidadPorRol();
         }
 
-        private void ConfigurarVisibilidadPorRol()
+        private async Task ConfigurarVisibilidadPorRol()
         {
-            // Mostrar el campo de especialidades solo si el rol es "Barbero"
             bool esBarbero = _perfilData.Rol?.Equals("Barbero", StringComparison.OrdinalIgnoreCase) ?? false;
+            bool esCliente = _perfilData.Rol?.Equals("Cliente", StringComparison.OrdinalIgnoreCase) ?? false;
+
             EspecialidadesContainer.IsVisible = esBarbero;
+
+            // Mostrar información de barbería solo a clientes
+            BarberiaActualContainer.IsVisible = esCliente && _perfilData.IdBarberia.HasValue;
+
+            // Cargar información de la barbería si es cliente
+            if (esCliente && _perfilData.IdBarberia.HasValue)
+            {
+                await CargarInformacionBarberia(_perfilData.IdBarberia.Value);
+            }
+        }
+        private async Task CargarInformacionBarberia(int idBarberia)
+        {
+            try
+            {
+                var barberia = await _barberiaService.GetBarberiaByIdAsync(idBarberia);
+
+                if (barberia != null)
+                {
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        BarberiaNombreLabel.Text = barberia.Nombre ?? "Sin nombre";
+                        BarberiaDireccionLabel.Text = barberia.Direccion ?? "Sin dirección";
+                        BarberiaTelefonoLabel.Text = barberia.Telefono ?? "Sin teléfono";
+
+                        // Cargar logo
+                        if (!string.IsNullOrWhiteSpace(barberia.LogoUrl))
+                        {
+                            BarberiaLogoImage.Source = barberia.LogoUrl.StartsWith("http")
+                                ? ImageSource.FromUri(new Uri(barberia.LogoUrl))
+                                : ImageSource.FromFile(barberia.LogoUrl);
+                        }
+                        else
+                        {
+                            BarberiaLogoImage.Source = "picture.png";
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error al cargar barbería: {ex.Message}");
+                // Mostrar valores por defecto
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    BarberiaNombreLabel.Text = "No disponible";
+                    BarberiaDireccionLabel.Text = "Sin información";
+                    BarberiaTelefonoLabel.Text = "Sin teléfono";
+                });
+            }
         }
 
-        private void CargarDatosPerfil()
+        private async void CargarDatosPerfil()
         {
             NombreEntry.Text = _perfilData.Nombre;
             TelefonoEntry.Text = _perfilData.Telefono;
@@ -57,6 +108,9 @@
                     PerfilImage.Source = "default_avatar.png";
                 }
             }
+
+            // Configurar visibilidad basada en el rol (esto cargará la barbería si aplica)
+            await ConfigurarVisibilidadPorRol();
         }
 
         private async void OnCambiarImagenClicked(object sender, EventArgs e)
@@ -142,7 +196,53 @@
                 IsBusy = false;
             }
         }
+        private async void OnCambiarDeBarberia(object sender, EventArgs e)
+        {
+            if (_isNavigating) return;
+            _isNavigating = true;
 
+            try
+            {
+                var seleccionPage = new SeleccionBarberiaPage();
+
+                seleccionPage.BarberiaSeleccionada += async (s, barberia) =>
+                {
+                    var authService = Application.Current!.Handler.MauiContext!.Services.GetService<AuthService>()!;
+
+                    //bool confirmado = await DisplayAlert(
+                    //    "Confirmar cambio",
+                    //    $"¿Deseas cambiar a la barbería '{barberia.Nombre}'?",
+                    //    "Sí", "No");
+                    var popup = new CustomAlertPopup($"¿Deseas cambiar a la barbería '{barberia.Nombre}'?");
+                    bool confirmacion = await popup.ShowAsync(this);
+
+                    if (confirmacion)
+                    {
+                        bool exito = await authService.CambiarBarberia(_perfilData.Cedula, barberia.Idbarberia);
+
+                        if (exito)
+                        {
+                            _perfilData.IdBarberia = barberia.Idbarberia;
+
+                            // Actualizar la UI con la nueva barbería
+                            await CargarInformacionBarberia(barberia.Idbarberia);
+
+                            await AppUtils.MostrarSnackbar($"Cambiado a {barberia.Nombre}", Colors.Green, Colors.White);
+                        }
+                        else
+                        {
+                            await AppUtils.MostrarSnackbar("Error al cambiar de barbería", Colors.Red, Colors.White);
+                        }
+                    }
+                };
+
+                await Navigation.PushAsync(seleccionPage);
+            }
+            finally
+            {
+                _isNavigating = false;
+            }
+        }
 
     }
 }

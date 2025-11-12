@@ -397,6 +397,34 @@ namespace Barber.Maui.BrandonBarber.Services
                 return null;
             }
         }
+        public async Task<bool> CambiarBarberia(long cedula, int idBarberia)
+        {
+            try
+            {
+                var request = new { IdBarberia = idBarberia };
+                var json = JsonSerializer.Serialize(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _BaseClient.PutAsync($"api/auth/cambiar-barberia/{cedula}", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Actualizar el usuario actual si es necesario
+                    if (CurrentUser?.Cedula == cedula)
+                    {
+                        CurrentUser.IdBarberia = idBarberia;
+                    }
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error al cambiar barbería: {ex.Message}");
+                return false;
+            }
+        }
     }
 
     // 🔥 MODELOS PARA RECUPERACIÓN DE CONTRASEÑA 🔥

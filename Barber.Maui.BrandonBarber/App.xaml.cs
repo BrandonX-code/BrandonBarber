@@ -17,16 +17,8 @@ namespace Barber.Maui.BrandonBarber
             Routing.RegisterRoute("perfil", typeof(PerfilPage));
             Routing.RegisterRoute("editarPerfil", typeof(EditarPerfilPage));
         }
-
-        //protected override Window CreateWindow(IActivationState? activationState)
-        //{
-        //    // Siempre iniciar con LoginPage, que decidirá si redirigir
-        //    return new Window(new NavigationPage(new LoginPage()));
-        //}
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            // 🔥 SIEMPRE iniciar con SplashPage
-            // El SplashPage decidirá si ir a Login o MainPage
             Console.WriteLine("🔷 App - Iniciando con SplashPage");
             return new Window(new NavigationPage(new SplashPage()));
         }

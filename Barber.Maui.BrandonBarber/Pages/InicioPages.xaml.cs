@@ -73,6 +73,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             if (ClienteView.IsVisible)
             {
                 _ = LoadBarberos();
+                CargarServicios();
             }
             if (BarberoView.IsVisible)
             {

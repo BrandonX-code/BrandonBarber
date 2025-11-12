@@ -6,44 +6,18 @@
              Shell.NavBarIsVisible="False"
              NavigationPage.HasNavigationBar="False">
 
-    <Grid VerticalOptions="Center" HorizontalOptions="Center">
-        <VerticalStackLayout Spacing="30" HorizontalOptions="Center" VerticalOptions="Center">
-
-            <!-- Logo de la app con animación simple -->
-            <Image x:Name="LogoImage"
-                   Source="gentlemen.png" 
-                   WidthRequest="250" 
-                   HeightRequest="250" 
-                   HorizontalOptions="Center"
-                   Opacity="0" />
-
-            <!-- Nombre de la app -->
-            <Label x:Name="AppNameLabel"
-                   Text="Barber Go" 
-                   FontSize="28" 
-                   FontAttributes="Bold"
-                   TextColor="White" 
-                   HorizontalOptions="Center"
-                   Opacity="0" />
-
-            <!-- Loading indicator -->
-            <VerticalStackLayout Spacing="15" HorizontalOptions="Center" Margin="0,20,0,0">
-                <ActivityIndicator x:Name="LoadingIndicator"
-                                 IsRunning="True" 
-                                 Color="#FF6F91" 
-                                 WidthRequest="40"
-                                 HeightRequest="40"
-                                 HorizontalOptions="Center" />
-
-                <Label x:Name="LoadingLabel"
-                       Text="Cargando..." 
-                       FontSize="14" 
-                       TextColor="#B0BEC5" 
-                       HorizontalOptions="Center"
-                       Opacity="0" />
-            </VerticalStackLayout>
-
-        </VerticalStackLayout>
-    </Grid>
+	<Grid VerticalOptions="Center" HorizontalOptions="Center">
+		<VerticalStackLayout Spacing="30" HorizontalOptions="Center" VerticalOptions="Center">
+			<!-- Logo de la app con animación simple -->
+			<Image x:Name="LogoImage" Source="gentlemen.png" WidthRequest="250" HeightRequest="250" HorizontalOptions="Center" Opacity="0" />
+			<!-- Nombre de la app -->
+			<Label x:Name="AppNameLabel" Text="Barber Go" FontSize="28" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" Opacity="0" />
+			<!-- Loading indicator -->
+			<VerticalStackLayout Spacing="15" HorizontalOptions="Center" Margin="0,20,0,0">
+				<ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" Color="#FF6F91" WidthRequest="40" HeightRequest="40" HorizontalOptions="Center" />
+				<Label x:Name="LoadingLabel" Text="Cargando..."  FontSize="14" TextColor="#B0BEC5" HorizontalOptions="Center" Opacity="0" />
+			</VerticalStackLayout>
+		</VerticalStackLayout>
+	</Grid>
 
 </ContentPage>

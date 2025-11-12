@@ -268,7 +268,32 @@ namespace Barber.Maui.API.Controllers
                 });
             }
         }
+        [HttpPut("cambiar-barberia/{cedula}")]
+        public async Task<ActionResult> CambiarBarberia(long cedula, [FromBody] CambiarBarberiaDto dto)
+        {
+            var usuario = await _context.UsuarioPerfiles.FirstOrDefaultAsync(u => u.Cedula == cedula);
 
+            if (usuario == null)
+                return NotFound(new { message = "Usuario no encontrado." });
+
+            if (usuario.Rol?.ToLower() != "cliente")
+                return BadRequest(new { message = "Solo los clientes pueden cambiar de barbería." });
+
+            // Validar que la barbería existe
+            var barberia = await _context.Barberias.FindAsync(dto.IdBarberia);
+            if (barberia == null)
+                return NotFound(new { message = "Barbería no encontrada." });
+
+            usuario.IdBarberia = dto.IdBarberia;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Barbería cambiada exitosamente.", idBarberia = dto.IdBarberia });
+        }
+
+        public class CambiarBarberiaDto
+        {
+            public int IdBarberia { get; set; }
+        }
         // Tus otros endpoints existentes...
         [HttpDelete("{cedula}")]
         public async Task<IActionResult> EliminarUsuario(long cedula)

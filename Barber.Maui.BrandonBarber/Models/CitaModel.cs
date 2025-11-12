@@ -24,7 +24,7 @@
                 return Estado?.ToLower() switch
                 {
                     "completada" => "✓",
-                    "cancelada" => "✗",
+                    "cancelada" => "X",
                     _ => "🟡"
                 };
             }
