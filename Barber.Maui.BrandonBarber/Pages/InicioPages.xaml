@@ -323,7 +323,7 @@
                             </Border.GestureRecognizers>
                             <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
                                 <Image Grid.Column="0" Source="man.png" WidthRequest="40" HeightRequest="40" />
-                                <Label Grid.Column="1" Text="Gestinar Servicios" TextColor="black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Label Grid.Column="1" Text="Gestionar Servicios" TextColor="black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
                                 <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
                             </Grid>
                         </Border>
@@ -334,7 +334,7 @@
                             </Border.GestureRecognizers>
                             <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
                                 <Image Grid.Column="0" Source="barberias.png" WidthRequest="40" HeightRequest="40" />
-                                <Label Grid.Column="1" Text="Gestinar Barberias" TextColor="black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Label Grid.Column="1" Text="Gestionar Barberias" TextColor="black" FontSize="20" VerticalOptions="Center" Margin="10,0,0,0"/>
                                 <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
                             </Grid>
                         </Border>

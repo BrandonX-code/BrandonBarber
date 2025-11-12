@@ -144,7 +144,7 @@ namespace Barber.Maui.BrandonBarber.Pages
         public string IconoEstado => Estado?.ToLower() switch
         {
             "aprobado" => "✓",
-            "rechazado" => "✗",
+            "rechazado" => "X",
             _ => "🟡"
         };
         public bool EsRechazada => Estado?.ToLower() == "rechazado";

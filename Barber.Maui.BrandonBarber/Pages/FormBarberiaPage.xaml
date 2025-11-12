@@ -75,7 +75,7 @@
         <StackLayout Spacing="20">
             <Label Text="{Binding PageTitle}" Style="{StaticResource TitleStyle}" Margin="0,0,0,10"/>
 
-            <Border Style="{StaticResource SectionFrameStyle}" StrokeThickness="0">
+            <Border Style="{StaticResource SectionFrameStyle}" StrokeShape="RoundRectangle 10" StrokeThickness="0">
                 <StackLayout Spacing="15">
                     <Label Text="Logo de la Barbería" Style="{StaticResource SectionTitleStyle}"/>
                     <Border WidthRequest="120" HeightRequest="120" StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="{StaticResource TertiaryBackground}" HorizontalOptions="Center" StrokeThickness="0">
@@ -88,7 +88,7 @@
                 </StackLayout>
             </Border>
 
-            <Border Style="{StaticResource SectionFrameStyle}" StrokeThickness="0">
+            <Border Style="{StaticResource SectionFrameStyle}" StrokeShape="RoundRectangle 10" StrokeThickness="0">
                 <StackLayout Spacing="15">
                     <StackLayout Spacing="5">
                         <Label Text="Nombre de la Barbería *" Style="{StaticResource FieldLabelStyle}"/>
