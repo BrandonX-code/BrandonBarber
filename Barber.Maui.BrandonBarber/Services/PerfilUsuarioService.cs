@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
 
@@ -88,7 +89,15 @@ namespace Barber.Maui.BrandonBarber.Services
                 return false;
             }
         }
-
+        public async Task<bool> VerificarEmailExiste(string email, long cedulaActual)
+        {
+            var response = await _httpClient.GetAsync($"api/perfiles/verificar-email/{email}?cedulaActual={cedulaActual}");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<bool>();
+            }
+            return false;
+        }
         /// <summary>
         /// Actualiza la imagen de perfil
         /// </summary>

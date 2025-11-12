@@ -58,7 +58,13 @@ namespace Barber.Maui.API.Controllers
                 return StatusCode(500, new { message = "Error al guardar el Auth.", error = ex.Message });
             }
         }
-
+        [HttpGet("verificar-email/{email}")]
+        public async Task<ActionResult<bool>> VerificarEmailExiste(string email, [FromQuery] long? cedulaActual = null)
+        {
+            var existe = await _context.UsuarioPerfiles
+                .AnyAsync(p => p.Email == email && p.Cedula != cedulaActual);
+            return Ok(existe);
+        }
         [HttpPut("{id}")]
         public async Task<IActionResult> ActualizarAuth(long id, [FromBody] Auth authUpdate)
         {
@@ -66,7 +72,14 @@ namespace Barber.Maui.API.Controllers
 
             var auth = await _context.UsuarioPerfiles.FirstOrDefaultAsync(u => u.Cedula == id);
             if (auth == null) return NotFound();
+            if (!string.IsNullOrEmpty(authUpdate.Email))
+            {
+                var emailExiste = await _context.UsuarioPerfiles
+                    .AnyAsync(u => u.Email == authUpdate.Email && u.Cedula != id);
 
+                if (emailExiste)
+                    return Conflict(new { message = "El correo electrónico ya está registrado por otro usuario." });
+            }
             auth.Nombre = authUpdate.Nombre;
             auth.Email = authUpdate.Email;
             auth.Direccion = authUpdate.Direccion;

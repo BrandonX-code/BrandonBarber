@@ -152,11 +152,20 @@
 
             try
             {
+                if (!string.IsNullOrWhiteSpace(EmailEntry.Text) && EmailEntry.Text != _perfilData.Email)
+                {
+                    bool emailExiste = await _perfilService.VerificarEmailExiste(EmailEntry.Text, _perfilData.Cedula);
+                    if (emailExiste)
+                    {
+                        await AppUtils.MostrarSnackbar("El correo electrónico ya está registrado por otro usuario.", Colors.Red, Colors.White);
+                        IsBusy = false;
+                        return;
+                    }
+                }
                 _perfilData.Nombre = NombreEntry.Text;
                 _perfilData.Telefono = TelefonoEntry.Text;
                 _perfilData.Email = EmailEntry.Text;
                 _perfilData.Direccion = DireccionEntry.Text;
-
                 // Guardar especialidades solo si es barbero
                 if (_perfilData.Rol?.Equals("Barbero", StringComparison.OrdinalIgnoreCase) ?? false)
                 {
