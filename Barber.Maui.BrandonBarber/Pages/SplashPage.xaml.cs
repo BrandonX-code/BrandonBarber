@@ -56,11 +56,6 @@
         {
             // Animar logo
             await LogoImage.FadeTo(1, 600, Easing.CubicOut);
-
-            // Animar nombre de la app
-            await AppNameLabel.FadeTo(1, 400, Easing.CubicOut);
-
-            // Animar label de cargando
             await LoadingLabel.FadeTo(1, 400, Easing.CubicOut);
         }
 
