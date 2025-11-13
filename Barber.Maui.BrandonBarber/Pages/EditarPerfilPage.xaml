@@ -3,18 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Barber.Maui.BrandonBarber.Pages.EditarPerfilPage"
              BackgroundColor="#0E2A36">
-    
+
     <Grid Padding="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
-        <Label Text="Editar Perfil"  Grid.Row="0" FontSize="24"  FontAttributes="Bold"  TextColor="White"  HorizontalOptions="Center" Margin="0,20,0,20" />
-
+        
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Grid.Row="1">
-            <VerticalStackLayout Spacing="20" Margin="0,10">
+            <VerticalStackLayout Spacing="15">
                 <Border Grid.Column="0" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" HeightRequest="140" WidthRequest="110" StrokeThickness="0">
                     <Image x:Name="PerfilImage" Aspect="AspectFill">
                         <Image.Clip>
@@ -55,7 +53,7 @@
                 </VerticalStackLayout>
                 <!-- Después de DireccionEntry y antes de EspecialidadesContainer -->
 
-                <VerticalStackLayout x:Name="BarberiaActualContainer" Spacing="5" IsVisible="False">
+                <VerticalStackLayout x:Name="BarberiaActualContainer" Spacing="15" IsVisible="False">
                     <Label Text="Tu barbería actual" Style="{StaticResource ProfileLabelStyle}" />
 
                     <Border BackgroundColor="#28475C" StrokeShape="RoundRectangle 15" Padding="15" StrokeThickness="0">
