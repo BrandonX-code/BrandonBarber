@@ -39,7 +39,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
 
             LoadingIndicator.IsVisible = true;
-            LoadingIndicator.IsRunning = true;
+            LoadingIndicator.IsLoading = true;
             ErrorLabel.IsVisible = false;
 
             var loginButton = (Button)sender;
@@ -65,9 +65,10 @@ namespace Barber.Maui.BrandonBarber.Pages
                 ErrorLabel.IsVisible = true;
             }
             finally
+
             {
                 LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsRunning = false;
+                LoadingIndicator.IsLoading = false;
                 loginButton.IsEnabled = true;
             }
         }

@@ -49,7 +49,7 @@
             }
 
             LoadingIndicator.IsVisible = true;
-            LoadingIndicator.IsRunning = true;
+            LoadingIndicator.IsLoading = true;
             ErrorLabel.IsVisible = false;
             SuccessLabel.IsVisible = false;
 
@@ -94,7 +94,7 @@
             finally
             {
                 LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsRunning = false;
+                LoadingIndicator.IsLoading = false;
                 agregarButton.IsEnabled = true;
             }
         }

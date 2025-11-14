@@ -52,6 +52,7 @@
             }
         }
 
+
         private async Task AnimateElements()
         {
             // Animar logo

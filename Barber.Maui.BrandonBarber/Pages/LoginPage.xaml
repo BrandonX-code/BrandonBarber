@@ -2,10 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Barber.Maui.BrandonBarber.Pages.LoginPage"
-             BackgroundColor="#0E2A36" Shell.NavBarIsVisible="False">
+             BackgroundColor="#0E2A36" Shell.NavBarIsVisible="False"
+             NavigationPage.HasNavigationBar="False"
+             xmlns:controls="clr-namespace:Barber.Maui.BrandonBarber.Controls">
 
-    <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Padding="30">
-        <Grid>
+    <Grid>
+        <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Padding="30">
             <VerticalStackLayout Spacing="20" VerticalOptions="Center">
                 <Image Source="gentlemen.png" WidthRequest="230" HeightRequest="230" HorizontalOptions="Center" />
 
@@ -54,10 +56,8 @@
                 </Border>
 
                 <Label x:Name="ErrorLabel" TextColor="#FF6F91" FontSize="14" HorizontalOptions="Center" IsVisible="False" />
-
-                <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="White" HorizontalOptions="Center" />
             </VerticalStackLayout>
-        </Grid>
-
-    </ScrollView>
+        </ScrollView>
+        <controls:LoadingControl x:Name="LoadingIndicator" IsVisible="False"/>
+    </Grid>
 </ContentPage>

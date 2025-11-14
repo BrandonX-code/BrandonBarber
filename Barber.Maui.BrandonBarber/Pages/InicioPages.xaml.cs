@@ -480,7 +480,7 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                 // Ocultar indicador de carga
                 LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsRunning = false;
+                LoadingIndicator.IsLoading = false;
 
                 // Mostrar la vista correspondiente según el rol
                 switch (AuthService.CurrentUser.Rol!.ToLower())
@@ -556,7 +556,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             try
             {
                 LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsRunning = true;
+                LoadingIndicator.IsLoading = true;
                 ContentContainer.IsVisible = false;
 
                 var response = await _authService._BaseClient.GetAsync("api/auth");
@@ -588,7 +588,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             finally
             {
                 LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsRunning = false;
+                LoadingIndicator.IsLoading = false;
                 ContentContainer.IsVisible = true;
             }
         }

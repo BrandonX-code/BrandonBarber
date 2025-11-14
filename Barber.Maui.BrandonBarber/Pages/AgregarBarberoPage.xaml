@@ -2,11 +2,12 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Barber.Maui.BrandonBarber.Pages.AgregarBarberoPage"
-             BackgroundColor="#0E2A36">
+             BackgroundColor="#0E2A36"
+             xmlns:controls="clr-namespace:Barber.Maui.BrandonBarber.Controls" Grid.RowSpan="1">
 
-    <Grid Padding="20">
-        <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
-            <VerticalStackLayout Spacing="20" Padding="0,20">
+    <Grid>
+        <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never"  Padding="20">
+            <VerticalStackLayout Spacing="20">
                 <Label Text="Agregar Nuevo Barbero" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" Margin="0,0,0,20" />
                 <VerticalStackLayout x:Name="PickerSection" Spacing="5" IsVisible="False">
                     <Label Text="Seleccionar Barbería *" TextColor="White" FontSize="16" />
@@ -77,14 +78,6 @@
                         <Entry x:Name="ConfirmPasswordEntry" FontSize="16" HeightRequest="45" VerticalOptions="Center" Margin="10,0"  Placeholder="Confirmar contraseña" IsPassword="True" />
                     </Border>
                 </VerticalStackLayout>
-
-                <!-- Switch para barbero activo -->
-                <!--
-                <HorizontalStackLayout Spacing="10" Margin="0,10">
-                    <Label Text="Barbero activo:" TextColor="White" FontSize="16" VerticalOptions="Center" />
-                    <Switch x:Name="ActivoSwitch" IsToggled="True" OnColor="#90A4AE" />
-                </HorizontalStackLayout>-->
-
                 <Label x:Name="ErrorLabel" TextColor="#ff0000" FontSize="14" HorizontalOptions="Center" IsVisible="False" />
                 <Label x:Name="SuccessLabel" TextColor="#00ff00" FontSize="14" HorizontalOptions="Center" IsVisible="False" />
 
@@ -97,9 +90,8 @@
                     <Button Text="Cancelar" Grid.Column="0" Style="{StaticResource SecondaryButtonStyleAgregarBarberoPage}" Clicked="OnCancelarClicked" />
                     <Button Text="Agregar Barbero" Grid.Column="1" Style="{StaticResource PrimaryButtonStyleAgregarBarberoPage}" Clicked="OnAgregarBarberoClicked" />
                 </Grid>
-
-                <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" />
             </VerticalStackLayout>
         </ScrollView>
+        <controls:LoadingControl x:Name="LoadingIndicator" IsVisible="False"/>
     </Grid>
 </ContentPage>
