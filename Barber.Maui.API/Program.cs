@@ -4,8 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 //builder.WebHost.UseUrls("http://0.0.0.0:5286", "https://0.0.0.0:7283");
-builder.WebHost.ConfigureKestrel(options => options.ListenAnyIP(5286));
-
+builder.WebHost.ConfigureKestrel(options =>
+{
+    var port = Environment.GetEnvironmentVariable("PORT") ?? "5286";
+    options.ListenAnyIP(int.Parse(port));
+});
 
 // Add services to the container.
 builder.Services.AddHttpClient(); // ✅ Esto resuelve el error
