@@ -15,9 +15,8 @@ namespace Barber.Maui.BrandonBarber
             builder
            .UseMauiCommunityToolkit(options =>
            {
-               options.SetShouldEnableSnackbarOnWindows(true); // 👈 Habilita Snackbar en Windows
+               options.SetShouldEnableSnackbarOnWindows(true);
            })
-
            .UseMauiCommunityToolkit()
            .UseMicrocharts()
            .ConfigureFonts(fonts =>
@@ -26,35 +25,51 @@ namespace Barber.Maui.BrandonBarber
                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
            });
 
-
 #if ANDROID
             Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("NoUnderline", (h, v) =>
             {
                 h.PlatformView.BackgroundTintList = Android.Content.Res.ColorStateList.ValueOf(Colors.Transparent.ToPlatform());
             });
-
-            // Update the problematic line
 #endif
 
+            // ✅ CONFIGURACIÓN ACTUALIZADA PARA RENDER
             string apiBaseUrl;
+
+#if DEBUG
+            // En modo DEBUG: usa localhost o IP local
             if (DeviceInfo.Platform == DevicePlatform.Android)
             {
-                apiBaseUrl = "https://192.168.0.28:7283/";
+                apiBaseUrl = "https://192.168.0.28:7283/"; // Para emulador/dispositivo Android en red local
             }
             else
             {
-                apiBaseUrl = "https://localhost:7283/";
+                apiBaseUrl = "https://localhost:7283/"; // Para Windows/iOS en desarrollo
             }
+#else
+            // En modo RELEASE: usa la URL de Render (producción)
+            apiBaseUrl = "https://brandonbarber.onrender.com/";
+#endif
 
             builder.Services.AddSingleton<HttpClient>(sp =>
             {
                 var httpClientHandler = new HttpClientHandler();
+
+#if DEBUG
+                // Solo ignora certificados SSL en desarrollo
                 if (DeviceInfo.Platform == DevicePlatform.Android)
                 {
                     httpClientHandler.ServerCertificateCustomValidationCallback =
                         (message, cert, chain, errors) => true;
                 }
-                return new HttpClient(httpClientHandler) { BaseAddress = new Uri(apiBaseUrl) };
+#endif
+
+                var httpClient = new HttpClient(httpClientHandler)
+                {
+                    BaseAddress = new Uri(apiBaseUrl),
+                    Timeout = TimeSpan.FromSeconds(30) // ✅ Aumenta el timeout para Render
+                };
+
+                return httpClient;
             });
 
             // Registrar servicios
@@ -76,8 +91,6 @@ namespace Barber.Maui.BrandonBarber
             builder.Services.AddSingleton<PerfilPage>();
             builder.Services.AddSingleton<GaleriaPage>();
             builder.Services.AddSingleton<SeleccionBarberiaPage>();
-
-            builder.UseMauiApp<App>().UseMauiCommunityToolkit();
 
 #if DEBUG
             builder.Logging.AddDebug();
