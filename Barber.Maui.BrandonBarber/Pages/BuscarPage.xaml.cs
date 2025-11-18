@@ -66,7 +66,8 @@
         {
             try
             {
-                MostrarLoader(true);
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
 
                 var clienteCedula = AuthService.CurrentUser!.Cedula;
                 var citas = await _reservationService.GetReservationsById(clienteCedula);
@@ -102,7 +103,8 @@
             }
             finally
             {
-                MostrarLoader(false);
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 
@@ -110,11 +112,6 @@
         {
             HasProximasCitas = ProximasCitas.Count > 0;
             HasHistorialCitas = HistorialCitas.Count > 0;
-        }
-
-        private void MostrarLoader(bool mostrar)
-        {
-            LoaderOverlay.IsVisible = mostrar;
         }
 
         // Agregar este método a tu clase BuscarPage
@@ -135,7 +132,8 @@
 
                 try
                 {
-                    MostrarLoader(true);
+                    LoadingIndicator.IsVisible = true;
+                    LoadingIndicator.IsLoading = true;
                     bool eliminado = await _reservationService.DeleteReservation(cita.Id);
 
                     if (eliminado)
@@ -155,7 +153,8 @@
                 }
                 finally
                 {
-                    MostrarLoader(false);
+                    LoadingIndicator.IsVisible = false;
+                    LoadingIndicator.IsLoading = false;
                 }
             }
         }

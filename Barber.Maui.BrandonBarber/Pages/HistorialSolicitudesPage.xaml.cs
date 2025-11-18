@@ -50,6 +50,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var response = await _httpClient.GetAsync("api/solicitudes/historial");
                 if (response.IsSuccessStatusCode)
                 {
@@ -81,6 +83,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             catch (Exception ex)
             {
                 await DisplayAlert("Error", ex.Message, "OK");
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 

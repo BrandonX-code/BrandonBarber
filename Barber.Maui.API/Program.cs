@@ -4,10 +4,27 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 //builder.WebHost.UseUrls("http://0.0.0.0:5286", "https://0.0.0.0:7283");
+
+//builder.WebHost.ConfigureKestrel(options =>
+//{
+//    var port = Environment.GetEnvironmentVariable("PORT") ?? "5286";
+//    options.ListenAnyIP(int.Parse(port));
+//});
 builder.WebHost.ConfigureKestrel(options =>
 {
-    var port = Environment.GetEnvironmentVariable("PORT") ?? "5286";
-    options.ListenAnyIP(int.Parse(port));
+    var port = Environment.GetEnvironmentVariable("PORT");
+
+    if (port != null)
+    {
+        // Modo Render
+        options.ListenAnyIP(int.Parse(port));
+    }
+    else
+    {
+        // Modo LOCAL
+        options.ListenAnyIP(5286); // HTTP
+        options.ListenAnyIP(7283, listen => listen.UseHttps()); // HTTPS
+    }
 });
 
 // Add services to the container.

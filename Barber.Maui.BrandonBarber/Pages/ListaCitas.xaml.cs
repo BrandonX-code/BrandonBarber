@@ -30,6 +30,8 @@
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var user = AuthService.CurrentUser;
 
                 // Solo mostrar picker si es administrador
@@ -51,6 +53,11 @@
             catch (Exception ex)
             {
                 await DisplayAlert("Error", "No se pudieron cargar las barberías: " + ex.Message, "OK");
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 
@@ -94,7 +101,8 @@
             _isNavigating = true;
             try
             {
-                MostrarLoader(true);
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 CitasFiltradas.Clear();
 
                 var user = AuthService.CurrentUser;
@@ -146,7 +154,8 @@
             finally
             {
                 _isNavigating = false;
-                MostrarLoader(false);
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
             _= ActualizarContador();
         }
@@ -162,7 +171,8 @@
 
                 try
                 {
-                    MostrarLoader(true);
+                    LoadingIndicator.IsVisible = true;
+                    LoadingIndicator.IsLoading = true;
                     bool eliminado = await _reservationService.DeleteReservation(cita.Id);
 
                     if (eliminado)
@@ -181,15 +191,10 @@
                 }
                 finally
                 {
-                    MostrarLoader(false);
+                    LoadingIndicator.IsVisible = false;
+                    LoadingIndicator.IsLoading = false;
                 }
             }
         }
-
-        private void MostrarLoader(bool mostrar)
-        {
-            LoaderOverlay.IsVisible = mostrar;
-        }
-
     }
 }

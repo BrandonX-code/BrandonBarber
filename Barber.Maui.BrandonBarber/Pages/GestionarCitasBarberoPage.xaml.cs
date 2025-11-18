@@ -27,6 +27,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var barberoId = AuthService.CurrentUser!.Cedula;
                 Debug.WriteLine($"🔍 Cargando citas para barbero: {barberoId}");
 
@@ -66,6 +68,11 @@ namespace Barber.Maui.BrandonBarber.Pages
                 Debug.WriteLine($"❌ StackTrace: {ex.StackTrace}");
                 await AppUtils.MostrarSnackbar($"Error al cargar citas: {ex.Message}", Colors.Red, Colors.White);
             }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
+            }
         }
 
         private async void OnCompletadaClicked(object sender, EventArgs e)
@@ -74,6 +81,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             _isNavigating = true;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 if (sender is Button button && button.CommandParameter is CitaModel cita)
                 {
                     await ActualizarEstado(cita, "Completada");
@@ -81,6 +90,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
 
@@ -92,6 +103,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             _isNavigating = true;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 if (sender is Button button && button.CommandParameter is CitaModel cita)
                 {
                     var popup = new CustomAlertPopup($"¿Confirmar cancelación de la cita de {cita.Nombre}?");
@@ -105,6 +118,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
 

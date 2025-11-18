@@ -101,6 +101,8 @@
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var barberoId = AuthService.CurrentUser?.Cedula ?? 0;
 
                 Console.WriteLine("🔍 Intentando cargar plantilla...");
@@ -157,6 +159,11 @@
                 Console.WriteLine($"❌ Error al cargar plantilla: {ex.Message}");
                 await DisplayAlert("Error", $"No se pudo cargar la plantilla: {ex.Message}", "OK");
             }
+            finally
+            {
+                LoadingIndicator.IsLoading = false;
+                LoadingIndicator.IsVisible = false;
+            }
         }
         private async void OnGuardarPlantillaClicked(object sender, EventArgs e)
         {
@@ -164,6 +171,8 @@
             _isNavigating = true;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var barberoId = AuthService.CurrentUser?.Cedula ?? 0;
                 var plantilla = new PlantillaDisponibilidadModel
                 {
@@ -247,6 +256,8 @@
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
         }

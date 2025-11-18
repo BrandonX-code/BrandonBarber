@@ -68,6 +68,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             IsBusy = true;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(_idAdministrador);
                 MainThread.BeginInvokeOnMainThread(() =>
                 {
@@ -85,6 +87,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             finally
             {
+                LoadingIndicator.IsLoading = false;
+                LoadingIndicator.IsVisible = false;
                 IsBusy = false;
             }
         }
@@ -132,11 +136,15 @@ namespace Barber.Maui.BrandonBarber.Pages
 
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 if (sender is Button button) button.IsEnabled = false;
                 await AgregarBarberia();
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isProcessingClick = false;
                 if (sender is Button button) button.IsEnabled = true;
             }
@@ -146,6 +154,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 if (Navigation == null)
                 {
                     await AppUtils.MostrarSnackbar("No se puede navegar en este momento", Colors.Red, Colors.White);
@@ -164,6 +174,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 await AppUtils.MostrarSnackbar($"Error al abrir formulario: {ex.Message}", Colors.Red, Colors.White);
             }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
+            }
         }
 
         private async Task EditarBarberia(Barberia barberia)
@@ -172,6 +187,8 @@ namespace Barber.Maui.BrandonBarber.Pages
 
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var formPage = new FormBarberiaPage(barberia);
                 formPage.BarberiaGuardada += OnBarberiaGuardada;
                 await Navigation.PushAsync(formPage);
@@ -179,6 +196,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             catch (Exception ex)
             {
                 await AppUtils.MostrarSnackbar($"Error al abrir formulario: {ex.Message}", Colors.Red, Colors.White);
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 
@@ -188,6 +210,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             _isNavigating = true;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 if (barberia == null) return;
                 var popup = new CustomAlertPopup($"¿Quieres Eliminar La Barbería '{barberia.Nombre}'?");
                 bool confirmar = await popup.ShowAsync(this);
@@ -211,11 +235,15 @@ namespace Barber.Maui.BrandonBarber.Pages
                 }
                 finally
                 {
+                    LoadingIndicator.IsVisible = false;
+                    LoadingIndicator.IsLoading = false;
                     IsBusy = false;
                 }
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
         }

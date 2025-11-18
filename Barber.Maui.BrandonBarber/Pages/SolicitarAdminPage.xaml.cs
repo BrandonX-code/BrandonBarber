@@ -19,6 +19,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             _isNavigating = true;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 // Validaciones
                 if (string.IsNullOrWhiteSpace(CedulaEntry.Text))
                 {
@@ -76,7 +78,7 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                 this.IsEnabled = false;
                 LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsRunning = true;
+                LoadingIndicator.IsLoading = true;
 
                 try
                 {
@@ -112,12 +114,14 @@ namespace Barber.Maui.BrandonBarber.Pages
                 finally
                 {
                     LoadingIndicator.IsVisible = false;
-                    LoadingIndicator.IsRunning = false;
+                    LoadingIndicator.IsLoading = false;
                     this.IsEnabled = true;
                 }
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
         }

@@ -2,106 +2,108 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Barber.Maui.BrandonBarber.Pages.RegistroPage"
-             BackgroundColor="#0E2A36">
+             BackgroundColor="#0E2A36" xmlns:controls="clr-namespace:Barber.Maui.BrandonBarber.Controls" Grid.RowSpan="1">
 
-    <Grid Padding="20">
-        <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
-            <VerticalStackLayout Spacing="20" Padding="0,20">
-                <Label Text="Crear Cuenta de Cliente"  FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" Margin="0,0,0,20" />
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="Seleccionar Barbería" TextColor="White" FontSize="16" />
+    <Grid>
 
-                    <Border Style="{StaticResource BarberiaCardStyle}" StrokeShape="RoundRectangle 10" Padding="15" Margin="0,0,0,10" StrokeThickness="0">
-                        <Border.GestureRecognizers>
-                            <TapGestureRecognizer Tapped="OnSelectBarberiaTapped" />
-                        </Border.GestureRecognizers>
-                        <HorizontalStackLayout Spacing="5" HeightRequest="30">
-                            <Image Source="barber.png" WidthRequest="30" HeightRequest="30" />
-                            <Label x:Name="SelectedBarberiaPlaceholder" Text="Seleccione La Barbería" TextColor="White" FontSize="16" VerticalOptions="Center"/>
-                        </HorizontalStackLayout>
-                    </Border>
+        <Grid Padding="20">
+            <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
+                <VerticalStackLayout Spacing="20" Padding="0,20">
+                    <Label Text="Crear Cuenta de Cliente"  FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" Margin="0,0,0,20" />
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Seleccionar Barbería" TextColor="White" FontSize="16" />
 
-                    <!-- Frame para mostrar la barbería seleccionada (inicialmente oculto) -->
-                    <Border x:Name="SelectedBarberiaFrame" StrokeShape="RoundRectangle 10" BackgroundColor="#28475C" Padding="20" IsVisible="False" StrokeThickness="0">
-                        <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
-                            <Border WidthRequest="80" HeightRequest="80" StrokeShape="RoundRectangle 50" VerticalOptions="Center" HorizontalOptions="Center" StrokeThickness="0">
-                                <Image x:Name="SelectedBarberiaImage" Aspect="AspectFill"/>
-                            </Border>
+                        <Border Style="{StaticResource BarberiaCardStyle}" StrokeShape="RoundRectangle 10" Padding="15" Margin="0,0,0,10" StrokeThickness="0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnSelectBarberiaTapped" />
+                            </Border.GestureRecognizers>
+                            <HorizontalStackLayout Spacing="5" HeightRequest="30">
+                                <Image Source="barber.png" WidthRequest="30" HeightRequest="30" />
+                                <Label x:Name="SelectedBarberiaPlaceholder" Text="Seleccione La Barbería" TextColor="White" FontSize="16" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Border>
 
-                            <VerticalStackLayout Spacing="5" VerticalOptions="Center" HorizontalOptions="Start">
-                                <Label Text="Barbería seleccionada:" TextColor="#FF6F91" FontSize="14" FontAttributes="Bold"/>
-                                <Label x:Name="SelectedBarberiaName" Text="Nombre" TextColor="White" FontSize="16"/>
-                                <Label x:Name="SelectedBarberiaEmail" Text="Correo" TextColor="White" FontSize="16"/>
-                                <Label x:Name="SelectedBarberiaTelefono" Text="Teléfono" TextColor="White" FontSize="16"/>
-                                <Label x:Name="SelectedBarberiaAddress" Text="Dirección" TextColor="#A0A0A0" FontSize="14"/>
-                            </VerticalStackLayout>
-                        </HorizontalStackLayout>
-                    </Border>
+                        <!-- Frame para mostrar la barbería seleccionada (inicialmente oculto) -->
+                        <Border x:Name="SelectedBarberiaFrame" StrokeShape="RoundRectangle 10" BackgroundColor="#28475C" Padding="20" IsVisible="False" StrokeThickness="0">
+                            <HorizontalStackLayout Spacing="15" VerticalOptions="Center">
+                                <Border WidthRequest="80" HeightRequest="80" StrokeShape="RoundRectangle 50" VerticalOptions="Center" HorizontalOptions="Center" StrokeThickness="0">
+                                    <Image x:Name="SelectedBarberiaImage" Aspect="AspectFill"/>
+                                </Border>
 
+                                <VerticalStackLayout Spacing="5" VerticalOptions="Center" HorizontalOptions="Start">
+                                    <Label Text="Barbería seleccionada:" TextColor="#FF6F91" FontSize="14" FontAttributes="Bold"/>
+                                    <Label x:Name="SelectedBarberiaName" Text="Nombre" TextColor="White" FontSize="16"/>
+                                    <Label x:Name="SelectedBarberiaEmail" Text="Correo" TextColor="White" FontSize="16"/>
+                                    <Label x:Name="SelectedBarberiaTelefono" Text="Teléfono" TextColor="White" FontSize="16"/>
+                                    <Label x:Name="SelectedBarberiaAddress" Text="Dirección" TextColor="#A0A0A0" FontSize="14"/>
+                                </VerticalStackLayout>
+                            </HorizontalStackLayout>
+                        </Border>
+
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Nombre completo" TextColor="White" FontSize="16" />
+                        <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
+                            <Entry x:Name="NombreEntry"  FontSize="16" HeightRequest="45" VerticalOptions="Center" TextColor="Black" Margin="10,0" Placeholder="Nombre completo" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Cedula" TextColor="White" FontSize="16" />
+                        <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
+                            <Entry x:Name="CedulaEntry" FontSize="16" TextColor="Black" HeightRequest="45" VerticalOptions="Center" Margin="10,0" Placeholder="Numero de cedula" Keyboard="Numeric" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Correo electronico" TextColor="White" FontSize="16" />
+                        <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
+                            <Entry x:Name="EmailEntry" FontSize="16" HeightRequest="45" TextColor="Black" VerticalOptions="Center" Margin="10,0" Placeholder="ejemplo@correo.com" Keyboard="Email" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Telefono" TextColor="White" FontSize="16" />
+                        <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
+                            <Entry x:Name="TelefonoEntry" FontSize="16" HeightRequest="45" TextColor="Black" VerticalOptions="Center" Margin="10,0" Placeholder="Numero de telefono" Keyboard="Telephone" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Direccion" TextColor="White" FontSize="16" />
+                        <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
+                            <Entry x:Name="DireccionEntry" FontSize="16" HeightRequest="45" TextColor="Black" VerticalOptions="Center" Margin="10,0" Placeholder="Direccion" />
+                        </Border>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Contraseña" TextColor="White" FontSize="16" />
+                        <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
+                            <Entry x:Name="PasswordEntry" FontSize="16" HeightRequest="45" TextColor="Black" VerticalOptions="Center" Margin="10,0" Placeholder="Contraseña" IsPassword="True" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout Spacing="5">
+                        <Label Text="Confirmar contraseña" TextColor="White" FontSize="16" />
+                        <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
+                            <Entry x:Name="ConfirmPasswordEntry" FontSize="16" HeightRequest="45" TextColor="Black" VerticalOptions="Center" Margin="10,0" Placeholder="Confirmar contraseña" IsPassword="True" />
+                        </Border>
+                    </VerticalStackLayout>
+
+                    <Label x:Name="ErrorLabel" TextColor="#ff0000" FontSize="14" HorizontalOptions="Center" IsVisible="False" />
+
+                    <Grid ColumnSpacing="15" Margin="0,20,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Text="Cancelar" Grid.Column="0" Style="{StaticResource CancelButtonStyle}" Clicked="OnCancelarClicked" />
+
+                        <Button Text="Registrarse" Grid.Column="1" Style="{StaticResource RegistroButtonStyle}" Clicked="OnRegistrarClicked" />
+                    </Grid>
                 </VerticalStackLayout>
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="Nombre completo" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
-                        <Entry x:Name="NombreEntry"  FontSize="16" HeightRequest="45" VerticalOptions="Center" TextColor="Black" Margin="10,0" Placeholder="Nombre completo" />
-                    </Border>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="Cedula" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
-                        <Entry x:Name="CedulaEntry" FontSize="16" TextColor="Black" HeightRequest="45" VerticalOptions="Center" Margin="10,0" Placeholder="Numero de cedula" Keyboard="Numeric" />
-                    </Border>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="Correo electronico" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
-                        <Entry x:Name="EmailEntry" FontSize="16" HeightRequest="45" TextColor="Black" VerticalOptions="Center" Margin="10,0" Placeholder="ejemplo@correo.com" Keyboard="Email" />
-                    </Border>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="Telefono" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
-                        <Entry x:Name="TelefonoEntry" FontSize="16" HeightRequest="45" TextColor="Black" VerticalOptions="Center" Margin="10,0" Placeholder="Numero de telefono" Keyboard="Telephone" />
-                    </Border>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="Direccion" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
-                        <Entry x:Name="DireccionEntry" FontSize="16" HeightRequest="45" TextColor="Black" VerticalOptions="Center" Margin="10,0" Placeholder="Direccion" />
-                    </Border>
-                </VerticalStackLayout>
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="Contraseña" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
-                        <Entry x:Name="PasswordEntry" FontSize="16" HeightRequest="45" TextColor="Black" VerticalOptions="Center" Margin="10,0" Placeholder="Contraseña" IsPassword="True" />
-                    </Border>
-                </VerticalStackLayout>
-
-                <VerticalStackLayout Spacing="5">
-                    <Label Text="Confirmar contraseña" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
-                        <Entry x:Name="ConfirmPasswordEntry" FontSize="16" HeightRequest="45" TextColor="Black" VerticalOptions="Center" Margin="10,0" Placeholder="Confirmar contraseña" IsPassword="True" />
-                    </Border>
-                </VerticalStackLayout>
-
-                <Label x:Name="ErrorLabel" TextColor="#ff0000" FontSize="14" HorizontalOptions="Center" IsVisible="False" />
-
-                <Grid ColumnSpacing="15" Margin="0,20,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-
-                    <Button Text="Cancelar" Grid.Column="0" Style="{StaticResource CancelButtonStyle}" Clicked="OnCancelarClicked" />
-
-                    <Button Text="Registrarse" Grid.Column="1" Style="{StaticResource RegistroButtonStyle}" Clicked="OnRegistrarClicked" />
-                </Grid>
-
-                <ActivityIndicator x:Name="LoadingIndicator" IsRunning="False" IsVisible="False" Color="#90A4AE" VerticalOptions="Center" HorizontalOptions="Center" />
-            </VerticalStackLayout>
-        </ScrollView>
+            </ScrollView>
+        </Grid>
+        <controls:LoadingControl x:Name="LoadingIndicator" IsVisible="False"/>
     </Grid>
 </ContentPage>

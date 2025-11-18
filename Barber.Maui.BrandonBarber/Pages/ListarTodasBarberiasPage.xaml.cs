@@ -46,6 +46,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var barberias = await _barberiaService.GetBarberiasAsync();
                 var response = await _authService._BaseClient.GetAsync("api/auth?rol=administrador");
                 List<UsuarioModels> administradores = [];
@@ -75,6 +77,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             catch (Exception ex)
             {
                 await AppUtils.MostrarSnackbar($"Error cargando barberías: {ex.Message}", Colors.Red, Colors.White);
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 

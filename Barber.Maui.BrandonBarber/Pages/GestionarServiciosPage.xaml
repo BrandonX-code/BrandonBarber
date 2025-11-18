@@ -1,64 +1,68 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Barber.Maui.BrandonBarber.Pages.GestionarServiciosPage">
-    <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
-        <VerticalStackLayout Padding="20" Spacing="20" BackgroundColor="#0E2A36">
-            <Label Text="Gestión de Servicios" FontSize="24" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center"/>
-            <VerticalStackLayout x:Name="PickerSection" Grid.Row="0"  Spacing="5"  IsVisible="False">
-                <Border BackgroundColor="#90A4AE" Padding="15" StrokeShape="RoundRectangle 10" StrokeThickness="0" HeightRequest="100">
-                    <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
-                        <Picker x:Name="Picker" Margin="10,0" SelectedIndexChanged="Picker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}" Title="Seleccionar Barberia" TitleColor="Black" TextColor="Black" VerticalOptions="Center" />
-                    </Border>
-                </Border>
-            </VerticalStackLayout>
-            <Border StrokeThickness="0" Background="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
-                <VerticalStackLayout Spacing="10">
-                    <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
-                        <Entry x:Name="NombreEntry" Margin="10,0" Placeholder="Nombre del Servicio" TextColor="Black"/>
-                    </Border>
-                    <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
-                        <Entry x:Name="PrecioEntry"  Margin="10,0" Placeholder="Precio" Keyboard="Numeric" TextColor="Black" TextChanged="OnPrecioEntryTextChanged"/>
-                    </Border>
-                    <Border x:Name="PreviewImageBorder" StrokeShape="RoundRectangle 10" HeightRequest="100" WidthRequest="100" HorizontalOptions="Fill" Padding="0" StrokeThickness="0" IsVisible="False">
-                        <Image x:Name="PreviewImage" HeightRequest="100" WidthRequest="100" Aspect="AspectFill"/>
-                    </Border>
+             x:Class="Barber.Maui.BrandonBarber.Pages.GestionarServiciosPage" xmlns:controls="clr-namespace:Barber.Maui.BrandonBarber.Controls" Grid.RowSpan="1">
 
-                    <Button Text="Seleccionar Imagen" Clicked="OnSeleccionarImagen" CornerRadius="15" HorizontalOptions="Fill" BackgroundColor="#0E2A36" TextColor="White"/>
-
-                    <Grid ColumnDefinitions="Auto, *, Auto">
-                        <Button x:Name="AgregarBtn" Text="Agregar" Clicked="OnAgregarServicio" CornerRadius="15" BackgroundColor="#FF6F91" TextColor="Black"  HorizontalOptions="Center" Grid.Column="1"/>
-                    </Grid>
-
-                    <Grid ColumnDefinitions="*, *" ColumnSpacing="10" HorizontalOptions="Center">
-                        <Button x:Name="EditarBtn" CornerRadius="15" Text="Guardar Cambios" Clicked="OnEditarServicio" BackgroundColor="#FF6F91" TextColor="Black" IsVisible="False" Grid.Column="0"/>
-                        <Button x:Name="CancelarBtn" CornerRadius="15" Text="Cancelar" Clicked="OnCancelarEdicion" BackgroundColor="#828282" TextColor="Black" IsVisible="False" Grid.Column="1"/>
-                    </Grid>
+    <Grid>
+        <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
+            <VerticalStackLayout Padding="20" Spacing="20" BackgroundColor="#0E2A36">
+                <Label Text="Gestión de Servicios" FontSize="24" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center"/>
+                <VerticalStackLayout x:Name="PickerSection" Grid.Row="0"  Spacing="5"  IsVisible="False">
+                    <Border BackgroundColor="#90A4AE" Padding="15" StrokeShape="RoundRectangle 10" StrokeThickness="0" HeightRequest="100">
+                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
+                            <Picker x:Name="Picker" Margin="10,0" SelectedIndexChanged="Picker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}" Title="Seleccionar Barberia" TitleColor="Black" TextColor="Black" VerticalOptions="Center" />
+                        </Border>
+                    </Border>
                 </VerticalStackLayout>
-            </Border>
+                <Border StrokeThickness="0" Background="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
+                    <VerticalStackLayout Spacing="10">
+                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
+                            <Entry x:Name="NombreEntry" Margin="10,0" Placeholder="Nombre del Servicio" TextColor="Black"/>
+                        </Border>
+                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
+                            <Entry x:Name="PrecioEntry"  Margin="10,0" Placeholder="Precio" Keyboard="Numeric" TextColor="Black" TextChanged="OnPrecioEntryTextChanged"/>
+                        </Border>
+                        <Border x:Name="PreviewImageBorder" StrokeShape="RoundRectangle 10" HeightRequest="100" WidthRequest="100" HorizontalOptions="Fill" Padding="0" StrokeThickness="0" IsVisible="False">
+                            <Image x:Name="PreviewImage" HeightRequest="100" WidthRequest="100" Aspect="AspectFill"/>
+                        </Border>
 
-            <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" HeightRequest="400">
-                <CollectionView x:Name="ServiciosListView" SelectionMode="Single" SelectionChanged="OnServicioSeleccionado">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="10" Margin="5" StrokeThickness="0">
-                                <Grid ColumnDefinitions="80,*,Auto,Auto" VerticalOptions="Center">
-                                    <Border StrokeShape="RoundRectangle 7" HeightRequest="60" WidthRequest="60" HorizontalOptions="Fill" Padding="0" StrokeThickness="0">
-                                        <Image Source="{Binding Imagen}" HeightRequest="60" WidthRequest="60" Grid.Column="0" Aspect="AspectFill"/>
-                                    </Border>
-                                    <VerticalStackLayout Grid.Column="1" Spacing="2">
-                                        <Label Text="{Binding Nombre}" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
-                                        <Label Text="{Binding Precio, StringFormat='${0:N0}'}" TextColor="Black" FontSize="16"/>
-                                    </VerticalStackLayout>
-                                    <Button ImageSource="editar.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Clicked="OnEditarBtnClicked" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="White" Padding="5,0"/>
-                                    <Button ImageSource="delete.png" HeightRequest="20" WidthRequest="20" Grid.Column="3" Clicked="OnEliminarBtnClicked" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="White" Padding="5,0"/>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </ScrollView>
+                        <Button Text="Seleccionar Imagen" Clicked="OnSeleccionarImagen" CornerRadius="15" HorizontalOptions="Fill" BackgroundColor="#0E2A36" TextColor="White"/>
 
-        </VerticalStackLayout>
-    </ScrollView>
+                        <Grid ColumnDefinitions="Auto, *, Auto">
+                            <Button x:Name="AgregarBtn" Text="Agregar" Clicked="OnAgregarServicio" CornerRadius="15" BackgroundColor="#FF6F91" TextColor="Black"  HorizontalOptions="Center" Grid.Column="1"/>
+                        </Grid>
+
+                        <Grid ColumnDefinitions="*, *" ColumnSpacing="10" HorizontalOptions="Center">
+                            <Button x:Name="EditarBtn" CornerRadius="15" Text="Guardar Cambios" Clicked="OnEditarServicio" BackgroundColor="#FF6F91" TextColor="Black" IsVisible="False" Grid.Column="0"/>
+                            <Button x:Name="CancelarBtn" CornerRadius="15" Text="Cancelar" Clicked="OnCancelarEdicion" BackgroundColor="#828282" TextColor="Black" IsVisible="False" Grid.Column="1"/>
+                        </Grid>
+                    </VerticalStackLayout>
+                </Border>
+
+                <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" HeightRequest="400">
+                    <CollectionView x:Name="ServiciosListView" SelectionMode="Single" SelectionChanged="OnServicioSeleccionado">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="10" Margin="5" StrokeThickness="0">
+                                    <Grid ColumnDefinitions="80,*,Auto,Auto" VerticalOptions="Center">
+                                        <Border StrokeShape="RoundRectangle 7" HeightRequest="60" WidthRequest="60" HorizontalOptions="Fill" Padding="0" StrokeThickness="0">
+                                            <Image Source="{Binding Imagen}" HeightRequest="60" WidthRequest="60" Grid.Column="0" Aspect="AspectFill"/>
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                            <Label Text="{Binding Nombre}" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                                            <Label Text="{Binding Precio, StringFormat='${0:N0}'}" TextColor="Black" FontSize="16"/>
+                                        </VerticalStackLayout>
+                                        <Button ImageSource="editar.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Clicked="OnEditarBtnClicked" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="White" Padding="5,0"/>
+                                        <Button ImageSource="delete.png" HeightRequest="20" WidthRequest="20" Grid.Column="3" Clicked="OnEliminarBtnClicked" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="White" Padding="5,0"/>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </ScrollView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+        <controls:LoadingControl x:Name="LoadingIndicator" IsVisible="False"/>
+    </Grid>
 </ContentPage>

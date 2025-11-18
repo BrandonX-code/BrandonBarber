@@ -2,36 +2,40 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Barber.Maui.BrandonBarber.Pages.PerfilPage"
-             BackgroundColor="#0E2A36">
-    <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
-        <Grid Padding="20">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="Auto" />
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-            </Grid.RowDefinitions>
-            <Grid Grid.Row="0" ColumnSpacing="10">
-                <Label Text="Perfil" FontSize="22" FontAttributes="Bold" TextColor="White" VerticalOptions="Center" />
-                <StackLayout Orientation="Horizontal" HorizontalOptions="End">
-                    <ImageButton Source="logout.png" HeightRequest="32" WidthRequest="32" VerticalOptions="Center" Clicked="OnCerrarSesionClicked"/>
-                </StackLayout>
-            </Grid>
-            <VerticalStackLayout Grid.Row="1" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
-                <Border Grid.Column="0"  BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" HeightRequest="180" WidthRequest="150" StrokeThickness="0">
-                    <Image x:Name="PerfilImage" Aspect="AspectFill">
-                        <Image.Clip>
-                            <RoundRectangleGeometry CornerRadius="10" Rect="0,0,150,180" />
-                        </Image.Clip>
-                    </Image>
-                </Border>
+             BackgroundColor="#0E2A36" xmlns:controls="clr-namespace:Barber.Maui.BrandonBarber.Controls" Grid.RowSpan="1">
+    <Grid>
 
-                <Label x:Name="NombreLabel" Text="xxx" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
-                <Label x:Name="TelefonoLabel" Text="###" FontSize="16" TextColor="White" HorizontalOptions="Center" />
-                <Button Text="Editar Perfil" BackgroundColor="#FF6F91" CornerRadius="15" TextColor="Black" Clicked="OnEditarPerfilClicked"/>
-            </VerticalStackLayout>
-        </Grid>
-    </ScrollView>
+        <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
+            <Grid Padding="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" ColumnSpacing="10">
+                    <Label Text="Perfil" FontSize="22" FontAttributes="Bold" TextColor="White" VerticalOptions="Center" />
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="End">
+                        <ImageButton Source="logout.png" HeightRequest="32" WidthRequest="32" VerticalOptions="Center" Clicked="OnCerrarSesionClicked"/>
+                    </StackLayout>
+                </Grid>
+                <VerticalStackLayout Grid.Row="1" Spacing="20" VerticalOptions="Center" HorizontalOptions="Center">
+                    <Border Grid.Column="0"  BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" HeightRequest="180" WidthRequest="150" StrokeThickness="0">
+                        <Image x:Name="PerfilImage" Aspect="AspectFill">
+                            <Image.Clip>
+                                <RoundRectangleGeometry CornerRadius="10" Rect="0,0,150,180" />
+                            </Image.Clip>
+                        </Image>
+                    </Border>
+
+                    <Label x:Name="NombreLabel" Text="xxx" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" />
+                    <Label x:Name="TelefonoLabel" Text="###" FontSize="16" TextColor="White" HorizontalOptions="Center" />
+                    <Button Text="Editar Perfil" BackgroundColor="#FF6F91" CornerRadius="15" TextColor="Black" Clicked="OnEditarPerfilClicked"/>
+                </VerticalStackLayout>
+            </Grid>
+        </ScrollView>
+        <controls:LoadingControl x:Name="LoadingIndicator" IsVisible="False"/>
+    </Grid>
 </ContentPage>

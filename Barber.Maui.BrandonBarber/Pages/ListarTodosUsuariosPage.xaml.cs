@@ -49,7 +49,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             try
             {
                 LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsRunning = true;
+                LoadingIndicator.IsLoading = true;
                 ContentContainer.IsVisible = false;
 
                 var response = await _authService._BaseClient.GetAsync("api/perfiles");
@@ -74,7 +74,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             finally
             {
                 LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsRunning = false;
+                LoadingIndicator.IsLoading = false;
                 ContentContainer.IsVisible = true;
                 EmptyStateFrame.IsVisible = !_usuariosFiltrados.Any();
             }

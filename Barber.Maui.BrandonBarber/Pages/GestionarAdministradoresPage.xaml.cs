@@ -57,7 +57,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             try
             {
                 LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsRunning = true;
+                LoadingIndicator.IsLoading = true;
                 ContentContainer.IsVisible = false;
 
                 System.Diagnostics.Debug.WriteLine("Iniciando carga de admins...");
@@ -87,7 +87,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             finally
             {
                 LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsRunning = false;
+                LoadingIndicator.IsLoading = false;
                 ContentContainer.IsVisible = true;
                 EmptyStateFrame.IsVisible = !_adminsFiltrados.Any();
             }

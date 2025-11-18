@@ -35,6 +35,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 long idAdministrador = AuthService.CurrentUser!.Cedula;
                 _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
 
@@ -59,6 +61,11 @@ namespace Barber.Maui.BrandonBarber.Pages
                 // Si falla cargar barberías, mostrar métricas generales
                 _barberiaSeleccionadaId = 0;
                 await CargarMetricas();
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 
@@ -87,6 +94,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var fechaActual = DateTime.Now;
                 int mes = fechaActual.Month;
                 int anio = fechaActual.Year;
@@ -114,9 +123,9 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var citasGestionadasMes = citasDelMes.Count(c => c.Estado?.ToLower() == "completada" || c.Estado?.ToLower() == "cancelada");
                 var citasCompletadasMes = citasDelMes.Count(c => c.Estado?.ToLower() == "completada");
 
-                var tasaAsistencia = citasGestionadasMes >0
-                    ? (double)citasCompletadasMes / citasGestionadasMes *100
-                    :0;
+                var tasaAsistencia = citasGestionadasMes > 0
+                    ? (double)citasCompletadasMes / citasGestionadasMes * 100
+                    : 0;
 
                 // Actualizar estadísticas generales
                 TotalCitasLabel.Text = citasHoy.Count.ToString(); // ← CITAS DE HOY
@@ -134,6 +143,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 await AppUtils.MostrarSnackbar($"Error al cargar métricas: {ex.Message}", Colors.Red, Colors.White);
             }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
+            }
         }
 
         private void OnAsistenciaChartTypeChanged(object sender, EventArgs e)
@@ -145,6 +159,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var entries = await ObtenerDatosTasaAsistencia();
 
                 Chart chart;
@@ -180,6 +196,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             catch (Exception ex)
             {
                 await AppUtils.MostrarSnackbar($"Error al cargar gráfico de tasa: {ex.Message}", Colors.Red, Colors.White);
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 
@@ -257,6 +278,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var entries = await ObtenerDatosAsistencia();
 
                 Chart chart;
@@ -290,6 +313,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             catch (Exception ex)
             {
                 await AppUtils.MostrarSnackbar($"Error al cargar gráfico: {ex.Message}", Colors.Red, Colors.White);
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 
@@ -343,6 +371,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 // Obtener todas las citas históricas
                 List<CitaModel> todasLasCitas;
                 if (_barberiaSeleccionadaId > 0)
@@ -468,6 +498,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 await AppUtils.MostrarSnackbar($"Error al cargar ranking: {ex.Message}", Colors.Red, Colors.White);
             }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
+            }
         }
 
         private static string TruncateLabel(string nombre, int maxLength)
@@ -480,6 +515,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 // Obtener todas las citas históricas
                 List<CitaModel> todasLasCitas;
                 if (_barberiaSeleccionadaId > 0)
@@ -532,6 +569,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             catch (Exception ex)
             {
                 await AppUtils.MostrarSnackbar($"Error al cargar clientes frecuentes: {ex.Message}", Colors.Red, Colors.White);
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
     }

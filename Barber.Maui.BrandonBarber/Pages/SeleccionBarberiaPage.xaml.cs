@@ -73,6 +73,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var barberias = await _barberiaService.GetBarberiasAsync();
 
                 MainThread.BeginInvokeOnMainThread(() =>
@@ -101,6 +103,11 @@ namespace Barber.Maui.BrandonBarber.Pages
                 {
                     await AppUtils.MostrarSnackbar($"Error cargando barberías: {ex.Message}", Colors.Red, Colors.White);
                 });
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 

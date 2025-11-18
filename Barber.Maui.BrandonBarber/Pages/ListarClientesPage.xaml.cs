@@ -39,6 +39,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 long idAdministrador = AuthService.CurrentUser!.Cedula;
                 _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
 
@@ -50,6 +52,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             catch (Exception ex)
             {
                 await DisplayAlert("Error", "No se pudieron cargar las barberías: " + ex.Message, "OK");
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 
@@ -87,7 +94,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             try
             {
                 LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsRunning = true;
+                LoadingIndicator.IsLoading = true;
                 ContentContainer.IsVisible = false;
 
                 // Si no hay barbería seleccionada, no mostrar clientes
@@ -133,7 +140,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             finally
             {
                 LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsRunning = false;
+                LoadingIndicator.IsLoading = false;
                 ContentContainer.IsVisible = true;
 
                 // Mostrar estado vacío si no hay clientes

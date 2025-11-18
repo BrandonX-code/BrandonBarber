@@ -36,6 +36,8 @@ namespace Barber.Maui.BrandonBarber.Pages
 
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var response = await _authService.ForgotPassword(EmailEntry.Text.Trim());
 
                 if (response.IsSuccess)
@@ -62,6 +64,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 ((Button)sender).IsEnabled = true;
                 this.IsEnabled = true;
                 SetLoadingState(false);
@@ -79,6 +83,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             this.IsEnabled = false;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var response = await _authService.ResetPassword(
                     _currentEmail,
                     TokenEntry.Text.Trim(),
@@ -104,6 +110,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 ((Button)sender).IsEnabled = true;
                 this.IsEnabled = true;
                 SetLoadingState(false);
@@ -118,6 +126,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             this.IsEnabled = false;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var response = await _authService.ForgotPassword(_currentEmail);
 
                 if (response.IsSuccess)
@@ -137,6 +147,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 ((Button)sender).IsEnabled = true;
                 this.IsEnabled = true;
                 SetLoadingState(false);
@@ -219,7 +231,6 @@ namespace Barber.Maui.BrandonBarber.Pages
         private void SetLoadingState(bool isLoading)
         {
             LoadingIndicator.IsVisible = isLoading;
-            LoadingIndicator.IsRunning = isLoading;
         }
 
         private async Task NavigateToLogin()

@@ -18,6 +18,8 @@
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 // Validar que el usuario actual no sea null
                 if (AuthService.CurrentUser == null)
                 {
@@ -45,6 +47,11 @@
             catch (Exception ex)
             {
                 await AppUtils.MostrarSnackbar($"Error al cargar calificación previa: {ex.Message}", Colors.Red, Colors.White);
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 
@@ -80,6 +87,8 @@
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 if (_calificacionSeleccionada == 0)
                 {
                     await AppUtils.MostrarSnackbar("Por favor selecciona una calificación", Colors.Orange, Colors.White);
@@ -125,6 +134,11 @@
             catch (Exception ex)
             {
                 await AppUtils.MostrarSnackbar($"Error al enviar calificación: {ex.Message}", Colors.Red, Colors.White);
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
     }

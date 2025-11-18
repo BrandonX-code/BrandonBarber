@@ -64,7 +64,7 @@
             try
             {
                 LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsRunning = true;
+                LoadingIndicator.IsLoading = true;
 
                 var response = await _authService._BaseClient.GetAsync("api/auth");
 
@@ -93,7 +93,7 @@
             finally
             {
                 LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsRunning = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
         // Método para cargar imágenes desde la API
@@ -102,7 +102,7 @@
             try
             {
                 LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsRunning = true;
+                LoadingIndicator.IsLoading = true;
 
                 Debug.WriteLine("🔄 Iniciando carga de galería...");
                 Debug.WriteLine($"📱 Plataforma: {DeviceInfo.Platform}");
@@ -136,7 +136,7 @@
             }
             finally
             {
-                LoadingIndicator.IsRunning = false;
+                LoadingIndicator.IsLoading = false;
                 LoadingIndicator.IsVisible = false;
             }
         }
@@ -342,7 +342,7 @@
                     return;
 
                 LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsRunning = true;
+                LoadingIndicator.IsLoading = true;
 
                 bool eliminada = await _galeriaService.EliminarImagen(imagenId);
 
@@ -366,7 +366,7 @@
             finally
             {
                 _isNavigating = false;
-                LoadingIndicator.IsRunning = false;
+                LoadingIndicator.IsLoading = false;
                 LoadingIndicator.IsVisible = false;
             }
         }
@@ -394,7 +394,7 @@
             try
             {
                 LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsRunning = true;
+                LoadingIndicator.IsLoading = true;
 
                 // Solo barberos
                 if (AuthService.CurrentUser?.Rol?.ToLower() != "barbero")
@@ -445,7 +445,7 @@
             finally
             {
                 _isNavigating = false;
-                LoadingIndicator.IsRunning = false;
+                LoadingIndicator.IsLoading = false;
                 LoadingIndicator.IsVisible = false;
             }
         }

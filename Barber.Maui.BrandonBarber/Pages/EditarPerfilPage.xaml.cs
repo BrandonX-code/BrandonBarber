@@ -102,6 +102,8 @@
             {
                 try
                 {
+                    LoadingIndicator.IsVisible = true;
+                    LoadingIndicator.IsLoading = true;
                     PerfilImage.Source = _perfilData.ImagenPath.StartsWith("http")
                         ? ImageSource.FromUri(new Uri(_perfilData.ImagenPath))
                         : ImageSource.FromFile(_perfilData.ImagenPath);
@@ -110,6 +112,11 @@
                 {
                     Debug.WriteLine($"Error al cargar la imagen: {ex.Message}");
                     PerfilImage.Source = "default_avatar.png";
+                }
+                finally
+                {
+                    LoadingIndicator.IsVisible = false;
+                    LoadingIndicator.IsLoading = false;
                 }
             }
 
@@ -148,17 +155,17 @@
 
         private async void OnGuardarClicked(object sender, EventArgs e)
         {
-            IsBusy = true;
-
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 if (!string.IsNullOrWhiteSpace(EmailEntry.Text) && EmailEntry.Text != _perfilData.Email)
                 {
                     bool emailExiste = await _perfilService.VerificarEmailExiste(EmailEntry.Text, _perfilData.Cedula);
                     if (emailExiste)
                     {
                         await AppUtils.MostrarSnackbar("El correo electrónico ya está registrado por otro usuario.", Colors.Red, Colors.White);
-                        IsBusy = false;
+                       
                         return;
                     }
                 }
@@ -206,7 +213,8 @@
             }
             finally
             {
-                IsBusy = false;
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
         private async void OnCambiarDeBarberia(object sender, EventArgs e)

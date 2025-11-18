@@ -82,7 +82,7 @@
             try
             {
                 LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsRunning = true;
+                LoadingIndicator.IsLoading = true;
                 ContentContainer.IsVisible = false;
 
                 var response = await _authService._BaseClient.GetAsync("api/auth");
@@ -128,7 +128,7 @@
             finally
             {
                 LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsRunning = false;
+                LoadingIndicator.IsLoading = false;
                 ContentContainer.IsVisible = true;
                 EmptyStateFrame.IsVisible = !_barberosFiltrados.Any();
             }
@@ -184,6 +184,8 @@
             _isNavigating = true;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 if (sender is Image image &&
                     image.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tap &&
                     tap.CommandParameter is UsuarioModels barbero)
@@ -213,6 +215,8 @@
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
         }
