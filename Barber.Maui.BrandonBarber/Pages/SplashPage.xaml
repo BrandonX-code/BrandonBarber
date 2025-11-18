@@ -8,7 +8,7 @@
 
 	<Grid VerticalOptions="Center" HorizontalOptions="Center">
         <VerticalStackLayout Spacing="30" HorizontalOptions="Center" VerticalOptions="Center">
-            <Image x:Name="LogoImage" Source="gentlemen.png" WidthRequest="250" HeightRequest="250" HorizontalOptions="Center" Opacity="0" />
+            <Image x:Name="LogoImage" Source="logobarbergoblanco.png" WidthRequest="350" HeightRequest="350" HorizontalOptions="Center" Opacity="0" />
             <VerticalStackLayout Spacing="15" HorizontalOptions="Center" Margin="0,20,0,0">
 				<ActivityIndicator x:Name="LoadingIndicator" IsRunning="True" Color="#FF6F91" WidthRequest="40" HeightRequest="40" HorizontalOptions="Center" />
 				<Label x:Name="LoadingLabel" Text="Cargando..."  FontSize="14" TextColor="#B0BEC5" HorizontalOptions="Center" Opacity="0" />
