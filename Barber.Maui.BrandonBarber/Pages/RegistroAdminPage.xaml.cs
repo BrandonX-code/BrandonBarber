@@ -39,6 +39,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var response = await _httpClient.PostAsync("api/auth/register-admin", content);
                 if (response.IsSuccessStatusCode)
                 {
@@ -56,6 +58,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 ErrorLabel.Text = ex.Message;
                 ErrorLabel.IsVisible = true;
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
         private bool ValidarFormulario()

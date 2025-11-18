@@ -27,7 +27,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
-                IsBusy = true;
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
 
                 if (AuthService.CurrentUser == null)
                 {
@@ -64,7 +65,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             finally
             {
-                IsBusy = false;
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 

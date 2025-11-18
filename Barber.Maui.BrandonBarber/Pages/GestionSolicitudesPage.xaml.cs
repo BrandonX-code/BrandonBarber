@@ -23,6 +23,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var response = await _httpClient.GetAsync("api/solicitudes/pendientes");
                 if (response.IsSuccessStatusCode)
                 {
@@ -49,11 +51,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 await DisplayAlert("Error", ex.Message, "OK");
             }
-        }
-
-        private void MostrarLoader(bool mostrar)
-        {
-            LoaderOverlay.IsVisible = mostrar;
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
+            }
         }
 
         private async void OnAprobarClicked(object sender, EventArgs e)
@@ -66,11 +68,10 @@ namespace Barber.Maui.BrandonBarber.Pages
 
             if (!confirmacion) return;
 
-            // Mostrar loader
-            MostrarLoader(true);
-
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var data = new { cedulaRevisor = AuthService.CurrentUser!.Cedula };
                 var json = JsonSerializer.Serialize(data);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
@@ -93,8 +94,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             finally
             {
-                // Ocultar loader
-                MostrarLoader(false);
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 
@@ -108,11 +109,11 @@ namespace Barber.Maui.BrandonBarber.Pages
 
             if (string.IsNullOrWhiteSpace(motivo)) return;
 
-            // Mostrar loader
-            MostrarLoader(true);
-
+            
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var data = new
                 {
                     cedulaRevisor = AuthService.CurrentUser!.Cedula,
@@ -139,8 +140,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             finally
             {
-                // Ocultar loader
-                MostrarLoader(false);
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
     }

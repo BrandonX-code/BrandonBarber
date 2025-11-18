@@ -24,6 +24,8 @@
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 long idAdministrador = AuthService.CurrentUser!.Cedula;
                 _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
 
@@ -39,6 +41,11 @@
             catch (Exception ex)
             {
                 await DisplayAlert("Error", "No se pudieron cargar las barberías: " + ex.Message, "OK");
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 
@@ -95,12 +102,19 @@
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var servicios = await _servicioService.GetServiciosByBarberiaAsync(idBarberia);
                 ServiciosListView.ItemsSource = servicios;
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Error", "No se pudieron cargar los servicios: " + ex.Message, "OK");
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 
@@ -110,6 +124,8 @@
             _isNavigating = true;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 if (string.IsNullOrWhiteSpace(NombreEntry.Text) || _imagenSeleccionada == null || string.IsNullOrWhiteSpace(PrecioEntry.Text))
                 {
                     _ = AppUtils.MostrarSnackbar("Todos los campos son obligatorios", Colors.Red, Colors.White);
@@ -161,6 +177,8 @@
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
         }
@@ -194,6 +212,8 @@
             _isNavigating = true;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 if ((sender as Button)?.CommandParameter is not ServicioModel servicio) return;
 
                 _servicioEditando = servicio;
@@ -221,6 +241,8 @@
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
         }
@@ -231,6 +253,8 @@
             _isNavigating = true;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 if (_servicioEditando == null) return;
 
                 string precioTexto = PrecioEntry.Text?.Replace("$", "").Replace(",", "")!;
@@ -273,6 +297,8 @@
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
         }
@@ -283,6 +309,8 @@
             _isNavigating = true;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 if ((sender as Button)?.CommandParameter is not ServicioModel servicio) return;
                 var popup = new CustomAlertPopup($"¿Quieres Eliminar el servicio ' {servicio.Nombre}'?");
                 bool confirm = await popup.ShowAsync(this);
@@ -301,6 +329,8 @@
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
         }
@@ -337,6 +367,8 @@
             {
                 try
                 {
+                    LoadingIndicator.IsVisible = true;
+                    LoadingIndicator.IsLoading = true;
                     var result = await FilePicker.PickAsync(new PickOptions
                     {
                         PickerTitle = "Selecciona una imagen",
@@ -366,6 +398,8 @@
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
         }

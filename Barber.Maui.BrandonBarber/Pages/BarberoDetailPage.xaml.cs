@@ -47,6 +47,8 @@
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var today = DateTime.Today;
                 // Obtener disponibilidades del mes actual completo
                 _disponibilidades = await _disponibilidadService.GetDisponibilidadPorMes(
@@ -75,6 +77,11 @@
             catch (Exception)
             {
                 await DisplayAlert("Error", "No se pudo cargar el calendario", "OK");
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 

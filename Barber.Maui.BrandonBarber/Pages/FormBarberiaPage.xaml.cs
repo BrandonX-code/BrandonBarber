@@ -66,6 +66,8 @@
 
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var barberia = new Barberia
                 {
                     Idbarberia = _isEdit && _barberiaOriginal is not null ? _barberiaOriginal.Idbarberia : 0,
@@ -109,6 +111,8 @@
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 IsBusy = false;
             }
         }

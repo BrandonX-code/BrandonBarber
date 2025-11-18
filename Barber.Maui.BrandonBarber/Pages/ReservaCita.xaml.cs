@@ -81,13 +81,12 @@
 
         private async void OnGuardarClicked(object sender, EventArgs e)
         {
-            MostrarLoader(true);
-
+            LoadingIndicator.IsVisible = true;
+            LoadingIndicator.IsLoading = true;
             try
             {
                 if (_reservationServices == null)
                 {
-                    MostrarLoader(false);
                     await AppUtils.MostrarSnackbar("No se pudo conectar con el servicio.", Colors.Red, Colors.White);
                     return;
                 }
@@ -95,7 +94,6 @@
                 var usuario = AuthService.CurrentUser;
                 if (usuario == null)
                 {
-                    MostrarLoader(false);
                     await AppUtils.MostrarSnackbar("Usuario no autenticado.", Colors.Red, Colors.White);
                     return;
                 }
@@ -103,14 +101,12 @@
                 DateTime fechaSeleccionada = FechaPicker.Date.Add(HoraPicker.Time);
                 if (fechaSeleccionada < DateTime.Now)
                 {
-                    MostrarLoader(false);
                     await AppUtils.MostrarSnackbar("La fecha de la cita debe ser futura.", Colors.Orange, Colors.White);
                     return;
                 }
 
                 if (BarberoPicker.SelectedItem is not UsuarioModels barberoSeleccionado)
                 {
-                    MostrarLoader(false);
                     await AppUtils.MostrarSnackbar("Debe seleccionar un barbero.", Colors.Orange, Colors.White);
                     return;
                 }
@@ -122,7 +118,6 @@
                 bool cedulaYaRegistrada = citasActuales.Any(c => c.Cedula == usuario.Cedula);
                 if (cedulaYaRegistrada)
                 {
-                    MostrarLoader(false);
                     await AppUtils.MostrarSnackbar("Ya existe una cita registrada con esta cédula para el día seleccionado.", Colors.OrangeRed, Colors.White);
                     return;
                 }
@@ -139,8 +134,6 @@
 
                 bool guardadoExitoso = await _reservationServices.AddReservation(nuevaReserva);
 
-                MostrarLoader(false);
-
                 if (guardadoExitoso)
                 {
                     await AppUtils.MostrarSnackbar("La reserva se guardó correctamente.", Colors.Green, Colors.White);
@@ -152,7 +145,11 @@
             catch (Exception ex)
             {
                 await AppUtils.MostrarSnackbar(ex.Message, Colors.DarkRed, Colors.White);
-                MostrarLoader(false);
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 
@@ -171,6 +168,8 @@
 
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var popup = new CustomAlertPopup("¿Está seguro que desea cancelar la reserva?");
                 bool confirm = await popup.ShowAsync(this);
 
@@ -183,6 +182,8 @@
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isCancelling = false;
 
                 if (sender is Button btn)
@@ -209,10 +210,6 @@
             await formLayout.FadeTo(0, 300);
             await formLayout.TranslateTo(0, 50, 300);
             await Task.Delay(200);
-        }
-        private void MostrarLoader(bool mostrar)
-        {
-            LoaderOverlay.IsVisible = mostrar;
         }
     }
 }

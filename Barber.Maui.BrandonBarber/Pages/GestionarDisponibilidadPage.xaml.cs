@@ -50,6 +50,8 @@
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 long barberoid = AuthService.CurrentUser!.Cedula;
                 var citas = await _reservationService.GetReservationsByBarberoAndFecha(barberoid, _selectedDate);
                 _citas.Clear();
@@ -62,12 +64,19 @@
             {
                 await AppUtils.MostrarSnackbar($"No se pudieron cargar las citas: {ex.Message}", Colors.Red, Colors.White);
             }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
+            }
         }
 
         private async Task LoadDisponibilidad()
         {
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 // Resetear checkboxes
                 Horario6a12.IsChecked = false;
                 Horario12a3.IsChecked = false;
@@ -94,6 +103,11 @@
             catch (Exception ex)
             {
                 await AppUtils.MostrarSnackbar($"No se pudo cargar la disponibilidad: {ex.Message}", Colors.Red, Colors.White);
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 
@@ -173,6 +187,8 @@
             _isNavigating = true;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 long idBarbero = Convert.ToInt64(await SecureStorage.Default.GetAsync("user_cedula"));
                 var HorariosJSON = new Dictionary<string, bool>
                 {
@@ -211,6 +227,8 @@
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
         }
@@ -235,6 +253,8 @@
             _isNavigating = true;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 var barberoId = AuthService.CurrentUser?.Cedula ?? 0;
                 var plantilla = await _disponibilidadService.ObtenerPlantillaSemanal(barberoId);
 
@@ -272,6 +292,8 @@
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
         }

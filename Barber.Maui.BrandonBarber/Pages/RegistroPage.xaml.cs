@@ -62,6 +62,8 @@
             _isNavigating = true;
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 // Crea la instancia de la página de selección
                 var selectionPage = new SeleccionBarberiaPage();
 
@@ -82,6 +84,8 @@
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
         }
@@ -103,7 +107,7 @@
                 }
 
                 LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsRunning = true;
+                LoadingIndicator.IsLoading = true;
                 ErrorLabel.IsVisible = false;
 
                 var registroButton = (Button)sender;
@@ -147,7 +151,7 @@
                 finally
                 {
                     LoadingIndicator.IsVisible = false;
-                    LoadingIndicator.IsRunning = false;
+                    LoadingIndicator.IsLoading = false;
                     registroButton.IsEnabled = true;
                 }
             }
