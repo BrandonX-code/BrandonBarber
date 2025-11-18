@@ -89,7 +89,6 @@
             </Grid>
         </ScrollView>
 
-        <Grid x:Name="LoaderOverlay" BackgroundColor="#80000000" IsVisible="False" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All" VerticalOptions="Fill" HorizontalOptions="Fill" ZIndex="10">
             <BoxView BackgroundColor="Transparent">
                 <BoxView.GestureRecognizers>
                     <TapGestureRecognizer />
