@@ -45,13 +45,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 36))
     ));
-builder.Services.Configure<EmailService>(
-    builder.Configuration.GetSection("EmailSettings"));
+//builder.Services.Configure<EmailService>(
+//    builder.Configuration.GetSection("EmailSettings"));
 
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<IEmailService, EmailService>();
+//builder.Services.AddSingleton<IEmailService, EmailService>();
+builder.Services.AddSingleton<IEmailService, SendGridEmailService>();
 var app = builder.Build();
 
 
