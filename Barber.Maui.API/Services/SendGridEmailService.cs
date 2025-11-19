@@ -23,7 +23,7 @@ namespace Barber.Maui.API.Services
                 var client = new SendGridClient(_apiKey);
                 var from = new EmailAddress(_fromEmail, _fromName);
                 var to = new EmailAddress(toEmail);
-                var subject = "Recuperación de Contraseña - Brandon Barber";
+                var subject = "Recuperación de Contraseña - Barber Go";
                 var htmlContent = GetEmailTemplate(userName, resetToken);
 
                 var msg = MailHelper.CreateSingleEmail(from, to, subject, "", htmlContent);
@@ -46,7 +46,7 @@ namespace Barber.Maui.API.Services
                 var client = new SendGridClient(_apiKey);
                 var from = new EmailAddress(_fromEmail, _fromName);
                 var to = new EmailAddress(toEmail);
-                var subject = "Solicitud de Administrador Aprobada - Brandon Barber";
+                var subject = "Solicitud de Administrador Aprobada - Barber Go";
                 var htmlContent = GetSolicitudAprobadaTemplate(nombre, linkRegistro);
 
                 var msg = MailHelper.CreateSingleEmail(from, to, subject, "", htmlContent);
@@ -72,7 +72,7 @@ namespace Barber.Maui.API.Services
                 var client = new SendGridClient(_apiKey);
                 var from = new EmailAddress(_fromEmail, _fromName);
                 var to = new EmailAddress(toEmail);
-                var subject = "Solicitud de Administrador Rechazada - Brandon Barber";
+                var subject = "Solicitud de Administrador Rechazada - Barber Go";
                 var htmlContent = GetSolicitudRechazadaTemplate(nombre, motivo);
 
                 var msg = MailHelper.CreateSingleEmail(from, to, subject, "", htmlContent);
@@ -111,7 +111,7 @@ namespace Barber.Maui.API.Services
                         <div class='container'>
                             <div class='header'>
                                 <h1>🔒 Recuperación de Contraseña</h1>
-                                <h2>Brandon Barber App</h2>
+                                <h2>Barber Go</h2>
                             </div>
                             <div class='content'>
                                 <h2>¡Hola {userName}!</h2>
@@ -126,7 +126,7 @@ namespace Barber.Maui.API.Services
             
                                 <p>Para restablecer tu contraseña:</p>
                                 <ol>
-                                    <li>Abre la aplicación Brandon Barber</li>
+                                    <li>Abre la aplicación Barber Go</li>
                                     <li>Ve a la pantalla de recuperación de contraseña</li>
                                     <li>Ingresa tu email y el código de arriba</li>
                                     <li>Establece tu nueva contraseña</li>
@@ -136,7 +136,7 @@ namespace Barber.Maui.API.Services
                             </div>
                             <div class='footer'>
                                 <p>Este es un email automático, por favor no responder.</p>
-                                <p>&copy; 2024 Brandon Barber. Todos los derechos reservados.</p>
+                                <p>&copy; 2024 Barber Go. Todos los derechos reservados.</p>
                             </div>
                         </div>
                     </body>
@@ -154,7 +154,7 @@ namespace Barber.Maui.API.Services
              <a href='{linkRegistro}' style='background:#4CAF50;color:white;padding:10px20px;text-decoration:none;border-radius:5px;'>Registrarse como Administrador</a>
              <p>Si tienes dudas, responde a este correo.</p>
              <br>
-             <small>Brandon Barber App</small>
+             <small>Barber Go App</small>
              </body>
              </html>";
         }
@@ -169,7 +169,7 @@ namespace Barber.Maui.API.Services
              <p>Motivo: <b>{motivo}</b></p>
              <p>Si tienes dudas, responde a este correo.</p>
              <br>
-             <small>Brandon Barber App</small>
+             <small>Barber Go App</small>
              </body>
              </html>";
         }

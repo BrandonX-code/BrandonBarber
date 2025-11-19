@@ -1,4 +1,6 @@
 ﻿@page
+@using Microsoft.AspNetCore.Components
+@inject NavigationManager Navigation
 @model Barber.Maui.API.Pages.AdminRegisterModel
 @{
     ViewData["Title"] = "Registro de Administrador";
@@ -170,7 +172,7 @@
                 <br><br>
                 <strong>Próximos pasos:</strong>
                 <ol class="success-steps">
-                    <li>Descarga la aplicación Brandon Barber</li>
+                    <li>Abre la aplicación Barber Go</li>
                     <li>Inicia sesión con tu email y contraseña</li>
                     <li>Crea tu barbería desde la app</li>
                     <li>Comienza a gestionar servicios y barberos</li>
