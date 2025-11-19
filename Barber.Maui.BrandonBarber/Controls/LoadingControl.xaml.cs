@@ -32,33 +32,30 @@
 
         private void StartAnimation()
         {
-            _isAnimating = true;
-            _ = AnimateLogo();
-            _ = AnimateText();
+            this.IsVisible = true;
+
+            // Animación Logo
+            var logoAnimation = new Animation(v =>
+            {
+                LogoImage.Opacity = v;
+            }, 0.3, 1);
+            logoAnimation.Commit(this, "LogoAnimation", length: 1600, easing: Easing.CubicInOut, repeat: () => true);
+
+            // Animación Texto
+            var textAnimation = new Animation(v =>
+            {
+                LoadingLabel.Opacity = v;
+            }, 0.3, 1);
+            textAnimation.Commit(this, "TextAnimation", length: 1600, easing: Easing.CubicInOut, repeat: () => true);
         }
+
 
         private void StopAnimation()
         {
-            _isAnimating = false;
             this.IsVisible = false;
-        }
 
-        private async Task AnimateLogo()
-        {
-            while (_isAnimating)
-            {
-                await LogoImage.FadeTo(0.3, 800, Easing.CubicInOut);
-                await LogoImage.FadeTo(1, 800, Easing.CubicInOut);
-            }
-        }
-
-        private async Task AnimateText()
-        {
-            while (_isAnimating)
-            {
-                await LoadingLabel.FadeTo(0.3, 800, Easing.CubicInOut);
-                await LoadingLabel.FadeTo(1, 800, Easing.CubicInOut);
-            }
+            this.AbortAnimation("LogoAnimation");
+            this.AbortAnimation("TextAnimation");
         }
     }
 }
