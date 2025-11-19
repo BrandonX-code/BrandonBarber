@@ -45,6 +45,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 36))
     ));
+builder.Services.Configure<EmailService>(
+    builder.Configuration.GetSection("EmailSettings"));
 
 
 builder.Services.AddEndpointsApiExplorer();
