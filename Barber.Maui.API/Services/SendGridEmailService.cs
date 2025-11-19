@@ -65,6 +65,10 @@ namespace Barber.Maui.API.Services
         {
             try
             {
+                Console.WriteLine($"🔑 API Key (primeros 10 chars): {_apiKey?.Substring(0, Math.Min(10, _apiKey?.Length ?? 0))}");
+                Console.WriteLine($"📧 From Email: {_fromEmail}");
+                Console.WriteLine($"📧 To Email: {toEmail}");
+
                 var client = new SendGridClient(_apiKey);
                 var from = new EmailAddress(_fromEmail, _fromName);
                 var to = new EmailAddress(toEmail);
@@ -78,7 +82,9 @@ namespace Barber.Maui.API.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Error: {ex.Message}");
+                Console.WriteLine($"❌ Error completo: {ex.Message}");
+                Console.WriteLine($"❌ InnerException: {ex.InnerException?.Message}");
+                Console.WriteLine($"❌ StackTrace: {ex.StackTrace}");
                 return false;
             }
         }
