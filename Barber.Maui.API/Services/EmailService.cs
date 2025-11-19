@@ -22,12 +22,14 @@ namespace Barber.Maui.API.Services
                 {
                     Port = int.Parse(smtpSettings["Port"]!),
                     Credentials = new NetworkCredential(
-                        smtpSettings["Username"],
-                        smtpSettings["Password"]
-                    ),
-                    EnableSsl = bool.Parse(smtpSettings["EnableSsl"]!)
+                       smtpSettings["Username"],
+                       smtpSettings["Password"]
+                   ),
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Timeout = 30000
                 };
-
                 var mailMessage = new MailMessage
                 {
                     From = new MailAddress(smtpSettings["FromEmail"]!, smtpSettings["FromName"]),
@@ -61,7 +63,10 @@ namespace Barber.Maui.API.Services
                         smtpSettings["Username"],
                         smtpSettings["Password"]
                     ),
-                    EnableSsl = bool.Parse(smtpSettings["EnableSsl"]!)
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Timeout = 30000
                 };
                 var mailMessage = new MailMessage
                 {
@@ -93,7 +98,10 @@ namespace Barber.Maui.API.Services
                         smtpSettings["Username"],
                         smtpSettings["Password"]
                     ),
-                    EnableSsl = bool.Parse(smtpSettings["EnableSsl"]!)
+                    EnableSsl = true,
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Timeout = 30000
                 };
                 var mailMessage = new MailMessage
                 {
