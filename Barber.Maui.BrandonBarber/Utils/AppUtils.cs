@@ -32,7 +32,7 @@ namespace Barber.Maui.BrandonBarber.Utils
                 BackgroundColor = background,
                 TextColor = textColor,
                 CornerRadius = new CornerRadius(30),
-                Font = Font.OfSize("Arial", 14),
+                Font = Font.OfSize("Arial", 16),
                 CharacterSpacing = 0
             };
 

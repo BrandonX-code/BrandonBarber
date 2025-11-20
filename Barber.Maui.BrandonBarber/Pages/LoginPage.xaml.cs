@@ -13,34 +13,52 @@ namespace Barber.Maui.BrandonBarber.Pages
             _authService = Application.Current!.Handler.MauiContext!.Services.GetService<AuthService>()!;
         }
 
-        // 🔥 YA NO necesitas verificar sesión en OnAppearing
-        // El SplashPage ya lo hizo
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            EmailEntry.Text = string.Empty;
+            PasswordEntry.Text = string.Empty;
             Console.WriteLine("🔷 LoginPage - Mostrando formulario de login");
+        }
+        private void OnTogglePasswordClicked(object sender, EventArgs e)
+        {
+            PasswordEntry.IsPassword = !PasswordEntry.IsPassword;
+
+            TogglePasswordIcon.Source = PasswordEntry.IsPassword
+                ? "ojocerrado.png"
+                : "ojoabierto.png";
         }
 
         private async void OnLoginClicked(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(EmailEntry.Text) || string.IsNullOrWhiteSpace(PasswordEntry.Text))
+            if (string.IsNullOrWhiteSpace(EmailEntry.Text) && string.IsNullOrWhiteSpace(PasswordEntry.Text))
             {
-                ErrorLabel.Text = "Por favor, completa todos los campos";
-                ErrorLabel.IsVisible = true;
+                await AppUtils.MostrarSnackbar("Por favor, completa todos los campos", Colors.Red, Colors.White);
                 return;
             }
+
+            if (string.IsNullOrWhiteSpace(EmailEntry.Text))
+            {
+                await AppUtils.MostrarSnackbar("Por favor, ingrese el correo", Colors.Red, Colors.White);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(PasswordEntry.Text))
+            {
+                await AppUtils.MostrarSnackbar("Por favor, ingrese la contraseña", Colors.Red, Colors.White);
+                return;
+            }
+
 
             var emailValidator = new EmailAddressAttribute();
             if (!emailValidator.IsValid(EmailEntry.Text))
             {
-                ErrorLabel.Text = "Error: El correo electrónico no tiene un formato válido.";
-                ErrorLabel.IsVisible = true;
+                await AppUtils.MostrarSnackbar("El correo electrónico no tiene un formato válido.", Colors.Red, Colors.White);
                 return;
             }
 
             LoadingIndicator.IsVisible = true;
             LoadingIndicator.IsLoading = true;
-            ErrorLabel.IsVisible = false;
 
             var loginButton = (Button)sender;
             loginButton.IsEnabled = false;
@@ -50,22 +68,19 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var response = await _authService.Login(EmailEntry.Text, PasswordEntry.Text);
                 if (response.IsSuccess)
                 {
-                    Console.WriteLine("🔷 Login exitoso - Navegando a MainPage");
+                    await AppUtils.MostrarSnackbar("Inicio de sesión exitoso", Colors.Green, Colors.White);
                     NavigateToMainPage();
                 }
                 else
                 {
-                    ErrorLabel.Text = response.Message;
-                    ErrorLabel.IsVisible = true;
+                    await AppUtils.MostrarSnackbar(response.Message!, Colors.Red, Colors.White);
                 }
             }
             catch (Exception ex)
             {
-                ErrorLabel.Text = $"Error: {ex.Message}";
-                ErrorLabel.IsVisible = true;
+                await AppUtils.MostrarSnackbar($"Error: {ex.Message}", Colors.Red, Colors.White);
             }
             finally
-
             {
                 LoadingIndicator.IsVisible = false;
                 LoadingIndicator.IsLoading = false;
@@ -109,8 +124,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             catch (Exception ex)
             {
                 Console.WriteLine($"❌ Error en NavigateToMainPage: {ex.Message}");
-                ErrorLabel.Text = "Error al navegar. Intenta nuevamente.";
-                ErrorLabel.IsVisible = true;
+                _ = AppUtils.MostrarSnackbar("Error al navegar. Intenta nuevamente.", Colors.Red, Colors.White);
             }
             finally
             {

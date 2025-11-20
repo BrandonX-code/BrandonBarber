@@ -129,11 +129,10 @@ namespace Barber.Maui.API.Controllers
 
                 if (usuario == null)
                 {
-                    // Por seguridad, no revelamos si el email existe o no
                     return Ok(new ForgotPasswordResponse
                     {
-                        IsSuccess = true,
-                        Message = "Si el email existe en nuestro sistema, recibirás un código de recuperación."
+                        IsSuccess = false,
+                        Message = "Este correo no está registrado en el sistema."
                     });
                 }
 
