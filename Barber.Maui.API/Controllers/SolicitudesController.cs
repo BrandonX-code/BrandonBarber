@@ -36,6 +36,20 @@ namespace Barber.Maui.API.Controllers
             if (solicitud == null)
                 return BadRequest("Datos inválidos");
 
+            // NUEVA VALIDACIÓN: Verificar si la cédula ya está registrada
+            var cedulaExiste = await _context.UsuarioPerfiles
+                .AnyAsync(u => u.Cedula == solicitud.CedulaSolicitante);
+
+            if (cedulaExiste)
+                return Conflict(new { Message = "Esta cédula ya está registrada en el sistema" });
+
+            // NUEVA VALIDACIÓN: Verificar si el email ya está registrado
+            var emailExiste = await _context.UsuarioPerfiles
+                .AnyAsync(u => u.Email == solicitud.EmailSolicitante);
+
+            if (emailExiste)
+                return Conflict(new { Message = "Este email ya está registrado en el sistema" });
+
             // Verificar si ya existe una solicitud pendiente
             var existe = await _context.SolicitudesAdmin
                 .AnyAsync(s => s.CedulaSolicitante == solicitud.CedulaSolicitante &&

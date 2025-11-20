@@ -20,9 +20,14 @@
                     </Grid>
                 </Border>
                 <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 25" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
-                    <Grid Padding="12,0" ColumnDefinitions="Auto, *" VerticalOptions="Center">
+                    <Grid Padding="12,0" ColumnDefinitions="Auto, *, Auto" VerticalOptions="Center">
                         <Image Source="lock.png"  WidthRequest="25" HeightRequest="25" VerticalOptions="Center" />
                         <Entry Grid.Column="1"  x:Name="PasswordEntry" TextColor="#0E2A36" Placeholder="Contraseña" PlaceholderColor="#90A4AE" FontSize="14" HeightRequest="45" BackgroundColor="Transparent" HorizontalOptions="Fill" VerticalOptions="Center" IsPassword="True"/>
+                        <Image Grid.Column="2" x:Name="TogglePasswordIcon" Source="ojoabierto.png" WidthRequest="30" HeightRequest="30" VerticalOptions="Center">
+                            <Image.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTogglePasswordClicked"/>
+                            </Image.GestureRecognizers>
+                        </Image>
                     </Grid>
                 </Border>
 
@@ -54,8 +59,6 @@
                         <Button Text="Solicitar cuenta de administrador" TextColor="Black" HorizontalOptions="Fill" BackgroundColor="#FF6F91" CornerRadius="15" FontSize="14" FontAttributes="Bold" Clicked="OnSolicitarAdminClicked" />
                     </VerticalStackLayout>
                 </Border>
-
-                <Label x:Name="ErrorLabel" TextColor="#FF6F91" FontSize="14" HorizontalOptions="Center" IsVisible="False" />
             </VerticalStackLayout>
         </ScrollView>
         <controls:LoadingControl x:Name="LoadingIndicator" IsVisible="False"/>

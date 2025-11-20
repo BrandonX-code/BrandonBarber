@@ -13,12 +13,16 @@ namespace Barber.Maui.BrandonBarber.Pages
             InitializeComponent();
             _authService = Application.Current!.Handler.MauiContext!.Services.GetService<AuthService>()!;
         }
-
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            EmailEntry.Text = string.Empty;
+        }
         private async void OnSendCodeClicked(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(EmailEntry.Text))
             {
-                ShowError("Por favor, ingresa tu email");
+                await AppUtils.MostrarSnackbar("Por favor, ingresa tu email", Colors.Red, Colors.White);
                 return;
             }
 
@@ -26,13 +30,12 @@ namespace Barber.Maui.BrandonBarber.Pages
             var emailValidator = new EmailAddressAttribute();
             if (!emailValidator.IsValid(EmailEntry.Text))
             {
-                ShowError("Por favor, ingresa un email válido");
+                await AppUtils.MostrarSnackbar("Por favor, ingresa un email válido", Colors.Red , Colors.White);
                 return;
             }
             ((Button)sender).IsEnabled = false;
             this.IsEnabled = false;
             SetLoadingState(true);
-            HideMessages();
 
             try
             {
@@ -43,9 +46,8 @@ namespace Barber.Maui.BrandonBarber.Pages
                 if (response.IsSuccess)
                 {
                     _currentEmail = EmailEntry.Text.Trim();
-                    ShowMessage(response.Message, isError: false);
-
-                    // Cambiar a la segunda pantalla
+                    await AppUtils.MostrarSnackbar(response.Message!, Colors.Green, Colors.White); // Verde para éxito
+                                                                                                   // Cambiar a la segunda pantalla
                     EmailStep.IsVisible = false;
                     ResetStep.IsVisible = true;
 
@@ -55,12 +57,12 @@ namespace Barber.Maui.BrandonBarber.Pages
                 }
                 else
                 {
-                    ShowError(response.Message);
+                    await AppUtils.MostrarSnackbar(response.Message!, Colors.Red, Colors.White);
                 }
             }
             catch (Exception ex)
             {
-                ShowError($"Error: {ex.Message}");
+                await AppUtils.MostrarSnackbar($"Error: {ex.Message}", Colors.Red, Colors.White);
             }
             finally
             {
@@ -78,7 +80,6 @@ namespace Barber.Maui.BrandonBarber.Pages
                 return;
 
             SetLoadingState(true);
-            HideMessages();
             ((Button)sender).IsEnabled = false;
             this.IsEnabled = false;
             try
@@ -93,7 +94,7 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                 if (response.IsSuccess)
                 {
-                    ShowMessage("¡Contraseña restablecida exitosamente! Redirigiendo...", isError: false);
+                    await AppUtils.MostrarSnackbar("¡Contraseña restablecida exitosamente! Redirigiendo...", Colors.Red, Colors.White);
 
                     // Esperar un momento y volver al login
                     await Task.Delay(2000);
@@ -101,12 +102,12 @@ namespace Barber.Maui.BrandonBarber.Pages
                 }
                 else
                 {
-                    ShowError(response.Message);
+                    await AppUtils.MostrarSnackbar(response.Message, Colors.Red, Colors.White);
                 }
             }
             catch (Exception ex)
             {
-                ShowError($"Error: {ex.Message}");
+                await AppUtils.MostrarSnackbar($"Error: {ex.Message}", Colors.Red, Colors.White);
             }
             finally
             {
@@ -121,7 +122,6 @@ namespace Barber.Maui.BrandonBarber.Pages
         private async void OnResendCodeClicked(object sender, EventArgs e)
         {
             SetLoadingState(true);
-            HideMessages();
             ((Button)sender).IsEnabled = false;
             this.IsEnabled = false;
             try
@@ -132,18 +132,18 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                 if (response.IsSuccess)
                 {
-                    ShowMessage("Código reenviado exitosamente", isError: false);
+                    await AppUtils.MostrarSnackbar("Código reenviado exitosamente", Colors.Red, Colors.White);
                     TokenEntry.Text = string.Empty;
                     TokenEntry.Focus();
                 }
                 else
                 {
-                    ShowError(response.Message);
+                    await AppUtils.MostrarSnackbar(response.Message, Colors.Red, Colors.White);
                 }
             }
             catch (Exception ex)
             {
-                ShowError($"Error: {ex.Message}");
+                await AppUtils.MostrarSnackbar($"Error: {ex.Message}", Colors.Red, Colors.White);
             }
             finally
             {
@@ -164,68 +164,41 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             if (string.IsNullOrWhiteSpace(TokenEntry.Text))
             {
-                ShowError("Por favor, ingresa el código recibido");
+                _ = AppUtils.MostrarSnackbar("Por favor, ingresa el código recibido", Colors.Red, Colors.White);
                 return false;
             }
 
             if (TokenEntry.Text.Trim().Length != 6)
             {
-                ShowError("El código debe tener 6 dígitos");
+                _ = AppUtils.MostrarSnackbar("El código debe tener 6 dígitos", Colors.Red, Colors.White);
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(NewPasswordEntry.Text))
             {
-                ShowError("Por favor, ingresa tu nueva contraseña");
+                _ = AppUtils.MostrarSnackbar("Por favor, ingresa tu nueva contraseña", Colors.Red, Colors.White);
                 return false;
             }
 
             if (NewPasswordEntry.Text.Length < 6)
             {
-                ShowError("La contraseña debe tener al menos 6 caracteres");
+                _ = AppUtils.MostrarSnackbar("La contraseña debe tener al menos 6 caracteres", Colors.Red, Colors.White);
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(ConfirmPasswordEntry.Text))
             {
-                ShowError("Por favor, confirma tu nueva contraseña");
+                _ = AppUtils.MostrarSnackbar("Por favor, confirma tu nueva contraseña", Colors.Red, Colors.White);
                 return false;
             }
 
             if (NewPasswordEntry.Text != ConfirmPasswordEntry.Text)
             {
-                ShowError("Las contraseñas no coinciden");
+                _ = AppUtils.MostrarSnackbar("Las contraseñas no coinciden", Colors.Red, Colors.White);
                 return false;
             }
 
             return true;
-        }
-
-        private void ShowMessage(string message, bool isError)
-        {
-            if (isError)
-            {
-                ErrorLabel.Text = message;
-                ErrorLabel.IsVisible = true;
-                MessageLabel.IsVisible = false;
-            }
-            else
-            {
-                MessageLabel.Text = message;
-                MessageLabel.IsVisible = true;
-                ErrorLabel.IsVisible = false;
-            }
-        }
-
-        private void ShowError(string message)
-        {
-            ShowMessage(message, isError: true);
-        }
-
-        private void HideMessages()
-        {
-            ErrorLabel.IsVisible = false;
-            MessageLabel.IsVisible = false;
         }
 
         private void SetLoadingState(bool isLoading)
@@ -245,7 +218,6 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 ResetStep.IsVisible = false;
                 EmailStep.IsVisible = true;
-                HideMessages();
                 return true; // Consumir el evento
             }
 

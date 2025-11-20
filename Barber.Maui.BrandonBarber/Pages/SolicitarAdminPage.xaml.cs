@@ -100,7 +100,27 @@ namespace Barber.Maui.BrandonBarber.Pages
                     }
                     else if ((int)response.StatusCode == 409)
                     {
-                        await AppUtils.MostrarSnackbar("Ya tienes una solicitud pendiente. Por favor espera a que sea revisada antes de enviar otra.", Colors.Orange, Colors.White);
+                        // Leer el mensaje específico del servidor
+                        var errorJson = await response.Content.ReadAsStringAsync();
+
+                        try
+                        {
+                            var errorResponse = JsonSerializer.Deserialize<Dictionary<string, string>>(errorJson,
+                                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                            if (errorResponse != null && errorResponse.ContainsKey("message"))
+                            {
+                                await AppUtils.MostrarSnackbar(errorResponse["message"], Colors.Orange, Colors.White);
+                            }
+                            else
+                            {
+                                await AppUtils.MostrarSnackbar("Ya existe un conflicto con los datos proporcionados", Colors.Orange, Colors.White);
+                            }
+                        }
+                        catch
+                        {
+                            await AppUtils.MostrarSnackbar("Ya existe un conflicto con los datos proporcionados", Colors.Orange, Colors.White);
+                        }
                     }
                     else
                     {

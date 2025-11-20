@@ -110,7 +110,41 @@
                     await AppUtils.MostrarSnackbar("Debe seleccionar un barbero.", Colors.Orange, Colors.White);
                     return;
                 }
+                // NUEVA VALIDACIÓN: Verificar disponibilidad del barbero
+                var disponibilidadService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<DisponibilidadService>();
+                var disponibilidad = await disponibilidadService.GetDisponibilidad(FechaPicker.Date, barberoSeleccionado.Cedula);
 
+                if (disponibilidad == null || disponibilidad.HorariosDict == null || !disponibilidad.HorariosDict.Any())
+                {
+                    await AppUtils.MostrarSnackbar("El barbero no ha configurado su disponibilidad para esta fecha.", Colors.Orange, Colors.White);
+                    return;
+                }
+
+                // Verificar si la hora seleccionada está en un rango disponible
+                var horaSeleccionada = HoraPicker.Time;
+                bool horarioDisponible = false;
+
+                foreach (var horario in disponibilidad.HorariosDict)
+                {
+                    if (horario.Value) // Si el horario está marcado como disponible
+                    {
+                        var rangoHoras = horario.Key.Split('-');
+                        var horaInicio = DateTime.Parse(rangoHoras[0].Trim()).TimeOfDay;
+                        var horaFin = DateTime.Parse(rangoHoras[1].Trim()).TimeOfDay;
+
+                        if (horaSeleccionada >= horaInicio && horaSeleccionada < horaFin)
+                        {
+                            horarioDisponible = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!horarioDisponible)
+                {
+                    await AppUtils.MostrarSnackbar("El barbero no está disponible en el horario seleccionado.", Colors.Orange, Colors.White);
+                    return;
+                }
                 int idBarberia = usuario.IdBarberia ?? 0;
                 var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date, idBarberia);
                 var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? [];

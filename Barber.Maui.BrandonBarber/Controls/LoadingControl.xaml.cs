@@ -33,27 +33,44 @@
         private void StartAnimation()
         {
             this.IsVisible = true;
+            this.InputTransparent = false;
 
-            // Animación Logo
-            var logoAnimation = new Animation(v =>
+            // Deshabilitar el contenido padre
+            if (this.Parent is Grid grid)
             {
-                LogoImage.Opacity = v;
-            }, 0.3, 1);
+                foreach (var child in grid.Children)
+                {
+                    if (child != this && child is View view)
+                    {
+                        view.IsEnabled = false;
+                    }
+                }
+            }
+
+            // Animaciones...
+            var logoAnimation = new Animation(v => { LogoImage.Opacity = v; }, 0.3, 1);
             logoAnimation.Commit(this, "LogoAnimation", length: 1600, easing: Easing.CubicInOut, repeat: () => true);
 
-            // Animación Texto
-            var textAnimation = new Animation(v =>
-            {
-                LoadingLabel.Opacity = v;
-            }, 0.3, 1);
+            var textAnimation = new Animation(v => { LoadingLabel.Opacity = v; }, 0.3, 1);
             textAnimation.Commit(this, "TextAnimation", length: 1600, easing: Easing.CubicInOut, repeat: () => true);
         }
 
-
         private void StopAnimation()
         {
-            this.IsVisible = false;
+            // Rehabilitar el contenido padre
+            if (this.Parent is Grid grid)
+            {
+                foreach (var child in grid.Children)
+                {
+                    if (child != this && child is View view)
+                    {
+                        view.IsEnabled = true;
+                    }
+                }
+            }
 
+            this.IsVisible = false;
+            this.InputTransparent = true;
             this.AbortAnimation("LogoAnimation");
             this.AbortAnimation("TextAnimation");
         }
