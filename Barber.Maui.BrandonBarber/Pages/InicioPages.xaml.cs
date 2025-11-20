@@ -678,6 +678,37 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             
         }
+        private async void OnServicioSelected(object sender, EventArgs e)
+        {
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
+            {
+                if (sender is Border border && border.BindingContext is ServicioModel servicio)
+                {
+                    // Animación de toque
+                    await border.ScaleTo(0.95, 100, Easing.CubicIn);
+                    await border.ScaleTo(1, 100, Easing.CubicOut);
+
+                    // Mostrar popup de confirmación
+                    var popup = new CustomAlertPopup("¿Quieres seleccionar este servicio?");
+                    bool confirm = await popup.ShowAsync(this);
+
+                    if (confirm)
+                    {
+                        // Navegar a MainPage pasando el servicio seleccionado
+                        var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
+                        var authService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<AuthService>();
+
+                        await Navigation.PushAsync(new MainPage(reservationService, authService, null, servicio));
+                    }
+                }
+            }
+            finally
+            {
+                _isNavigating = false;
+            }
+        }
 
         private async void VerSolicitudesAdmin(object sender, EventArgs e)
         {
