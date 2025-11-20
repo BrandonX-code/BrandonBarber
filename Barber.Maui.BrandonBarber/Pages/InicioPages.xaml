@@ -37,7 +37,9 @@
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <Border StrokeShape="RoundRectangle 20"  BackgroundColor="#90A4AE" Padding="-1" HeightRequest="220" WidthRequest="190"  StrokeThickness="0">
-
+                                            <Border.GestureRecognizers>
+                                                <TapGestureRecognizer Tapped="OnServicioSelected"/>
+                                            </Border.GestureRecognizers>
                                             <Grid RowSpacing="0">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="*" />
@@ -170,8 +172,7 @@
 
                     <!-- BarberoView -->
                     <VerticalStackLayout x:Name="BarberoView" IsVisible="false" Padding="20" Spacing="20">
-                        <Label Text="Panel de Barbero" FontSize="24" TextColor="White" FontAttributes="Bold" HorizontalOptions="Center" />
-
+                     
                         <Grid>
                             <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
                                 <Border.GestureRecognizers>

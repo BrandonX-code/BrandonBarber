@@ -5,21 +5,40 @@
         private readonly ReservationService _reservationServices;
         private readonly AuthService _authService;
         private readonly UsuarioModels? _barberoPreseleccionado;
+        private ServicioModel? _servicioSeleccionado; // ✅ NUEVO CAMPO
         private bool _isCancelling = false;
 
-        public MainPage(ReservationService reservationService, AuthService authService, UsuarioModels? barberoPreseleccionado = null)
+        public MainPage(ReservationService reservationService, AuthService authService,
+            UsuarioModels? barberoPreseleccionado = null, ServicioModel? servicioSeleccionado = null)
         {
             InitializeComponent();
             _reservationServices = reservationService;
             _authService = authService;
             _barberoPreseleccionado = barberoPreseleccionado;
+            _servicioSeleccionado = servicioSeleccionado; // ✅ GUARDAR SERVICIO
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+
+            // ✅ CONFIGURAR SERVICIO ANTES DE LAS ANIMACIONES
+            if (_servicioSeleccionado != null)
+            {
+                servicioBorder.IsVisible = true;
+                ServicioImagen.Source = _servicioSeleccionado.Imagen;
+                ServicioNombreLabel.Text = _servicioSeleccionado.Nombre;
+                ServicioPrecioLabel.Text = $"${_servicioSeleccionado.Precio:N0}";
+            }
+            else
+            {
+                servicioBorder.IsVisible = false;
+            }
+
             await StartEntryAnimations();
             await CargarBarberosAsync();
+
+            // LÓGICA PARA BARBERO PRESELECCIONADO
             if (_barberoPreseleccionado != null && BarberoPicker.ItemsSource is List<UsuarioModels> barberos)
             {
                 BarberoPicker.IsEnabled = false;
@@ -40,6 +59,12 @@
             await formLayout.TranslateTo(0, 0, 400, Easing.CubicOut);
             uint delay = 100;
             await Task.Delay((int)delay);
+            // ✅ ANIMAR SERVICIO BORDER SI ESTÁ VISIBLE
+            if (servicioBorder.IsVisible)
+            {
+                await servicioBorder.FadeTo(1, 300);
+                await Task.Delay((int)delay);
+            }
             await barberoBorder.FadeTo(1, 300);
             await Task.Delay((int)delay);
             await fechaBorder.FadeTo(1, 300);
@@ -47,6 +72,33 @@
             await horaBorder.FadeTo(1, 300);
             await Task.Delay((int)delay);
             await buttonsLayout.FadeTo(1, 300);
+        }
+
+        // ✅ NUEVO MÉTODO PARA CAMBIAR SERVICIO
+        private async void OnCambiarServicioClicked(object sender, EventArgs e)
+        {
+            if (_isCancelling) return;
+            _isCancelling = true;
+
+            try
+            {
+                var popup = new CustomAlertPopup("¿Deseas seleccionar otro servicio?");
+                bool confirm = await popup.ShowAsync(this);
+
+                if (confirm)
+                {
+                    // Limpiar servicio seleccionado
+                    _servicioSeleccionado = null;
+                    servicioBorder.IsVisible = false;
+
+                    // Volver a InicioPages
+                    await Navigation.PopAsync();
+                }
+            }
+            finally
+            {
+                _isCancelling = false;
+            }
         }
 
         private async Task CargarBarberosAsync()
@@ -110,6 +162,14 @@
                     await AppUtils.MostrarSnackbar("Debe seleccionar un barbero.", Colors.Orange, Colors.White);
                     return;
                 }
+
+                // ✅ VALIDAR QUE HAYA SERVICIO SELECCIONADO
+                if (_servicioSeleccionado == null)
+                {
+                    await AppUtils.MostrarSnackbar("Debe seleccionar un servicio.", Colors.Orange, Colors.White);
+                    return;
+                }
+
                 // NUEVA VALIDACIÓN: Verificar disponibilidad del barbero
                 var disponibilidadService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<DisponibilidadService>();
                 var disponibilidad = await disponibilidadService.GetDisponibilidad(FechaPicker.Date, barberoSeleccionado.Cedula);
@@ -145,6 +205,7 @@
                     await AppUtils.MostrarSnackbar("El barbero no está disponible en el horario seleccionado.", Colors.Orange, Colors.White);
                     return;
                 }
+
                 int idBarberia = usuario.IdBarberia ?? 0;
                 var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date, idBarberia);
                 var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? [];
@@ -155,6 +216,7 @@
                     await AppUtils.MostrarSnackbar("Ya existe una cita registrada con esta cédula para el día seleccionado.", Colors.OrangeRed, Colors.White);
                     return;
                 }
+
                 var cliente = AuthService.CurrentUser;
                 CitaModel nuevaReserva = new()
                 {
@@ -163,7 +225,11 @@
                     Telefono = cliente.Telefono,
                     Fecha = fechaSeleccionada,
                     BarberoId = barberoSeleccionado.Cedula,
-                    BarberoNombre = string.Empty
+                    BarberoNombre = string.Empty,
+                    // ✅ AGREGAR INFO DEL SERVICIO (necesitarás estas propiedades en CitaModel)
+                    // ServicioId = _servicioSeleccionado.Id,
+                    // ServicioNombre = _servicioSeleccionado.Nombre,
+                    // ServicioPrecio = _servicioSeleccionado.Precio
                 };
 
                 bool guardadoExitoso = await _reservationServices.AddReservation(nuevaReserva);
@@ -190,7 +256,7 @@
         private async void OnCancelarClicked(object sender, EventArgs e)
         {
             if (_isCancelling)
-                return; // Evita clics múltiples
+                return;
 
             _isCancelling = true;
 
@@ -229,6 +295,9 @@
         {
             FechaPicker.Date = DateTime.Today;
             HoraPicker.Time = TimeSpan.Zero;
+            // ✅ LIMPIAR SERVICIO
+            _servicioSeleccionado = null;
+            servicioBorder.IsVisible = false;
         }
 
         private static async Task AnimateButtonClick(Button button)
