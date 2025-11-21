@@ -21,11 +21,31 @@ public class CitasController : ControllerBase
             .Where(b => b.IdBarberia == idbarberia)
             .Select(b => new { b.Cedula, b.Nombre })
             .ToListAsync();
+
         var barberoIds = barberos.Select(b => b.Cedula).ToList();
+        var barberoDict = barberos.ToDictionary(b => b.Cedula, b => b.Nombre);
+
         var citas = await _context.Citas
             .Where(c => barberoIds.Contains(c.BarberoId))
             .OrderBy(c => c.Fecha)
             .ToListAsync();
+
+        // Llenar BarberoNombre y ServicioNombre
+        foreach (var cita in citas)
+        {
+            cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
+
+            if (cita.ServicioId.HasValue)
+            {
+                var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
+                if (servicio != null)
+                {
+                    cita.ServicioNombre = servicio.Nombre;
+                    cita.ServicioPrecio = servicio.Precio;
+                }
+            }
+        }
+
         return Ok(citas);
     }
 
@@ -48,6 +68,17 @@ public class CitasController : ControllerBase
             foreach (var cita in citas)
             {
                 cita.BarberoNombre = barberos.GetValueOrDefault(cita.BarberoId, "No encontrado");
+
+                // ✅ Llenar info del servicio
+                if (cita.ServicioId.HasValue)
+                {
+                    var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
+                    if (servicio != null)
+                    {
+                        cita.ServicioNombre = servicio.Nombre;
+                        cita.ServicioPrecio = servicio.Precio;
+                    }
+                }
             }
 
             return Ok(citas);
@@ -79,10 +110,21 @@ public class CitasController : ControllerBase
                 .OrderByDescending(c => c.Fecha)
                 .ToListAsync();
 
-            // Llenar información de barberos
+            // Llenar información de barberos y servicios
             foreach (var cita in citas)
             {
                 cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
+
+                // ✅ Llenar info del servicio
+                if (cita.ServicioId.HasValue)
+                {
+                    var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
+                    if (servicio != null)
+                    {
+                        cita.ServicioNombre = servicio.Nombre;
+                        cita.ServicioPrecio = servicio.Precio;
+                    }
+                }
             }
 
             return Ok(citas);
@@ -113,6 +155,17 @@ public class CitasController : ControllerBase
             foreach (var cita in citas)
             {
                 cita.BarberoNombre = barberos.GetValueOrDefault(cita.BarberoId, "No encontrado");
+
+                // ✅ Llenar info del servicio
+                if (cita.ServicioId.HasValue)
+                {
+                    var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
+                    if (servicio != null)
+                    {
+                        cita.ServicioNombre = servicio.Nombre;
+                        cita.ServicioPrecio = servicio.Precio;
+                    }
+                }
             }
 
             return Ok(citas);
@@ -146,10 +199,21 @@ public class CitasController : ControllerBase
                 .OrderBy(c => c.Fecha)
                 .ToListAsync();
 
-            // Llenar información de barberos
+            // Llenar información de barberos y servicios
             foreach (var cita in citas)
             {
                 cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
+
+                // ✅ Llenar info del servicio
+                if (cita.ServicioId.HasValue)
+                {
+                    var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
+                    if (servicio != null)
+                    {
+                        cita.ServicioNombre = servicio.Nombre;
+                        cita.ServicioPrecio = servicio.Precio;
+                    }
+                }
             }
 
             return Ok(citas);
@@ -171,6 +235,17 @@ public class CitasController : ControllerBase
         {
             Auth barbero = _context.UsuarioPerfiles.Where(b => b.Cedula == cita.BarberoId).FirstOrDefault()!;
             cita.BarberoNombre = barbero?.Nombre ?? "No encontrado";
+
+            // ✅ Llenar info del servicio
+            if (cita.ServicioId.HasValue)
+            {
+                var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
+                if (servicio != null)
+                {
+                    cita.ServicioNombre = servicio.Nombre;
+                    cita.ServicioPrecio = servicio.Precio;
+                }
+            }
         }
 
         return Ok(citas);
@@ -193,10 +268,21 @@ public class CitasController : ControllerBase
             .OrderBy(c => c.Fecha)
             .ToListAsync();
 
-        // Llenar la propiedad NombreBarbero
+        // Llenar la propiedad NombreBarbero y ServicioNombre
         foreach (var cita in citas)
         {
             cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
+
+            // ✅ Llenar info del servicio
+            if (cita.ServicioId.HasValue)
+            {
+                var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
+                if (servicio != null)
+                {
+                    cita.ServicioNombre = servicio.Nombre;
+                    cita.ServicioPrecio = servicio.Precio;
+                }
+            }
         }
 
         return Ok(citas);
@@ -210,9 +296,63 @@ public class CitasController : ControllerBase
             .OrderBy(c => c.Fecha)
             .ToListAsync();
 
+        // ✅ Llenar info del servicio
+        foreach (var cita in citas)
+        {
+            if (cita.ServicioId.HasValue)
+            {
+                var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
+                if (servicio != null)
+                {
+                    cita.ServicioNombre = servicio.Nombre;
+                    cita.ServicioPrecio = servicio.Precio;
+                }
+            }
+        }
+
         return Ok(citas);
     }
 
+    [HttpGet("barbero/{barberoId}")]
+    public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorBarbero(long barberoId)
+    {
+        try
+        {
+            var citas = await _context.Citas
+                .Where(c => c.BarberoId == barberoId)
+                .OrderBy(c => c.Fecha)
+                .ToListAsync();
+
+            // Llenar información del barbero y servicios
+            if (citas.Any())
+            {
+                var barbero = await _context.UsuarioPerfiles
+                    .FirstOrDefaultAsync(b => b.Cedula == barberoId);
+
+                foreach (var cita in citas)
+                {
+                    cita.BarberoNombre = barbero?.Nombre ?? "No encontrado";
+
+                    // ✅ Llenar info del servicio
+                    if (cita.ServicioId.HasValue)
+                    {
+                        var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
+                        if (servicio != null)
+                        {
+                            cita.ServicioNombre = servicio.Nombre;
+                            cita.ServicioPrecio = servicio.Precio;
+                        }
+                    }
+                }
+            }
+
+            return Ok(citas);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Error al obtener citas del barbero.", error = ex.Message });
+        }
+    }
     [HttpPost]
     public async Task<ActionResult<Cita>> CrearCita([FromBody] Cita nuevaCita)
     {
@@ -230,9 +370,20 @@ public class CitasController : ControllerBase
 
         try
         {
+            // ✅ Si viene ServicioId, obtener info del servicio
+            if (nuevaCita.ServicioId.HasValue)
+            {
+                var servicio = await _context.Servicios.FindAsync(nuevaCita.ServicioId.Value);
+                if (servicio != null)
+                {
+                    nuevaCita.ServicioNombre = servicio.Nombre;
+                    nuevaCita.ServicioPrecio = servicio.Precio;
+                }
+            }
+
             _context.Citas.Add(nuevaCita);
             await _context.SaveChangesAsync();
-            return StatusCode(201);
+            return StatusCode(201, nuevaCita); // ✅ Devolver la cita creada
         }
         catch (Exception ex)
         {
@@ -265,35 +416,7 @@ public class CitasController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok();
     }
-    [HttpGet("barbero/{barberoId}")]
-    public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorBarbero(long barberoId)
-    {
-        try
-        {
-            var citas = await _context.Citas
-                .Where(c => c.BarberoId == barberoId)
-                .OrderBy(c => c.Fecha)
-                .ToListAsync();
-
-            // Llenar información del barbero
-            if (citas.Any())
-            {
-                var barbero = await _context.UsuarioPerfiles
-                    .FirstOrDefaultAsync(b => b.Cedula == barberoId);
-
-                foreach (var cita in citas)
-                {
-                    cita.BarberoNombre = barbero?.Nombre ?? "No encontrado";
-                }
-            }
-
-            return Ok(citas);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "Error al obtener citas del barbero.", error = ex.Message });
-        }
-    }
+    
 }
 public class EstadoUpdateDto
 {

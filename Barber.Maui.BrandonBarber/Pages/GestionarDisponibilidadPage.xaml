@@ -63,17 +63,42 @@
 
                     <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
                         <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
-                            <VerticalStackLayout Spacing="15">
+                            <VerticalStackLayout>
                                 <Label Text="Citas Programadas" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
-                                <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="CitasCollection" HeightRequest="260" HorizontalOptions="Center" EmptyView="No hay citas programadas para esta fecha.">
+
+                                <CollectionView x:Name="CitasCollection" HeightRequest="260" VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" EmptyView="No hay citas programadas para esta fecha.">
                                     <CollectionView.ItemTemplate>
                                         <DataTemplate>
-                                            <Border Margin="0,5" BackgroundColor="#0E2A36" Padding="10" StrokeShape="RoundRectangle 10" StrokeThickness="0">
-                                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
-                                                    <Label Text="{Binding Nombre}" TextColor="White" FontAttributes="Bold" Grid.Row="0" Grid.Column="0" />
-                                                    <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}" TextColor="White" Grid.Row="1" Grid.Column="0" />
-                                                    <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="12" TextColor="White" Grid.Row="2" Grid.Column="0" />
-                                                </Grid>
+                                            <Border Margin="0,15" BackgroundColor="#0E2A36" Padding="10" StrokeShape="RoundRectangle 10" StrokeThickness="0">
+                                                <VerticalStackLayout Spacing="5">
+
+                                                    <Grid ColumnDefinitions="80,*" ColumnSpacing="5">
+                                                        <Label Grid.Column="0" Text="Nombre:" FontSize="16" TextColor="White" FontAttributes="Bold"/>
+                                                        <Label Grid.Column="1" Text="{Binding Nombre}"  FontSize="16" TextColor="White" LineBreakMode="WordWrap"/>
+                                                    </Grid>
+
+                                                    <Grid ColumnDefinitions="80,*" ColumnSpacing="5">
+                                                        <Label Grid.Column="0" Text="Fecha:" FontSize="16" TextColor="White" FontAttributes="Bold"/>
+                                                        <Label Grid.Column="1" Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}"  FontSize="16" TextColor="White"/>
+                                                    </Grid>
+
+                                                    <Grid ColumnDefinitions="80,*" ColumnSpacing="5">
+                                                        <Label Grid.Column="0" Text="Hora:" FontSize="16" TextColor="White" FontAttributes="Bold"/>
+                                                        <Label Grid.Column="1" Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}"  FontSize="16" TextColor="White"/>
+                                                    </Grid>
+
+                                                    <Grid ColumnDefinitions="80,*" ColumnSpacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
+                                                        <Label Grid.Column="0" Text="Servicio:" FontSize="16" TextColor="White" FontAttributes="Bold"/>
+                                                        <Label Grid.Column="1" Text="{Binding ServicioNombre}" TextColor="White"  FontSize="16" LineBreakMode="WordWrap"/>
+                                                    </Grid>
+
+                                                    <Grid ColumnDefinitions="80,*" ColumnSpacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
+                                                        <Label Grid.Column="0" Text="Precio:" FontSize="16" TextColor="White" FontAttributes="Bold"/>
+                                                        <Label Grid.Column="1" Text="{Binding ServicioPrecio, StringFormat='${0:N0}'}"  FontSize="16" TextColor="White"/>
+                                                    </Grid>
+
+                                                </VerticalStackLayout>
+
                                             </Border>
                                         </DataTemplate>
                                     </CollectionView.ItemTemplate>
@@ -81,6 +106,7 @@
                             </VerticalStackLayout>
                         </Border>
                     </ScrollView>
+
                 </VerticalStackLayout>
             </ScrollView>
 

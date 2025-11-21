@@ -31,6 +31,9 @@
         }
 
         public bool MostrarBarberoInfo { get; set; }
+        public int? ServicioId { get; set; }
+        public string? ServicioNombre { get; set; }
+        public decimal? ServicioPrecio { get; set; }
     }
 
 }
