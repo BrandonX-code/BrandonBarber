@@ -93,5 +93,29 @@ namespace Barber.Maui.API.Controllers
 
             return Ok(new { puntuacion = calificacion.Puntuacion });
         }
+        // GET: api/calificaciones/barbero/{barberoId}/reseñas
+        [HttpGet("barbero/{barberoId}/reseñas")]
+        public async Task<IActionResult> GetResenasBarbero(long barberoId)
+        {
+            var resenas = await _context.Calificaciones
+                .Where(c => c.BarberoId == barberoId)
+                .OrderByDescending(c => c.FechaCalificacion)
+                .Select(c => new
+                {
+                    c.ClienteId,
+                    NombreCliente = _context.UsuarioPerfiles
+                        .Where(u => u.Cedula == c.ClienteId)
+                        .Select(u => u.Nombre)
+                        .FirstOrDefault(),
+                    c.Puntuacion,
+                    c.Comentario,
+                    c.FechaCalificacion
+                })
+                .ToListAsync();
+
+            return Ok(resenas);
+        }
+
+
     }
 }

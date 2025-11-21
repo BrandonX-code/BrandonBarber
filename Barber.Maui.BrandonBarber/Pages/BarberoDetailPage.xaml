@@ -33,13 +33,23 @@
                             <Grid>
                                 <Button x:Name="CalificarButton" Grid.ColumnSpan="2" Text="Calificar Barbero" BackgroundColor="#FF6F91" TextColor="Black" FontSize="15"	CornerRadius="15" HorizontalOptions="Fill" Margin="0,5,0,0" Clicked="OnCalificarClicked"/>
                             </Grid>
+                            <Grid>
+                                <Button x:Name="VerResenasButton" Grid.ColumnSpan="2" Text="Ver Reseñas" BackgroundColor="#4DB6AC" TextColor="Black" FontSize="15" CornerRadius="15" HorizontalOptions="Fill" Margin="0,5,0,0" Clicked="OnVerResenasClicked"/>
+                            </Grid>
+
                         </VerticalStackLayout>
                     </Grid>
 
                     <VerticalStackLayout Spacing="10">
                         <Label Text="Especialidades" TextColor="White" FontSize="16" FontAttributes="Bold"/>
 
-                        <Label x:Name="DescripcionLabel" TextColor="White" FontSize="14" LineHeight="1.4"/>
+                        <Label x:Name="DescripcionLabel" TextColor="White" FontSize="16" LineHeight="1.4">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+
                     </VerticalStackLayout>
 
                     <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" StrokeThickness="0">

@@ -10,7 +10,7 @@ namespace Barber.Maui.BrandonBarber.Mobal
         {
             InitializeComponent();
             MessageLabel.Text = message;
-
+            CanBeDismissedByTappingOutsideOfPopup = false;
             YesButton.Clicked += (_, __) => { Close(true); };
             NoButton.Clicked += (_, __) => { Close(false); };
         }
