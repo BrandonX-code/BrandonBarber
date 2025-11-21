@@ -15,10 +15,10 @@
                     <Border x:Name="servicioBorder" StrokeThickness="0" StrokeShape="RoundRectangle 10"  BackgroundColor="#28475C" Padding="15,12" Margin="0,0,0,10" Opacity="0" IsVisible="False">
                         <VerticalStackLayout Spacing="10">
                             <HorizontalStackLayout Spacing="15">
-                                <Border Grid.Column="0" WidthRequest="70" HeightRequest="70" StrokeShape="RoundRectangle 35" BackgroundColor="#E0F7FA"  VerticalOptions="Center"  StrokeThickness="0">
+                                <Border Grid.Column="0" WidthRequest="100" HeightRequest="100" StrokeShape="RoundRectangle 50" BackgroundColor="#E0F7FA"  VerticalOptions="Center"  StrokeThickness="0">
                                     <Image x:Name="ServicioImagen"  Aspect="AspectFill">
                                         <Image.Clip>
-                                            <RoundRectangleGeometry CornerRadius="35" Rect="0,0,70,70" />
+                                            <RoundRectangleGeometry CornerRadius="50" Rect="0,0,100,100" />
                                         </Image.Clip>
                                     </Image>
                                 </Border>

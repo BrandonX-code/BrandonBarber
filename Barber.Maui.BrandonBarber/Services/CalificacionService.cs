@@ -36,6 +36,15 @@ namespace Barber.Maui.BrandonBarber.Services
             var result = await response.Content.ReadFromJsonAsync<CalificacionClienteResponse>();
             return result?.Puntuacion ?? 0;
         }
+        public async Task<List<CalificacionModel>> ObtenerResenasAsync(long barberoId)
+        {
+            var response = await _httpClient.GetAsync($"api/calificaciones/barbero/{barberoId}/reseñas");
+            if (!response.IsSuccessStatusCode)
+                return new List<CalificacionModel>();
+
+            var resenas = await response.Content.ReadFromJsonAsync<List<CalificacionModel>>();
+            return resenas ?? new List<CalificacionModel>();
+        }
 
         private class PromedioResponse
         {

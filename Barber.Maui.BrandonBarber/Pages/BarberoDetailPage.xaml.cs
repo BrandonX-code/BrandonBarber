@@ -33,15 +33,38 @@
             BarberoName.Text = _barbero.Nombre;
             BarberoImage.Source = !string.IsNullOrEmpty(_barbero.ImagenPath) ? _barbero.ImagenPath : "dotnet_bot.png";
 
+            var formatted = new FormattedString();
+
             if (!string.IsNullOrEmpty(_barbero.Especialidades))
             {
-                DescripcionLabel.Text = $"Barbero especializado en: {_barbero.Especialidades}";
+                formatted.Spans.Add(new Span
+                {
+                    Text = "Barbero especializado en: ",
+                    FontAttributes = FontAttributes.Bold,
+                    TextColor = Colors.White,
+                    FontSize = 18
+                });
+
+                formatted.Spans.Add(new Span
+                {
+                    Text = _barbero.Especialidades,
+                    FontAttributes = FontAttributes.None,
+                    TextColor = Colors.White
+                });
             }
             else
             {
-                DescripcionLabel.Text = "No se han especificado especialidades.";
+                formatted.Spans.Add(new Span
+                {
+                    Text = "No se han especificado especialidades.",
+                    FontAttributes = FontAttributes.None,
+                    TextColor = Colors.White
+                });
             }
+
+            DescripcionLabel.FormattedText = formatted;
         }
+
 
         private async void LoadCalendario()
         {
@@ -347,6 +370,10 @@
             var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
             // Navega a ReservaCita y pasa el barbero actual como preseleccionado
             await Navigation.PushAsync(new MainPage(reservationService, authService, _barbero));
+        }
+        private async void OnVerResenasClicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ReseñasBarberoPage(_barbero));
         }
 
         private void ActualizarCalificacionVisual()

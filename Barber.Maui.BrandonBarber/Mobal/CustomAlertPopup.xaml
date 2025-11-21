@@ -4,7 +4,7 @@
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
    x:Class="Barber.Maui.BrandonBarber.Mobal.CustomAlertPopup"
-   Color="Transparent"> <!-- 👈 hace el fondo del popup transparente -->
+   Color="Transparent" CanBeDismissedByTappingOutsideOfPopup="False"> <!-- 👈 hace el fondo del popup transparente -->
 
     <Border
         StrokeThickness="0"
