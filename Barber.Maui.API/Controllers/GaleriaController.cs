@@ -65,7 +65,7 @@ namespace Barber.Maui.API.Controllers
         }
 
         [HttpPost("addimg")]
-        public async Task<ActionResult<ImagenGaleria>> SubirImagen(IFormFile imagen, [FromForm] string descripcion, [FromForm] long idbarbero)
+        public async Task<ActionResult<ImagenGaleria>> SubirImagen(IFormFile imagen, [FromForm] string? descripcion, [FromForm] long idbarbero)
         {
             if (imagen == null || imagen.Length == 0)
             {

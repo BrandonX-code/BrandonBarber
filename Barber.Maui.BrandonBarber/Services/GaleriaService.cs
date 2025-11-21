@@ -41,14 +41,15 @@ namespace Barber.Maui.BrandonBarber.Services
                 fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(mimeType);
                 content.Add(fileContent, "imagen", fileName);
 
+                // Convertir idbarbero a string antes de agregarlo
+                content.Add(new StringContent(idbarbero.ToString()), "idbarbero");
                 // Agregar metadatos si existen
                 if (!string.IsNullOrEmpty(descripcion))
                 {
-                    content.Add(new StringContent(descripcion), "descripcion");
+                    content.Add(new StringContent(descripcion ?? string.Empty), "descripcion");
                 }
 
-                // Convertir idbarbero a string antes de agregarlo
-                content.Add(new StringContent(idbarbero.ToString()), "idbarbero");
+               
 
                 Console.WriteLine($"🔹 Enviando imagen a {_httpClient.BaseAddress}api/galeria/addimg");
                 Console.WriteLine($"🔹 Archivo: {fileName}, Tamaño: {fileBytes.Length} bytes");

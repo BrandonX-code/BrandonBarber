@@ -417,10 +417,18 @@
                 });
 
                 if (foto == null)
-                    return; // usuario canceló
+                    return;
 
-                // Opcional: pide descripción
-                string descripcion = await DisplayPromptAsync("Descripción", "Ingresa una descripción para la imagen (opcional):", placeholder: "Ej: Corte fade con barba", maxLength: 500);
+                string? descripcion = await DisplayPromptAsync("Descripción", "Ingresa una descripción para la imagen (opcional):", placeholder: "Ej: Corte fade con barba", maxLength: 500);
+
+                if (descripcion == null)
+                {
+                    await AppUtils.MostrarSnackbar("Operación cancelada.", Colors.Orange, Colors.White);
+                    return;
+                }
+
+                // Si está vacío, usar string vacío
+                descripcion = string.IsNullOrWhiteSpace(descripcion) ? string.Empty : descripcion;
 
                 string rutaLocal = foto.FullPath;
 
