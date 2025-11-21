@@ -14,23 +14,34 @@
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
                                 <Border Padding="15" Margin="0,0,0,10" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 15" StrokeThickness="0">
-                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,*" RowSpacing="10">
-                                        <HorizontalStackLayout Spacing="5">
+                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,*">
+                                        <HorizontalStackLayout Spacing="5" Margin="0,5">
                                             <Image Grid.Column="0" Source="id.png" WidthRequest="20" HeightRequest="20" />
                                             <Label Grid.Column="1" LineBreakMode="WordWrap" Text="{Binding Nombre}" FontSize="18" FontAttributes="Bold" TextColor="Black"/>
                                         </HorizontalStackLayout>
-                                        <HorizontalStackLayout Grid.Row="1" Spacing="5">
+                                        <HorizontalStackLayout Grid.Row="1" Spacing="5" Margin="0,5">
                                             <Image Source="call.png" WidthRequest="20" HeightRequest="20" />
                                             <Label Grid.ColumnSpan="2" Text="{Binding Telefono}" FontSize="15" TextColor="Black"/>
                                         </HorizontalStackLayout>
 
-                                        <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="5">
+                                        <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="5" Margin="0,5">
                                             <Image Source="calendar.png" WidthRequest="20" HeightRequest="20"/>
                                             <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy - hh:mm tt}'}" TextColor="Black"/>
                                         </HorizontalStackLayout>
-                                        <Label Grid.Row="3" Grid.ColumnSpan="2" Text="{Binding Estado}" TextColor="Black" FontAttributes="Bold"/>
-                                        <Button Grid.Row="4" Grid.Column="0" Text="Completada" CornerRadius="15" BackgroundColor="#FF6F91" TextColor="Black" Clicked="OnCompletadaClicked" CommandParameter="{Binding .}" Margin="0,0,5,0"/>
-                                        <Button Grid.Row="4" Grid.Column="1" Text="Cancelada"  CornerRadius="15" BackgroundColor="#404040" TextColor="White" Clicked="OnCanceladaClicked" CommandParameter="{Binding .}" Margin="5,0,0,0"/>
+                                        <HorizontalStackLayout IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}" Grid.Row="3" Spacing="5" Margin="0,5">
+                                            <Image Source="servicio.png" WidthRequest="20" HeightRequest="20" />
+                                            <Label Text="Servicio: " FontSize="16" TextColor="Black" FontAttributes="Bold"/>
+                                            <Label Text="{Binding ServicioNombre}" FontSize="16" TextColor="Black" LineBreakMode="WordWrap"/>
+                                        </HorizontalStackLayout>
+
+                                        <HorizontalStackLayout IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}" Grid.Row="4" Spacing="5" Margin="0,5">
+                                            <Image Source="precio.png" WidthRequest="20" HeightRequest="20" />
+                                            <Label Text="Precio: " FontSize="16" TextColor="Black" FontAttributes="Bold"/>
+                                            <Label Text="{Binding ServicioPrecio, StringFormat='${0:N0}'}" FontSize="15" TextColor="Black" />
+                                        </HorizontalStackLayout>
+                                        <Label Grid.Row="5" Grid.ColumnSpan="2" Text="{Binding Estado}" TextColor="Black" FontAttributes="Bold" Margin="0,5"/>
+                                        <Button Grid.Row="6" Grid.Column="0" Text="Completada" CornerRadius="15" BackgroundColor="#FF6F91" TextColor="Black" Clicked="OnCompletadaClicked" CommandParameter="{Binding .}" Margin="0,5,5,5"/>
+                                        <Button Grid.Row="6" Grid.Column="1" Text="Cancelada"  CornerRadius="15" BackgroundColor="#404040" TextColor="White" Clicked="OnCanceladaClicked" CommandParameter="{Binding .}" Margin="5,5,0,5"/>
                                     </Grid>
                                 </Border>
                             </DataTemplate>

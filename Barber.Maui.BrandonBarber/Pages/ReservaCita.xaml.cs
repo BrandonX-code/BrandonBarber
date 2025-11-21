@@ -227,9 +227,9 @@
                     BarberoId = barberoSeleccionado.Cedula,
                     BarberoNombre = string.Empty,
                     // ✅ AGREGAR INFO DEL SERVICIO (necesitarás estas propiedades en CitaModel)
-                    // ServicioId = _servicioSeleccionado.Id,
-                    // ServicioNombre = _servicioSeleccionado.Nombre,
-                    // ServicioPrecio = _servicioSeleccionado.Precio
+                    ServicioId = _servicioSeleccionado.Id,
+                    ServicioNombre = _servicioSeleccionado.Nombre,
+                    ServicioPrecio = _servicioSeleccionado.Precio
                 };
 
                 bool guardadoExitoso = await _reservationServices.AddReservation(nuevaReserva);

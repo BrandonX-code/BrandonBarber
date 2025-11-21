@@ -37,6 +37,17 @@
                                                         <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy -}'}" FontSize="15" FontAttributes="Bold" TextColor="Black"/>
                                                         <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="15" FontAttributes="Bold" TextColor="Black"/>
                                                     </HorizontalStackLayout>
+                                                    <HorizontalStackLayout Spacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
+                                                        <Image Source="servicio.png" WidthRequest="20" HeightRequest="20" />
+                                                        <Label Text="Servicio: " FontSize="16" TextColor="Black" FontAttributes="Bold"/>
+                                                        <Label Text="{Binding ServicioNombre}" FontSize="16" TextColor="Black" />
+                                                    </HorizontalStackLayout>
+
+                                                    <HorizontalStackLayout Spacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
+                                                        <Image Source="precio.png" WidthRequest="20" HeightRequest="20" />
+                                                        <Label Text="Precio: " FontSize="16" TextColor="Black" FontAttributes="Bold"/>
+                                                        <Label Text="{Binding ServicioPrecio, StringFormat='${0:N0}'}" FontSize="15" TextColor="Black"/>
+                                                    </HorizontalStackLayout>
                                                 </VerticalStackLayout>
                                             </Border>
                                         </SwipeView>
@@ -68,6 +79,17 @@
                                                     <HorizontalStackLayout Spacing="5">
                                                         <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
                                                         <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy - hh:mm tt}'}" FontSize="15" FontAttributes="Bold" TextColor="Black"/>
+                                                    </HorizontalStackLayout>
+                                                    <HorizontalStackLayout Spacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
+                                                        <Image Source="servicio.png" WidthRequest="20" HeightRequest="20" />
+                                                        <Label Text="Servicio: " FontSize="16" TextColor="Black" FontAttributes="Bold"/>
+                                                        <Label Text="{Binding ServicioNombre}" FontSize="16" TextColor="Black" />
+                                                    </HorizontalStackLayout>
+
+                                                    <HorizontalStackLayout Spacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
+                                                        <Image Source="precio.png" WidthRequest="20" HeightRequest="20" />
+                                                        <Label Text="Precio: " FontSize="16" TextColor="Black" FontAttributes="Bold"/>
+                                                        <Label Text="{Binding ServicioPrecio, StringFormat='${0:N0}'}" FontSize="15" TextColor="Black"/>
                                                     </HorizontalStackLayout>
                                                 </VerticalStackLayout>
                                                 <Border Grid.Column="1" Stroke="Transparent" WidthRequest="22"  HeightRequest="22"  StrokeShape="RoundRectangle 20" VerticalOptions="Center">

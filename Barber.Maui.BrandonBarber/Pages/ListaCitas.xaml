@@ -62,7 +62,13 @@
                                                         <Image Grid.Column="0" Source="id.png" WidthRequest="20" HeightRequest="20" />
                                                         <Label Grid.Column="1" Text="{Binding Nombre}" FontSize="Body" TextColor="Black" FontAttributes="Bold" LineBreakMode="WordWrap" VerticalOptions="Center" />
                                                     </Grid>
-
+                                                    <HorizontalStackLayout IsVisible="{Binding MostrarBarberoInfo}">
+                                                        <HorizontalStackLayout Spacing="5">
+                                                            <Image Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />
+                                                            <Label Text="Barbero: " FontSize="Small" TextColor="Black" />
+                                                        </HorizontalStackLayout>
+                                                        <Label Text="{Binding BarberoNombre}" FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                                    </HorizontalStackLayout>
                                                     <HorizontalStackLayout Spacing="5">
                                                         <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
                                                         <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy - hh:mm tt}'}" FontSize="16" TextColor="Black" />
@@ -72,13 +78,16 @@
                                                         <Image Source="call.png" WidthRequest="20" HeightRequest="20" />
                                                         <Label Text="{Binding Telefono}" FontSize="14" TextColor="Black" />
                                                     </HorizontalStackLayout>
+                                                    <HorizontalStackLayout Spacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
+                                                        <Image Source="servicio.png" WidthRequest="20" HeightRequest="20" />
+                                                        <Label Text="Servicio: " FontSize="16" TextColor="Black" FontAttributes="Bold"/>
+                                                        <Label Text="{Binding ServicioNombre}" FontSize="16" TextColor="Black" />
+                                                    </HorizontalStackLayout>
 
-                                                    <HorizontalStackLayout IsVisible="{Binding MostrarBarberoInfo}">
-                                                        <HorizontalStackLayout Spacing="5">
-                                                            <Image Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />
-                                                            <Label Text="Barbero: " FontSize="Small" TextColor="Black" />
-                                                        </HorizontalStackLayout>
-                                                        <Label Text="{Binding BarberoNombre}" FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                                    <HorizontalStackLayout Spacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
+                                                        <Image Source="precio.png" WidthRequest="20" HeightRequest="20" />
+                                                        <Label Text="Precio: " FontSize="16" TextColor="Black" FontAttributes="Bold"/>
+                                                        <Label Text="{Binding ServicioPrecio, StringFormat='${0:N0}'}" FontSize="15" TextColor="Black"/>
                                                     </HorizontalStackLayout>
                                                 </VerticalStackLayout>
                                                 <Border Grid.Column="1" Stroke="Transparent" WidthRequest="22"  HeightRequest="22"  StrokeShape="RoundRectangle 20" VerticalOptions="Center">

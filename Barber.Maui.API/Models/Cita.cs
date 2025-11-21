@@ -13,5 +13,8 @@ namespace Barber.Maui.API.Models
         [NotMapped]
         public string? BarberoNombre { get; set; }
         public string Estado { get; set; } = "Pendiente"; // Agregar esta línea
+        public int? ServicioId { get; set; }
+        public string? ServicioNombre { get; set; }
+        public decimal? ServicioPrecio { get; set; }
     }
 }
