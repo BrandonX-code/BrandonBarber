@@ -150,12 +150,15 @@
                     return;
                 }
 
-                DateTime fechaSeleccionada = FechaPicker.Date.Add(HoraPicker.Time);
-                if (fechaSeleccionada < DateTime.Now)
+                DateTime fechaSeleccionadaLocal = FechaPicker.Date.Add(HoraPicker.Time);
+                DateTime fechaSeleccionada = DateTime.SpecifyKind(fechaSeleccionadaLocal, DateTimeKind.Local).ToUniversalTime();
+
+                if (fechaSeleccionada < DateTime.UtcNow)
                 {
                     await AppUtils.MostrarSnackbar("La fecha de la cita debe ser futura.", Colors.Orange, Colors.White);
                     return;
                 }
+
 
                 if (BarberoPicker.SelectedItem is not UsuarioModels barberoSeleccionado)
                 {

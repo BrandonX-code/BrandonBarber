@@ -14,6 +14,23 @@ public class CitasController : ControllerBase
         _context = context;
     }
 
+    private void ConvertirCitaAFormatoLocal(Cita cita)
+    {
+        cita.Fecha = DateTime.SpecifyKind(cita.Fecha, DateTimeKind.Utc).ToLocalTime();
+    }
+    private async Task EnriquecerCitaConServicio(Cita cita)
+    {
+        if (cita.ServicioId.HasValue)
+        {
+            var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
+            if (servicio != null)
+            {
+                cita.ServicioNombre = servicio.Nombre;
+                cita.ServicioPrecio = servicio.Precio;
+            }
+        }
+    }
+
     [HttpGet("Barberos/{idbarberia}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitas(int idbarberia)
     {
@@ -22,34 +39,24 @@ public class CitasController : ControllerBase
             .Select(b => new { b.Cedula, b.Nombre })
             .ToListAsync();
 
-        var barberoIds = barberos.Select(b => b.Cedula).ToList();
         var barberoDict = barberos.ToDictionary(b => b.Cedula, b => b.Nombre);
+        var barberoIds = barberos.Select(b => b.Cedula).ToList();
 
         var citas = await _context.Citas
             .Where(c => barberoIds.Contains(c.BarberoId))
             .OrderBy(c => c.Fecha)
             .ToListAsync();
 
-        // Llenar BarberoNombre y ServicioNombre
         foreach (var cita in citas)
         {
+            ConvertirCitaAFormatoLocal(cita);
             cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
-
-            if (cita.ServicioId.HasValue)
-            {
-                var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
-                if (servicio != null)
-                {
-                    cita.ServicioNombre = servicio.Nombre;
-                    cita.ServicioPrecio = servicio.Precio;
-                }
-            }
+            await EnriquecerCitaConServicio(cita);
         }
 
         return Ok(citas);
     }
 
-    // NUEVO: Obtener todas las citas históricas del sistema
     [HttpGet("todas")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetTodasLasCitas()
     {
@@ -59,7 +66,6 @@ public class CitasController : ControllerBase
                 .OrderByDescending(c => c.Fecha)
                 .ToListAsync();
 
-            // Llenar información de barberos
             var barberoIds = citas.Select(c => c.BarberoId).Distinct().ToList();
             var barberos = await _context.UsuarioPerfiles
                 .Where(b => barberoIds.Contains(b.Cedula))
@@ -67,18 +73,9 @@ public class CitasController : ControllerBase
 
             foreach (var cita in citas)
             {
+                ConvertirCitaAFormatoLocal(cita);
                 cita.BarberoNombre = barberos.GetValueOrDefault(cita.BarberoId, "No encontrado");
-
-                // ✅ Llenar info del servicio
-                if (cita.ServicioId.HasValue)
-                {
-                    var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
-                    if (servicio != null)
-                    {
-                        cita.ServicioNombre = servicio.Nombre;
-                        cita.ServicioPrecio = servicio.Precio;
-                    }
-                }
+                await EnriquecerCitaConServicio(cita);
             }
 
             return Ok(citas);
@@ -89,42 +86,29 @@ public class CitasController : ControllerBase
         }
     }
 
-    // NUEVO: Obtener todas las citas históricas de una barbería específica
     [HttpGet("barberia/{idBarberia}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorBarberia(int idBarberia)
     {
         try
         {
-            // Obtener barberos de la barbería
             var barberos = await _context.UsuarioPerfiles
                 .Where(b => b.IdBarberia == idBarberia)
                 .Select(b => new { b.Cedula, b.Nombre })
                 .ToListAsync();
 
-            var barberoIds = barberos.Select(b => b.Cedula).ToList();
             var barberoDict = barberos.ToDictionary(b => b.Cedula, b => b.Nombre);
+            var barberoIds = barberos.Select(b => b.Cedula).ToList();
 
-            // Obtener todas las citas de esos barberos (sin filtro de fecha)
             var citas = await _context.Citas
                 .Where(c => barberoIds.Contains(c.BarberoId))
                 .OrderByDescending(c => c.Fecha)
                 .ToListAsync();
 
-            // Llenar información de barberos y servicios
             foreach (var cita in citas)
             {
+                ConvertirCitaAFormatoLocal(cita);
                 cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
-
-                // ✅ Llenar info del servicio
-                if (cita.ServicioId.HasValue)
-                {
-                    var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
-                    if (servicio != null)
-                    {
-                        cita.ServicioNombre = servicio.Nombre;
-                        cita.ServicioPrecio = servicio.Precio;
-                    }
-                }
+                await EnriquecerCitaConServicio(cita);
             }
 
             return Ok(citas);
@@ -135,18 +119,19 @@ public class CitasController : ControllerBase
         }
     }
 
-    // NUEVO: Obtener citas por rango de fechas
     [HttpGet("by-date-range/{fechaInicio}/{fechaFin}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorRangoFechas(DateTime fechaInicio, DateTime fechaFin)
     {
         try
         {
+            fechaInicio = fechaInicio.ToUniversalTime();
+            fechaFin = fechaFin.ToUniversalTime();
+
             var citas = await _context.Citas
-                .Where(c => c.Fecha.Date >= fechaInicio.Date && c.Fecha.Date <= fechaFin.Date)
+                .Where(c => c.Fecha >= fechaInicio && c.Fecha <= fechaFin)
                 .OrderBy(c => c.Fecha)
                 .ToListAsync();
 
-            // Llenar información de barberos
             var barberoIds = citas.Select(c => c.BarberoId).Distinct().ToList();
             var barberos = await _context.UsuarioPerfiles
                 .Where(b => barberoIds.Contains(b.Cedula))
@@ -154,18 +139,9 @@ public class CitasController : ControllerBase
 
             foreach (var cita in citas)
             {
+                ConvertirCitaAFormatoLocal(cita);
                 cita.BarberoNombre = barberos.GetValueOrDefault(cita.BarberoId, "No encontrado");
-
-                // ✅ Llenar info del servicio
-                if (cita.ServicioId.HasValue)
-                {
-                    var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
-                    if (servicio != null)
-                    {
-                        cita.ServicioNombre = servicio.Nombre;
-                        cita.ServicioPrecio = servicio.Precio;
-                    }
-                }
+                await EnriquecerCitaConServicio(cita);
             }
 
             return Ok(citas);
@@ -176,51 +152,39 @@ public class CitasController : ControllerBase
         }
     }
 
-    // NUEVO: Obtener citas por rango de fechas y barbería
     [HttpGet("by-date-range/{fechaInicio}/{fechaFin}/{idBarberia}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorRangoFechasYBarberia(DateTime fechaInicio, DateTime fechaFin, int idBarberia)
     {
         try
         {
-            // Obtener barberos de la barbería
+            fechaInicio = fechaInicio.ToUniversalTime();
+            fechaFin = fechaFin.ToUniversalTime();
+
             var barberos = await _context.UsuarioPerfiles
                 .Where(b => b.IdBarberia == idBarberia)
                 .Select(b => new { b.Cedula, b.Nombre })
                 .ToListAsync();
 
-            var barberoIds = barberos.Select(b => b.Cedula).ToList();
             var barberoDict = barberos.ToDictionary(b => b.Cedula, b => b.Nombre);
+            var barberoIds = barberos.Select(b => b.Cedula).ToList();
 
-            // Obtener citas en el rango de fechas para esos barberos
             var citas = await _context.Citas
-                .Where(c => c.Fecha.Date >= fechaInicio.Date &&
-                           c.Fecha.Date <= fechaFin.Date &&
-                           barberoIds.Contains(c.BarberoId))
+                .Where(c => c.Fecha >= fechaInicio && c.Fecha <= fechaFin && barberoIds.Contains(c.BarberoId))
                 .OrderBy(c => c.Fecha)
                 .ToListAsync();
 
-            // Llenar información de barberos y servicios
             foreach (var cita in citas)
             {
+                ConvertirCitaAFormatoLocal(cita);
                 cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
-
-                // ✅ Llenar info del servicio
-                if (cita.ServicioId.HasValue)
-                {
-                    var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
-                    if (servicio != null)
-                    {
-                        cita.ServicioNombre = servicio.Nombre;
-                        cita.ServicioPrecio = servicio.Precio;
-                    }
-                }
+                await EnriquecerCitaConServicio(cita);
             }
 
             return Ok(citas);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = "Error al obtener citas por rango de fechas y barbería.", error = ex.Message });
+            return StatusCode(500, new { message = "Error al obtener citas por fecha y barbería.", error = ex.Message });
         }
     }
 
@@ -233,56 +197,40 @@ public class CitasController : ControllerBase
 
         foreach (var cita in citas)
         {
-            Auth barbero = _context.UsuarioPerfiles.Where(b => b.Cedula == cita.BarberoId).FirstOrDefault()!;
-            cita.BarberoNombre = barbero?.Nombre ?? "No encontrado";
+            ConvertirCitaAFormatoLocal(cita);
+            var barbero = await _context.UsuarioPerfiles
+                .FirstOrDefaultAsync(b => b.Cedula == cita.BarberoId);
 
-            // ✅ Llenar info del servicio
-            if (cita.ServicioId.HasValue)
-            {
-                var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
-                if (servicio != null)
-                {
-                    cita.ServicioNombre = servicio.Nombre;
-                    cita.ServicioPrecio = servicio.Precio;
-                }
-            }
+            cita.BarberoNombre = barbero?.Nombre ?? "No encontrado";
+            await EnriquecerCitaConServicio(cita);
         }
 
         return Ok(citas);
     }
 
     [HttpGet("by-date/{fecha}&{idBarberia}")]
-    public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorFecha(DateTime fecha, int idbarberia)
+    public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorFecha(DateTime fecha, int idBarberia)
     {
-        // Obtener barberos con cédula y nombre
+        fecha = fecha.ToUniversalTime();
+
         var barberos = await _context.UsuarioPerfiles
-            .Where(b => b.IdBarberia == idbarberia && b.Rol == "barbero")
+            .Where(b => b.IdBarberia == idBarberia && b.Rol == "barbero")
             .Select(b => new { b.Cedula, b.Nombre })
             .ToListAsync();
 
-        var barberoIds = barberos.Select(b => b.Cedula).ToList();
         var barberoDict = barberos.ToDictionary(b => b.Cedula, b => b.Nombre);
+        var barberoIds = barberos.Select(b => b.Cedula).ToList();
 
         var citas = await _context.Citas
             .Where(c => c.Fecha.Date == fecha.Date && barberoIds.Contains(c.BarberoId))
             .OrderBy(c => c.Fecha)
             .ToListAsync();
 
-        // Llenar la propiedad NombreBarbero y ServicioNombre
         foreach (var cita in citas)
         {
+            ConvertirCitaAFormatoLocal(cita);
             cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
-
-            // ✅ Llenar info del servicio
-            if (cita.ServicioId.HasValue)
-            {
-                var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
-                if (servicio != null)
-                {
-                    cita.ServicioNombre = servicio.Nombre;
-                    cita.ServicioPrecio = servicio.Precio;
-                }
-            }
+            await EnriquecerCitaConServicio(cita);
         }
 
         return Ok(citas);
@@ -291,23 +239,17 @@ public class CitasController : ControllerBase
     [HttpGet("barbero/{barberoId}/fecha/{fecha}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorBarberoYFecha(long barberoId, DateTime fecha)
     {
+        fecha = fecha.ToUniversalTime();
+
         var citas = await _context.Citas
             .Where(c => c.BarberoId == barberoId && c.Fecha.Date == fecha.Date)
             .OrderBy(c => c.Fecha)
             .ToListAsync();
 
-        // ✅ Llenar info del servicio
         foreach (var cita in citas)
         {
-            if (cita.ServicioId.HasValue)
-            {
-                var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
-                if (servicio != null)
-                {
-                    cita.ServicioNombre = servicio.Nombre;
-                    cita.ServicioPrecio = servicio.Precio;
-                }
-            }
+            ConvertirCitaAFormatoLocal(cita);
+            await EnriquecerCitaConServicio(cita);
         }
 
         return Ok(citas);
@@ -323,27 +265,14 @@ public class CitasController : ControllerBase
                 .OrderBy(c => c.Fecha)
                 .ToListAsync();
 
-            // Llenar información del barbero y servicios
-            if (citas.Any())
+            var barbero = await _context.UsuarioPerfiles
+                .FirstOrDefaultAsync(b => b.Cedula == barberoId);
+
+            foreach (var cita in citas)
             {
-                var barbero = await _context.UsuarioPerfiles
-                    .FirstOrDefaultAsync(b => b.Cedula == barberoId);
-
-                foreach (var cita in citas)
-                {
-                    cita.BarberoNombre = barbero?.Nombre ?? "No encontrado";
-
-                    // ✅ Llenar info del servicio
-                    if (cita.ServicioId.HasValue)
-                    {
-                        var servicio = await _context.Servicios.FindAsync(cita.ServicioId.Value);
-                        if (servicio != null)
-                        {
-                            cita.ServicioNombre = servicio.Nombre;
-                            cita.ServicioPrecio = servicio.Precio;
-                        }
-                    }
-                }
+                ConvertirCitaAFormatoLocal(cita);
+                cita.BarberoNombre = barbero?.Nombre ?? "No encontrado";
+                await EnriquecerCitaConServicio(cita);
             }
 
             return Ok(citas);
@@ -353,37 +282,38 @@ public class CitasController : ControllerBase
             return StatusCode(500, new { message = "Error al obtener citas del barbero.", error = ex.Message });
         }
     }
+
     [HttpPost]
     public async Task<ActionResult<Cita>> CrearCita([FromBody] Cita nuevaCita)
     {
-        if (nuevaCita == null || string.IsNullOrWhiteSpace(nuevaCita.Nombre) || nuevaCita.Fecha < DateTime.Now)
+        if (nuevaCita == null ||
+            string.IsNullOrWhiteSpace(nuevaCita.Nombre))
         {
-            return BadRequest("Error: Datos inválidos en la solicitud.");
+            return BadRequest("Datos inválidos.");
         }
 
-        bool existeCita = await _context.Citas.AnyAsync(c => c.Fecha == nuevaCita.Fecha && c.BarberoId == nuevaCita.BarberoId);
+        // Convertir fecha local → UTC antes de guardar
+        nuevaCita.Fecha = nuevaCita.Fecha.ToUniversalTime();
+
+        bool existeCita = await _context.Citas
+            .AnyAsync(c => c.Fecha == nuevaCita.Fecha && c.BarberoId == nuevaCita.BarberoId);
 
         if (existeCita)
         {
-            return Conflict("Ya existe una cita en esta fecha y hora. Elija otro horario.");
+            return Conflict("Ya existe una cita en esta fecha y hora.");
         }
 
         try
         {
-            // ✅ Si viene ServicioId, obtener info del servicio
-            if (nuevaCita.ServicioId.HasValue)
-            {
-                var servicio = await _context.Servicios.FindAsync(nuevaCita.ServicioId.Value);
-                if (servicio != null)
-                {
-                    nuevaCita.ServicioNombre = servicio.Nombre;
-                    nuevaCita.ServicioPrecio = servicio.Precio;
-                }
-            }
+            await EnriquecerCitaConServicio(nuevaCita);
 
             _context.Citas.Add(nuevaCita);
             await _context.SaveChangesAsync();
-            return StatusCode(201, nuevaCita); // ✅ Devolver la cita creada
+
+            // Convertimos a local antes de enviarla
+            ConvertirCitaAFormatoLocal(nuevaCita);
+
+            return StatusCode(201, nuevaCita);
         }
         catch (Exception ex)
         {
@@ -396,15 +326,14 @@ public class CitasController : ControllerBase
     {
         var cita = await _context.Citas.FindAsync(id);
         if (cita == null)
-        {
             return NotFound();
-        }
 
         _context.Citas.Remove(cita);
         await _context.SaveChangesAsync();
 
         return NoContent();
     }
+
     [HttpPut("{id}/estado")]
     public async Task<IActionResult> ActualizarEstado(int id, [FromBody] EstadoUpdateDto dto)
     {
@@ -414,10 +343,11 @@ public class CitasController : ControllerBase
 
         cita.Estado = dto.Estado;
         await _context.SaveChangesAsync();
+
         return Ok();
     }
-    
 }
+
 public class EstadoUpdateDto
 {
     public string Estado { get; set; } = string.Empty;
