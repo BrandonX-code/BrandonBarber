@@ -22,9 +22,13 @@ namespace Barber.Maui.API.Controllers
         {
             try
             {
-                // Obtener el token FCM del barbero desde la base de datos
+                var cedulaStr = request.BarberoId.ToString(); // crucial: long → string
+
+                var barberoIdLong = request.BarberoId;
+
                 var barbero = await _context.UsuarioPerfiles
-                    .FirstOrDefaultAsync(u => u.Cedula == request.BarberoId);
+                    .FirstOrDefaultAsync(u => u.Cedula == barberoIdLong);
+
 
                 if (barbero == null || string.IsNullOrEmpty(barbero.FcmToken))
                     return BadRequest(new { message = "Barbero no encontrado o sin token FCM" });
@@ -38,13 +42,13 @@ namespace Barber.Maui.API.Controllers
                         Body = request.Mensaje
                     },
                     Data = new Dictionary<string, string>()
-                    {
-                        { "citaId", request.CitaId.ToString() },
-                        { "fecha", request.Fecha.ToString("o") }
-                    }
+            {
+                { "citaId", request.CitaId.ToString() },
+                { "fecha", request.Fecha.ToString("o") }
+            }
                 };
 
-                string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
+                var response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
                 return Ok(new { message = "Notificación enviada", response });
             }
             catch (Exception ex)
@@ -52,6 +56,24 @@ namespace Barber.Maui.API.Controllers
                 return StatusCode(500, new { message = "Error al enviar notificación", error = ex.Message });
             }
         }
+        [HttpGet("ver-barbero/{cedula}")]
+        public async Task<IActionResult> VerBarbero(long cedula)
+        {
+            var b = await _context.UsuarioPerfiles.FirstOrDefaultAsync(x => x.Cedula == cedula);
+
+            if (b == null)
+                return NotFound(new { existe = false });
+
+            return Ok(new
+            {
+                existe = true,
+                b.Cedula,
+                b.Nombre,
+                fcmTokenVacio = string.IsNullOrEmpty(b.FcmToken),
+                b.FcmToken
+            });
+        }
+
         [HttpGet("verificar-firebase")]
         public IActionResult VerificarFirebase()
         {

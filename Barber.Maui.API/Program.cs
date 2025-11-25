@@ -60,7 +60,8 @@ try
 {
     if (FirebaseApp.DefaultInstance == null)
     {
-        string base64 = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS");
+        string base64 = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS_BASE64");
+
 
         if (string.IsNullOrEmpty(base64))
         {
