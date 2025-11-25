@@ -18,5 +18,6 @@ namespace Barber.Maui.API.Models
         // Add the missing properties to fix the error
         public double CalificacionPromedio { get; set; }
         public int TotalCalificaciones { get; set; }
+        public string? FcmToken { get; set; }
     }
 }

@@ -1,6 +1,9 @@
 ﻿using Barber.Maui.API.Data;
 using Barber.Maui.API.Services;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 //builder.WebHost.UseUrls("http://0.0.0.0:5286", "https://0.0.0.0:7283");
@@ -53,6 +56,35 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //builder.Services.AddSingleton<IEmailService, EmailService>();
 builder.Services.AddSingleton<IEmailService, SendGridEmailService>();
+try
+{
+    if (FirebaseApp.DefaultInstance == null)
+    {
+        string base64 = Environment.GetEnvironmentVariable("FIREBASE_CREDENTIALS");
+
+        if (string.IsNullOrEmpty(base64))
+        {
+            Console.WriteLine("❌ No existe la variable FIREBASE_CREDENTIALS");
+        }
+        else
+        {
+            var json = Encoding.UTF8.GetString(Convert.FromBase64String(base64));
+
+            FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromJson(json)
+            });
+
+            Console.WriteLine("✅ Firebase inicializado con credenciales BASE64");
+        }
+    }
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"❌ Error inicializando Firebase: {ex.Message}");
+}
+
+
 var app = builder.Build();
 
 
