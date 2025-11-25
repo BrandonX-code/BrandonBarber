@@ -330,30 +330,6 @@ namespace Barber.Maui.API.Controllers
 
             return Ok(usuario);
         }
-        [HttpPut("guardar-token/{cedula}")]
-        public async Task<IActionResult> GuardarTokenFCM(long cedula, [FromBody] TokenRequest request)
-        {
-            if (string.IsNullOrWhiteSpace(request.FcmToken))
-                return BadRequest(new { message = "El token no puede estar vacío." });
-
-            // Validación básica de formato FCM
-            if (request.FcmToken.Length < 100)
-                return BadRequest(new { message = "Token FCM inválido (demasiado corto)." });
-
-            if (request.FcmToken.Contains(" "))
-                return BadRequest(new { message = "Token FCM inválido (contiene espacios)." });
-
-            var usuario = await _context.UsuarioPerfiles.FirstOrDefaultAsync(u => u.Cedula == cedula);
-
-            if (usuario == null)
-                return NotFound(new { message = "Usuario no encontrado" });
-
-            usuario.FcmToken = request.FcmToken;
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Token FCM guardado correctamente" });
-        }
-
 
         public class TokenRequest
         {
