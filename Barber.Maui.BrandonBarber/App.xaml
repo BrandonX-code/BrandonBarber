@@ -13,6 +13,7 @@
             <converters:DisponibilidadColorConverter x:Key="DisponibilidadColorConverter" />
             <converters:LessThanConverter x:Key="LessThanConverter" />
             <converters:ServicioVisibleConverter x:Key="ServicioVisibleConverter" />
+            <converters:EstadoPendienteConverter x:Key="EstadoPendienteConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

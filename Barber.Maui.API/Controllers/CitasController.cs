@@ -1,5 +1,6 @@
 ﻿using Barber.Maui.API.Data;
 using Barber.Maui.API.Models;
+using Barber.Maui.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,11 +8,13 @@ using Microsoft.EntityFrameworkCore;
 [ApiController]
 public class CitasController : ControllerBase
 {
+    private readonly INotificationService _notificationService;
     private readonly AppDbContext _context;
 
-    public CitasController(AppDbContext context)
+    public CitasController(AppDbContext context, INotificationService notificationService)
     {
         _context = context;
+        _notificationService = notificationService;
     }
 
     private void ConvertirCitaAFormatoLocal(Cita cita)
@@ -306,13 +309,25 @@ public class CitasController : ControllerBase
         try
         {
             await EnriquecerCitaConServicio(nuevaCita);
-
             _context.Citas.Add(nuevaCita);
             await _context.SaveChangesAsync();
 
-            // Convertimos a local antes de enviarla
-            ConvertirCitaAFormatoLocal(nuevaCita);
+            // 🔥 ENVIAR NOTIFICACIÓN AL BARBERO
+            var data = new Dictionary<string, string>
+            {
+                { "tipo", "nueva_cita" },
+                { "citaId", nuevaCita.Id.ToString() },
+                { "clienteNombre", nuevaCita.Nombre ?? "" }
+            };
 
+            await _notificationService.EnviarNotificacionAsync(
+                nuevaCita.BarberoId,
+                "Nueva Cita Pendiente",
+                $"{nuevaCita.Nombre} ha solicitado una cita para el {nuevaCita.Fecha:dd/MM/yyyy HH:mm}",
+                data
+            );
+
+            ConvertirCitaAFormatoLocal(nuevaCita);
             return StatusCode(201, nuevaCita);
         }
         catch (Exception ex)
@@ -335,17 +350,49 @@ public class CitasController : ControllerBase
     }
 
     [HttpPut("{id}/estado")]
-    public async Task<IActionResult> ActualizarEstado(int id, [FromBody] EstadoUpdateDto dto)
+    public async Task<IActionResult> ActualizarEstado(int id, [FromBody] EstadoRequest req)
     {
-        var cita = await _context.Citas.FindAsync(id);
-        if (cita == null)
-            return NotFound();
+        var cita = await _context.Citas.FirstOrDefaultAsync(c => c.Id == id);
+        if (cita == null) return NotFound();
 
-        cita.Estado = dto.Estado;
+        // obtener barbero
+        var barbero = await _context.UsuarioPerfiles
+            .FirstOrDefaultAsync(u => u.Cedula == cita.BarberoId);
+
+        // obtener servicio
+        var servicio = await _context.Servicios
+            .FirstOrDefaultAsync(s => s.Id == cita.ServicioId);
+
+        string barberoNombre = barbero?.Nombre ?? "el barbero";
+        string servicioNombre = servicio?.Nombre ?? "tu servicio";
+
+        cita.Estado = req.Estado;
         await _context.SaveChangesAsync();
+
+        if (req.Estado == "Completada")
+        {
+            await _notificationService.EnviarNotificacionAsync(
+                cita.Cedula,
+                "Cita Aceptada",
+                $"Tu cita con {barberoNombre} para {servicioNombre} fue aceptada",
+                new Dictionary<string, string> { { "tipo", "cita_aceptada" } }
+            );
+        }
+        else if (req.Estado == "Cancelada")
+        {
+            await _notificationService.EnviarNotificacionAsync(
+                cita.Cedula,
+                "Cita Rechazada",
+                $"Tu cita con {barberoNombre} para {servicioNombre} fue rechazada",
+                new Dictionary<string, string> { { "tipo", "cita_rechazada" } }
+            );
+        }
 
         return Ok();
     }
+
+    public class EstadoRequest { public string Estado { get; set; } = string.Empty; }
+
 }
 
 public class EstadoUpdateDto

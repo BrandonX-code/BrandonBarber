@@ -2,6 +2,14 @@
 using Microcharts.Maui;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.Platform;
+using Plugin.LocalNotification;
+using Plugin.Firebase.CloudMessaging;
+using Microsoft.Maui.LifecycleEvents;
+
+#if ANDROID
+using Plugin.Firebase.Core.Platforms.Android;
+#endif
+
 
 namespace Barber.Maui.BrandonBarber
 {
@@ -9,9 +17,11 @@ namespace Barber.Maui.BrandonBarber
     {
         public static MauiApp CreateMauiApp()
         {
+
             var builder = MauiApp.CreateBuilder();
             builder
-                .UseMauiApp<App>();
+                .UseMauiApp<App>()
+            .RegisterFirebaseServices();
             builder
            .UseMauiCommunityToolkit(options =>
            {
@@ -82,6 +92,11 @@ namespace Barber.Maui.BrandonBarber
             builder.Services.AddSingleton<CalificacionService>();
             builder.Services.AddSingleton<BarberiaService>();
             builder.Services.AddSingleton<AdministradorService>();
+            builder.Services.AddSingleton<NotificationService>();
+            LocalNotificationCenter.Current.NotificationActionTapped += (e) =>
+            {
+                Console.WriteLine($"📱 Notificación tocada: {e.Request.NotificationId}");
+            };
 
             // Registrar páginas
             builder.Services.AddSingleton<LoginPage>();
@@ -96,6 +111,24 @@ namespace Barber.Maui.BrandonBarber
             builder.Logging.AddDebug();
 #endif
             return builder.Build();
+        }
+
+        private static MauiAppBuilder RegisterFirebaseServices(this MauiAppBuilder builder)
+        {
+            builder.ConfigureLifecycleEvents(events => {
+            #if IOS
+                    events.AddiOS(iOS => iOS.WillFinishLaunching((_, __) => {
+                        CrossFirebase.Initialize();
+                        FirebaseCloudMessagingImplementation.Initialize();
+                        return false;
+                    }));
+            #elif ANDROID
+                            events.AddAndroid(android => android.OnCreate((activity, _) =>
+                            CrossFirebase.Initialize(activity)));
+            #endif
+                        });
+
+            return builder;
         }
     }
 }

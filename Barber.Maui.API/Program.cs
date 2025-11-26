@@ -26,7 +26,7 @@ builder.WebHost.ConfigureKestrel(options =>
         options.ListenAnyIP(7283, listen => listen.UseHttps()); // HTTPS
     }
 });
-
+builder.Services.AddScoped<INotificationService, FirebaseNotificationService>();
 // Add services to the container.
 builder.Services.AddHttpClient(); // ✅ Esto resuelve el error
 builder.Services.AddRazorPages(); // ✅ Para las Razor Pages

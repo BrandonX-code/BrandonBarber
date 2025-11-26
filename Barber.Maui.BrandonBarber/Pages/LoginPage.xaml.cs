@@ -113,6 +113,29 @@ namespace Barber.Maui.BrandonBarber.Pages
                 PasswordEntry.Text = string.Empty;
                 Preferences.Set("IsLoggedIn", true);
 
+                // 🔥 INICIALIZAR NOTIFICACIONES AQUÍ
+                Task.Run(async () =>
+                {
+                    try
+                    {
+                        var notificationService = App.Current!.Handler.MauiContext!.Services.GetService<NotificationService>();
+                        await notificationService!.InicializarAsync();
+                        if (notificationService != null)
+                        {
+                            await notificationService.InicializarAsync();
+                            Console.WriteLine("✅ NotificationService inicializado después del login");
+                        }
+                        else
+                        {
+                            Console.WriteLine("❌ NotificationService es null");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"❌ Error inicializando notificaciones: {ex.Message}");
+                    }
+                });
+
                 var serviciosService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ServicioService>();
                 var newPage = new NavigationPage(new InicioPages(_authService, serviciosService));
 

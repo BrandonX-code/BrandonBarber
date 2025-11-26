@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "206004647035",
+    "project_id": "barberapp-21a92",
+    "storage_bucket": "barberapp-21a92.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206004647035:android:6b10273a1f118bbfd6dede",
+        "android_client_info": {
+          "package_name": "com.companyname.Barber.maui.BrandonBarber"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB70EPGshR0wBqig0G921itSnfAUrzNvv0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

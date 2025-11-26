@@ -5,10 +5,16 @@ using Android.OS;
 using Android.Views;
 using Android.Views.InputMethods;
 using Android.Widget;
+using Firebase;
+using Plugin.Firebase.CloudMessaging;
 
 namespace Barber.Maui.BrandonBarber
 {
-    [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true, LaunchMode = LaunchMode.SingleTop, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation | ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
+    [Activity(Theme = "@style/Maui.SplashTheme", MainLauncher = true,
+    ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation |
+    ConfigChanges.UiMode | ConfigChanges.ScreenLayout | ConfigChanges.SmallestScreenSize |
+    ConfigChanges.Density,
+    LaunchMode = LaunchMode.SingleTop)]
     public class MainActivity : MauiAppCompatActivity
     {
         private float _downX, _downY;
@@ -17,9 +23,51 @@ namespace Barber.Maui.BrandonBarber
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            {
+                var channel = new NotificationChannel(
+                    "barber_notifications",
+                    "Barber Notificaciones",
+                    NotificationImportance.High)
+                {
+                    Description = "Notificaciones de la barbería"
+                };
+
+                var manager = (NotificationManager)GetSystemService(NotificationService);
+                manager.CreateNotificationChannel(channel);
+            }
+            CreateNotificationChannelIfNeeded();
             Window!.SetSoftInputMode(Android.Views.SoftInput.AdjustResize);
+            HandleIntent(Intent);
+
+        }
+        protected override void OnNewIntent(Intent intent)
+        {
+            base.OnNewIntent(intent);
+            HandleIntent(intent);
         }
 
+        private static void HandleIntent(Intent intent)
+        {
+            FirebaseCloudMessagingImplementation.OnNewIntent(intent);
+        }
+
+        private void CreateNotificationChannelIfNeeded()
+        {
+            if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
+            {
+                CreateNotificationChannel();
+            }
+        }
+
+        private void CreateNotificationChannel()
+        {
+            var channelId = $"{PackageName}.general";
+            var notificationManager = (NotificationManager)GetSystemService(NotificationService);
+            var channel = new NotificationChannel(channelId, "General", NotificationImportance.Default);
+            notificationManager.CreateNotificationChannel(channel);
+            FirebaseCloudMessagingImplementation.ChannelId = channelId;
+        }
         public override bool DispatchTouchEvent(MotionEvent? ev)
         {
             switch (ev!.Action)

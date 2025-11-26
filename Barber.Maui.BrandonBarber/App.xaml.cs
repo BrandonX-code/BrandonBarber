@@ -1,7 +1,8 @@
-﻿using Microsoft.Maui.Controls;
-using System;
-using Barber.Maui.BrandonBarber.Pages;
+﻿using Barber.Maui.BrandonBarber.Pages;
 using Barber.Maui.BrandonBarber.Services;
+using Microsoft.Maui.Controls;
+using Plugin.Firebase.CloudMessaging;
+using System;
 
 namespace Barber.Maui.BrandonBarber
 {
@@ -10,7 +11,15 @@ namespace Barber.Maui.BrandonBarber
         public App()
         {
             InitializeComponent();
+            CrossFirebaseCloudMessaging.Current.TokenChanged += (s, e) =>
+            {
+                Console.WriteLine("🔥 FCM TOKEN: " + e.Token);
+            };
 
+            CrossFirebaseCloudMessaging.Current.NotificationReceived += (s, e) =>
+            {
+                Console.WriteLine("📩 Notificación recibida: " + e.Notification.Body);
+            };
             // Registrar rutas para la navegación
             Routing.RegisterRoute("login", typeof(LoginPage));
             Routing.RegisterRoute("registro", typeof(RegistroPage));

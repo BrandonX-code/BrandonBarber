@@ -4,6 +4,7 @@ using Barber.Maui.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Barber.Maui.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251125220930_FixCitas")]
+    partial class FixCitas
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,7 +68,7 @@ namespace Barber.Maui.API.Migrations
 
                     b.HasKey("Cedula");
 
-                    b.ToTable("UsuarioPerfiles", (string)null);
+                    b.ToTable("UsuarioPerfiles");
                 });
 
             modelBuilder.Entity("Barber.Maui.API.Models.Barberia", b =>
@@ -99,7 +102,7 @@ namespace Barber.Maui.API.Migrations
 
                     b.HasKey("Idbarberia");
 
-                    b.ToTable("Barberias", (string)null);
+                    b.ToTable("Barberias");
                 });
 
             modelBuilder.Entity("Barber.Maui.API.Models.Calificacion", b =>
@@ -127,7 +130,7 @@ namespace Barber.Maui.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Calificaciones", (string)null);
+                    b.ToTable("Calificaciones");
                 });
 
             modelBuilder.Entity("Barber.Maui.API.Models.Cita", b =>
@@ -168,7 +171,7 @@ namespace Barber.Maui.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Citas", (string)null);
+                    b.ToTable("Citas");
                 });
 
             modelBuilder.Entity("Barber.Maui.API.Models.Disponibilidad", b =>
@@ -191,7 +194,7 @@ namespace Barber.Maui.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Disponibilidad", (string)null);
+                    b.ToTable("Disponibilidad");
                 });
 
             modelBuilder.Entity("Barber.Maui.API.Models.FcmToken", b =>
@@ -265,7 +268,7 @@ namespace Barber.Maui.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ImagenesGaleria", (string)null);
+                    b.ToTable("ImagenesGaleria");
                 });
 
             modelBuilder.Entity("Barber.Maui.API.Models.PasswordReset", b =>
@@ -297,7 +300,7 @@ namespace Barber.Maui.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PasswordResets", (string)null);
+                    b.ToTable("PasswordResets");
                 });
 
             modelBuilder.Entity("Barber.Maui.API.Models.ServicioModel", b =>
@@ -322,7 +325,7 @@ namespace Barber.Maui.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Servicios", (string)null);
+                    b.ToTable("Servicios");
                 });
 
             modelBuilder.Entity("Barber.Maui.API.Models.SolicitudAdmin", b =>
@@ -377,7 +380,7 @@ namespace Barber.Maui.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SolicitudesAdmin", (string)null);
+                    b.ToTable("SolicitudesAdmin");
                 });
 #pragma warning restore 612, 618
         }

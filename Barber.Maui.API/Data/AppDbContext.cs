@@ -16,10 +16,13 @@ namespace Barber.Maui.API.Data
         public DbSet<ServicioModel> Servicios { get; set; }
         public DbSet<Calificacion> Calificaciones { get; set; }
         public DbSet<PasswordReset> PasswordResets { get; set; }
+        public DbSet<FcmToken> FcmToken { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Tu configuración existente...
-
+            modelBuilder.Entity<FcmToken>().ToTable("FcmToken"); // ← aquí la magia
+            base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Auth>(e =>
             {
                 e.HasKey(e => e.Cedula);
