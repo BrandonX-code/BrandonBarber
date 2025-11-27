@@ -46,6 +46,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IEmailService, SendGridEmailService>();
 var app = builder.Build();
 app.UseDeveloperExceptionPage();
+builder.Configuration.AddEnvironmentVariables();
+
 app.MapOpenApi();
 app.UseSwagger();
 app.UseSwaggerUI();
