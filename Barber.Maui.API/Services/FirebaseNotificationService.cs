@@ -23,29 +23,24 @@ namespace Barber.Maui.API.Services
                 {
                     try
                     {
-                        // Verificar si ya existe una instancia de FirebaseApp
                         if (FirebaseApp.DefaultInstance == null)
                         {
-                            var credentialPath = configuration["Firebase:CredentialPath"];
+                            // Leer JSON completo de la variable de entorno
+                            var firebaseJson = configuration["FIREBASE_ADMIN_CREDENTIALS"];
 
-                            // Buscar el archivo en el directorio de ejecución
-                            var fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, credentialPath!);
+                            if (string.IsNullOrWhiteSpace(firebaseJson))
+                                throw new Exception("No se encontró la variable de entorno FIREBASE_ADMIN_CREDENTIALS");
 
-                            Console.WriteLine($"🔍 Buscando archivo Firebase en: {fullPath}");
+                            Console.WriteLine("🔐 Credenciales Firebase cargadas desde variable de entorno");
 
-                            if (!File.Exists(fullPath))
-                            {
-                                throw new FileNotFoundException($"No se encontró el archivo de credenciales de Firebase en: {fullPath}");
-                            }
-
-                            Console.WriteLine("✅ Archivo Firebase encontrado");
+                            var credential = GoogleCredential.FromJson(firebaseJson);
 
                             FirebaseApp.Create(new AppOptions
                             {
-                                Credential = GoogleCredential.FromFile(fullPath)
+                                Credential = credential
                             });
 
-                            Console.WriteLine("✅ Firebase inicializado correctamente");
+                            Console.WriteLine("✅ Firebase inicializado correctamente sin archivo");
                         }
                         else
                         {
@@ -62,6 +57,7 @@ namespace Barber.Maui.API.Services
                 }
             }
         }
+
 
         public async Task<bool> EnviarNotificacionAsync(long usuarioCedula, string titulo, string mensaje, Dictionary<string, string>? data = null)
         {
