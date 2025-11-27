@@ -150,6 +150,14 @@
                     return;
                 }
 
+                // Validar fecha seleccionada
+                if (FechaPicker.Date == DateTime.MinValue)
+                {
+                    await AppUtils.MostrarSnackbar("Debe seleccionar una fecha.", Colors.Orange, Colors.White);
+                    return;
+                }
+
+                // Conversion correcta: LOCAL ➜ UTC (Render usa UTC)
                 DateTime fechaSeleccionadaLocal = FechaPicker.Date.Add(HoraPicker.Time);
                 DateTime fechaSeleccionada = DateTime.SpecifyKind(fechaSeleccionadaLocal, DateTimeKind.Local).ToUniversalTime();
 
@@ -159,21 +167,18 @@
                     return;
                 }
 
-
                 if (BarberoPicker.SelectedItem is not UsuarioModels barberoSeleccionado)
                 {
                     await AppUtils.MostrarSnackbar("Debe seleccionar un barbero.", Colors.Orange, Colors.White);
                     return;
                 }
 
-                // ✅ VALIDAR QUE HAYA SERVICIO SELECCIONADO
                 if (_servicioSeleccionado == null)
                 {
                     await AppUtils.MostrarSnackbar("Debe seleccionar un servicio.", Colors.Orange, Colors.White);
                     return;
                 }
 
-                // NUEVA VALIDACIÓN: Verificar disponibilidad del barbero
                 var disponibilidadService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<DisponibilidadService>();
                 var disponibilidad = await disponibilidadService.GetDisponibilidad(FechaPicker.Date, barberoSeleccionado.Cedula);
 
@@ -183,13 +188,12 @@
                     return;
                 }
 
-                // Verificar si la hora seleccionada está en un rango disponible
                 var horaSeleccionada = HoraPicker.Time;
                 bool horarioDisponible = false;
 
                 foreach (var horario in disponibilidad.HorariosDict)
                 {
-                    if (horario.Value) // Si el horario está marcado como disponible
+                    if (horario.Value)
                     {
                         var rangoHoras = horario.Key.Split('-');
                         var horaInicio = DateTime.Parse(rangoHoras[0].Trim()).TimeOfDay;
@@ -221,15 +225,16 @@
                 }
 
                 var cliente = AuthService.CurrentUser;
+
                 CitaModel nuevaReserva = new()
                 {
                     Cedula = cliente!.Cedula,
                     Nombre = cliente.Nombre,
                     Telefono = cliente.Telefono,
-                    Fecha = fechaSeleccionada,
+                    Fecha = fechaSeleccionada, // UTC
                     BarberoId = barberoSeleccionado.Cedula,
                     BarberoNombre = string.Empty,
-                    // ✅ AGREGAR INFO DEL SERVICIO (necesitarás estas propiedades en CitaModel)
+
                     ServicioId = _servicioSeleccionado.Id,
                     ServicioNombre = _servicioSeleccionado.Nombre,
                     ServicioPrecio = _servicioSeleccionado.Precio
@@ -255,6 +260,7 @@
                 LoadingIndicator.IsLoading = false;
             }
         }
+
 
         private async void OnCancelarClicked(object sender, EventArgs e)
         {

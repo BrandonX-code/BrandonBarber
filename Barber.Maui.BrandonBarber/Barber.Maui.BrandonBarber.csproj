@@ -59,6 +59,7 @@
 		<GoogleServicesJson Include="google-services.json" />
 	</ItemGroup>
 	<ItemGroup>
+	  <AndroidResource Remove="Platforms\Android\Resources\drawable\ic_stat_notify.png" />
 	  <AndroidResource Remove="Platforms\Android\Resources\values\strings.xml" />
 	</ItemGroup>
 

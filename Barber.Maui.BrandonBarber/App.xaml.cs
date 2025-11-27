@@ -1,8 +1,4 @@
-﻿using Barber.Maui.BrandonBarber.Pages;
-using Barber.Maui.BrandonBarber.Services;
-using Microsoft.Maui.Controls;
-using Plugin.Firebase.CloudMessaging;
-using System;
+﻿using Plugin.Firebase.CloudMessaging;
 
 namespace Barber.Maui.BrandonBarber
 {

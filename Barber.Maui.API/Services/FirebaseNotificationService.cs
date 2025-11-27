@@ -59,6 +59,7 @@ namespace Barber.Maui.API.Services
         }
 
 
+
         public async Task<bool> EnviarNotificacionAsync(long usuarioCedula, string titulo, string mensaje, Dictionary<string, string>? data = null)
         {
             try
@@ -85,11 +86,13 @@ namespace Barber.Maui.API.Services
                     Data = data ?? new Dictionary<string, string>(),
                     Android = new AndroidConfig
                     {
-                        Priority = Priority.High,
                         Notification = new AndroidNotification
                         {
+                            Icon = "ic_stat_notify",   // 👈 AQUÍ SÍ EXISTE
+                            Color = "#ffffff",
                             Sound = "default",
-                            ChannelId = "barber_notifications"
+                            ChannelId = "barber_notifications",
+                            ImageUrl = "https://i.pinimg.com/736x/74/2e/a6/742ea6bccad14b6b92535cd27f3e1f10.jpg"
                         }
                     }
                 };
@@ -116,26 +119,23 @@ namespace Barber.Maui.API.Services
                     .ToListAsync();
 
                 if (tokensDuplicados.Any())
-                {
                     _context.FcmToken.RemoveRange(tokensDuplicados);
-                }
 
-                // 2. Verificar si ese mismo usuario ya tiene ese token
-                var tokenExistente = await _context.FcmToken
-                    .FirstOrDefaultAsync(t => t.UsuarioCedula == usuarioCedula && t.Token == token);
+                // 2. Eliminar TODOS los tokens anteriores del usuario
+                var tokensUsuario = await _context.FcmToken
+                    .Where(t => t.UsuarioCedula == usuarioCedula)
+                    .ToListAsync();
 
-                if (tokenExistente != null)
+                if (tokensUsuario.Any())
+                    _context.FcmToken.RemoveRange(tokensUsuario);
+
+                // 3. Guardar SOLO el token nuevo
+                _context.FcmToken.Add(new FcmToken
                 {
-                    tokenExistente.UltimaActualizacion = DateTime.UtcNow;
-                }
-                else
-                {
-                    _context.FcmToken.Add(new FcmToken
-                    {
-                        UsuarioCedula = usuarioCedula,
-                        Token = token
-                    });
-                }
+                    UsuarioCedula = usuarioCedula,
+                    Token = token,
+                    UltimaActualizacion = DateTime.UtcNow
+                });
 
                 await _context.SaveChangesAsync();
                 return true;
@@ -146,6 +146,7 @@ namespace Barber.Maui.API.Services
                 return false;
             }
         }
+
 
     }
 }

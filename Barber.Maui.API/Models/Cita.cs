@@ -8,7 +8,7 @@ namespace Barber.Maui.API.Models
         public long Cedula { get; set; }
         public string? Nombre { get; set; }
         public string? Telefono { get; set; }
-        public DateTime Fecha { get; set; } = DateTime.Now;
+        public DateTime Fecha { get; set; }
         public long BarberoId { get; set; }
         [NotMapped]
         public string? BarberoNombre { get; set; }

@@ -294,10 +294,6 @@ public class CitasController : ControllerBase
         {
             return BadRequest("Datos inválidos.");
         }
-
-        // Convertir fecha local → UTC antes de guardar
-        nuevaCita.Fecha = nuevaCita.Fecha.ToUniversalTime();
-
         bool existeCita = await _context.Citas
             .AnyAsync(c => c.Fecha == nuevaCita.Fecha && c.BarberoId == nuevaCita.BarberoId);
 
@@ -314,11 +310,11 @@ public class CitasController : ControllerBase
 
             // 🔥 ENVIAR NOTIFICACIÓN AL BARBERO
             var data = new Dictionary<string, string>
-            {
-                { "tipo", "nueva_cita" },
-                { "citaId", nuevaCita.Id.ToString() },
-                { "clienteNombre", nuevaCita.Nombre ?? "" }
-            };
+        {
+            { "tipo", "nueva_cita" },
+            { "citaId", nuevaCita.Id.ToString() },
+            { "clienteNombre", nuevaCita.Nombre ?? "" }
+        };
 
             await _notificationService.EnviarNotificacionAsync(
                 nuevaCita.BarberoId,
