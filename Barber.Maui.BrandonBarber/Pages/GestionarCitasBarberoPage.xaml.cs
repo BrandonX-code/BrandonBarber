@@ -1,20 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Barber.Maui.BrandonBarber.Pages
+﻿namespace Barber.Maui.BrandonBarber.Pages
 {
     public partial class GestionarCitasBarberoPage : ContentPage
     {
-        private bool _isNavigating = false;
         private readonly ReservationService _reservationService;
+        private List<CitaModel> _todasLasCitas = new();
+        private string _estadoActual = "Pendiente";
 
         public GestionarCitasBarberoPage(ReservationService reservationService)
         {
             InitializeComponent();
             _reservationService = reservationService;
+
+            // Suscribirse a notificaciones
+            WeakReferenceMessenger.Default.Register<NotificacionRecibidaMessage>(this, async (r, m) =>
+            {
+                if (m.Tipo == "nueva_cita")
+                {
+                    await CargarCitas();
+                }
+            });
         }
 
         protected override async void OnAppearing()
@@ -29,44 +33,13 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 LoadingIndicator.IsVisible = true;
                 LoadingIndicator.IsLoading = true;
-                var barberoId = AuthService.CurrentUser!.Cedula;
-                Debug.WriteLine($"🔍 Cargando citas para barbero: {barberoId}");
-
-                var citas = await _reservationService.GetReservationsByBarbero(barberoId);
-
-                Debug.WriteLine($"📊 Total de citas obtenidas: {citas?.Count ?? 0}");
-
-                if (citas != null && citas.Any())
-                {
-                    foreach (var cita in citas)
-                    {
-                        Debug.WriteLine($"  - Cita: {cita.Nombre}, Fecha: {cita.Fecha}, Estado: {cita.Estado}");
-                    }
-                }
-
-                // Filtrar solo citas pendientes, sin importar la fecha
-                var citasGestionar = citas?
-                    .Where(c => c.Estado == "Pendiente")
-                    .OrderBy(c => c.Fecha)
-                    .ToList() ?? new List<CitaModel>();
-
-                Debug.WriteLine($"✅ Citas a gestionar (pendientes): {citasGestionar.Count}");
-
-                CitasCollection.ItemsSource = citasGestionar;
-
-                // Mostrar/ocultar el mensaje de estado vacío
-                EmptyStateLayout.IsVisible = citasGestionar.Count == 0;
-
-                if (citasGestionar.Count == 0)
-                {
-                    await AppUtils.MostrarSnackbar("No hay citas pendientes para gestionar", Colors.Orange, Colors.White);
-                }
+                var barbero = AuthService.CurrentUser;
+                _todasLasCitas = await _reservationService.GetReservationsByBarbero(barbero!.Cedula);
+                FiltrarPorEstado(_estadoActual);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"❌ Error al cargar citas: {ex.Message}");
-                Debug.WriteLine($"❌ StackTrace: {ex.StackTrace}");
-                await AppUtils.MostrarSnackbar($"Error al cargar citas: {ex.Message}", Colors.Red, Colors.White);
+                await DisplayAlert("Error", $"No se pudieron cargar las citas: {ex.Message}", "OK");
             }
             finally
             {
@@ -75,75 +48,71 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
         }
 
-        private async void OnCompletadaClicked(object sender, EventArgs e)
+        private void FiltrarPorEstado(string estado)
         {
-            if (_isNavigating) return;
-            _isNavigating = true;
-            try
+            _estadoActual = estado;
+
+            var citasFiltradas = _todasLasCitas
+                .Where(c => c.Estado?.ToLower() == estado.ToLower())
+                .OrderBy(c => c.Fecha)
+                .ToList();
+
+            CitasCollectionView.ItemsSource = citasFiltradas;
+
+            // Actualizar botones
+            ActualizarEstilosBotones();
+        }
+
+        private void ActualizarEstilosBotones()
+        {
+            BtnPendientes.BackgroundColor = _estadoActual == "Pendiente" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+            BtnCompletadas.BackgroundColor = _estadoActual == "Completada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+            BtnCanceladas.BackgroundColor = _estadoActual == "Cancelada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+        }
+
+        private void OnPendientesClicked(object sender, EventArgs e) => FiltrarPorEstado("Pendiente");
+        private void OnCompletadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Completada");
+        private void OnCanceladasClicked(object sender, EventArgs e) => FiltrarPorEstado("Cancelada");
+
+        private async void OnAceptarCitaClicked(object sender, EventArgs e)
+        {
+            if (sender is Button button && button.CommandParameter is CitaModel cita)
             {
-                LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsLoading = true;
-                if (sender is Button button && button.CommandParameter is CitaModel cita)
+                var confirm = await DisplayAlert("Confirmar",
+                    $"¿Deseas aceptar la cita de {cita.Nombre}?",
+                    "Sí", "No");
+
+                if (confirm)
                 {
-                    await ActualizarEstado(cita, "Completada");
+                    var exito = await _reservationService.ActualizarEstadoCita(cita.Id, "Completada");
+                    if (exito)
+                    {
+                        await AppUtils.MostrarSnackbar("Cita aceptada", Colors.Green, Colors.White);
+                        await CargarCitas();
+                    }
+
                 }
             }
-            finally
-            {
-                LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsLoading = false;
-                _isNavigating = false;
-            }
-
         }
 
-        private async void OnCanceladaClicked(object sender, EventArgs e)
+        private async void OnRechazarCitaClicked(object sender, EventArgs e)
         {
-            if (_isNavigating) return;
-            _isNavigating = true;
-            try
+            if (sender is Button button && button.CommandParameter is CitaModel cita)
             {
-                LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsLoading = true;
-                if (sender is Button button && button.CommandParameter is CitaModel cita)
-                {
-                    var popup = new CustomAlertPopup($"¿Confirmar cancelación de la cita de {cita.Nombre}?");
-                    bool confirmacion = await popup.ShowAsync(this);
+                var confirm = await DisplayAlert("Confirmar",
+                    $"¿Deseas rechazar la cita de {cita.Nombre}?",
+                    "Sí", "No");
 
-                    if (confirmacion)
+                if (confirm)
+                {
+                    var exito = await _reservationService.ActualizarEstadoCita(cita.Id, "Cancelada");
+
+                    if (exito)
                     {
-                        await ActualizarEstado(cita, "Cancelada");
+                        await AppUtils.MostrarSnackbar("Cita rechazada", Colors.Orange, Colors.White);
+                        await CargarCitas();
                     }
                 }
-            }
-            finally
-            {
-                LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsLoading = false;
-                _isNavigating = false;
-            }
-
-        }
-
-        private async Task ActualizarEstado(CitaModel cita, string nuevoEstado)
-        {
-            try
-            {
-                bool exito = await _reservationService.ActualizarEstadoCita(cita.Id, nuevoEstado);
-
-                if (exito)
-                {
-                    await AppUtils.MostrarSnackbar($"Cita marcada como {nuevoEstado}", Colors.Green, Colors.White);
-                    await CargarCitas();
-                }
-                else
-                {
-                    await AppUtils.MostrarSnackbar("Error al actualizar el estado", Colors.Red, Colors.White);
-                }
-            }
-            catch (Exception ex)
-            {
-                await AppUtils.MostrarSnackbar($"Error: {ex.Message}", Colors.Red, Colors.White);
             }
         }
     }
