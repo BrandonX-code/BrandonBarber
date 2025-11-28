@@ -9,9 +9,9 @@
             <Grid Padding="15,10" BackgroundColor="Transparent">
                 <VerticalStackLayout Spacing="15">
                     <Border BackgroundColor="#2a3f48" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
-                        <VerticalStackLayout Spacing="10">
+                        <Grid RowSpacing="10">
                             <Label Text="Próximas Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasProximasCitas}"/>
-                            <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="ProximasCitasCollection" ItemsSource="{Binding ProximasCitas}" EmptyView="No hay citas próximas reserve una cita primero" HeightRequest="320">
+                            <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="ProximasCitasCollection" ItemsSource="{Binding ProximasCitas}" HeightRequest="320">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <SwipeView SwipeStarted="OnSwipeStarted">
@@ -54,13 +54,19 @@
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
-                        </VerticalStackLayout>
+                            <VerticalStackLayout x:Name="EmptyProximasLayout" IsVisible="{Binding HasProximasCitas, Converter={StaticResource InverseBoolConverter}}" VerticalOptions="Center" HorizontalOptions="Center" Spacing="15">
+                                <Image Source="calendarblanco.png" WidthRequest="50" HeightRequest="50" Opacity="0.6"/>
+                                <Label Text="No hay próximas citas" FontSize="18" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+                                <Label Text="Las citas próximas aparecerán aquí" FontSize="14" TextColor="#90A4AE" HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
+
+                        </Grid>
                     </Border>
 
                     <Border BackgroundColor="#2a3f48" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
-                        <VerticalStackLayout Spacing="10">
+                        <Grid RowSpacing="10">
                             <Label Text="Historial de Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasHistorialCitas}" Margin="0,5,0,0"/>
-                            <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="HistorialCitasCollection"  ItemsSource="{Binding HistorialCitas}" EmptyView="No hay historial de citas" HeightRequest="285">
+                            <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="HistorialCitasCollection"  ItemsSource="{Binding HistorialCitas}" HeightRequest="285">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
                                         <Border Padding="8" Margin="3" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" StrokeThickness="0">
@@ -103,8 +109,14 @@
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
+                            <VerticalStackLayout x:Name="EmptyHistorialLayout" IsVisible="{Binding HasHistorialCitas, Converter={StaticResource InverseBoolConverter}}" VerticalOptions="Center" HorizontalOptions="Center" Spacing="15">
+                                <Image Source="calendarblanco.png" WidthRequest="50" HeightRequest="50" Opacity="0.6"/>
+                                <Label Text="No hay historial de citas" FontSize="18" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
+                                <Label Text="Las citas pasadas aparecerán aquí" FontSize="14" TextColor="#90A4AE" HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
 
-                        </VerticalStackLayout>
+
+                        </Grid>
                     </Border>
 
                 </VerticalStackLayout>

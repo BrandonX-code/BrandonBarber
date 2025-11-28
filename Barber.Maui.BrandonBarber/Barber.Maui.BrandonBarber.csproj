@@ -59,7 +59,6 @@
 		<GoogleServicesJson Include="google-services.json" />
 	</ItemGroup>
 	<ItemGroup>
-	  <AndroidResource Remove="Platforms\Android\Resources\drawable\ic_stat_notify.png" />
 	  <AndroidResource Remove="Platforms\Android\Resources\values\strings.xml" />
 	</ItemGroup>
 
@@ -195,8 +194,6 @@
 	  <MauiXaml Update="Pages\SplashPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	</ItemGroup><ItemGroup>
-		<MauiImage Include="Platforms\Android\Resources\drawable-*\ic_stat_notify.png" />
-   	</ItemGroup>
+	</ItemGroup>
 
 </Project>

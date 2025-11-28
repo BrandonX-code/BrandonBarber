@@ -92,7 +92,6 @@ namespace Barber.Maui.API.Services
                     {
                         Notification = new AndroidNotification
                         {
-                            Icon = "ic_stat_notify",
                             Color = "#0E2A36", // 🔥 Color de tu marca
                             Sound = "default",
                             ChannelId = "barber_notifications"

@@ -34,7 +34,7 @@
                                 <Button x:Name="CalificarButton" Grid.ColumnSpan="2" Text="Calificar Barbero" BackgroundColor="#FF6F91" TextColor="Black" FontSize="15"	CornerRadius="15" HorizontalOptions="Fill" Margin="0,5,0,0" Clicked="OnCalificarClicked"/>
                             </Grid>
                             <Grid>
-                                <Button x:Name="VerResenasButton" Grid.ColumnSpan="2" Text="Ver Reseñas" BackgroundColor="#4DB6AC" TextColor="Black" FontSize="15" CornerRadius="15" HorizontalOptions="Fill" Margin="0,5,0,0" Clicked="OnVerResenasClicked"/>
+                                <Button x:Name="VerResenasButton" Grid.ColumnSpan="2" Text="Ver Reseñas" BackgroundColor="#717d7e" TextColor="Black" FontSize="15" CornerRadius="15" HorizontalOptions="Fill" Margin="0,5,0,0" Clicked="OnVerResenasClicked"/>
                             </Grid>
 
                         </VerticalStackLayout>

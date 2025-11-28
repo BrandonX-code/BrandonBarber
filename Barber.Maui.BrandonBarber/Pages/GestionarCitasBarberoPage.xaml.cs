@@ -58,7 +58,7 @@
                 .ToList();
 
             CitasCollectionView.ItemsSource = citasFiltradas;
-
+            EmptyStateLayout.IsVisible = citasFiltradas.Count == 0;
             // Actualizar botones
             ActualizarEstilosBotones();
         }

@@ -108,13 +108,13 @@
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
+        </Grid>
             <!-- Mensaje cuando no hay citas -->
             <VerticalStackLayout x:Name="EmptyStateLayout" IsVisible="False" VerticalOptions="Center" HorizontalOptions="Center" Spacing="15">
                 <Image Source="calendarblanco.png" WidthRequest="80" HeightRequest="80" Opacity="0.6"/>
                 <Label Text="No hay citas pendientes" FontSize="18" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center"/>
                 <Label Text="Las citas por gestionar aparecerán aquí" FontSize="14" TextColor="#90A4AE" HorizontalTextAlignment="Center"/>
             </VerticalStackLayout>
-        </Grid>
         <controls:LoadingControl x:Name="LoadingIndicator" IsVisible="False"/>
     </Grid>
 </ContentPage>

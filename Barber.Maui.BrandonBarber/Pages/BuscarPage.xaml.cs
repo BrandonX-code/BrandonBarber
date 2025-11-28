@@ -74,7 +74,7 @@
 
                 if (citas == null || citas.Count == 0)
                 {
-                    await AppUtils.MostrarSnackbar("No se encontró ninguna cita con esa Cédula.", Colors.Red, Colors.White);
+                    await AppUtils.MostrarSnackbar("No tienes citas agendadas.", Colors.Red, Colors.White);
                     UpdateVisibility();
                     return;
                 }

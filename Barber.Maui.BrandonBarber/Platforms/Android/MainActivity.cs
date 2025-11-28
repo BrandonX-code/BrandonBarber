@@ -26,15 +26,20 @@ namespace Barber.Maui.BrandonBarber
             if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
             {
                 var channel = new NotificationChannel(
-                    "barber_notifications",
-                    "Barber Notificaciones",
-                    NotificationImportance.High)
+                "barber_notifications",
+                "Barber Notificaciones",
+                NotificationImportance.High)
                 {
                     Description = "Notificaciones de la barbería"
                 };
+                channel.SetSound(null, null);
+                channel.EnableLights(true);
 
                 var manager = (NotificationManager)GetSystemService(NotificationService);
                 manager.CreateNotificationChannel(channel);
+
+                FirebaseCloudMessagingImplementation.SmallIconRef = Resource.Drawable.barber_notification;
+
             }
             CreateNotificationChannelIfNeeded();
             Window!.SetSoftInputMode(Android.Views.SoftInput.AdjustResize);
