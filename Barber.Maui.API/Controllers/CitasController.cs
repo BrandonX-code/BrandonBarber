@@ -312,7 +312,9 @@ public class CitasController : ControllerBase
             await _context.SaveChangesAsync();
 
             // 🔥 MODIFICAR LA NOTIFICACIÓN: Convertir a hora local de Colombia
-            var fechaLocal = nuevaCita.Fecha.ToLocalTime();
+            var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
+            var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(nuevaCita.Fecha, zonaColombia);
+
 
             var data = new Dictionary<string, string>
         {
