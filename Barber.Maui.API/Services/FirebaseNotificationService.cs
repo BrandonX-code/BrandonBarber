@@ -25,26 +25,30 @@ namespace Barber.Maui.API.Services
                     {
                         if (FirebaseApp.DefaultInstance == null)
                         {
-                            // Leer JSON completo de la variable de entorno
+                            // 1️⃣ Intentar leer desde la variable de entorno (Render)
                             var firebaseJson = configuration["FIREBASE_ADMIN_CREDENTIALS"];
 
-                            if (string.IsNullOrWhiteSpace(firebaseJson))
-                                throw new Exception("No se encontró la variable de entorno FIREBASE_ADMIN_CREDENTIALS");
+                            GoogleCredential credential;
 
-                            Console.WriteLine("🔐 Credenciales Firebase cargadas desde variable de entorno");
+                            if (!string.IsNullOrWhiteSpace(firebaseJson))
+                            {
+                                Console.WriteLine("🔐 Credenciales Firebase desde variable de entorno");
+                                credential = GoogleCredential.FromJson(firebaseJson);
+                            }
+                            else
+                            {
+                                // 2️⃣ Si estás en LOCAL usar archivo JSON
+                                Console.WriteLine("📁 Cargando credenciales Firebase desde archivo local");
 
-                            var credential = GoogleCredential.FromJson(firebaseJson);
+                                credential = GoogleCredential.FromFile("firebase-adminsdk.json");
+                            }
 
                             FirebaseApp.Create(new AppOptions
                             {
                                 Credential = credential
                             });
 
-                            Console.WriteLine("✅ Firebase inicializado correctamente sin archivo");
-                        }
-                        else
-                        {
-                            Console.WriteLine("ℹ️ Firebase ya estaba inicializado");
+                            Console.WriteLine("✅ Firebase inicializado correctamente");
                         }
 
                         _initialized = true;
@@ -57,7 +61,6 @@ namespace Barber.Maui.API.Services
                 }
             }
         }
-
 
 
         public async Task<bool> EnviarNotificacionAsync(long usuarioCedula, string titulo, string mensaje, Dictionary<string, string>? data = null)
@@ -81,18 +84,19 @@ namespace Barber.Maui.API.Services
                     Notification = new Notification
                     {
                         Title = titulo,
-                        Body = mensaje
+                        Body = mensaje,
+                        ImageUrl = "https://i.pinimg.com/736x/74/2e/a6/742ea6bccad14b6b92535cd27f3e1f10.jpg" // 🔥 MOVER AQUÍ
                     },
                     Data = data ?? new Dictionary<string, string>(),
                     Android = new AndroidConfig
                     {
                         Notification = new AndroidNotification
                         {
-                            Icon = "ic_stat_notify",   // 👈 AQUÍ SÍ EXISTE
-                            Color = "#ffffff",
+                            Icon = "ic_stat_notify",
+                            Color = "#0E2A36", // 🔥 Color de tu marca
                             Sound = "default",
-                            ChannelId = "barber_notifications",
-                            ImageUrl = "https://i.pinimg.com/736x/74/2e/a6/742ea6bccad14b6b92535cd27f3e1f10.jpg"
+                            ChannelId = "barber_notifications"
+                            // 🔥 QUITAR ImageUrl de aquí
                         }
                     }
                 };

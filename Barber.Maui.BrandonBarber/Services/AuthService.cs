@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using Plugin.Firebase.CloudMessaging;
+using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -55,15 +56,16 @@ namespace Barber.Maui.BrandonBarber.Services
                 {
                     CurrentUser = authResponse.User;
 
-                    // Guardar el token para futuras peticiones
                     await SecureStorage.Default.SetAsync("auth_token", authResponse.Token!);
                     await SecureStorage.Default.SetAsync("user_cedula", CurrentUser!.Cedula.ToString());
 
-                    // Configurar el token en el HttpClient para futuras peticiones
                     _BaseClient.DefaultRequestHeaders.Authorization =
                         new AuthenticationHeaderValue("Bearer", authResponse.Token);
 
                     Console.WriteLine($"🔹 Usuario logueado: {CurrentUser.Nombre} - Rol: {CurrentUser.Rol}");
+
+                    // 🔥 AGREGAR ESTO: Registrar token FCM después del login
+                    await RegistrarTokenFCM();
                 }
 
                 return authResponse ?? new AuthResponse { IsSuccess = false, Message = "Respuesta vacía del servidor" };
@@ -307,16 +309,15 @@ namespace Barber.Maui.BrandonBarber.Services
                 _BaseClient.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", token);
 
-                // Obtener los datos del usuario directamente
+                // Obtener los datos del usuario
                 var userResponse = await _BaseClient.GetAsync($"api/auth/usuario/{userCedula}");
-                // Cambia "user" por "usuario" (ya que tu endpoint es /usuario/)
 
                 Console.WriteLine($"🔹 Respuesta del servidor para usuario: {userResponse.StatusCode}");
 
                 if (!userResponse.IsSuccessStatusCode)
                 {
                     Console.WriteLine("🔹 No se pudo obtener datos del usuario, haciendo logout");
-                    Logout();
+                    await Logout();
                     return false;
                 }
 
@@ -329,18 +330,62 @@ namespace Barber.Maui.BrandonBarber.Services
                 if (CurrentUser != null)
                 {
                     Console.WriteLine($"🔹 Usuario cargado: {CurrentUser.Nombre} - Rol: {CurrentUser.Rol}");
+
+                    // 🔥 AGREGAR ESTO: Registrar token FCM después de verificar sesión
+                    await RegistrarTokenFCM();
+
                     return true;
                 }
 
-                Logout();
+                await Logout();
                 return false;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"❌ Error al verificar autenticación: {ex.Message}");
                 Console.WriteLine($"❌ Error al verificar autenticación: {ex.Message}");
-                Logout();
+                await Logout();
                 return false;
+            }
+        }
+        private async Task RegistrarTokenFCM()
+        {
+            try
+            {
+                // Obtener el token FCM actual
+                var fcmToken = await CrossFirebaseCloudMessaging.Current.GetTokenAsync();
+
+                if (string.IsNullOrEmpty(fcmToken))
+                {
+                    Console.WriteLine("⚠️ No se pudo obtener token FCM");
+                    return;
+                }
+
+                Console.WriteLine($"🔥 Registrando token FCM: {fcmToken}");
+
+                var request = new
+                {
+                    UsuarioCedula = CurrentUser!.Cedula,
+                    FcmToken = fcmToken
+                };
+
+                var json = JsonSerializer.Serialize(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _BaseClient.PostAsync("api/notifications/register-token", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("✅ Token FCM registrado exitosamente en CheckAuthStatus");
+                }
+                else
+                {
+                    Console.WriteLine($"❌ Error al registrar token FCM: {response.StatusCode}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error al registrar token FCM: {ex.Message}");
             }
         }
 

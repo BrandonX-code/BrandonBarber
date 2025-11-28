@@ -289,11 +289,14 @@ public class CitasController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Cita>> CrearCita([FromBody] Cita nuevaCita)
     {
-        if (nuevaCita == null ||
-            string.IsNullOrWhiteSpace(nuevaCita.Nombre))
+        if (nuevaCita == null || string.IsNullOrWhiteSpace(nuevaCita.Nombre))
         {
             return BadRequest("Datos inválidos.");
         }
+
+        // 🔥 AGREGAR ESTO: Convertir la fecha a UTC antes de guardar
+        nuevaCita.Fecha = nuevaCita.Fecha.ToUniversalTime();
+
         bool existeCita = await _context.Citas
             .AnyAsync(c => c.Fecha == nuevaCita.Fecha && c.BarberoId == nuevaCita.BarberoId);
 
@@ -308,7 +311,9 @@ public class CitasController : ControllerBase
             _context.Citas.Add(nuevaCita);
             await _context.SaveChangesAsync();
 
-            // 🔥 ENVIAR NOTIFICACIÓN AL BARBERO
+            // 🔥 MODIFICAR LA NOTIFICACIÓN: Convertir a hora local de Colombia
+            var fechaLocal = nuevaCita.Fecha.ToLocalTime();
+
             var data = new Dictionary<string, string>
         {
             { "tipo", "nueva_cita" },
@@ -319,7 +324,7 @@ public class CitasController : ControllerBase
             await _notificationService.EnviarNotificacionAsync(
                 nuevaCita.BarberoId,
                 "Nueva Cita Pendiente",
-                $"{nuevaCita.Nombre} ha solicitado una cita para el {nuevaCita.Fecha:dd/MM/yyyy HH:mm}",
+                $"{nuevaCita.Nombre} ha solicitado una cita para el {fechaLocal:dd/MM/yyyy - hh:mm tt}", // 🔥 FORMATO CORREGIDO
                 data
             );
 
@@ -351,26 +356,28 @@ public class CitasController : ControllerBase
         var cita = await _context.Citas.FirstOrDefaultAsync(c => c.Id == id);
         if (cita == null) return NotFound();
 
-        // obtener barbero
         var barbero = await _context.UsuarioPerfiles
             .FirstOrDefaultAsync(u => u.Cedula == cita.BarberoId);
 
-        // obtener servicio
         var servicio = await _context.Servicios
             .FirstOrDefaultAsync(s => s.Id == cita.ServicioId);
 
         string barberoNombre = barbero?.Nombre ?? "el barbero";
         string servicioNombre = servicio?.Nombre ?? "tu servicio";
 
+        // 🔥 Convertir fecha a hora local
+        var fechaLocal = cita.Fecha.ToLocalTime();
+
         cita.Estado = req.Estado;
         await _context.SaveChangesAsync();
 
+        // 🔥 ENVIAR SOLO UNA NOTIFICACIÓN según el estado
         if (req.Estado == "Completada")
         {
             await _notificationService.EnviarNotificacionAsync(
                 cita.Cedula,
                 "Cita Aceptada",
-                $"Tu cita con {barberoNombre} para {servicioNombre} fue aceptada",
+                $"Tu cita con {barberoNombre} para {servicioNombre} el {fechaLocal:dd/MM/yyyy - hh:mm tt} fue aceptada", // 🔥 FORMATO
                 new Dictionary<string, string> { { "tipo", "cita_aceptada" } }
             );
         }
@@ -379,7 +386,7 @@ public class CitasController : ControllerBase
             await _notificationService.EnviarNotificacionAsync(
                 cita.Cedula,
                 "Cita Rechazada",
-                $"Tu cita con {barberoNombre} para {servicioNombre} fue rechazada",
+                $"Tu cita con {barberoNombre} para {servicioNombre} el {fechaLocal:dd/MM/yyyy - hh:mm tt} fue rechazada", // 🔥 FORMATO
                 new Dictionary<string, string> { { "tipo", "cita_rechazada" } }
             );
         }

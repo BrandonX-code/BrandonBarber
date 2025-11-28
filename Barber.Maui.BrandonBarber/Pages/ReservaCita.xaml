@@ -54,7 +54,7 @@
                         <VerticalStackLayout Spacing="10">
                             <Label Text="Hora:" TextColor="Black" FontSize="16"/>
                             <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="0" HorizontalOptions="Fill">
-                                <TimePicker x:Name="HoraPicker" TextColor="Black" VerticalOptions="Center" />
+                                <TimePicker x:Name="HoraPicker" TextColor="Black" VerticalOptions="Center" Format="hh:mm tt" />
                             </Border>
                         </VerticalStackLayout>
                     </Border>
