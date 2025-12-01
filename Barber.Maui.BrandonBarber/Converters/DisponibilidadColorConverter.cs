@@ -6,16 +6,11 @@ namespace Barber.Maui.BrandonBarber.Converters
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is string disponibilidad)
+            if (value is bool disponible)
             {
-                return disponibilidad.ToLower() switch
-                {
-                    "disponible" => Colors.LightGreen,
-                    "no disponible" => Colors.IndianRed,
-                    _ => Colors.Gray
-                };
+                return disponible ? Color.FromArgb("#E0F7FA") : Color.FromArgb("#717d7e");
             }
-            return Colors.Gray;
+            return Color.FromArgb("#E0F7FA");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

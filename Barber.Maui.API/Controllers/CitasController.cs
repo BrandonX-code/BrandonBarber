@@ -295,7 +295,8 @@ public class CitasController : ControllerBase
         }
 
         // 🔥 AGREGAR ESTO: Convertir la fecha a UTC antes de guardar
-        nuevaCita.Fecha = nuevaCita.Fecha.ToUniversalTime();
+        //nuevaCita.Fecha = nuevaCita.Fecha.ToUniversalTime();
+        nuevaCita.Fecha = DateTime.SpecifyKind(nuevaCita.Fecha, DateTimeKind.Utc);
 
         bool existeCita = await _context.Citas
             .AnyAsync(c => c.Fecha == nuevaCita.Fecha && c.BarberoId == nuevaCita.BarberoId);

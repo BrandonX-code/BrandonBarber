@@ -48,14 +48,47 @@
                             </Border>
                         </VerticalStackLayout>
                     </Border>
-
-                    <!-- Hora -->
-                    <Border x:Name="horaBorder" StrokeThickness="0" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0">
+                    
+                    <Border x:Name="franjasBorder" StrokeThickness="0" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0" IsVisible="False">
                         <VerticalStackLayout Spacing="10">
-                            <Label Text="Hora:" TextColor="Black" FontSize="16"/>
-                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="0" HorizontalOptions="Fill">
-                                <TimePicker x:Name="HoraPicker" TextColor="Black" VerticalOptions="Center" Format="hh:mm tt" />
-                            </Border>
+                            <Label Text="Selecciona una franja horaria:" TextColor="Black" FontSize="16"/>
+
+                            <ScrollView HeightRequest="150" VerticalScrollBarVisibility="Never">
+                                <CollectionView x:Name="FranjasCollectionView" SelectionMode="Single" SelectionChanged="OnFranjaSeleccionada">
+                                    <CollectionView.ItemsLayout>
+                                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="8"/>
+                                    </CollectionView.ItemsLayout>
+
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Padding="12,8" StrokeThickness="0" StrokeShape="RoundRectangle 8">
+                                                <Border.BackgroundColor>
+                                                    <Binding Path="EstaDisponible">
+                                                        <Binding.Converter>
+                                                            <StaticResource Key="DisponibilidadColorConverter"/>
+                                                        </Binding.Converter>
+                                                    </Binding>
+                                                </Border.BackgroundColor>
+                                                <VisualStateManager.VisualStateGroups>
+                                                    <VisualStateGroup Name="CommonStates">
+                                                        <VisualState Name="Normal"/>
+                                                        <VisualState Name="Selected">
+                                                            <VisualState.Setters>
+                                                                <Setter Property="BackgroundColor" Value="#FF6F91"/>
+                                                            </VisualState.Setters>
+                                                        </VisualState>
+                                                    </VisualStateGroup>
+                                                </VisualStateManager.VisualStateGroups>
+
+                                                <Label Text="{Binding HoraTexto}" TextColor="Black" FontSize="14" HorizontalOptions="Center"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+
+                                </CollectionView>
+                            </ScrollView>
+
+                            <Label x:Name="FranjaSeleccionadaLabel" Text="Ninguna franja seleccionada" TextColor="Black" FontSize="15" FontAttributes="Bold"/>
                         </VerticalStackLayout>
                     </Border>
 

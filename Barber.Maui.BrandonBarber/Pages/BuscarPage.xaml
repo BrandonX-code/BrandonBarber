@@ -8,9 +8,9 @@
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" AbsoluteLayout.LayoutBounds="0,0,1,1" AbsoluteLayout.LayoutFlags="All">
             <Grid Padding="15,10" BackgroundColor="Transparent">
                 <VerticalStackLayout Spacing="15">
+                    <Label Text="Próximas Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasProximasCitas}"/>
                     <Border BackgroundColor="#2a3f48" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
                         <Grid RowSpacing="10">
-                            <Label Text="Próximas Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasProximasCitas}"/>
                             <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="ProximasCitasCollection" ItemsSource="{Binding ProximasCitas}" HeightRequest="320">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
@@ -63,9 +63,9 @@
                         </Grid>
                     </Border>
 
+                    <Label Text="Historial de Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasHistorialCitas}" Margin="0,5,0,0"/>
                     <Border BackgroundColor="#2a3f48" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
                         <Grid RowSpacing="10">
-                            <Label Text="Historial de Citas" Style="{StaticResource SectionHeaderStyle}" IsVisible="{Binding HasHistorialCitas}" Margin="0,5,0,0"/>
                             <CollectionView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" x:Name="HistorialCitasCollection"  ItemsSource="{Binding HistorialCitas}" HeightRequest="285">
                                 <CollectionView.ItemTemplate>
                                     <DataTemplate>
@@ -98,11 +98,11 @@
                                                         <Label Text="{Binding ServicioPrecio, StringFormat='${0:N0}'}" FontSize="15" TextColor="Black"/>
                                                     </HorizontalStackLayout>
                                                 </VerticalStackLayout>
-                                                <Border Grid.Column="1" Stroke="Transparent" WidthRequest="22"  HeightRequest="22"  StrokeShape="RoundRectangle 20" VerticalOptions="Center">
+                                                <Border Grid.Column="1" Stroke="Transparent" Padding="7"  StrokeShape="RoundRectangle 7" VerticalOptions="Start">
                                                     <Border.BackgroundColor>
                                                         <Binding Path="Estado" Converter="{StaticResource EstadoColorConverter}" />
                                                     </Border.BackgroundColor>
-                                                    <Label Text="{Binding IconoEstado}" TextColor="White"  FontSize="10"  FontAttributes="Bold"  HorizontalOptions="Center"  VerticalOptions="Center"/>
+                                                    <Label Text="{Binding IconoEstado}" TextColor="White"  FontSize="12"  FontAttributes="Bold"  HorizontalOptions="Center"  VerticalOptions="Center"/>
                                                 </Border>
                                             </Grid>
                                         </Border>

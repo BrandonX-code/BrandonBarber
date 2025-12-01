@@ -23,9 +23,9 @@
             {
                 return Estado?.ToLower() switch
                 {
-                    "completada" => "✓",
-                    "cancelada" => "X",
-                    _ => "🟡"
+                    "completada" => "Completada",
+                    "cancelada" => "Rechazada",
+                    _ => "Pendiente"
                 };
             }
         }

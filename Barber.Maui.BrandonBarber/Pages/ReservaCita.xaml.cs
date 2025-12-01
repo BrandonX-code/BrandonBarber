@@ -7,6 +7,8 @@
         private readonly UsuarioModels? _barberoPreseleccionado;
         private ServicioModel? _servicioSeleccionado; // ✅ NUEVO CAMPO
         private bool _isCancelling = false;
+        private FranjaHorariaModel? _franjaSeleccionada;
+        private List<FranjaHorariaModel>? _todasLasFranjas;
 
         public MainPage(ReservationService reservationService, AuthService authService,
             UsuarioModels? barberoPreseleccionado = null, ServicioModel? servicioSeleccionado = null)
@@ -21,6 +23,17 @@
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+            BarberoPicker.SelectedIndexChanged += async (s, e) =>
+            {
+                LimpiarSeleccionFranja();
+                await CargarFranjasDisponibles();
+            };
+
+            FechaPicker.DateSelected += async (s, e) =>
+            {
+                LimpiarSeleccionFranja();
+                await CargarFranjasDisponibles();
+            };
 
             // ✅ CONFIGURAR SERVICIO ANTES DE LAS ANIMACIONES
             if (_servicioSeleccionado != null)
@@ -50,6 +63,7 @@
             {
                 BarberoPicker.IsEnabled = true;
             }
+
         }
 
         private async Task StartEntryAnimations()
@@ -69,7 +83,7 @@
             await Task.Delay((int)delay);
             await fechaBorder.FadeTo(1, 300);
             await Task.Delay((int)delay);
-            await horaBorder.FadeTo(1, 300);
+            await franjasBorder.FadeTo(1, 300);
             await Task.Delay((int)delay);
             await buttonsLayout.FadeTo(1, 300);
         }
@@ -115,6 +129,70 @@
             BarberoPicker.SelectedIndex = -1;
         }
 
+        private async Task CargarFranjasDisponibles()
+        {
+            if (BarberoPicker.SelectedItem is not UsuarioModels barberoSeleccionado)
+                return;
+
+            var disponibilidadService = App.Current!.Handler.MauiContext!.Services
+                .GetRequiredService<DisponibilidadService>();
+
+            var disponibilidad = await disponibilidadService.GetDisponibilidad(
+                FechaPicker.Date, barberoSeleccionado.Cedula);
+
+            if (disponibilidad == null || !disponibilidad.HorariosDict.Any(h => h.Value))
+            {
+                await AppUtils.MostrarSnackbar("El barbero no tiene disponibilidad para esta fecha",
+                    Colors.Orange, Colors.White);
+                LimpiarSeleccionFranja();
+                FranjasCollectionView.ItemsSource = null;
+                franjasBorder.IsVisible = false; // 🔥 Oculta el Border
+                return;
+            }
+
+            // Generar franjas de 40 minutos
+            _todasLasFranjas = disponibilidadService.GenerarFranjasHorarias(disponibilidad.HorariosDict);
+
+            // Obtener citas ya agendadas
+            var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date,
+                AuthService.CurrentUser!.IdBarberia ?? 0);
+
+            var citasBarbero = citasDelDia.Where(c => c.BarberoId == barberoSeleccionado.Cedula).ToList();
+
+            // Marcar franjas ocupadas
+            foreach (var cita in citasBarbero)
+            {
+                var horaCita = cita.Fecha.TimeOfDay;
+                var franjaOcupada = _todasLasFranjas.FirstOrDefault(f =>
+                    horaCita >= f.HoraInicio && horaCita < f.HoraFin);
+
+                if (franjaOcupada != null)
+                    franjaOcupada.EstaDisponible = false;
+            }
+
+            FranjasCollectionView.ItemsSource = _todasLasFranjas
+            .Where(f => f.EstaDisponible)
+            .ToList();
+            franjasBorder.IsVisible = true; // 🔥 Muestra el Border si hay franjas
+        }
+
+        private void OnFranjaSeleccionada(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.CurrentSelection.FirstOrDefault() is FranjaHorariaModel franja)
+            {
+                if (!franja.EstaDisponible)
+                {
+                    // Deseleccionar si no está disponible
+                    FranjasCollectionView.SelectedItem = null;
+                    LimpiarSeleccionFranja();
+                    _ = AppUtils.MostrarSnackbar("Esta hora ya está ocupada", Colors.Red, Colors.White);
+                    return;
+                }
+
+                _franjaSeleccionada = franja;
+                FranjaSeleccionadaLabel.Text = $"Seleccionada: {franja.HoraTexto}";
+            }
+        }
         private async Task OnBuscarClicked(object sender, EventArgs e)
         {
             if (sender is Button button)
@@ -157,15 +235,22 @@
                     return;
                 }
 
-                // Conversion correcta: LOCAL ➜ UTC (Render usa UTC)
-                DateTime fechaSeleccionadaLocal = FechaPicker.Date.Add(HoraPicker.Time);
-                DateTime fechaSeleccionada = DateTime.SpecifyKind(fechaSeleccionadaLocal, DateTimeKind.Local).ToUniversalTime();
-
-                if (fechaSeleccionada < DateTime.UtcNow)
+                // ✅ Validar franja seleccionada PRIMERO
+                if (_franjaSeleccionada == null)
                 {
-                    await AppUtils.MostrarSnackbar("La fecha de la cita debe ser futura.", Colors.Orange, Colors.White);
+                    await AppUtils.MostrarSnackbar("Debe seleccionar una franja horaria.", Colors.Orange, Colors.White);
                     return;
                 }
+
+                if (!_franjaSeleccionada.EstaDisponible)
+                {
+                    await AppUtils.MostrarSnackbar("La franja seleccionada ya no está disponible.", Colors.Orange, Colors.White);
+                    return;
+                }
+
+                // ✅ Construir fecha con la franja seleccionada
+                DateTime fechaSeleccionadaLocal = FechaPicker.Date.Add(_franjaSeleccionada.HoraInicio);
+                DateTime fechaSeleccionada = DateTime.SpecifyKind(fechaSeleccionadaLocal, DateTimeKind.Local).ToUniversalTime();
 
                 if (BarberoPicker.SelectedItem is not UsuarioModels barberoSeleccionado)
                 {
@@ -179,6 +264,7 @@
                     return;
                 }
 
+                // ✅ Validar que el día tiene disponibilidad (opcional, ya lo validamos antes)
                 var disponibilidadService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<DisponibilidadService>();
                 var disponibilidad = await disponibilidadService.GetDisponibilidad(FechaPicker.Date, barberoSeleccionado.Cedula);
 
@@ -188,31 +274,7 @@
                     return;
                 }
 
-                var horaSeleccionada = HoraPicker.Time;
-                bool horarioDisponible = false;
-
-                foreach (var horario in disponibilidad.HorariosDict)
-                {
-                    if (horario.Value)
-                    {
-                        var rangoHoras = horario.Key.Split('-');
-                        var horaInicio = DateTime.Parse(rangoHoras[0].Trim()).TimeOfDay;
-                        var horaFin = DateTime.Parse(rangoHoras[1].Trim()).TimeOfDay;
-
-                        if (horaSeleccionada >= horaInicio && horaSeleccionada < horaFin)
-                        {
-                            horarioDisponible = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!horarioDisponible)
-                {
-                    await AppUtils.MostrarSnackbar("El barbero no está disponible en el horario seleccionado.", Colors.Orange, Colors.White);
-                    return;
-                }
-
+                // Validar que no haya otra cita del mismo cliente ese día
                 int idBarberia = usuario.IdBarberia ?? 0;
                 var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date, idBarberia);
                 var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? [];
@@ -234,7 +296,6 @@
                     Fecha = fechaSeleccionada, // UTC
                     BarberoId = barberoSeleccionado.Cedula,
                     BarberoNombre = string.Empty,
-
                     ServicioId = _servicioSeleccionado.Id,
                     ServicioNombre = _servicioSeleccionado.Nombre,
                     ServicioPrecio = _servicioSeleccionado.Precio
@@ -260,8 +321,6 @@
                 LoadingIndicator.IsLoading = false;
             }
         }
-
-
         private async void OnCancelarClicked(object sender, EventArgs e)
         {
             if (_isCancelling)
@@ -299,11 +358,21 @@
                     btn.IsEnabled = true;
             }
         }
+        private void LimpiarSeleccionFranja()
+        {
+            // Eliminar selección visual
+            FranjasCollectionView.SelectedItem = null;
+
+            // Resetear variable interna
+            _franjaSeleccionada = null;
+
+            // Resetear Label
+            FranjaSeleccionadaLabel.Text = "Ninguna franja seleccionada";
+        }
 
         private void Limpiarcampos()
         {
             FechaPicker.Date = DateTime.Today;
-            HoraPicker.Time = TimeSpan.Zero;
             // ✅ LIMPIAR SERVICIO
             _servicioSeleccionado = null;
             servicioBorder.IsVisible = false;

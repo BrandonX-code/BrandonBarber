@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Barber.Maui.API.Models
 {
@@ -9,7 +10,9 @@ namespace Barber.Maui.API.Models
         public string? Email { get; set; }
         public string? Direccion { get; set; }
         public string? Telefono { get; set; }
+        [Column("Contrasena")]
         public string? Contraseña { get; set; }
+
         public string? Rol { get; set; }
         public string? ImagenPath { get; set; }
         public string? Especialidades { get; set; }

@@ -345,5 +345,31 @@ namespace Barber.Maui.BrandonBarber.Services
                 return null;
             }
         }
+        public List<FranjaHorariaModel> GenerarFranjasHorarias(Dictionary<string, bool> horariosDisponibles)
+        {
+            var franjas = new List<FranjaHorariaModel>();
+            var duracionFranja = TimeSpan.FromMinutes(40);
+
+            foreach (var horario in horariosDisponibles.Where(h => h.Value))
+            {
+                var partes = horario.Key.Split('-');
+                var horaInicio = DateTime.Parse(partes[0].Trim()).TimeOfDay;
+                var horaFin = DateTime.Parse(partes[1].Trim()).TimeOfDay;
+
+                var horaActual = horaInicio;
+                while (horaActual + duracionFranja <= horaFin)
+                {
+                    franjas.Add(new FranjaHorariaModel
+                    {
+                        HoraInicio = horaActual,
+                        HoraFin = horaActual + duracionFranja,
+                        EstaDisponible = true
+                    });
+                    horaActual += duracionFranja;
+                }
+            }
+
+            return franjas.OrderBy(f => f.HoraInicio).ToList();
+        }
     }
 }
