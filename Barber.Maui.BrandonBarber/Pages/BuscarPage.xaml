@@ -22,33 +22,41 @@
                                             </SwipeView.RightItems>
 
                                             <Border Padding="8" Margin="4" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" StrokeThickness="0" >
-                                                <VerticalStackLayout Grid.Column="0" Spacing="10">
-                                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="5">
-                                                        <Image Grid.Column="0" Source="id.png" WidthRequest="20" HeightRequest="20" />
-                                                        <Label Grid.Column="1" Text="{Binding Nombre}" FontSize="Body" TextColor="Black" FontAttributes="Bold" LineBreakMode="WordWrap"/>
-                                                    </Grid>
-                                                    <Grid ColumnDefinitions="Auto,Auto,*" ColumnSpacing="5">
-                                                        <Image Grid.Column="0" Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />
-                                                        <Label Grid.Column="1" Text="Barbero: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
-                                                        <Label Grid.Column="2" Text="{Binding BarberoNombre}" FontSize="Small" TextColor="Black" FontAttributes="None" />
-                                                    </Grid>
-                                                    <HorizontalStackLayout Spacing="5">
-                                                        <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
-                                                        <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy -}'}" FontSize="15" FontAttributes="Bold" TextColor="Black"/>
-                                                        <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="15" FontAttributes="Bold" TextColor="Black"/>
-                                                    </HorizontalStackLayout>
-                                                    <HorizontalStackLayout Spacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
-                                                        <Image Source="servicio.png" WidthRequest="20" HeightRequest="20" />
-                                                        <Label Text="Servicio: " FontSize="16" TextColor="Black" FontAttributes="Bold"/>
-                                                        <Label Text="{Binding ServicioNombre}" FontSize="16" TextColor="Black" />
-                                                    </HorizontalStackLayout>
+                                                <Grid ColumnDefinitions="*, Auto">
+                                                    <VerticalStackLayout Grid.Column="0" Spacing="10">
+                                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="5">
+                                                            <Image Grid.Column="0" Source="id.png" WidthRequest="20" HeightRequest="20" />
+                                                            <Label Grid.Column="1" Text="{Binding Nombre}" FontSize="Body" TextColor="Black" FontAttributes="Bold" LineBreakMode="WordWrap"/>
+                                                        </Grid>
+                                                        <Grid ColumnDefinitions="Auto,Auto,*" ColumnSpacing="5">
+                                                            <Image Grid.Column="0" Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />
+                                                            <Label Grid.Column="1" Text="Barbero: " FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                                            <Label Grid.Column="2" Text="{Binding BarberoNombre}" FontSize="Small" TextColor="Black" FontAttributes="None" />
+                                                        </Grid>
+                                                        <HorizontalStackLayout Spacing="5">
+                                                            <Image Source="calendar.png" WidthRequest="20" HeightRequest="20" />
+                                                            <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy -}'}" FontSize="15" FontAttributes="Bold" TextColor="Black"/>
+                                                            <Label Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}" FontSize="15" FontAttributes="Bold" TextColor="Black"/>
+                                                        </HorizontalStackLayout>
+                                                        <HorizontalStackLayout Spacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
+                                                            <Image Source="servicio.png" WidthRequest="20" HeightRequest="20" />
+                                                            <Label Text="Servicio: " FontSize="16" TextColor="Black" FontAttributes="Bold"/>
+                                                            <Label Text="{Binding ServicioNombre}" FontSize="16" TextColor="Black" />
+                                                        </HorizontalStackLayout>
 
-                                                    <HorizontalStackLayout Spacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
-                                                        <Image Source="precio.png" WidthRequest="20" HeightRequest="20" />
-                                                        <Label Text="Precio: " FontSize="16" TextColor="Black" FontAttributes="Bold"/>
-                                                        <Label Text="{Binding ServicioPrecio, StringFormat='${0:N0}'}" FontSize="15" TextColor="Black"/>
-                                                    </HorizontalStackLayout>
-                                                </VerticalStackLayout>
+                                                        <HorizontalStackLayout Spacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
+                                                            <Image Source="precio.png" WidthRequest="20" HeightRequest="20" />
+                                                            <Label Text="Precio: " FontSize="16" TextColor="Black" FontAttributes="Bold"/>
+                                                            <Label Text="{Binding ServicioPrecio, StringFormat='${0:N0}'}" FontSize="15" TextColor="Black"/>
+                                                        </HorizontalStackLayout>
+                                                    </VerticalStackLayout>
+                                                    <Border Grid.Column="1" Stroke="Transparent" Padding="7"  StrokeShape="RoundRectangle 7" VerticalOptions="Start">
+                                                        <Border.BackgroundColor>
+                                                            <Binding Path="Estado" Converter="{StaticResource EstadoColorConverter}" />
+                                                        </Border.BackgroundColor>
+                                                        <Label Text="{Binding IconoEstado}" TextColor="White"  FontSize="12"  FontAttributes="Bold"  HorizontalOptions="Center"  VerticalOptions="Center"/>
+                                                    </Border>
+                                                </Grid>
                                             </Border>
                                         </SwipeView>
                                     </DataTemplate>

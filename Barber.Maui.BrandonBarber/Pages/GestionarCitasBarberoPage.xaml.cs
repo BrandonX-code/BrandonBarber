@@ -54,7 +54,7 @@
 
             var citasFiltradas = _todasLasCitas
                 .Where(c => c.Estado?.ToLower() == estado.ToLower())
-                .OrderBy(c => c.Fecha)
+                .OrderByDescending(c => c.Fecha) // 👈 más reciente primero
                 .ToList();
 
             CitasCollectionView.ItemsSource = citasFiltradas;
@@ -62,6 +62,7 @@
 
             ActualizarEstilosBotones();
         }
+
 
         private void ActualizarEstilosBotones()
         {
@@ -80,10 +81,8 @@
         {
             if (sender is Button button && button.CommandParameter is CitaModel cita)
             {
-                var confirm = await DisplayAlert("Confirmar",
-                    $"¿Deseas aceptar la cita de {cita.Nombre}?",
-                    "Sí", "No");
-
+                var popup = new CustomAlertPopup($"¿Deseas aceptar la cita de {cita.Nombre}?");
+                bool confirm = await popup.ShowAsync(this);
                 if (confirm)
                 {
                     var exito = await _reservationService.ActualizarEstadoCita(cita.Id, "Completada");
@@ -100,9 +99,11 @@
         {
             if (sender is Button button && button.CommandParameter is CitaModel cita)
             {
-                var confirm = await DisplayAlert("Confirmar",
-                    $"¿El cliente {cita.Nombre} asistió a la cita?",
-                    "Sí, completada", "No, cancelar");
+                //var confirm = await DisplayAlert("Confirmar",
+                //    $"¿El cliente {cita.Nombre} asistió a la cita?",
+                //    "Sí, completada", "No, cancelar");
+                var popup = new CustomAlertPopup($"¿El cliente {cita.Nombre} asistió a la cita?");
+                bool confirm = await popup.ShowAsync(this);
 
                 string nuevoEstado = confirm ? "Finalizada" : "Cancelada";
 
@@ -122,10 +123,8 @@
         {
             if (sender is Button button && button.CommandParameter is CitaModel cita)
             {
-                var confirm = await DisplayAlert("Confirmar",
-                    $"¿Deseas rechazar la cita de {cita.Nombre}?",
-                    "Sí", "No");
-
+                var popup = new CustomAlertPopup($"¿Deseas rechazar la cita de {cita.Nombre}?");
+                bool confirm = await popup.ShowAsync(this);
                 if (confirm)
                 {
                     var exito = await _reservationService.ActualizarEstadoCita(cita.Id, "Cancelada");
