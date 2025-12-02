@@ -366,10 +366,37 @@
 
         private async void OnMakeAppointmentClicked(object sender, EventArgs e)
         {
-            var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
+            // Primero mostrar los servicios disponibles
+            var servicioService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ServicioService>();
+            var servicios = await servicioService.GetServiciosAsync();
+
+            if (servicios == null || servicios.Count == 0)
+            {
+                await DisplayAlert("Aviso", "No hay servicios disponibles", "OK");
+                return;
+            }
+
+            // Crear lista de nombres para el ActionSheet
+            var nombresServicios = servicios.Select(s => $"{s.Nombre} - ${s.Precio:N0}").ToArray();
+
+            var seleccion = await DisplayActionSheet(
+                "Selecciona un servicio",
+                "Cancelar",
+                null,
+                nombresServicios);
+
+            if (seleccion == "Cancelar" || seleccion == null)
+                return;
+
+            // Encontrar el servicio seleccionado
+            var indice = Array.IndexOf(nombresServicios, seleccion);
+            var servicioSeleccionado = servicios[indice];
+
+            // Navegar a reserva con barbero Y servicio preseleccionados
+            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
-            // Navega a ReservaCita y pasa el barbero actual como preseleccionado
-            await Navigation.PushAsync(new MainPage(reservationService, authService, _barbero));
+
+            await Navigation.PushAsync(new MainPage(reservationService, authService, _barbero, servicioSeleccionado));
         }
         private async void OnVerResenasClicked(object sender, EventArgs e)
         {

@@ -31,25 +31,27 @@
                     <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
                         <VerticalStackLayout Spacing="15">
                             <Label Text="Horarios Disponibles" TextColor="Black" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
-                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="10">
-                                <Label Text="Horario" TextColor="Black" FontAttributes="Bold" Grid.Column="0" Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center" FontSize="16"/>
-                                <Label Text="Disponible" TextColor="Black" FontAttributes="Bold" Grid.Column="1" Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center" FontSize="16"/>
+                            <ScrollView MaximumHeightRequest="400">
+                                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="10">
+                                    <Label Text="Horario" TextColor="Black" FontAttributes="Bold" Grid.Column="0" Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center" FontSize="16"/>
+                                    <Label Text="Disponible" TextColor="Black" FontAttributes="Bold" Grid.Column="1" Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center" FontSize="16"/>
 
-                                <Label Text="6:00 AM - 12:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="1" VerticalOptions="Center" HorizontalOptions="Center"/>
-                                <CheckBox x:Name="Horario6a12" Grid.Column="1" Grid.Row="1" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Label Text="6:00 AM - 12:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="1" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                    <CheckBox x:Name="Horario6a12" Grid.Column="1" Grid.Row="1" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
 
-                                <Label Text="12:00 PM - 03:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="2" VerticalOptions="Center" HorizontalOptions="Center"/>
-                                <CheckBox x:Name="Horario12a3" Grid.Column="1" Grid.Row="2" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Label Text="12:00 PM - 03:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="2" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                    <CheckBox x:Name="Horario12a3" Grid.Column="1" Grid.Row="2" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
 
-                                <Label Text="03:00 PM - 05:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="3" VerticalOptions="Center" HorizontalOptions="Center"/>
-                                <CheckBox x:Name="Horario3a5" Grid.Column="1" Grid.Row="3" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Label Text="03:00 PM - 05:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="3" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                    <CheckBox x:Name="Horario3a5" Grid.Column="1" Grid.Row="3" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
 
-                                <Label Text="05:00 PM - 07:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="4" VerticalOptions="Center" HorizontalOptions="Center"/>
-                                <CheckBox x:Name="Horario5a7" Grid.Column="1" Grid.Row="4" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                    <Label Text="05:00 PM - 07:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="4" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                    <CheckBox x:Name="Horario5a7" Grid.Column="1" Grid.Row="4" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
 
-                                <Label Text="07:00 PM - 08:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="5" VerticalOptions="Center" HorizontalOptions="Center"/>
-                                <CheckBox x:Name="Horario7a8" Grid.Column="1" Grid.Row="5" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
-                            </Grid>
+                                    <Label Text="07:00 PM - 08:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="5" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                    <CheckBox x:Name="Horario7a8" Grid.Column="1" Grid.Row="5" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
+                                </Grid>
+                            </ScrollView>
 
                         </VerticalStackLayout>
                     </Border>

@@ -15,6 +15,7 @@
             <converters:ServicioVisibleConverter x:Key="ServicioVisibleConverter" />
             <converters:EstadoPendienteConverter x:Key="EstadoPendienteConverter" />
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <converters:EstadoAceptadaConverter x:Key="EstadoAceptadaConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

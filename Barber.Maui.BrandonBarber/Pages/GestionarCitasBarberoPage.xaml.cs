@@ -59,7 +59,7 @@
 
             CitasCollectionView.ItemsSource = citasFiltradas;
             EmptyStateLayout.IsVisible = citasFiltradas.Count == 0;
-            // Actualizar botones
+
             ActualizarEstilosBotones();
         }
 
@@ -68,12 +68,14 @@
             BtnPendientes.BackgroundColor = _estadoActual == "Pendiente" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
             BtnCompletadas.BackgroundColor = _estadoActual == "Completada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
             BtnCanceladas.BackgroundColor = _estadoActual == "Cancelada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+            BtnFinalizadas.BackgroundColor = _estadoActual == "Finalizada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
         }
 
         private void OnPendientesClicked(object sender, EventArgs e) => FiltrarPorEstado("Pendiente");
         private void OnCompletadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Completada");
         private void OnCanceladasClicked(object sender, EventArgs e) => FiltrarPorEstado("Cancelada");
-
+        private void OnFinalizadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Finalizada");
+        
         private async void OnAceptarCitaClicked(object sender, EventArgs e)
         {
             if (sender is Button button && button.CommandParameter is CitaModel cita)
@@ -94,7 +96,28 @@
                 }
             }
         }
+        private async void OnCompletarCitaClicked(object sender, EventArgs e)
+        {
+            if (sender is Button button && button.CommandParameter is CitaModel cita)
+            {
+                var confirm = await DisplayAlert("Confirmar",
+                    $"¿El cliente {cita.Nombre} asistió a la cita?",
+                    "Sí, completada", "No, cancelar");
 
+                string nuevoEstado = confirm ? "Finalizada" : "Cancelada";
+
+                var exito = await _reservationService.ActualizarEstadoCita(cita.Id, nuevoEstado);
+
+                if (exito)
+                {
+                    await AppUtils.MostrarSnackbar(
+                        confirm ? "Cita marcada como finalizada" : "Cita cancelada",
+                        Colors.Green,
+                        Colors.White);
+                    await CargarCitas();
+                }
+            }
+        }
         private async void OnRechazarCitaClicked(object sender, EventArgs e)
         {
             if (sender is Button button && button.CommandParameter is CitaModel cita)

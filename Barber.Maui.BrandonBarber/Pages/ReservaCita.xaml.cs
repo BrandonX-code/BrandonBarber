@@ -190,7 +190,7 @@
                 }
 
                 _franjaSeleccionada = franja;
-                FranjaSeleccionadaLabel.Text = $"Seleccionada: {franja.HoraTexto}";
+                FranjaSeleccionadaLabel.Text = $" Hora Seleccionada: {franja.HoraTexto}";
             }
         }
         private async Task OnBuscarClicked(object sender, EventArgs e)
