@@ -190,7 +190,7 @@
                 }
 
                 _franjaSeleccionada = franja;
-                FranjaSeleccionadaLabel.Text = $" Hora Seleccionada: {franja.HoraTexto}";
+                FranjaSeleccionadaLabel.Text = $"Hora Seleccionada: {franja.HoraTexto}";
             }
         }
         private async Task OnBuscarClicked(object sender, EventArgs e)
@@ -367,7 +367,7 @@
             _franjaSeleccionada = null;
 
             // Resetear Label
-            FranjaSeleccionadaLabel.Text = "Ninguna franja seleccionada";
+            FranjaSeleccionadaLabel.Text = "Ninguna hora seleccionada";
         }
 
         private void Limpiarcampos()

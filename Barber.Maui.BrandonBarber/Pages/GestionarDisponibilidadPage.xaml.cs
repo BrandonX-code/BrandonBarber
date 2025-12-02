@@ -1,299 +1,232 @@
-﻿namespace Barber.Maui.BrandonBarber.Pages
+﻿using Switch = Microsoft.Maui.Controls.Switch;
+
+namespace Barber.Maui.BrandonBarber.Pages
 {
     public partial class GestionarDisponibilidadPage : ContentPage
     {
         private readonly DisponibilidadService _disponibilidadService;
-        private readonly ReservationService _reservationService;
-        private DateTime _selectedDate;
-        private readonly ObservableCollection<CitaModel> _citas;
-        private Dictionary<string, bool> _horariosDisponibles;
+        private DisponibilidadSemanalModel? _disponibilidad;
         private bool _isNavigating = false;
-        public static DateTime MinimumDate => DateTime.Today;
 
         public GestionarDisponibilidadPage(DisponibilidadService disponibilidadService, ReservationService reservationService)
         {
             InitializeComponent();
             _disponibilidadService = disponibilidadService;
-            _reservationService = reservationService;
-            _selectedDate = DateTime.Today;
-            _citas = [];
-            _horariosDisponibles = [];
-            FechaSelector.MinimumDate = DateTime.Today;
-            FechaSelector.Date = _selectedDate;
-            CitasCollection.ItemsSource = _citas;
-            this.BindingContext = this;
-
-            // Inicializar horarios disponibles y cargar datos
-            InitializeHorarios();
-            LoadData();
+            _ = CargarDisponibilidad();
         }
 
-        private void InitializeHorarios()
+        private async Task CargarDisponibilidad()
         {
-            _horariosDisponibles = new Dictionary<string, bool>
+            var barberoId = AuthService.CurrentUser?.Cedula ?? 0;
+            _disponibilidad = await _disponibilidadService.ObtenerDisponibilidadSemanal(barberoId);
+
+            if (_disponibilidad != null)
             {
-                 { "6:00 AM - 12:00 PM", true },
-                 { "12:00 PM - 03:00 PM", true },
-                 { "03:00 PM - 05:00 PM", true },
-                 { "05:00 PM - 07:00 PM", true },
-                 { "07:00 PM- 08:00 PM", true }
-            };
+                GenerarVista();
+            }
         }
 
-        private async void LoadData()
+        private void GenerarVista()
         {
-            await LoadCitas();
-            await LoadDisponibilidad();
-        }
+            DiasContainer.Children.Clear();
 
-        private async Task LoadCitas()
-        {
-            try
+            foreach (var dia in _disponibilidad!.Dias)
             {
-                LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsLoading = true;
-                long barberoid = AuthService.CurrentUser!.Cedula;
-                var citas = await _reservationService.GetReservationsByBarberoAndFecha(barberoid, _selectedDate);
-                _citas.Clear();
-                foreach (var cita in citas)
+                var border = new Border
                 {
-                    _citas.Add(cita);
-                }
-            }
-            catch (Exception ex)
-            {
-                await AppUtils.MostrarSnackbar($"No se pudieron cargar las citas: {ex.Message}", Colors.Red, Colors.White);
-            }
-            finally
-            {
-                LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsLoading = false;
-            }
-        }
+                    BackgroundColor = Color.FromArgb("#90A4AE"),
+                    StrokeShape = new RoundRectangle { CornerRadius = 15 },
+                    Padding = new Thickness(20, 15),
+                    StrokeThickness = 0,
+                    Margin = new Thickness(0, 0, 0, 5)
+                };
 
-        private async Task LoadDisponibilidad()
-        {
-            try
-            {
-                LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsLoading = true;
-                // Resetear checkboxes
-                Horario6a12.IsChecked = false;
-                Horario12a3.IsChecked = false;
-                Horario3a5.IsChecked = false;
-                Horario5a7.IsChecked = false;
-                Horario7a8.IsChecked = false;
-
-                // Cargar disponibilidad para la fecha seleccionada
-                var barberoId = AuthService.CurrentUser?.Cedula ?? 0;
-                var disponibilidad = await _disponibilidadService.GetDisponibilidad(_selectedDate, barberoId);
-
-                if (disponibilidad != null && disponibilidad.Horarios != null)
+                var mainStack = new VerticalStackLayout
                 {
-                    _horariosDisponibles = disponibilidad.HorariosDict;
+                    Spacing = 15
+                };
 
-                    Horario6a12.IsChecked = _horariosDisponibles.ContainsKey("6:00 AM - 12:00 PM") && _horariosDisponibles["6:00 AM - 12:00 PM"];
-                    Horario12a3.IsChecked = _horariosDisponibles.ContainsKey("12:00 PM - 03:00 PM") && _horariosDisponibles["12:00 PM - 03:00 PM"];
-                    Horario3a5.IsChecked = _horariosDisponibles.ContainsKey("03:00 PM - 05:00 PM") && _horariosDisponibles["03:00 PM - 05:00 PM"];
-                    Horario5a7.IsChecked = _horariosDisponibles.ContainsKey("05:00 PM - 07:00 PM") && _horariosDisponibles["05:00 PM - 07:00 PM"];
-                    Horario7a8.IsChecked = _horariosDisponibles.ContainsKey("07:00 PM - 08:00 PM") && _horariosDisponibles["07:00 PM - 08:00 PM"];
-
-                }
-            }
-            catch (Exception ex)
-            {
-                await AppUtils.MostrarSnackbar($"No se pudo cargar la disponibilidad: {ex.Message}", Colors.Red, Colors.White);
-            }
-            finally
-            {
-                LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsLoading = false;
-            }
-        }
-
-        private void OnDateSelected(object sender, DateChangedEventArgs e)
-        {
-            _selectedDate = e.NewDate;
-            LoadData();
-        }
-
-        private void OnHorarioCheckedChanged(object sender, CheckedChangedEventArgs e)
-        {
-            if (sender is CheckBox checkBox)
-            {
-                string hora = "";
-
-                // Identificar la hora según el checkbox
-                if (checkBox == Horario6a12) hora = "6:00 AM - 12:00 PM";
-                else if (checkBox == Horario12a3) hora = "12:00 PM - 03:00 PM";
-                else if (checkBox == Horario3a5) hora = "03:00 PM - 05:00 PM";
-                else if (checkBox == Horario5a7) hora = "05:00 PM - 07:00 PM";
-                else if (checkBox == Horario7a8) hora = "07:00 PM - 08:00 PM";
-
-
-                // Actualizar el diccionario
-                if (!string.IsNullOrEmpty(hora))
+                // ========== FILA 1: Día y Switch ==========
+                var headerGrid = new Grid
                 {
-                    _horariosDisponibles[hora] = checkBox.IsChecked;
-                }
-
-                // Verificar si hay citas existentes para este horario
-                VerificarConflictos(hora, checkBox.IsChecked);
-            }
-        }
-
-        private async void VerificarConflictos(string hora, bool disponible)
-        {
-            if (!disponible)
+                    ColumnDefinitions =
             {
-                var horaInicioTexto = hora.Split('-')[0].Trim();
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = GridLength.Auto }
+            }
+                };
 
-                if (DateTime.TryParse(horaInicioTexto, out DateTime horaDateTime))
+                var labelDia = new Label
                 {
-                    var citasAfectadas = _citas.Where(c => c.Fecha.Hour == horaDateTime.Hour).ToList();
+                    Text = dia.NombreDia,
+                    FontSize = 18,
+                    FontAttributes = FontAttributes.Bold,
+                    TextColor = Colors.Black,
+                    VerticalOptions = LayoutOptions.Center
+                };
 
-                    if (citasAfectadas.Any())
+                var switchHabilitar = new Switch
+                {
+                    IsToggled = dia.Habilitado,
+                    OnColor = Color.FromArgb("#FF6F91"),
+                    ThumbColor = Colors.White,
+                    VerticalOptions = LayoutOptions.Center
+                };
+
+                Grid.SetColumn(labelDia, 0);
+                Grid.SetColumn(switchHabilitar, 1);
+
+                headerGrid.Children.Add(labelDia);
+                headerGrid.Children.Add(switchHabilitar);
+
+                // ========== FILA 2: Horarios (Grid con 2 columnas) ==========
+                var horariosGrid = new Grid
+                {
+                    IsVisible = dia.Habilitado,
+                    ColumnDefinitions =
+            {
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
+            },
+                    ColumnSpacing = 15
+                };
+
+                // Columna Inicio
+                var inicioStack = new VerticalStackLayout { Spacing = 8 };
+
+                var labelInicio = new Label
+                {
+                    Text = "Inicio",
+                    FontSize = 14,
+                    TextColor = Colors.Black,
+                    FontAttributes = FontAttributes.Bold
+                };
+
+                var borderInicio = new Border
+                {
+                    BackgroundColor = Color.FromArgb("#E0F7FA"),
+                    StrokeShape = new RoundRectangle { CornerRadius = 10 },
+                    StrokeThickness = 0,
+                    Padding = new Thickness(15, 8)
+                };
+
+                var timePickerInicio = new TimePicker
+                {
+                    Time = dia.HoraInicio,
+                    TextColor = Colors.Black,
+                    BackgroundColor = Colors.Transparent,
+                    FontSize = 16,
+                    HorizontalOptions = LayoutOptions.Fill
+                };
+
+                timePickerInicio.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == nameof(TimePicker.Time))
                     {
-                        var popup = new CustomAlertPopup("Hay citas programadas para este horario. Si lo marca como no disponible, estas citas se cancelarán. ¿Desea continuar?\"");
-                        bool confirmacion = await popup.ShowAsync(this);
-                        if (!confirmacion)
-                        {
-                            _horariosDisponibles[hora] = true;
-                            ActualizarCheckbox(hora, true);
-                        }
+                        dia.HoraInicio = timePickerInicio.Time;
                     }
-                }
+                };
+
+                borderInicio.Content = timePickerInicio;
+                inicioStack.Children.Add(labelInicio);
+                inicioStack.Children.Add(borderInicio);
+
+                // Columna Fin
+                var finStack = new VerticalStackLayout { Spacing = 8 };
+
+                var labelFin = new Label
+                {
+                    Text = "Fin",
+                    FontSize = 14,
+                    TextColor = Colors.Black,
+                    FontAttributes = FontAttributes.Bold
+                };
+
+                var borderFin = new Border
+                {
+                    BackgroundColor = Color.FromArgb("#E0F7FA"),
+                    StrokeShape = new RoundRectangle { CornerRadius = 10 },
+                    StrokeThickness = 0,
+                    Padding = new Thickness(15, 8)
+                };
+
+                var timePickerFin = new TimePicker
+                {
+                    Time = dia.HoraFin,
+                    TextColor = Colors.Black,
+                    BackgroundColor = Colors.Transparent,
+                    FontSize = 16,
+                    HorizontalOptions = LayoutOptions.Fill
+                };
+
+                timePickerFin.PropertyChanged += (s, e) =>
+                {
+                    if (e.PropertyName == nameof(TimePicker.Time))
+                    {
+                        dia.HoraFin = timePickerFin.Time;
+                    }
+                };
+
+                borderFin.Content = timePickerFin;
+                finStack.Children.Add(labelFin);
+                finStack.Children.Add(borderFin);
+
+                Grid.SetColumn(inicioStack, 0);
+                Grid.SetColumn(finStack, 1);
+
+                horariosGrid.Children.Add(inicioStack);
+                horariosGrid.Children.Add(finStack);
+
+                // ========== Evento del Switch ==========
+                switchHabilitar.Toggled += (s, e) =>
+                {
+                    dia.Habilitado = e.Value;
+                    horariosGrid.IsVisible = e.Value;
+                };
+
+                // ========== Agregar todo al stack principal ==========
+                mainStack.Children.Add(headerGrid);
+                mainStack.Children.Add(horariosGrid);
+
+                border.Content = mainStack;
+                DiasContainer.Children.Add(border);
             }
         }
-
-
-        private void ActualizarCheckbox(string hora, bool estado)
-        {
-            switch (hora)
-            {
-                case "6:00 AM - 12:00 PM": Horario6a12.IsChecked = estado; break;
-                case "12:00 PM - 03:00 PM": Horario12a3.IsChecked = estado; break;
-                case "03:00 PM - 05:00 PM": Horario3a5.IsChecked = estado; break;
-                case "05:00 PM - 07:00 PM": Horario5a7.IsChecked = estado; break;
-                case "07:00 PM - 08:00 PM": Horario7a8.IsChecked = estado; break;
-            }
-        }
-
-
-        // En GestionarDisponibilidadPage.xaml.cs, modifica el método OnGuardarClicked
         private async void OnGuardarClicked(object sender, EventArgs e)
         {
             if (_isNavigating) return;
             _isNavigating = true;
+
             try
             {
-                LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsLoading = true;
-                long idBarbero = Convert.ToInt64(await SecureStorage.Default.GetAsync("user_cedula"));
-                var HorariosJSON = new Dictionary<string, bool>
+                // Validar horarios
+                foreach (var dia in _disponibilidad!.Dias.Where(d => d.Habilitado))
                 {
-                     { "6:00 AM - 12:00 PM", Horario6a12.IsChecked },
-                     { "12:00 PM - 03:00 PM", Horario12a3.IsChecked },
-                     { "03:00 PM - 05:00 PM", Horario3a5.IsChecked  },
-                     { "05:00 PM - 07:00 PM", Horario5a7.IsChecked  },
-                     { "07:00 PM - 08:00 PM", Horario7a8.IsChecked }
-                };
+                    if (dia.HoraFin <= dia.HoraInicio)
+                    {
+                        await DisplayAlert("Error", $"La hora de fin debe ser mayor que la hora de inicio en {dia.NombreDia}", "OK");
+                        return;
+                    }
+                }
 
-                var disponibilidad = new DisponibilidadModel
+                bool guardado = await _disponibilidadService.GuardarDisponibilidadSemanal(_disponibilidad);
+
+                if (guardado)
                 {
-                    Id = 0,
-                    Fecha = FechaSelector.Date,
-                    BarberoId = idBarbero,
-                    HorariosDict = HorariosJSON
-                };
-
-
-                // Guardar disponibilidad
-                bool result = await _disponibilidadService.GuardarDisponibilidad(disponibilidad);
-
-                if (result)
-                {
-                    await AppUtils.MostrarSnackbar("La disponibilidad ha sido guardada correctamente", Colors.Green, Colors.White);
+                    await AppUtils.MostrarSnackbar("Disponibilidad guardada y aplicada al mes", Colors.Green, Colors.White);
                     await Navigation.PopAsync();
                 }
                 else
                 {
-                    await AppUtils.MostrarSnackbar("No se pudo guardar la disponibilidad", Colors.Red, Colors.White);
+                    await DisplayAlert("Error", "No se pudo guardar la disponibilidad", "OK");
                 }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al guardar: {ex.Message}", "Aceptar");
+                await DisplayAlert("Error", ex.Message, "OK");
             }
             finally
             {
-                LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsLoading = false;
-                _isNavigating = false;
-            }
-        }
-        private async void OnConfigurarPlantillaClicked(object sender, EventArgs e)
-        {
-            if (_isNavigating) return;
-            _isNavigating = true;
-            try
-            {
-                await Navigation.PushAsync(new PlantillaDisponibilidadPage(_disponibilidadService));
-            }
-            finally
-            {
-                _isNavigating = false;
-            }
-            
-        }
-
-        private async void OnAplicarPlantillaMesClicked(object sender, EventArgs e)
-        {
-            if (_isNavigating) return;
-            _isNavigating = true;
-            try
-            {
-                LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsLoading = true;
-                var barberoId = AuthService.CurrentUser?.Cedula ?? 0;
-                var plantilla = await _disponibilidadService.ObtenerPlantillaSemanal(barberoId);
-
-                if (plantilla == null)
-                {
-                    await DisplayAlert("Aviso", "Primero debes configurar tu plantilla semanal", "OK");
-                    return;
-                }
-
-                var popup = new CustomAlertPopup("¿Deseas aplicar tu plantilla semanal a todo el mes actual? Esto sobrescribirá la disponibilidad existente.");
-                bool confirmacion = await popup.ShowAsync(this);
-
-                if (!confirmacion)
-                    return;
-
-                // Aplicar al mes actual
-                var primerDia = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-                var ultimoDia = primerDia.AddMonths(1).AddDays(-1);
-
-                bool resultado = await _disponibilidadService.AplicarPlantillaARango(barberoId, primerDia, ultimoDia);
-
-                if (resultado)
-                {
-                    await AppUtils.MostrarSnackbar("Plantilla aplicada correctamente al mes", Colors.Green, Colors.White);
-                    await LoadDisponibilidad(); // Recargar la vista actual
-                }
-                else
-                {
-                    await AppUtils.MostrarSnackbar("Error al aplicar la plantilla", Colors.Red, Colors.White);
-                }
-            }
-            catch (Exception ex)
-            {
-                await DisplayAlert("Error", $"Error: {ex.Message}", "OK");
-            }
-            finally
-            {
-                LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
         }

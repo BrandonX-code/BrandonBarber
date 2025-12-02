@@ -66,7 +66,7 @@ namespace Barber.Maui.BrandonBarber
             // En modo DEBUG: usa localhost o IP local
             if (DeviceInfo.Platform == DevicePlatform.Android)
             {
-                apiBaseUrl = "https://192.168.0.28:7283/"; // Para emulador/dispositivo Android en red local
+                apiBaseUrl = "https://192.168.0.135:7283/"; // Para emulador/dispositivo Android en red local
             }
             else
             {

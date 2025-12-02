@@ -48,37 +48,6 @@ namespace Barber.Maui.BrandonBarber.Services
             }
         }
 
-        public async Task<DisponibilidadModel?> GetDisponibilidadPorBarbero(long cedula)
-        {
-            try
-            {
-                string url = $"api/disponibilidad/by-barberId/{cedula}";
-                var response = await _httpClient.GetAsync(url);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    if (response.StatusCode == HttpStatusCode.NotFound)
-                    {
-                        // No hay disponibilidad registrada para esta fecha y barbero
-                        return null;
-                    }
-
-                    Debug.WriteLine($"❌ Error al obtener disponibilidad: {response.StatusCode}");
-                    return null;
-                }
-
-                var json = await response.Content.ReadAsStringAsync();
-                var disponibilidad = JsonSerializer.Deserialize<DisponibilidadModel>(json,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-                return disponibilidad;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"❌ Excepción al obtener disponibilidad: {ex.Message}");
-                return null;
-            }
-        }
 
         public async Task<List<DisponibilidadModel>> GetDisponibilidadActualPorBarbero(long barberoId)
         {
@@ -135,31 +104,6 @@ namespace Barber.Maui.BrandonBarber.Services
                 return false;
             }
         }
-        // Guardar plantilla semanal en SecureStorage
-        public async Task<bool> GuardarPlantillaSemanal(PlantillaDisponibilidadModel plantilla)
-        {
-            try
-            {
-                var json = JsonSerializer.Serialize(plantilla);
-                Console.WriteLine($"🔹 JSON a guardar: {json}");
-
-                await SecureStorage.Default.SetAsync($"plantilla_semanal_{plantilla.BarberoId}", json);
-
-                Console.WriteLine($"✅ Plantilla guardada para barbero: {plantilla.BarberoId}");
-
-                // Verificar que se guardó
-                var verificacion = await SecureStorage.Default.GetAsync($"plantilla_semanal_{plantilla.BarberoId}");
-                Console.WriteLine($"🔹 Verificación: {verificacion}");
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Error al guardar plantilla: {ex.Message}");
-                Console.WriteLine($"❌ StackTrace: {ex.StackTrace}");
-                return false;
-            }
-        }
 
         // Obtener plantilla semanal
         public async Task<PlantillaDisponibilidadModel?> ObtenerPlantillaSemanal(long barberoId)
@@ -176,47 +120,6 @@ namespace Barber.Maui.BrandonBarber.Services
             {
                 Debug.WriteLine($"❌ Error al obtener plantilla: {ex.Message}");
                 return null;
-            }
-        }
-
-        // Aplicar plantilla a un rango de fechas
-        public async Task<bool> AplicarPlantillaARango(long barberoId, DateTime fechaInicio, DateTime fechaFin)
-        {
-            try
-            {
-                var plantilla = await ObtenerPlantillaSemanal(barberoId);
-                if (plantilla == null)
-                    return false;
-
-                var fechaActual = fechaInicio.Date;
-                while (fechaActual <= fechaFin.Date)
-                {
-                    // Obtener día de la semana en español
-                    var diaSemana = ObtenerDiaSemanaEspanol(fechaActual.DayOfWeek);
-
-                    // Si hay horarios configurados para este día en la plantilla
-                    if (plantilla.HorariosPorDia.ContainsKey(diaSemana))
-                    {
-                        var disponibilidad = new DisponibilidadModel
-                        {
-                            Id = 0,
-                            Fecha = fechaActual,
-                            BarberoId = barberoId,
-                            HorariosDict = plantilla.HorariosPorDia[diaSemana]
-                        };
-
-                        await GuardarDisponibilidad(disponibilidad);
-                    }
-
-                    fechaActual = fechaActual.AddDays(1);
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine($"❌ Error al aplicar plantilla: {ex.Message}");
-                return false;
             }
         }
 
@@ -258,93 +161,6 @@ namespace Barber.Maui.BrandonBarber.Services
                 return new List<DisponibilidadModel>();
             }
         }
-        // Agregar este método en DisponibilidadService.cs
-
-        public async Task<PlantillaDisponibilidadModel?> ReconstruirPlantillaDesdeDisponibilidades(long barberoId)
-        {
-            try
-            {
-                // Obtener disponibilidades del mes actual
-                var year = DateTime.Today.Year;
-                var month = DateTime.Today.Month;
-
-                var disponibilidades = await GetDisponibilidadPorMes(barberoId, year, month);
-
-                if (disponibilidades == null || !disponibilidades.Any())
-                {
-                    Console.WriteLine("⚠️ No hay disponibilidades guardadas en la BD");
-                    return null;
-                }
-
-                Console.WriteLine($"✅ Se encontraron {disponibilidades.Count} disponibilidades en la BD");
-
-                // Crear la plantilla vacía
-                var plantilla = new PlantillaDisponibilidadModel
-                {
-                    BarberoId = barberoId,
-                    HorariosPorDia = new Dictionary<string, Dictionary<string, bool>>()
-                };
-
-                // Inicializar cada día con horarios vacíos
-                string[] diasSemana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
-                foreach (var dia in diasSemana)
-                {
-                    plantilla.HorariosPorDia[dia] = new Dictionary<string, bool>();
-                }
-
-                // Agrupar disponibilidades por día de la semana
-                var disponibilidadesPorDia = disponibilidades
-                    .GroupBy(d => ObtenerDiaSemanaEspanol(d.Fecha.DayOfWeek))
-                    .ToDictionary(g => g.Key, g => g.ToList());
-
-                // Para cada día de la semana que tenga disponibilidades
-                foreach (var grupo in disponibilidadesPorDia)
-                {
-                    var diaSemana = grupo.Key;
-                    var disponibilidadesDia = grupo.Value;
-
-                    Console.WriteLine($"📅 Procesando {diaSemana}: {disponibilidadesDia.Count} registros");
-
-                    // Crear un diccionario temporal para contar ocurrencias de cada horario
-                    var conteoHorarios = new Dictionary<string, int>();
-
-                    // Contar cuántas veces cada horario está disponible
-                    foreach (var disp in disponibilidadesDia)
-                    {
-                        if (disp.HorariosDict != null)
-                        {
-                            foreach (var horario in disp.HorariosDict)
-                            {
-                                if (!conteoHorarios.ContainsKey(horario.Key))
-                                    conteoHorarios[horario.Key] = 0;
-
-                                if (horario.Value) // Si está disponible
-                                    conteoHorarios[horario.Key]++;
-                            }
-                        }
-                    }
-
-                    // Determinar el patrón más común (si más del 50% de las veces está disponible)
-                    var totalRegistros = disponibilidadesDia.Count;
-                    foreach (var horario in conteoHorarios)
-                    {
-                        var porcentajeDisponible = (double)horario.Value / totalRegistros;
-                        plantilla.HorariosPorDia[diaSemana][horario.Key] = porcentajeDisponible > 0.5;
-
-                        Console.WriteLine($"  - {horario.Key}: {horario.Value}/{totalRegistros} veces disponible = {porcentajeDisponible:P0}");
-                    }
-                }
-
-                Console.WriteLine("✅ Plantilla reconstruida exitosamente desde la BD");
-                return plantilla;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Error al reconstruir plantilla: {ex.Message}");
-                Console.WriteLine($"❌ StackTrace: {ex.StackTrace}");
-                return null;
-            }
-        }
         public List<FranjaHorariaModel> GenerarFranjasHorarias(Dictionary<string, bool> horariosDisponibles)
         {
             var franjas = new List<FranjaHorariaModel>();
@@ -370,6 +186,126 @@ namespace Barber.Maui.BrandonBarber.Services
             }
 
             return franjas.OrderBy(f => f.HoraInicio).ToList();
+        }
+        // DisponibilidadService.cs - AGREGAR estos métodos
+
+        public async Task<DisponibilidadSemanalModel?> ObtenerDisponibilidadSemanal(long barberoId)
+        {
+            try
+            {
+                var json = await SecureStorage.Default.GetAsync($"disponibilidad_semanal_{barberoId}");
+                if (string.IsNullOrEmpty(json))
+                {
+                    // Retornar configuración por defecto
+                    return new DisponibilidadSemanalModel
+                    {
+                        BarberoId = barberoId,
+                        Dias = new List<DiaDisponibilidadModel>
+                        {
+                            new() { NombreDia = "Lunes", Habilitado = true, HoraInicio = new TimeSpan(9, 0, 0), HoraFin = new TimeSpan(18, 0, 0) },
+                            new() { NombreDia = "Martes", Habilitado = true, HoraInicio = new TimeSpan(9, 0, 0), HoraFin = new TimeSpan(18, 0, 0) },
+                            new() { NombreDia = "Miércoles", Habilitado = true, HoraInicio = new TimeSpan(9, 0, 0), HoraFin = new TimeSpan(18, 0, 0) },
+                            new() { NombreDia = "Jueves", Habilitado = true, HoraInicio = new TimeSpan(9, 0, 0), HoraFin = new TimeSpan(18, 0, 0) },
+                            new() { NombreDia = "Viernes", Habilitado = true, HoraInicio = new TimeSpan(9, 0, 0), HoraFin = new TimeSpan(18, 0, 0) },
+                            new() { NombreDia = "Sábado", Habilitado = true, HoraInicio = new TimeSpan(9, 0, 0), HoraFin = new TimeSpan(18, 0, 0) },
+                            new() { NombreDia = "Domingo", Habilitado = false, HoraInicio = new TimeSpan(9, 0, 0), HoraFin = new TimeSpan(18, 0, 0) }
+                        }
+                    };
+                }
+
+                return JsonSerializer.Deserialize<DisponibilidadSemanalModel>(json);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"❌ Error al obtener disponibilidad semanal: {ex.Message}");
+                return null;
+            }
+        }
+
+        public async Task<bool> GuardarDisponibilidadSemanal(DisponibilidadSemanalModel disponibilidad)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(disponibilidad);
+                await SecureStorage.Default.SetAsync($"disponibilidad_semanal_{disponibilidad.BarberoId}", json);
+
+                // Aplicar al mes actual automáticamente
+                await AplicarDisponibilidadSemanalAMes(disponibilidad.BarberoId, DateTime.Today);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"❌ Error al guardar disponibilidad semanal: {ex.Message}");
+                return false;
+            }
+        }
+
+        public async Task<bool> AplicarDisponibilidadSemanalAMes(long barberoId, DateTime fecha)
+        {
+            try
+            {
+                var disponibilidadSemanal = await ObtenerDisponibilidadSemanal(barberoId);
+                if (disponibilidadSemanal == null) return false;
+
+                var primerDia = new DateTime(fecha.Year, fecha.Month, 1);
+                var ultimoDia = primerDia.AddMonths(1).AddDays(-1);
+
+                var fechaActual = primerDia;
+                while (fechaActual <= ultimoDia)
+                {
+                    var diaSemana = ObtenerDiaSemanaEspanol(fechaActual.DayOfWeek);
+                    var diaConfig = disponibilidadSemanal.Dias.FirstOrDefault(d => d.NombreDia == diaSemana);
+
+                    if (diaConfig != null && diaConfig.Habilitado)
+                    {
+                        // Generar franjas cada 40 minutos
+                        var horarios = GenerarHorariosDesdeRango(diaConfig.HoraInicio, diaConfig.HoraFin);
+
+                        var disponibilidad = new DisponibilidadModel
+                        {
+                            Id = 0,
+                            Fecha = fechaActual,
+                            BarberoId = barberoId,
+                            HorariosDict = horarios
+                        };
+
+                        await GuardarDisponibilidad(disponibilidad);
+                    }
+
+                    fechaActual = fechaActual.AddDays(1);
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"❌ Error al aplicar disponibilidad al mes: {ex.Message}");
+                return false;
+            }
+        }
+
+        private Dictionary<string, bool> GenerarHorariosDesdeRango(TimeSpan inicio, TimeSpan fin)
+        {
+            var horarios = new Dictionary<string, bool>();
+            var horaActual = inicio;
+            var duracion = TimeSpan.FromMinutes(40);
+
+            while (horaActual + duracion <= fin)
+            {
+                var siguienteHora = horaActual + duracion;
+                var formato = $"{FormatearHora(horaActual)} - {FormatearHora(siguienteHora)}";
+                horarios[formato] = true;
+                horaActual = siguienteHora;
+            }
+
+            return horarios;
+        }
+
+        private string FormatearHora(TimeSpan hora)
+        {
+            var dt = DateTime.Today.Add(hora);
+            return dt.ToString("hh:mm tt");
         }
     }
 }

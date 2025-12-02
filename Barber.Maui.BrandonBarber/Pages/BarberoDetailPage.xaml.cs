@@ -282,14 +282,15 @@
             LoadHorasDisponiblesParaDia(selectedDate);
         }
 
+        // BarberoDetailPage.xaml.cs - REEMPLAZAR este método
+
         private void LoadHorasDisponiblesParaDia(DateTime dia)
         {
             var disponibilidadDia = _disponibilidades?.FirstOrDefault(d => d.Fecha.Date == dia.Date);
 
             if (disponibilidadDia == null)
             {
-                // El barbero no ha gestionado disponibilidad para este día
-                NoAvailabilityLabel.Text = "El barbero no ha gestionado su disponibilidad para este día";
+                NoAvailabilityLabel.Text = "El barbero no ha configurado su disponibilidad para este día";
                 NoAvailabilityLabel.IsVisible = true;
                 AvailableHoursContainer.IsVisible = false;
                 return;
@@ -298,6 +299,7 @@
             var horasDisponibles = disponibilidadDia.HorariosDict
                 .Where(h => h.Value)
                 .Select(h => h.Key)
+                .OrderBy(h => h)
                 .ToList();
 
             AvailableHoursContainer.Children.Clear();
@@ -315,21 +317,21 @@
                 var border = new Border
                 {
                     BackgroundColor = Color.FromArgb("#90A4AE"),
-                    Padding = new Thickness(15, 8),
-                    HeightRequest = 40,
+                    Padding = new Thickness(20, 12),
+                    Margin = new Thickness(0, 0, 10, 0),
                     Stroke = Colors.Transparent,
                     StrokeThickness = 0,
-                    StrokeShape = new RoundRectangle
-                    {
-                        CornerRadius = 5
-                    }
+                    StrokeShape = new RoundRectangle { CornerRadius = 10 }
                 };
 
                 var label = new Label
                 {
                     Text = hora,
                     TextColor = Colors.Black,
-                    FontSize = 14
+                    FontSize = 15,
+                    FontAttributes = FontAttributes.Bold,
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center
                 };
 
                 border.Content = label;
@@ -339,7 +341,6 @@
             NoAvailabilityLabel.IsVisible = false;
             AvailableHoursContainer.IsVisible = true;
         }
-
         private async void ContarYMostrarVisita()
         {
             try

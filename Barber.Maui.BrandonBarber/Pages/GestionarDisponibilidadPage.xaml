@@ -1,121 +1,37 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Barber.Maui.BrandonBarber.Pages.GestionarDisponibilidadPage" xmlns:controls="clr-namespace:Barber.Maui.BrandonBarber.Controls" Grid.RowSpan="1">
+             x:Class="Barber.Maui.BrandonBarber.Pages.GestionarDisponibilidadPage"
+             BackgroundColor="#0E2A36">
 
-    <Grid>
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Header -->
+        <Label Grid.Row="0" 
+               Text="Gestionar Horarios Semanales" 
+               FontSize="24" 
+               FontAttributes="Bold"
+               TextColor="White" 
+               HorizontalOptions="Center"
+               Margin="20,40,20,20"/>
 
-        <Grid BackgroundColor="#0E2A36">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <!-- Content -->
+        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout x:Name="DiasContainer" 
+                               Padding="20" 
+                               Spacing="15"/>
+        </ScrollView>
 
-            <!-- Header -->
-            <Grid Grid.Row="0" BackgroundColor="#0E2A36" Padding="10,30"  HorizontalOptions="Center">
-                <Label Text="Gestionar Disponibilidad" FontSize="20" TextColor="White" FontAttributes="Bold" />
-            </Grid>
-
-            <!-- Content -->
-            <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Grid.Row="1">
-                <VerticalStackLayout Padding="20" Spacing="20">
-                    <!-- Calendario -->
-                    <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="Selecciona fecha" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
-                            <DatePicker x:Name="FechaSelector" Format="D" TextColor="Black" MinimumDate="{Binding MinimumDate}" DateSelected="OnDateSelected" />
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="Horarios Disponibles" TextColor="Black" FontSize="18" FontAttributes="Bold" HorizontalOptions="Center"/>
-                            <ScrollView MaximumHeightRequest="400">
-                                <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="10">
-                                    <Label Text="Horario" TextColor="Black" FontAttributes="Bold" Grid.Column="0" Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center" FontSize="16"/>
-                                    <Label Text="Disponible" TextColor="Black" FontAttributes="Bold" Grid.Column="1" Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center" FontSize="16"/>
-
-                                    <Label Text="6:00 AM - 12:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="1" VerticalOptions="Center" HorizontalOptions="Center"/>
-                                    <CheckBox x:Name="Horario6a12" Grid.Column="1" Grid.Row="1" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
-
-                                    <Label Text="12:00 PM - 03:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="2" VerticalOptions="Center" HorizontalOptions="Center"/>
-                                    <CheckBox x:Name="Horario12a3" Grid.Column="1" Grid.Row="2" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
-
-                                    <Label Text="03:00 PM - 05:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="3" VerticalOptions="Center" HorizontalOptions="Center"/>
-                                    <CheckBox x:Name="Horario3a5" Grid.Column="1" Grid.Row="3" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
-
-                                    <Label Text="05:00 PM - 07:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="4" VerticalOptions="Center" HorizontalOptions="Center"/>
-                                    <CheckBox x:Name="Horario5a7" Grid.Column="1" Grid.Row="4" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
-
-                                    <Label Text="07:00 PM - 08:00 PM" TextColor="Black" Grid.Column="0" Grid.Row="5" VerticalOptions="Center" HorizontalOptions="Center"/>
-                                    <CheckBox x:Name="Horario7a8" Grid.Column="1" Grid.Row="5" Color="Black" CheckedChanged="OnHorarioCheckedChanged" HorizontalOptions="Center" VerticalOptions="Center"/>
-                                </Grid>
-                            </ScrollView>
-
-                        </VerticalStackLayout>
-                    </Border>
-                    <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
-                        <VerticalStackLayout Spacing="15">
-                            <Label Text="Plantilla Semanal" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
-                            <Button Text="Configurar Plantilla Semanal" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="15" Clicked="OnConfigurarPlantillaClicked"/>
-                            <Button Text="Aplicar Plantilla al Mes" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="15" Clicked="OnAplicarPlantillaMesClicked"/>
-                        </VerticalStackLayout>
-                    </Border>
-
-                    <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
-                        <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
-                            <VerticalStackLayout>
-                                <Label Text="Citas Programadas" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
-
-                                <CollectionView x:Name="CitasCollection" HeightRequest="260" VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" EmptyView="No hay citas programadas para esta fecha.">
-                                    <CollectionView.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Margin="0,15" BackgroundColor="#0E2A36" Padding="10" StrokeShape="RoundRectangle 10" StrokeThickness="0">
-                                                <VerticalStackLayout Spacing="5">
-
-                                                    <Grid ColumnDefinitions="80,*" ColumnSpacing="5">
-                                                        <Label Grid.Column="0" Text="Nombre:" FontSize="16" TextColor="White" FontAttributes="Bold"/>
-                                                        <Label Grid.Column="1" Text="{Binding Nombre}"  FontSize="16" TextColor="White" LineBreakMode="WordWrap"/>
-                                                    </Grid>
-
-                                                    <Grid ColumnDefinitions="80,*" ColumnSpacing="5">
-                                                        <Label Grid.Column="0" Text="Fecha:" FontSize="16" TextColor="White" FontAttributes="Bold"/>
-                                                        <Label Grid.Column="1" Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}"  FontSize="16" TextColor="White"/>
-                                                    </Grid>
-
-                                                    <Grid ColumnDefinitions="80,*" ColumnSpacing="5">
-                                                        <Label Grid.Column="0" Text="Hora:" FontSize="16" TextColor="White" FontAttributes="Bold"/>
-                                                        <Label Grid.Column="1" Text="{Binding Fecha, StringFormat='{0:hh:mm tt}'}"  FontSize="16" TextColor="White"/>
-                                                    </Grid>
-
-                                                    <Grid ColumnDefinitions="80,*" ColumnSpacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
-                                                        <Label Grid.Column="0" Text="Servicio:" FontSize="16" TextColor="White" FontAttributes="Bold"/>
-                                                        <Label Grid.Column="1" Text="{Binding ServicioNombre}" TextColor="White"  FontSize="16" LineBreakMode="WordWrap"/>
-                                                    </Grid>
-
-                                                    <Grid ColumnDefinitions="80,*" ColumnSpacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
-                                                        <Label Grid.Column="0" Text="Precio:" FontSize="16" TextColor="White" FontAttributes="Bold"/>
-                                                        <Label Grid.Column="1" Text="{Binding ServicioPrecio, StringFormat='${0:N0}'}"  FontSize="16" TextColor="White"/>
-                                                    </Grid>
-
-                                                </VerticalStackLayout>
-
-                                            </Border>
-                                        </DataTemplate>
-                                    </CollectionView.ItemTemplate>
-                                </CollectionView>
-                            </VerticalStackLayout>
-                        </Border>
-                    </ScrollView>
-
-                </VerticalStackLayout>
-            </ScrollView>
-
-            <HorizontalStackLayout Grid.Row="2" Padding="20" HorizontalOptions="Center">
-                <Button Text="Guardar Disponibilidad"  BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="15" Clicked="OnGuardarClicked" />
-            </HorizontalStackLayout>
-        </Grid>
-        <controls:LoadingControl x:Name="LoadingIndicator" IsVisible="False"/>
+        <!-- Botones -->
+        <HorizontalStackLayout Grid.Row="2" 
+                             Padding="20" 
+                             Spacing="15"
+                             HorizontalOptions="Center">
+            <Button Text="Guardar y Aplicar" 
+                    BackgroundColor="#FF6F91" 
+                    TextColor="Black"
+                    CornerRadius="15"
+                    Clicked="OnGuardarClicked"
+                    WidthRequest="200"/>
+        </HorizontalStackLayout>
     </Grid>
 </ContentPage>
