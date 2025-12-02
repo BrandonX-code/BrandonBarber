@@ -25,6 +25,7 @@
                 {
                     "completada" => "Completada",
                     "cancelada" => "Rechazada",
+                    "finalizada" => "Finalizada",
                     _ => "Pendiente"
                 };
             }

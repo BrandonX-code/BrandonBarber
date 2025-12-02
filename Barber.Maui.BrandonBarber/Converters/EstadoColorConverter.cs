@@ -10,11 +10,13 @@ namespace Barber.Maui.BrandonBarber.Converters
             {
                 return estado.ToLower() switch
                 {
-                    "completada" or "aprobado" => Color.FromArgb("#4CAF50"), // Verde
-                    "cancelada" or "rechazado" => Color.FromArgb("#F44336"), // Rojo
-                    "pendiente" => Color.FromArgb("#FFA726"),                // Naranja
+                    "completada" or "aprobado" => Color.FromArgb("#4CAF50"),
+                    "cancelada" or "rechazado" => Color.FromArgb("#F44336"),
+                    "pendiente" => Color.FromArgb("#FFA726"),
+                    "finalizada" => Color.FromArgb("#4D5154"), // 👈 AÑADIDO
                     _ => Color.FromArgb("#90A4AE")
                 };
+
             }
             return Color.FromArgb("#90A4AE");
         }

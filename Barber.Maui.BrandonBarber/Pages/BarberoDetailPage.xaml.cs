@@ -1,4 +1,6 @@
-﻿namespace Barber.Maui.BrandonBarber.Pages
+﻿using System.Globalization;
+
+namespace Barber.Maui.BrandonBarber.Pages
 {
     public partial class BarberoDetailPage : ContentPage
     {
@@ -299,7 +301,12 @@
             var horasDisponibles = disponibilidadDia.HorariosDict
                 .Where(h => h.Value)
                 .Select(h => h.Key)
-                .OrderBy(h => h)
+                .OrderBy(h => DateTime.ParseExact(
+                     h.Split(" - ")[0].Trim(),
+                    "hh:mm tt",
+                    CultureInfo.InvariantCulture
+                ))
+
                 .ToList();
 
             AvailableHoursContainer.Children.Clear();
@@ -317,7 +324,7 @@
                 var border = new Border
                 {
                     BackgroundColor = Color.FromArgb("#90A4AE"),
-                    Padding = new Thickness(20, 12),
+                    Padding = new Thickness(10, 12),
                     Margin = new Thickness(0, 0, 10, 0),
                     Stroke = Colors.Transparent,
                     StrokeThickness = 0,

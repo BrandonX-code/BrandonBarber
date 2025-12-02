@@ -33,6 +33,22 @@
                 await DisplayAlert("Error", $"Error cargando barberías: {ex.Message}", "OK");
             }
         }
+        private void OnTogglePasswordClicked(object sender, EventArgs e)
+        {
+            if (sender is Image img)
+            {
+                if (img == TogglePasswordIcon)
+                {
+                    PasswordEntry.IsPassword = !PasswordEntry.IsPassword;
+                    TogglePasswordIcon.Source = PasswordEntry.IsPassword ? "ojocerrado.png" : "ojoabierto.png";
+                }
+                else if (img == ToggleConfirmPasswordIcon)
+                {
+                    ConfirmPasswordEntry.IsPassword = !ConfirmPasswordEntry.IsPassword;
+                    ToggleConfirmPasswordIcon.Source = ConfirmPasswordEntry.IsPassword ? "ojocerrado.png" : "ojoabierto.png";
+                }
+            }
+        }
 
         private void UpdateBarberiaList(string searchText)
         {

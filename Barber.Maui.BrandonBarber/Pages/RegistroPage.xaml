@@ -78,16 +78,32 @@
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Contraseña" TextColor="White" FontSize="16" />
                         <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
-                            <Entry x:Name="PasswordEntry" FontSize="16" HeightRequest="45" TextColor="Black" VerticalOptions="Center" Margin="10,0" Placeholder="Contraseña" IsPassword="True" />
+                            <Grid Padding="0,0,10,0" ColumnDefinitions="*, Auto" VerticalOptions="Center">
+                                <Entry Grid.Column="0" x:Name="PasswordEntry" FontSize="16" HeightRequest="45" TextColor="Black" VerticalOptions="Center" Margin="10,0" Placeholder="Contraseña" IsPassword="True" />
+                                <Image Grid.Column="1" x:Name="TogglePasswordIcon" Source="ojoabierto.png" WidthRequest="30" HeightRequest="30" VerticalOptions="Center">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnTogglePasswordClicked"/>
+                                    </Image.GestureRecognizers>
+                                </Image>
+                            </Grid>
                         </Border>
                     </VerticalStackLayout>
+
 
                     <VerticalStackLayout Spacing="5">
                         <Label Text="Confirmar contraseña" TextColor="White" FontSize="16" />
                         <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
-                            <Entry x:Name="ConfirmPasswordEntry" FontSize="16" HeightRequest="45" TextColor="Black" VerticalOptions="Center" Margin="10,0" Placeholder="Confirmar contraseña" IsPassword="True" />
+                            <Grid Padding="0,0,10,0" ColumnDefinitions="*, Auto" VerticalOptions="Center">
+                                <Entry Grid.Column="0" x:Name="ConfirmPasswordEntry" FontSize="16" HeightRequest="45" TextColor="Black" VerticalOptions="Center" Margin="10,0" Placeholder="Confirmar contraseña" IsPassword="True" />
+                                <Image Grid.Column="1" x:Name="ToggleConfirmPasswordIcon" Source="ojoabierto.png" WidthRequest="30" HeightRequest="30" VerticalOptions="Center">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="OnTogglePasswordClicked"/>
+                                    </Image.GestureRecognizers>
+                                </Image>
+                            </Grid>
                         </Border>
                     </VerticalStackLayout>
+
 
                     <Label x:Name="ErrorLabel" TextColor="#ff0000" FontSize="14" HorizontalOptions="Center" IsVisible="False" />
 

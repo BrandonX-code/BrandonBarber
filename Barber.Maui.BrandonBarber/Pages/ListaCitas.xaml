@@ -90,11 +90,11 @@
                                                         <Label Text="{Binding ServicioPrecio, StringFormat='${0:N0}'}" FontSize="15" TextColor="Black"/>
                                                     </HorizontalStackLayout>
                                                 </VerticalStackLayout>
-                                                <Border Grid.Column="1" Stroke="Transparent" WidthRequest="22"  HeightRequest="22"  StrokeShape="RoundRectangle 20" VerticalOptions="Center">
+                                                <Border Grid.Column="1" Stroke="Transparent" Padding="7"  StrokeShape="RoundRectangle 7" VerticalOptions="Start">
                                                     <Border.BackgroundColor>
                                                         <Binding Path="Estado" Converter="{StaticResource EstadoColorConverter}" />
                                                     </Border.BackgroundColor>
-                                                    <Label Text="{Binding IconoEstado}" TextColor="White"  FontSize="10"  FontAttributes="Bold"  HorizontalOptions="Center"  VerticalOptions="Center"/>
+                                                    <Label Text="{Binding IconoEstado}" TextColor="White"  FontSize="12"  FontAttributes="Bold"  HorizontalOptions="Center"  VerticalOptions="Center"/>
                                                 </Border>
                                             </Grid>
                                         </Border>
