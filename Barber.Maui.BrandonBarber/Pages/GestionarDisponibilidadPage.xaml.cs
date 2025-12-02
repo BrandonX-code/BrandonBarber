@@ -50,10 +50,10 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var headerGrid = new Grid
                 {
                     ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = GridLength.Auto }
-            }
+                    {
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = GridLength.Auto }
+                    }
                 };
 
                 var labelDia = new Label
@@ -84,10 +84,10 @@ namespace Barber.Maui.BrandonBarber.Pages
                 {
                     IsVisible = dia.Habilitado,
                     ColumnDefinitions =
-            {
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
-                new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
-            },
+                    {
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
+                        new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
+                    },
                     ColumnSpacing = 15
                 };
 
@@ -116,6 +116,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                     TextColor = Colors.Black,
                     BackgroundColor = Colors.Transparent,
                     FontSize = 16,
+                    Format = "hh:mm tt",
                     HorizontalOptions = LayoutOptions.Fill
                 };
 

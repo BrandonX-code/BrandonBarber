@@ -1,9 +1,10 @@
-﻿using Microcharts;
-using SkiaSharp;
-using Entry = Microcharts.ChartEntry;
-using Command = Microsoft.Maui.Controls.Command;
-using Barber.Maui.BrandonBarber.Models;
+﻿using Barber.Maui.BrandonBarber.Models;
 using Barber.Maui.BrandonBarber.Services;
+using Microcharts;
+using SkiaSharp;
+using System.Globalization;
+using Command = Microsoft.Maui.Controls.Command;
+using Entry = Microcharts.ChartEntry;
 
 namespace Barber.Maui.BrandonBarber.Pages
 {
@@ -14,6 +15,8 @@ namespace Barber.Maui.BrandonBarber.Pages
         private readonly BarberiaService? _barberiaService;
         private List<Barberia>? _barberias;
         private int _barberiaSeleccionadaId; // ID de la barbería seleccionada
+        private readonly CultureInfo _cultura;
+        private readonly RegionInfo _region;
         public Command RefreshCommand { get; }
 
         public MetricasPage(ReservationService reservationService, AuthService authService)
@@ -22,11 +25,14 @@ namespace Barber.Maui.BrandonBarber.Pages
             _reservationService = reservationService;
             _authService = authService;
             _barberiaService = Application.Current!.Handler.MauiContext!.Services.GetService<BarberiaService>();
+            _cultura = CultureInfo.CurrentCulture;
+            _region = new RegionInfo(_cultura.Name);
             RefreshCommand = new Command(async () => await RefreshMetricas());
             BindingContext = this;
             ChartTypePicker.SelectedIndex = 0;
             RankingChartTypePicker.SelectedIndex = 0;
             AsistenciaChartTypePicker.SelectedIndex = 0;
+            GananciasChartTypePicker.SelectedIndex = 0;
             // Cargar barberías primero, luego métricas
             _ = CargarBarberias();
         }
@@ -89,7 +95,19 @@ namespace Barber.Maui.BrandonBarber.Pages
                 metricsRefreshView.IsRefreshing = false;
             }
         }
+        private string FormatearMoneda(decimal valor)
+        {
+            // Símbolo de moneda según región
+            string simbolo = _region.CurrencySymbol;
 
+            if (valor >= 1_000_000)
+                return $"{simbolo}{valor / 1_000_000:F1}M";
+            if (valor >= 1_000)
+                return $"{simbolo}{valor / 1_000:F1}K";
+
+            // Formato con separadores de miles según la cultura
+            return valor.ToString("C0", _cultura); // C0 = Currency con 0 decimales
+        }
         private async Task CargarMetricas()
         {
             try
@@ -119,9 +137,12 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var citasDelMes = todasLasCitas.Where(c =>
                     c.Fecha.Month == mes && c.Fecha.Year == anio).ToList();
 
-                // Solo contar las gestionadas (completada o cancelada)
-                var citasGestionadasMes = citasDelMes.Count(c => c.Estado?.ToLower() == "completada" || c.Estado?.ToLower() == "cancelada");
-                var citasCompletadasMes = citasDelMes.Count(c => c.Estado?.ToLower() == "completada");
+                // ✅ CAMBIO: Solo contar las gestionadas (finalizadas o canceladas)
+                var citasGestionadasMes = citasDelMes
+                    .Count(c => c.Estado?.ToLower() == "finalizada" || c.Estado?.ToLower() == "cancelada");
+
+                var citasCompletadasMes = citasDelMes
+                    .Count(c => c.Estado?.ToLower() == "finalizada");
 
                 var tasaAsistencia = citasGestionadasMes > 0
                     ? (double)citasCompletadasMes / citasGestionadasMes * 100
@@ -136,7 +157,8 @@ namespace Barber.Maui.BrandonBarber.Pages
                     CargarGraficoAsistencia(),
                     CargarGraficoTasaAsistencia(),
                     CargarRankingBarberos(),
-                    CargarClientesFrecuentes()
+                    CargarClientesFrecuentes(),
+                    CargarGraficoGanancias()
                 );
             }
             catch (Exception ex)
@@ -154,7 +176,57 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             CargarGraficoTasaAsistencia().ConfigureAwait(false);
         }
+        private void OnGananciasChartTypeChanged(object sender, EventArgs e)
+        {
+            CargarGraficoGanancias().ConfigureAwait(false);
+        }
+        private async Task CargarGraficoGanancias()
+        {
+            try
+            {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
 
+                var entries = await ObtenerDatosGanancias();
+
+                Chart chart;
+                if (GananciasChartTypePicker.SelectedIndex == 0)
+                {
+                    chart = new BarChart
+                    {
+                        Entries = entries,
+                        LabelTextSize = 40,
+                        Margin = 40,
+                        LabelOrientation = Orientation.Horizontal,
+                        ValueLabelOrientation = Orientation.Horizontal,
+                        BackgroundColor = SKColor.Parse("#0E2A36")
+                    };
+                }
+                else
+                {
+                    chart = new LineChart
+                    {
+                        Entries = entries,
+                        LabelTextSize = 40,
+                        Margin = 40,
+                        LabelOrientation = Orientation.Horizontal,
+                        ValueLabelOrientation = Orientation.Horizontal,
+                        BackgroundColor = SKColor.Parse("#0E2A36")
+                    };
+                }
+
+                GananciasChart.Chart = chart;
+            }
+            catch (Exception ex)
+            {
+                await AppUtils.MostrarSnackbar($"Error al cargar gráfico de ganancias: {ex.Message}", Colors.Red, Colors.White);
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
+            }
+        }
         private async Task CargarGraficoTasaAsistencia()
         {
             try
@@ -203,20 +275,90 @@ namespace Barber.Maui.BrandonBarber.Pages
                 LoadingIndicator.IsLoading = false;
             }
         }
+        private async Task<List<ChartEntry>> ObtenerDatosGanancias()
+        {
+            var entries = new List<ChartEntry>();
+            var fechaActual = DateTime.Now;
 
+            var colores = new[]
+            {
+                SKColor.Parse("#4CAF50"), // Verde
+                SKColor.Parse("#66BB6A"),
+                SKColor.Parse("#81C784"),
+                SKColor.Parse("#A5D6A7"),
+                SKColor.Parse("#C8E6C9"),
+                SKColor.Parse("#E8F5E9")
+            };
+
+            // Obtener todas las citas históricas
+            List<CitaModel> todasLasCitas;
+            if (_barberiaSeleccionadaId > 0)
+            {
+                todasLasCitas = await _reservationService.GetReservationsByBarberia(_barberiaSeleccionadaId);
+            }
+            else
+            {
+                todasLasCitas = await _reservationService.GetAllReservationsHistorical();
+            }
+
+            decimal gananciasMesActual = 0;
+            decimal gananciasAnioActual = 0;
+
+            for (int i = 5; i >= 0; i--)
+            {
+                var fecha = fechaActual.AddMonths(-i);
+
+                // Filtrar solo citas finalizadas del mes específico
+                var citasDelMes = todasLasCitas.Where(c =>
+                    c.Fecha.Year == fecha.Year &&
+                    c.Fecha.Month == fecha.Month &&
+                    c.Estado?.ToLower() == "finalizada").ToList();
+
+                // Calcular ganancias del mes
+                decimal gananciasMes = citasDelMes
+                    .Where(c => c.ServicioPrecio.HasValue)
+                    .Sum(c => c.ServicioPrecio.Value);
+
+                entries.Add(new ChartEntry((float)gananciasMes)
+                {
+                    Label = fecha.ToString("MMM"),
+                    ValueLabel = FormatearMoneda(gananciasMes),
+                    Color = colores[5 - i],
+                    TextColor = SKColor.Parse("#ffffff"),
+                    ValueLabelColor = SKColor.Parse("#ffffff")
+                });
+
+                // Acumular para resumen
+                if (fecha.Month == fechaActual.Month && fecha.Year == fechaActual.Year)
+                {
+                    gananciasMesActual = gananciasMes;
+                }
+
+                if (fecha.Year == fechaActual.Year)
+                {
+                    gananciasAnioActual += gananciasMes;
+                }
+            }
+
+            // Actualizar labels de resumen
+            GananciasMesLabel.Text = FormatearMoneda(gananciasMesActual);
+            GananciasAnioLabel.Text = FormatearMoneda(gananciasAnioActual);
+
+            return entries;
+        }
         private async Task<List<ChartEntry>> ObtenerDatosTasaAsistencia()
         {
             var entries = new List<ChartEntry>();
             var fechaActual = DateTime.Now;
             var colores = new[]
             {
-                SKColor.Parse("#4CAF50"), // Verde para alta asistencia
-                SKColor.Parse("#8BC34A"),
-                SKColor.Parse("#FFC107"), // Amarillo para media
-                SKColor.Parse("#FF9800"),
-                SKColor.Parse("#FF5722"), // Rojo para baja
-                SKColor.Parse("#F44336")
-            };
+        SKColor.Parse("#4CAF50"), // Verde para alta asistencia
+        SKColor.Parse("#8BC34A"),
+        SKColor.Parse("#FFC107"), // Amarillo para media
+        SKColor.Parse("#FF9800"),
+        SKColor.Parse("#FF5722"), // Rojo para baja
+        SKColor.Parse("#F44336")
+    };
 
             // Obtener todas las citas históricas de una vez
             List<CitaModel> todasLasCitas;
@@ -238,13 +380,22 @@ namespace Barber.Maui.BrandonBarber.Pages
                     c.Fecha.Year == fecha.Year &&
                     c.Fecha.Month == fecha.Month).ToList();
 
-                var tasaAsistencia = citasDelMes.Count > 0
-                    ? (float)((double)citasDelMes.Count(c => c.Estado?.ToLower() == "completada") / citasDelMes.Count * 100)
+                // ✅ CAMBIO IMPORTANTE: Solo contar citas gestionadas (finalizadas + canceladas)
+                var citasGestionadas = citasDelMes
+                    .Where(c => c.Estado?.ToLower() == "finalizada" || c.Estado?.ToLower() == "cancelada")
+                    .ToList();
+
+                // Contar solo las finalizadas
+                var citasFinalizadas = citasDelMes
+                    .Count(c => c.Estado?.ToLower() == "finalizada");
+
+                // Calcular tasa: finalizadas / gestionadas * 100
+                var tasaAsistencia = citasGestionadas.Count > 0
+                    ? (float)((double)citasFinalizadas / citasGestionadas.Count * 100)
                     : 0f;
 
                 // Elegir color según la tasa
                 SKColor color;
-                // Color según la tasa - ya está bien, solo ajusta los colores:
                 if (tasaAsistencia >= 80) color = SKColor.Parse("#2E7D32"); // Verde oscuro
                 else if (tasaAsistencia >= 60) color = SKColor.Parse("#66BB6A"); // Verde claro
                 else if (tasaAsistencia >= 40) color = SKColor.Parse("#FFA726"); // Naranja

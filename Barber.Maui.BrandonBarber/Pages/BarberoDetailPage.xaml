@@ -83,6 +83,7 @@
 
                     <VerticalStackLayout Spacing="15">
                         <Label Text="Horas Disponibles" TextColor="White" FontSize="16" FontAttributes="Bold"/>
+                        <Label x:Name="DeslizaLabel" Text="Desliza →" Margin="0,-33,10,0" TextColor="White" FontSize="13" HorizontalOptions="End" IsVisible="False"/>
 
                         <Label x:Name="NoAvailabilityLabel" Text="No hay horarios disponibles" TextColor="White" IsVisible="false"/>
 

@@ -301,13 +301,17 @@ namespace Barber.Maui.BrandonBarber.Pages
             var horasDisponibles = disponibilidadDia.HorariosDict
                 .Where(h => h.Value)
                 .Select(h => h.Key)
-                .OrderBy(h => DateTime.ParseExact(
-                     h.Split(" - ")[0].Trim(),
-                    "hh:mm tt",
-                    CultureInfo.InvariantCulture
-                ))
+
+                .OrderBy(h =>
+                {
+                    var horaInicio = h.Split(" - ")[0].Trim();
+                    DateTime.TryParse(horaInicio, CultureInfo.GetCultureInfo("es-ES"), DateTimeStyles.None, out var parsedHora);
+                    return parsedHora;
+                })
+
 
                 .ToList();
+            DeslizaLabel.IsVisible = horasDisponibles.Count > 3;
 
             AvailableHoursContainer.Children.Clear();
 

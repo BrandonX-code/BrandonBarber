@@ -37,6 +37,39 @@
                             </VerticalStackLayout>
                         </Border>
                     </Grid>
+                    <Border BackgroundColor="#90A4AE" Padding="5" StrokeShape="RoundRectangle 16" StrokeThickness="0">
+                        <VerticalStackLayout>
+                            <Grid ColumnDefinitions="*,Auto" Padding="5">
+                                <Label Text="Ganancias" VerticalOptions="Center" TextColor="Black" FontSize="20" FontAttributes="Bold"/>
+                                <Picker x:Name="GananciasChartTypePicker" Grid.Column="1" TextColor="Black" BackgroundColor="#90A4AE" SelectedIndexChanged="OnGananciasChartTypeChanged">
+                                    <Picker.Items>
+                                        <x:String>Barras</x:String>
+                                        <x:String>Líneas</x:String>
+                                    </Picker.Items>
+                                </Picker>
+                            </Grid>
+                            <Border BackgroundColor="#0E2A36" Padding="0" StrokeShape="RoundRectangle 16" StrokeThickness="0">
+                                <microcharts:ChartView x:Name="GananciasChart" Margin="0,10,0,-10" HeightRequest="220" BackgroundColor="Transparent" />
+                            </Border>
+
+                            <!-- Resumen de ganancias -->
+                            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10" RowSpacing="10" Padding="10">
+                                <Border Grid.Column="0" Grid.Row="0" BackgroundColor="#0E2A36" StrokeShape="RoundRectangle 10" Padding="12" StrokeThickness="0">
+                                    <VerticalStackLayout>
+                                        <Label Text="Este Mes" TextColor="White" FontSize="14"/>
+                                        <Label x:Name="GananciasMesLabel" Text="$0" TextColor="White" FontSize="20" FontAttributes="Bold"/>
+                                    </VerticalStackLayout>
+                                </Border>
+
+                                <Border Grid.Column="1" Grid.Row="0" BackgroundColor="#0E2A36" StrokeShape="RoundRectangle 10" Padding="12" StrokeThickness="0">
+                                    <VerticalStackLayout>
+                                        <Label Text="Este Año" TextColor="White" FontSize="14"/>
+                                        <Label x:Name="GananciasAnioLabel" Text="$0" TextColor="White" FontSize="20" FontAttributes="Bold"/>
+                                    </VerticalStackLayout>
+                                </Border>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </Border>
                     <!-- Agregar después del Grid con TotalCitasLabel y TasaAsistenciaLabel -->
                     <Border BackgroundColor="#90A4AE" Padding="5" StrokeShape="RoundRectangle 16" StrokeThickness="0">
                         <VerticalStackLayout>
