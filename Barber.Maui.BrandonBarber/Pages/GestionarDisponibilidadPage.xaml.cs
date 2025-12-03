@@ -6,13 +6,22 @@ namespace Barber.Maui.BrandonBarber.Pages
     {
         private readonly DisponibilidadService _disponibilidadService;
         private DisponibilidadSemanalModel? _disponibilidad;
+        private readonly AuthService _authService;
         private bool _isNavigating = false;
 
-        public GestionarDisponibilidadPage(DisponibilidadService disponibilidadService, ReservationService reservationService)
+        public GestionarDisponibilidadPage( DisponibilidadService disponibilidadService, ReservationService reservationService, AuthService authService)
         {
             InitializeComponent();
             _disponibilidadService = disponibilidadService;
-            _ = CargarDisponibilidad();
+            _authService = authService; // ✔️ guardar instancia
+
+            Appearing += async (_, __) =>
+            {
+                if (AuthService.CurrentUser == null)
+                    await _authService.LoadStoredUserAsync(); // ✔️ usar instancia
+
+                await CargarDisponibilidad();
+            };
         }
 
         private async Task CargarDisponibilidad()

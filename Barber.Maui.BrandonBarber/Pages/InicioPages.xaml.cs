@@ -539,7 +539,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 var disponibilidadService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<DisponibilidadService>();
                 var reservationService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ReservationService>();
-                await Navigation.PushAsync(new GestionarDisponibilidadPage(disponibilidadService, reservationService));
+                var authservices = App.Current!.Handler.MauiContext!.Services.GetRequiredService<AuthService>();
+                await Navigation.PushAsync(new GestionarDisponibilidadPage(disponibilidadService, reservationService,authservices));
             }
             finally
             {

@@ -422,6 +422,38 @@ namespace Barber.Maui.BrandonBarber.Services
                 return new List<UsuarioModels>();
             }
         }
+        public async Task<bool> LoadStoredUserAsync()
+        {
+            try
+            {
+                var token = await SecureStorage.Default.GetAsync("auth_token");
+                var cedulaString = await SecureStorage.Default.GetAsync("user_cedula");
+
+                if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(cedulaString))
+                    return false;
+
+                long cedula = long.Parse(cedulaString);
+
+                _BaseClient.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token);
+
+                var response = await _BaseClient.GetAsync($"api/auth/usuario/{cedula}");
+
+                if (!response.IsSuccessStatusCode)
+                    return false;
+
+                var json = await response.Content.ReadAsStringAsync();
+
+                CurrentUser = JsonSerializer.Deserialize<UsuarioModels>(json,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                return CurrentUser != null;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
         public async Task<UsuarioModels?> GetUserByCedula(long cedula)
         {
