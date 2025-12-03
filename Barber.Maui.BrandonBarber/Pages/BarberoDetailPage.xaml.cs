@@ -114,7 +114,6 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             NoAvailabilityLabel.Text = "El barbero no ha gestinado su disponibilidad";
             NoAvailabilityLabel.IsVisible = true;
-            AvailableHoursContainer.IsVisible = false;
             _diaSeleccionado = null;
         }
 
@@ -294,63 +293,45 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 NoAvailabilityLabel.Text = "El barbero no ha configurado su disponibilidad para este día";
                 NoAvailabilityLabel.IsVisible = true;
-                AvailableHoursContainer.IsVisible = false;
+                HorarioDisponibleBorder.IsVisible = false;
                 return;
             }
 
             var horasDisponibles = disponibilidadDia.HorariosDict
                 .Where(h => h.Value)
                 .Select(h => h.Key)
-
                 .OrderBy(h =>
                 {
                     var horaInicio = h.Split(" - ")[0].Trim();
                     DateTime.TryParse(horaInicio, CultureInfo.GetCultureInfo("es-ES"), DateTimeStyles.None, out var parsedHora);
                     return parsedHora;
                 })
-
-
                 .ToList();
-            DeslizaLabel.IsVisible = horasDisponibles.Count > 3;
-
-            AvailableHoursContainer.Children.Clear();
 
             if (horasDisponibles.Count == 0)
             {
                 NoAvailabilityLabel.Text = "No hay horarios disponibles para este día";
                 NoAvailabilityLabel.IsVisible = true;
-                AvailableHoursContainer.IsVisible = false;
+                HorarioDisponibleBorder.IsVisible = false;
                 return;
             }
 
-            foreach (var hora in horasDisponibles)
+            // Construir el texto del horario
+            string horarioTexto;
+            if (horasDisponibles.Count == 1)
             {
-                var border = new Border
-                {
-                    BackgroundColor = Color.FromArgb("#90A4AE"),
-                    Padding = new Thickness(10, 12),
-                    Margin = new Thickness(0, 0, 10, 0),
-                    Stroke = Colors.Transparent,
-                    StrokeThickness = 0,
-                    StrokeShape = new RoundRectangle { CornerRadius = 10 }
-                };
-
-                var label = new Label
-                {
-                    Text = hora,
-                    TextColor = Colors.Black,
-                    FontSize = 15,
-                    FontAttributes = FontAttributes.Bold,
-                    HorizontalOptions = LayoutOptions.Center,
-                    VerticalOptions = LayoutOptions.Center
-                };
-
-                border.Content = label;
-                AvailableHoursContainer.Children.Add(border);
+                horarioTexto = horasDisponibles[0];
+            }
+            else
+            {
+                var primeraHora = horasDisponibles.First().Split(" - ")[0].Trim();
+                var ultimaHora = horasDisponibles.Last().Split(" - ")[1].Trim();
+                horarioTexto = $"{primeraHora} - {ultimaHora}";
             }
 
+            HorarioTextoLabel.Text = horarioTexto;
             NoAvailabilityLabel.IsVisible = false;
-            AvailableHoursContainer.IsVisible = true;
+            HorarioDisponibleBorder.IsVisible = true;
         }
         private async void ContarYMostrarVisita()
         {
