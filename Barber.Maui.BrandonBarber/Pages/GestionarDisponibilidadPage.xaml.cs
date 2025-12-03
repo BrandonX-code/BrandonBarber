@@ -209,6 +209,8 @@ namespace Barber.Maui.BrandonBarber.Pages
 
             try
             {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
                 // Validar horarios
                 foreach (var dia in _disponibilidad!.Dias.Where(d => d.Habilitado))
                 {
@@ -237,6 +239,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             finally
             {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
                 _isNavigating = false;
             }
         }
