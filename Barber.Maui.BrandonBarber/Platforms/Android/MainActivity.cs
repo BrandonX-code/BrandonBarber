@@ -23,9 +23,6 @@ namespace Barber.Maui.BrandonBarber
         protected override void OnCreate(Bundle? savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
-            FirebaseCloudMessagingImplementation.SmallIconRef = Resource.Mipmap.barber_notification;
-
-
             CreateNotificationChannelIfNeeded();
             Window!.SetSoftInputMode(Android.Views.SoftInput.AdjustResize);
             HandleIntent(Intent);
@@ -52,12 +49,21 @@ namespace Barber.Maui.BrandonBarber
 
         private void CreateNotificationChannel()
         {
-            var channelId = $"{PackageName}.general";
+            var channelId = "barber_notifications";
             var notificationManager = (NotificationManager)GetSystemService(NotificationService);
-            var channel = new NotificationChannel(channelId, "General", NotificationImportance.Default);
-            notificationManager.CreateNotificationChannel(channel);
-            FirebaseCloudMessagingImplementation.ChannelId = "barber_notifications";
 
+            var channel = new NotificationChannel(channelId, "Notificaciones Barber", NotificationImportance.High)
+            {
+                Description = "Notificaciones de citas y servicios",
+                LightColor = Android.Graphics.Color.ParseColor("#0E2A36")
+            };
+
+            channel.EnableLights(true);
+            channel.EnableVibration(true);
+
+            notificationManager.CreateNotificationChannel(channel);
+            FirebaseCloudMessagingImplementation.ChannelId = channelId;
+            FirebaseCloudMessagingImplementation.SmallIconRef = Resource.Mipmap.barber_notification;
         }
         public override bool DispatchTouchEvent(MotionEvent? ev)
         {

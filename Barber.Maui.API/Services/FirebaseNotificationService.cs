@@ -85,17 +85,20 @@ namespace Barber.Maui.API.Services
                     {
                         Title = titulo,
                         Body = mensaje,
-                        ImageUrl = "https://i.pinimg.com/736x/74/2e/a6/742ea6bccad14b6b92535cd27f3e1f10.jpg" // 🔥 MOVER AQUÍ
+                        // Usar URL completa y pública de la imagen
+                        ImageUrl = "https://i.pinimg.com/736x/74/2e/a6/742ea6bccad14b6b92535cd27f3e1f10.jpg"
                     },
                     Data = data ?? new Dictionary<string, string>(),
                     Android = new AndroidConfig
                     {
+                        Priority = Priority.High, // ✅ AÑADIR PRIORIDAD
                         Notification = new AndroidNotification
                         {
-                            Color = "#0E2A36", // 🔥 Color de tu marca
+                            Color = "#0E2A36",
                             Sound = "default",
-                            ChannelId = "barber_notifications"
-                            // 🔥 QUITAR ImageUrl de aquí
+                            ChannelId = "barber_notifications",
+                            Icon = "barber_notification", // ✅ Referencia al icono pequeño
+                            ImageUrl = null // ✅ No duplicar aquí
                         }
                     }
                 };
@@ -111,7 +114,6 @@ namespace Barber.Maui.API.Services
                 return false;
             }
         }
-
         public async Task<bool> RegistrarTokenAsync(long usuarioCedula, string token)
         {
             try
