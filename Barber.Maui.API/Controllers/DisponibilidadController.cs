@@ -2,6 +2,7 @@
 using Barber.Maui.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using System.Text.Json;
 
 namespace Barber.Maui.API.Controllers
@@ -86,28 +87,29 @@ namespace Barber.Maui.API.Controllers
         {
             if (nuevaDisponibilidad == null || nuevaDisponibilidad.BarberoId <= 0)
             {
-                return BadRequest(new { message = "Error: Datos inválidos en la solicitud." });
+                return BadRequest(new { message = "Datos inválidos" });
             }
 
             try
             {
-                // Asegurar que la fecha solo tenga parte de día
+                // Solo fecha
                 nuevaDisponibilidad.Fecha = nuevaDisponibilidad.Fecha.Date;
 
-                // Buscar si ya existe una disponibilidad para esa fecha y barbero
+                // Normalizar horarios ANTES de guardar
+                nuevaDisponibilidad.Horarios = NormalizarHorarios(nuevaDisponibilidad.Horarios);
+
                 var disponibilidadExistente = await _context.Disponibilidad
-                    .FirstOrDefaultAsync(d => d.Fecha == nuevaDisponibilidad.Fecha && d.BarberoId == nuevaDisponibilidad.BarberoId);
+                    .FirstOrDefaultAsync(d => d.Fecha == nuevaDisponibilidad.Fecha &&
+                                              d.BarberoId == nuevaDisponibilidad.BarberoId);
 
                 if (disponibilidadExistente != null)
                 {
-                    // Actualizar los horarios existentes
                     disponibilidadExistente.Horarios = nuevaDisponibilidad.Horarios;
                     _context.Disponibilidad.Update(disponibilidadExistente);
                 }
                 else
                 {
-                    // Nueva disponibilidad
-                    nuevaDisponibilidad.Id = 0; // Forzar creación de nuevo Id
+                    nuevaDisponibilidad.Id = 0;
                     _context.Disponibilidad.Add(nuevaDisponibilidad);
                 }
 
@@ -119,5 +121,49 @@ namespace Barber.Maui.API.Controllers
                 return StatusCode(500, new { message = "Error al guardar la disponibilidad.", error = ex.Message });
             }
         }
+        private string NormalizarHorarios(string jsonHorarios)
+        {
+            if (string.IsNullOrWhiteSpace(jsonHorarios))
+                return jsonHorarios;
+
+            var dic = JsonSerializer.Deserialize<Dictionary<string, bool>>(jsonHorarios);
+            if (dic == null)
+                return jsonHorarios;
+
+            var normalizado = new Dictionary<string, bool>();
+
+            foreach (var kvp in dic)
+            {
+                var partes = kvp.Key.Split('-');
+                if (partes.Length != 2)
+                    continue;
+
+                string inicio = NormalizarHora(partes[0].Trim());
+                string fin = NormalizarHora(partes[1].Trim());
+
+                string clave = $"{inicio} - {fin}";
+                normalizado[clave] = kvp.Value;
+            }
+
+            return JsonSerializer.Serialize(normalizado);
+        }
+
+        private string NormalizarHora(string horaRaw)
+        {
+            horaRaw = horaRaw
+                .Replace("a.m.", "AM", StringComparison.OrdinalIgnoreCase)
+                .Replace("p.m.", "PM", StringComparison.OrdinalIgnoreCase)
+                .Replace("a. m.", "AM", StringComparison.OrdinalIgnoreCase)
+                .Replace("p. m.", "PM", StringComparison.OrdinalIgnoreCase)
+                .Replace("am", "AM", StringComparison.OrdinalIgnoreCase)
+                .Replace("pm", "PM", StringComparison.OrdinalIgnoreCase)
+                .Trim();
+
+            if (DateTime.TryParse(horaRaw, out var dt))
+                return dt.ToString("hh:mm tt", CultureInfo.InvariantCulture);
+
+            throw new FormatException($"Formato de hora no válido: {horaRaw}");
+        }
+
     }
 }

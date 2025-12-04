@@ -1,7 +1,8 @@
-﻿using System.Net;
+﻿using Microsoft.Maui.Storage;
+using System.Globalization;
+using System.Net;
 using System.Text;
 using System.Text.Json;
-using Microsoft.Maui.Storage;
 namespace Barber.Maui.BrandonBarber.Services
 {
     public class DisponibilidadService
@@ -161,6 +162,31 @@ namespace Barber.Maui.BrandonBarber.Services
                 return new List<DisponibilidadModel>();
             }
         }
+        private TimeSpan ParseHoraSeguro(string hora)
+        {
+            // Normalizamos todos los formatos comunes
+            hora = hora
+                .Replace("a.m.", "AM", StringComparison.OrdinalIgnoreCase)
+                .Replace("p.m.", "PM", StringComparison.OrdinalIgnoreCase)
+                .Replace("a. m.", "AM", StringComparison.OrdinalIgnoreCase)
+                .Replace("p. m.", "PM", StringComparison.OrdinalIgnoreCase)
+                .Replace("am", "AM", StringComparison.OrdinalIgnoreCase)
+                .Replace("pm", "PM", StringComparison.OrdinalIgnoreCase)
+                .Trim();
+
+            // Intentar con formato estándar
+            if (DateTime.TryParseExact(hora,
+                                       new[] { "hh:mm tt", "h:mm tt" },
+                                       CultureInfo.InvariantCulture,
+                                       DateTimeStyles.None,
+                                       out var dt))
+            {
+                return dt.TimeOfDay;
+            }
+
+            throw new FormatException($"Formato de hora inválido: '{hora}'");
+        }
+
         public List<FranjaHorariaModel> GenerarFranjasHorarias(Dictionary<string, bool> horariosDisponibles)
         {
             var franjas = new List<FranjaHorariaModel>();
@@ -169,8 +195,9 @@ namespace Barber.Maui.BrandonBarber.Services
             foreach (var horario in horariosDisponibles.Where(h => h.Value))
             {
                 var partes = horario.Key.Split('-');
-                var horaInicio = DateTime.Parse(partes[0].Trim()).TimeOfDay;
-                var horaFin = DateTime.Parse(partes[1].Trim()).TimeOfDay;
+
+                var horaInicio = ParseHoraSeguro(partes[0].Trim());
+                var horaFin = ParseHoraSeguro(partes[1].Trim());
 
                 var horaActual = horaInicio;
                 while (horaActual + duracionFranja <= horaFin)
@@ -181,13 +208,13 @@ namespace Barber.Maui.BrandonBarber.Services
                         HoraFin = horaActual + duracionFranja,
                         EstaDisponible = true
                     });
+
                     horaActual += duracionFranja;
                 }
             }
 
             return franjas.OrderBy(f => f.HoraInicio).ToList();
         }
-        // DisponibilidadService.cs - AGREGAR estos métodos
 
         public async Task<DisponibilidadSemanalModel?> ObtenerDisponibilidadSemanal(long barberoId)
         {
