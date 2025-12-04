@@ -368,8 +368,9 @@ public class CitasController : ControllerBase
         string barberoNombre = barbero?.Nombre ?? "el barbero";
         string servicioNombre = servicio?.Nombre ?? "tu servicio";
 
-        // 🔥 Convertir fecha a hora local
-        var fechaLocal = cita.Fecha.ToLocalTime();
+        // 🔥 Convertir fecha a hora local de Colombia
+        var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
+        var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(cita.Fecha, DateTimeKind.Utc), zonaColombia);
 
         cita.Estado = req.Estado;
         await _context.SaveChangesAsync();
@@ -380,7 +381,7 @@ public class CitasController : ControllerBase
             await _notificationService.EnviarNotificacionAsync(
                 cita.Cedula,
                 "Cita Aceptada",
-                $"Tu cita con {barberoNombre} para {servicioNombre} el {fechaLocal:dd/MM/yyyy - hh:mm tt} fue aceptada", // 🔥 FORMATO
+                $"Tu cita con {barberoNombre} para {servicioNombre} el {fechaLocal:dd/MM/yyyy - hh:mm tt} fue aceptada",
                 new Dictionary<string, string> { { "tipo", "cita_aceptada" } }
             );
         }
@@ -389,7 +390,7 @@ public class CitasController : ControllerBase
             await _notificationService.EnviarNotificacionAsync(
                 cita.Cedula,
                 "Cita Rechazada",
-                $"Tu cita con {barberoNombre} para {servicioNombre} el {fechaLocal:dd/MM/yyyy - hh:mm tt} fue rechazada", // 🔥 FORMATO
+                $"Tu cita con {barberoNombre} para {servicioNombre} el {fechaLocal:dd/MM/yyyy - hh:mm tt} fue rechazada",
                 new Dictionary<string, string> { { "tipo", "cita_rechazada" } }
             );
         }
