@@ -1,4 +1,6 @@
-﻿namespace Barber.Maui.BrandonBarber.Pages
+﻿using Microsoft.Maui.ApplicationModel;
+
+namespace Barber.Maui.BrandonBarber.Pages
 {
     public partial class SplashPage : ContentPage
     {
@@ -13,6 +15,9 @@
         protected override async void OnAppearing()
         {
             base.OnAppearing();
+
+            // Verificar actualización antes de cualquier otra acción
+            await VerificarActualizacionAsync();
 
             // Animaciones de entrada simples
             _ = AnimateElements();
@@ -52,6 +57,20 @@
             }
         }
 
+        private async Task VerificarActualizacionAsync()
+        {
+            var updateInfo = await Utils.UpdateChecker.GetLatestUpdateInfoAsync();
+            if (updateInfo == null) return;
+
+            // Obtener versión actual automáticamente
+            var currentVersion = AppInfo.Current.VersionString;
+
+            if (updateInfo.Version != currentVersion)
+            {
+                var popup = new Controls.UpdateAlertPopup(updateInfo.Mensaje, updateInfo.ApkUrl);
+                await popup.ShowAsync();
+            }
+        }
 
         private async Task AnimateElements()
         {
