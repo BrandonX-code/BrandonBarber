@@ -5,7 +5,6 @@ namespace Barber.Maui.BrandonBarber.Services
     public class UpdateService
     {
         private readonly HttpClient _httpClient;
-        private const string CURRENT_VERSION = "1.0"; // ⚠️ CAMBIAR SEGÚN TU VERSIÓN ACTUAL
 
         public UpdateService(HttpClient httpClient)
         {
@@ -38,11 +37,11 @@ namespace Barber.Maui.BrandonBarber.Services
                     return null;
                 }
 
-                // Comparar versiones
-                var currentVersion = Version.Parse(CURRENT_VERSION);
+                // OBTENER LA VERSIÓN REAL DEL APK
+                var currentVersion = Version.Parse(VersionTracking.CurrentVersion);
                 var serverVersion = Version.Parse(updateInfo.Version);
 
-                Console.WriteLine($"📱 Versión actual: {currentVersion}");
+                Console.WriteLine($"📱 Versión actual instalada: {currentVersion}");
                 Console.WriteLine($"☁️ Versión del servidor: {serverVersion}");
 
                 if (serverVersion > currentVersion)
@@ -60,6 +59,7 @@ namespace Barber.Maui.BrandonBarber.Services
                 return null;
             }
         }
+
     }
 
     public class UpdateInfo
