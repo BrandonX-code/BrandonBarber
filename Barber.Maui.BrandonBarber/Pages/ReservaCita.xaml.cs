@@ -402,7 +402,7 @@
             if (updateInfo == null) return;
 
             // Obtener versión actual
-            var currentVersion = "1.0.2"; // Cambia esto por tu versión actual
+            var currentVersion = "1.0"; // Cambia esto por tu versión actual
             // Puedes obtenerlo de ApplicationInfo.Current.VersionString si lo tienes
 
             if (updateInfo.Version != currentVersion)
