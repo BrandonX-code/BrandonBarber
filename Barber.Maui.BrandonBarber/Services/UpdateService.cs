@@ -5,7 +5,7 @@ namespace Barber.Maui.BrandonBarber.Services
     public class UpdateService
     {
         private readonly HttpClient _httpClient;
-        private const string CURRENT_VERSION = "1.0.0"; // ⚠️ CAMBIAR SEGÚN TU VERSIÓN ACTUAL
+        private const string CURRENT_VERSION = "1.0"; // ⚠️ CAMBIAR SEGÚN TU VERSIÓN ACTUAL
 
         public UpdateService(HttpClient httpClient)
         {
