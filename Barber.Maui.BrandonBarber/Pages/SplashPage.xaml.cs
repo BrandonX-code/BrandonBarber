@@ -9,13 +9,16 @@ namespace Barber.Maui.BrandonBarber.Pages
         private readonly NotificationService _notificationService;
         private readonly UpdateService _updateService;
 
-        public SplashPage()
+        public SplashPage(
+        AuthService authService,
+        NotificationService notificationService,
+        UpdateService updateService)
         {
             InitializeComponent();
 
-            _authService = Application.Current!.Handler!.MauiContext!.Services.GetService<AuthService>()!;
-            _notificationService = Application.Current!.Handler!.MauiContext!.Services.GetService<NotificationService>()!;
-            _updateService = Application.Current!.Handler!.MauiContext!.Services.GetService<UpdateService>()!;
+            _authService = authService;
+            _notificationService = notificationService;
+            _updateService = updateService;
         }
 
         protected override async void OnAppearing()
@@ -27,7 +30,7 @@ namespace Barber.Maui.BrandonBarber.Pages
 
             // Animaciones de entrada simples
             _ = AnimateElements();
-
+            await VerificarAutenticacion();
             // Esperar un mínimo de tiempo para mostrar el splash (opcional, para mejor UX)
             var minSplashTime = Task.Delay(1500); // 1.5 segundos mínimo
 

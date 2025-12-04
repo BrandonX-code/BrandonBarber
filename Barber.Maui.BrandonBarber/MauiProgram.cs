@@ -110,6 +110,7 @@ namespace Barber.Maui.BrandonBarber
             builder.Services.AddSingleton<BarberiaService>();
             builder.Services.AddSingleton<AdministradorService>();
             builder.Services.AddSingleton<NotificationService>();
+            builder.Services.AddSingleton<UpdateService>();
             LocalNotificationCenter.Current.NotificationActionTapped += (e) =>
             {
                 Console.WriteLine($"📱 Notificación tocada: {e.Request.NotificationId}");

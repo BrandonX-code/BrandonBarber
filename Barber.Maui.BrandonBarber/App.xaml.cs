@@ -25,8 +25,20 @@ namespace Barber.Maui.BrandonBarber
         protected override Window CreateWindow(IActivationState? activationState)
         {
             Console.WriteLine("🔷 App - Iniciando con SplashPage");
-            return new Window(new NavigationPage(new SplashPage()));
+
+            var services = this.Handler?.MauiContext?.Services;
+
+            var authService = services.GetRequiredService<AuthService>();
+            var notificationService = services.GetRequiredService<NotificationService>();
+            var updateService = services.GetRequiredService<UpdateService>();
+
+            return new Window(
+                new NavigationPage(
+                    new SplashPage(authService, notificationService, updateService)
+                )
+            );
         }
+
         protected override void OnStart()
         {
             base.OnStart();

@@ -7,8 +7,7 @@
         <VerticalStackLayout Spacing="15">
             <Label x:Name="TitleLabel" Text="¡Nueva versión disponible!" FontSize="22" FontAttributes="Bold" TextColor="#FF6F91" HorizontalOptions="Center" />
             <Label x:Name="MessageLabel" Text="Hay una actualización con nuevas funciones y mejoras." FontSize="16" TextColor="#0E2A36" HorizontalOptions="Center" />
-            <Button x:Name="UpdateButton" Text="Actualizar ahora" BackgroundColor="#FF6F91" TextColor="White" CornerRadius="15" FontAttributes="Bold" Clicked="OnUpdateClicked" />
-            <Button x:Name="CloseButton" Text="Cerrar" BackgroundColor="#717d7e" TextColor="White" CornerRadius="15" Clicked="OnCloseClicked" />
+            <Button x:Name="UpdateButton" Text="Actualizar ahora" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="15" FontAttributes="Bold" Clicked="OnUpdateClicked" />
         </VerticalStackLayout>
     </Frame>
 </ContentPage>
