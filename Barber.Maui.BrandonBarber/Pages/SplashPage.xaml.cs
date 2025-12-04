@@ -13,9 +13,9 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             InitializeComponent();
 
-            _authService = Application.Current!.MainPage!.Handler!.MauiContext!.Services.GetService<AuthService>()!;
-            _notificationService = Application.Current!.MainPage!.Handler!.MauiContext!.Services.GetService<NotificationService>()!;
-            _updateService = Application.Current!.MainPage!.Handler!.MauiContext!.Services.GetService<UpdateService>()!;
+            _authService = App.Current!.Handler!.MauiContext!.Services.GetService<AuthService>()!;
+            _notificationService = App.Current!.Handler!.MauiContext!.Services.GetService<NotificationService>()!;
+            _updateService = App.Current!.Handler!.MauiContext!.Services.GetService<UpdateService>()!;
         }
 
         protected override async void OnAppearing()
