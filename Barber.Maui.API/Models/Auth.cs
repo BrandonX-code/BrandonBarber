@@ -10,6 +10,7 @@ namespace Barber.Maui.API.Models
         public string? Email { get; set; }
         public string? Direccion { get; set; }
         public string? Telefono { get; set; }
+        //[Column("contrasena")]
         public string? Contraseña { get; set; }
 
         public string? Rol { get; set; }

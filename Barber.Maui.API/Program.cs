@@ -1,15 +1,10 @@
 ﻿using Barber.Maui.API.Data;
 using Barber.Maui.API.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
-//builder.WebHost.UseUrls("http://0.0.0.0:5286", "https://0.0.0.0:7283");
 
-//builder.WebHost.ConfigureKestrel(options =>
-//{
-//    var port = Environment.GetEnvironmentVariable("PORT") ?? "5286";
-//    options.ListenAnyIP(int.Parse(port));
-//});
 builder.WebHost.ConfigureKestrel(options =>
 {
     var port = Environment.GetEnvironmentVariable("PORT");
@@ -26,10 +21,10 @@ builder.WebHost.ConfigureKestrel(options =>
         options.ListenAnyIP(7283, listen => listen.UseHttps()); // HTTPS
     }
 });
+
 builder.Services.AddScoped<INotificationService, FirebaseNotificationService>();
-// Add services to the container.
-builder.Services.AddHttpClient(); // ✅ Esto resuelve el error
-builder.Services.AddRazorPages(); // ✅ Para las Razor Pages
+builder.Services.AddHttpClient();
+builder.Services.AddRazorPages();
 builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "X-CSRF-TOKEN";
@@ -44,21 +39,37 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IEmailService, SendGridEmailService>();
+
 var app = builder.Build();
+
 app.UseDeveloperExceptionPage();
 builder.Configuration.AddEnvironmentVariables();
 
 app.MapOpenApi();
 app.UseSwagger();
 app.UseSwaggerUI();
-//}
+
+// ✅ CONFIGURAR ARCHIVOS ESTÁTICOS PARA SERVIR APK
 app.UseStaticFiles();
 
-app.UseHttpsRedirection();
+// ✅ Servir archivos desde wwwroot con configuración específica para APK
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(builder.Environment.ContentRootPath, "wwwroot")),
+    RequestPath = "",
+    ServeUnknownFileTypes = true,
+    DefaultContentType = "application/vnd.android.package-archive",
+    ContentTypeProvider = new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider
+    {
+        Mappings = { [".apk"] = "application/vnd.android.package-archive" }
+    }
+});
 
+app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseAntiforgery();
-app.MapRazorPages(); // ✅ Mapear las Razor Pages
+app.MapRazorPages();
 app.MapControllers();
 
 app.Run();
