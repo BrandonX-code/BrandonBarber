@@ -35,6 +35,9 @@
                 await CargarFranjasDisponibles();
             };
 
+            // Verificar actualización al iniciar
+            await VerificarActualizacionAsync();
+
             // ✅ CONFIGURAR SERVICIO ANTES DE LAS ANIMACIONES
             if (_servicioSeleccionado != null)
             {
@@ -391,6 +394,22 @@
             await formLayout.FadeTo(0, 300);
             await formLayout.TranslateTo(0, 50, 300);
             await Task.Delay(200);
+        }
+
+        private async Task VerificarActualizacionAsync()
+        {
+            var updateInfo = await Utils.UpdateChecker.GetLatestUpdateInfoAsync();
+            if (updateInfo == null) return;
+
+            // Obtener versión actual
+            var currentVersion = "1.0.0"; // Cambia esto por tu versión actual
+            // Puedes obtenerlo de ApplicationInfo.Current.VersionString si lo tienes
+
+            if (updateInfo.Version != currentVersion)
+            {
+                var popup = new Controls.UpdateAlertPopup(updateInfo.Mensaje, updateInfo.ApkUrl);
+                await popup.ShowAsync();
+            }
         }
     }
 }

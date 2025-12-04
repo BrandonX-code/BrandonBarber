@@ -112,6 +112,9 @@
 	  <MauiXaml Update="Controls\LoadingControl.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Controls\UpdateAlertPopup.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Mobal\CustomAlertPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
