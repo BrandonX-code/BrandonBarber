@@ -17,6 +17,7 @@ namespace Barber.Maui.API.Controllers
         [HttpGet("check")]
         public IActionResult CheckUpdate()
         {
+            Console.WriteLine("Verificando actualización de la aplicación...");
             try
             {
                 var currentVersion = _configuration["AppUpdate:CurrentVersion"] ?? "1.0";
