@@ -165,5 +165,51 @@ namespace Barber.Maui.API.Controllers
             throw new FormatException($"Formato de hora no válido: {horaRaw}");
         }
 
+        [HttpDelete("barbero/{barberoId}/mes/{year}/{month}")]
+        public async Task<IActionResult> EliminarDisponibilidadMes(long barberoId, int year, int month)
+        {
+            var primerDia = new DateTime(year, month,1);
+            var ultimoDia = primerDia.AddMonths(1).AddDays(-1);
+
+            var disponibilidades = await _context.Disponibilidad
+                .Where(d => d.BarberoId == barberoId &&
+                    d.Fecha.Date >= primerDia &&
+                    d.Fecha.Date <= ultimoDia)
+                .ToListAsync();
+
+            if (!disponibilidades.Any())
+                return Ok(new { message = "No había disponibilidades para eliminar." });
+
+            _context.Disponibilidad.RemoveRange(disponibilidades);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Disponibilidades eliminadas correctamente." });
+        }
+
+        [HttpDelete("barbero/{barberoId}/semana/{fecha}")]
+        public async Task<IActionResult> EliminarDisponibilidadSemana(long barberoId, DateTime fecha)
+        {
+            // Calcular lunes y domingo de la semana de 'fecha' (lunes =1, domingo =7)
+            int dayOfWeek = (int)fecha.DayOfWeek;
+            // En .NET, Sunday =0, Monday =1, ..., Saturday =6
+            int daysToMonday = dayOfWeek ==0 ?6 : dayOfWeek -1;
+            var lunes = fecha.Date.AddDays(-daysToMonday);
+            var domingo = lunes.AddDays(6);
+
+            var disponibilidades = await _context.Disponibilidad
+                .Where(d => d.BarberoId == barberoId &&
+                    d.Fecha.Date >= lunes &&
+                    d.Fecha.Date <= domingo)
+                .ToListAsync();
+
+            if (!disponibilidades.Any())
+                return Ok(new { message = "No había disponibilidades para eliminar en la semana." });
+
+            _context.Disponibilidad.RemoveRange(disponibilidades);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = $"Disponibilidades de la semana ({lunes:yyyy-MM-dd} a {domingo:yyyy-MM-dd}) eliminadas correctamente." });
+        }
+
     }
 }

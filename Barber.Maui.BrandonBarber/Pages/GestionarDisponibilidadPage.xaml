@@ -27,12 +27,16 @@
                              Padding="20" 
                              Spacing="15"
                              HorizontalOptions="Center">
-                <Button Text="Guardar y Aplicar" 
+                <Button Text="Guardar solo esta semana" 
                     BackgroundColor="#FF6F91" 
                     TextColor="Black"
                     CornerRadius="15"
-                    Clicked="OnGuardarClicked"
-                    WidthRequest="200"/>
+                    Clicked="OnGuardarSemanaClicked"/>
+                <Button Text="Aplicar a todo el mes" 
+                    BackgroundColor="#FF6F91" 
+                    TextColor="Black"
+                    CornerRadius="15"
+                    Clicked="OnGuardarMesClicked"/>
             </HorizontalStackLayout>
         </Grid>
         <controls:LoadingControl x:Name="LoadingIndicator" IsVisible="False"/>

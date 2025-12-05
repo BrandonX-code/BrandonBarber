@@ -50,11 +50,20 @@
 
             _lastOpenedSwipeView = sender as SwipeView;
         }
-        protected override void OnAppearing()
+        private void OnPendientesClicked(object sender, EventArgs e) => FiltrarPorEstado("Pendiente");
+        private void OnCompletadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Completada");
+        private void OnCanceladasClicked(object sender, EventArgs e) => FiltrarPorEstado("Cancelada");
+        private void OnFinalizadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Finalizada");
+
+        private List<CitaModel> _todasLasCitas = new();
+        private string _estadoActual = "Pendiente";
+
+        protected override async void OnAppearing()
         {
             base.OnAppearing();
             UpdateVisibility();
             _ = ActualizarLista();
+            await ActualizarListaEstados();
         }
 
         private async void OnSearchClicked(object sender, EventArgs e)
@@ -108,13 +117,52 @@
             }
         }
 
+        private async Task ActualizarListaEstados()
+        {
+            try
+            {
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
+                var clienteCedula = AuthService.CurrentUser!.Cedula;
+                _todasLasCitas = await _reservationService.GetReservationsById(clienteCedula);
+                FiltrarPorEstado(_estadoActual);
+            }
+            catch (Exception ex)
+            {
+                await AppUtils.MostrarSnackbar($"Ocurrió un error: {ex.Message}", Colors.DarkRed, Colors.White);
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
+            }
+        }
+
+        private void FiltrarPorEstado(string estado)
+        {
+            _estadoActual = estado;
+            var citasFiltradas = _todasLasCitas
+                .Where(c => c.Estado?.ToLower() == estado.ToLower())
+                .OrderByDescending(c => c.Fecha)
+                .ToList();
+            CitasCollectionView.ItemsSource = citasFiltradas;
+            EmptyStateLayout.IsVisible = citasFiltradas.Count == 0;
+            ActualizarEstilosBotones();
+        }
+
+        private void ActualizarEstilosBotones()
+        {
+            BtnPendientes.BackgroundColor = _estadoActual == "Pendiente" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+            BtnCompletadas.BackgroundColor = _estadoActual == "Completada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+            BtnCanceladas.BackgroundColor = _estadoActual == "Cancelada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+            BtnFinalizadas.BackgroundColor = _estadoActual == "Finalizada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+        }
+
         private void UpdateVisibility()
         {
             HasProximasCitas = ProximasCitas.Count > 0;
             HasHistorialCitas = HistorialCitas.Count > 0;
         }
-
-        // Agregar este método a tu clase BuscarPage
 
         private async void EliminarCitaSwipeInvoked(object sender, EventArgs e)
         {

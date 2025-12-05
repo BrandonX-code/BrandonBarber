@@ -9,16 +9,16 @@ namespace Barber.Maui.BrandonBarber.Pages
         private readonly AuthService _authService;
         private bool _isNavigating = false;
 
-        public GestionarDisponibilidadPage( DisponibilidadService disponibilidadService, ReservationService reservationService, AuthService authService)
+        public GestionarDisponibilidadPage(DisponibilidadService disponibilidadService, ReservationService reservationService, AuthService authService)
         {
             InitializeComponent();
             _disponibilidadService = disponibilidadService;
-            _authService = authService; // ✔️ guardar instancia
+            _authService = authService;
 
             Appearing += async (_, __) =>
             {
                 if (AuthService.CurrentUser == null)
-                    await _authService.LoadStoredUserAsync(); // ✔️ usar instancia
+                    await _authService.LoadStoredUserAsync();
 
                 await CargarDisponibilidad();
             };
@@ -26,9 +26,9 @@ namespace Barber.Maui.BrandonBarber.Pages
 
         private async Task CargarDisponibilidad()
         {
-            var barberoId = AuthService.CurrentUser?.Cedula ?? 0;
-            _disponibilidad = await _disponibilidadService.ObtenerDisponibilidadSemanal(barberoId);
-
+            var barberoId = AuthService.CurrentUser?.Cedula ??0;
+            // Siempre obtener desde la API, no desde SecureStorage
+            _disponibilidad = await _disponibilidadService.ObtenerDisponibilidadSemanalDesdeApi(barberoId);
             if (_disponibilidad != null)
             {
                 GenerarVista();
@@ -44,18 +44,17 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var border = new Border
                 {
                     BackgroundColor = Color.FromArgb("#90A4AE"),
-                    StrokeShape = new RoundRectangle { CornerRadius = 15 },
-                    Padding = new Thickness(20, 15),
-                    StrokeThickness = 0,
-                    Margin = new Thickness(0, 0, 0, 5)
+                    StrokeShape = new RoundRectangle { CornerRadius =15 },
+                    Padding = new Thickness(20,15),
+                    StrokeThickness =0,
+                    Margin = new Thickness(0,0,0,5)
                 };
 
                 var mainStack = new VerticalStackLayout
                 {
-                    Spacing = 15
+                    Spacing =15
                 };
 
-                // ========== FILA 1: Día y Switch ==========
                 var headerGrid = new Grid
                 {
                     ColumnDefinitions =
@@ -68,7 +67,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var labelDia = new Label
                 {
                     Text = dia.NombreDia,
-                    FontSize = 18,
+                    FontSize =18,
                     FontAttributes = FontAttributes.Bold,
                     TextColor = Colors.Black,
                     VerticalOptions = LayoutOptions.Center
@@ -82,13 +81,12 @@ namespace Barber.Maui.BrandonBarber.Pages
                     VerticalOptions = LayoutOptions.Center
                 };
 
-                Grid.SetColumn(labelDia, 0);
-                Grid.SetColumn(switchHabilitar, 1);
+                Grid.SetColumn(labelDia,0);
+                Grid.SetColumn(switchHabilitar,1);
 
                 headerGrid.Children.Add(labelDia);
                 headerGrid.Children.Add(switchHabilitar);
 
-                // ========== FILA 2: Horarios (Grid con 2 columnas) ==========
                 var horariosGrid = new Grid
                 {
                     IsVisible = dia.Habilitado,
@@ -97,16 +95,15 @@ namespace Barber.Maui.BrandonBarber.Pages
                         new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) },
                         new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) }
                     },
-                    ColumnSpacing = 15
+                    ColumnSpacing =15
                 };
 
-                // Columna Inicio
-                var inicioStack = new VerticalStackLayout { Spacing = 8 };
+                var inicioStack = new VerticalStackLayout { Spacing =8 };
 
                 var labelInicio = new Label
                 {
                     Text = "Inicio",
-                    FontSize = 14,
+                    FontSize =14,
                     TextColor = Colors.Black,
                     FontAttributes = FontAttributes.Bold
                 };
@@ -114,9 +111,9 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var borderInicio = new Border
                 {
                     BackgroundColor = Color.FromArgb("#E0F7FA"),
-                    StrokeShape = new RoundRectangle { CornerRadius = 10 },
-                    StrokeThickness = 0,
-                    Padding = new Thickness(15, 8)
+                    StrokeShape = new RoundRectangle { CornerRadius =10 },
+                    StrokeThickness =0,
+                    Padding = new Thickness(15,8)
                 };
 
                 var timePickerInicio = new TimePicker
@@ -124,7 +121,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                     Time = dia.HoraInicio,
                     TextColor = Colors.Black,
                     BackgroundColor = Colors.Transparent,
-                    FontSize = 16,
+                    FontSize =16,
                     Format = "hh:mm tt",
                     HorizontalOptions = LayoutOptions.Fill
                 };
@@ -141,13 +138,12 @@ namespace Barber.Maui.BrandonBarber.Pages
                 inicioStack.Children.Add(labelInicio);
                 inicioStack.Children.Add(borderInicio);
 
-                // Columna Fin
-                var finStack = new VerticalStackLayout { Spacing = 8 };
+                var finStack = new VerticalStackLayout { Spacing =8 };
 
                 var labelFin = new Label
                 {
                     Text = "Fin",
-                    FontSize = 14,
+                    FontSize =14,
                     TextColor = Colors.Black,
                     FontAttributes = FontAttributes.Bold
                 };
@@ -155,9 +151,9 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var borderFin = new Border
                 {
                     BackgroundColor = Color.FromArgb("#E0F7FA"),
-                    StrokeShape = new RoundRectangle { CornerRadius = 10 },
-                    StrokeThickness = 0,
-                    Padding = new Thickness(15, 8)
+                    StrokeShape = new RoundRectangle { CornerRadius =10 },
+                    StrokeThickness =0,
+                    Padding = new Thickness(15,8)
                 };
 
                 var timePickerFin = new TimePicker
@@ -165,7 +161,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                     Time = dia.HoraFin,
                     TextColor = Colors.Black,
                     BackgroundColor = Colors.Transparent,
-                    FontSize = 16,
+                    FontSize =16,
                     HorizontalOptions = LayoutOptions.Fill
                 };
 
@@ -181,20 +177,18 @@ namespace Barber.Maui.BrandonBarber.Pages
                 finStack.Children.Add(labelFin);
                 finStack.Children.Add(borderFin);
 
-                Grid.SetColumn(inicioStack, 0);
-                Grid.SetColumn(finStack, 1);
+                Grid.SetColumn(inicioStack,0);
+                Grid.SetColumn(finStack,1);
 
                 horariosGrid.Children.Add(inicioStack);
                 horariosGrid.Children.Add(finStack);
 
-                // ========== Evento del Switch ==========
                 switchHabilitar.Toggled += (s, e) =>
                 {
                     dia.Habilitado = e.Value;
                     horariosGrid.IsVisible = e.Value;
                 };
 
-                // ========== Agregar todo al stack principal ==========
                 mainStack.Children.Add(headerGrid);
                 mainStack.Children.Add(horariosGrid);
 
@@ -202,7 +196,19 @@ namespace Barber.Maui.BrandonBarber.Pages
                 DiasContainer.Children.Add(border);
             }
         }
-        private async void OnGuardarClicked(object sender, EventArgs e)
+
+        // NUEVO: Guardar solo semana o todo el mes
+        private async void OnGuardarSemanaClicked(object sender, EventArgs e)
+        {
+            await GuardarDisponibilidadAsync(aplicarMes: false);
+        }
+
+        private async void OnGuardarMesClicked(object sender, EventArgs e)
+        {
+            await GuardarDisponibilidadAsync(aplicarMes: true);
+        }
+
+        private async Task GuardarDisponibilidadAsync(bool aplicarMes)
         {
             if (_isNavigating) return;
             _isNavigating = true;
@@ -211,7 +217,6 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 LoadingIndicator.IsVisible = true;
                 LoadingIndicator.IsLoading = true;
-                // Validar horarios
                 foreach (var dia in _disponibilidad!.Dias.Where(d => d.Habilitado))
                 {
                     if (dia.HoraFin <= dia.HoraInicio)
@@ -221,11 +226,19 @@ namespace Barber.Maui.BrandonBarber.Pages
                     }
                 }
 
-                bool guardado = await _disponibilidadService.GuardarDisponibilidadSemanal(_disponibilidad);
+                bool guardado;
+                if (aplicarMes)
+                {
+                    guardado = await _disponibilidadService.AplicarDisponibilidadSemanalAMesApi(_disponibilidad.BarberoId, DateTime.Today, _disponibilidad);
+                }
+                else
+                {
+                    guardado = await _disponibilidadService.AplicarDisponibilidadSemanalASemanaActualApi(_disponibilidad.BarberoId, DateTime.Today, _disponibilidad);
+                }
 
                 if (guardado)
                 {
-                    await AppUtils.MostrarSnackbar("Disponibilidad guardada y aplicada al mes", Colors.Green, Colors.White);
+                    await AppUtils.MostrarSnackbar(aplicarMes ? "Disponibilidad aplicada a todo el mes" : "Disponibilidad guardada para la semana", Colors.Green, Colors.White);
                     await Navigation.PopAsync();
                 }
                 else
