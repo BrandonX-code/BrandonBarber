@@ -668,6 +668,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 LoadingIndicator.IsVisible = true;
                 LoadingIndicator.IsLoading = true;
+
                 // Obtener todas las citas históricas
                 List<CitaModel> todasLasCitas;
                 if (_barberiaSeleccionadaId > 0)
@@ -679,11 +680,14 @@ namespace Barber.Maui.BrandonBarber.Pages
                     todasLasCitas = await _reservationService.GetAllReservationsHistorical();
                 }
 
-                // Filtrar por los últimos 6 meses
+                // ✅ FILTRAR SOLO CITAS FINALIZADAS
                 var fechaLimite = DateTime.Now.AddMonths(-6);
-                var citasUltimos6Meses = todasLasCitas.Where(c => c.Fecha >= fechaLimite).ToList();
+                var citasFinalizadas = todasLasCitas
+                    .Where(c => c.Fecha >= fechaLimite &&
+                               c.Estado?.ToLower() == "finalizada") // ← CAMBIO AQUÍ
+                    .ToList();
 
-                var clientesFrecuentes = citasUltimos6Meses
+                var clientesFrecuentes = citasFinalizadas
                     .Where(c => c.Cedula > 0)
                     .GroupBy(c => c.Cedula)
                     .Select(g => new { Cedula = g.Key, Visitas = g.Count() })

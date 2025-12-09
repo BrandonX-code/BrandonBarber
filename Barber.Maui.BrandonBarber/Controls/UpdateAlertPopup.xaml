@@ -1,13 +1,64 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
- xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
- x:Class="Barber.Maui.BrandonBarber.Controls.UpdateAlertPopup"
- BackgroundColor="#80000000">
-    <Frame Padding="20" BackgroundColor="White" CornerRadius="20" VerticalOptions="Center" HorizontalOptions="Center" HasShadow="True">
-        <VerticalStackLayout Spacing="15">
-            <Label x:Name="TitleLabel" Text="¡Nueva versión disponible!" FontSize="22" FontAttributes="Bold" TextColor="#FF6F91" HorizontalOptions="Center" />
-            <Label x:Name="MessageLabel" Text="Hay una actualización con nuevas funciones y mejoras." FontSize="16" TextColor="#0E2A36" HorizontalOptions="Center" />
-            <Button x:Name="UpdateButton" Text="Actualizar ahora" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="15" FontAttributes="Bold" Clicked="OnUpdateClicked" />
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Barber.Maui.BrandonBarber.Controls.UpdateAlertPopup"
+             BackgroundColor="#80000000">
+
+    <Border Padding="30" 
+           BackgroundColor="White" 
+           StrokeShape="RoundRectangle 20" 
+           VerticalOptions="Center" 
+           HorizontalOptions="Center" 
+           WidthRequest="320">
+
+        <VerticalStackLayout Spacing="20" HorizontalOptions="Center">
+
+            <!-- Logo -->
+            <Image Source="logobarbergoblanco.png" 
+                   WidthRequest="120" 
+                   HeightRequest="120" 
+                   HorizontalOptions="Center"/>
+
+            <!-- Título -->
+            <Label Text="¡Nueva Versión!" 
+                   FontSize="24" 
+                   FontAttributes="Bold" 
+                   TextColor="#FF6F91" 
+                   HorizontalOptions="Center"/>
+
+            <!-- Versión actual -->
+            <Label x:Name="CurrentVersionLabel"
+                   FontSize="14" 
+                   TextColor="#666666" 
+                   HorizontalOptions="Center"/>
+
+            <!-- Nueva versión -->
+            <Label x:Name="NewVersionLabel"
+                   FontSize="16" 
+                   FontAttributes="Bold" 
+                   TextColor="#0E2A36" 
+                   HorizontalOptions="Center"/>
+
+            <!-- Mensaje -->
+            <Label x:Name="MessageLabel" 
+                   Text="Hay nuevas funciones y mejoras disponibles" 
+                   FontSize="14" 
+                   TextColor="#0E2A36" 
+                   HorizontalTextAlignment="Center"
+                   HorizontalOptions="Center"/>
+
+            <!-- Botón actualizar -->
+            <Button x:Name="UpdateButton" 
+                    Text="Actualizar ahora" 
+                    BackgroundColor="#FF6F91" 
+                    TextColor="Black" 
+                    CornerRadius="15" 
+                    FontAttributes="Bold" 
+                    FontSize="16"
+                    Padding="40,12"
+                    Clicked="OnUpdateClicked" 
+                    HorizontalOptions="Center"/>
+
         </VerticalStackLayout>
-    </Frame>
+    </Border>
 </ContentPage>

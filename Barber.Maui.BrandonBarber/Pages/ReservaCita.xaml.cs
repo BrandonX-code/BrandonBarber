@@ -147,7 +147,7 @@
                     Colors.Orange, Colors.White);
                 LimpiarSeleccionFranja();
                 FranjasCollectionView.ItemsSource = null;
-                franjasBorder.IsVisible = false; // 🔥 Oculta el Border
+                franjasBorder.IsVisible = false;
                 return;
             }
 
@@ -159,6 +159,23 @@
                 AuthService.CurrentUser!.IdBarberia ?? 0);
 
             var citasBarbero = citasDelDia.Where(c => c.BarberoId == barberoSeleccionado.Cedula).ToList();
+
+            // ✅ NUEVA VALIDACIÓN: Marcar franjas pasadas como no disponibles
+            var ahora = DateTime.Now;
+            var esFechaHoy = FechaPicker.Date.Date == DateTime.Today;
+
+            foreach (var franja in _todasLasFranjas)
+            {
+                // Si es hoy y la hora ya pasó, marcar como no disponible
+                if (esFechaHoy)
+                {
+                    var horaFranja = DateTime.Today.Add(franja.HoraInicio);
+                    if (horaFranja < ahora)
+                    {
+                        franja.EstaDisponible = false;
+                    }
+                }
+            }
 
             // Marcar franjas ocupadas
             foreach (var cita in citasBarbero)
@@ -172,9 +189,10 @@
             }
 
             FranjasCollectionView.ItemsSource = _todasLasFranjas
-            .Where(f => f.EstaDisponible)
-            .ToList();
-            franjasBorder.IsVisible = true; // 🔥 Muestra el Border si hay franjas
+                .Where(f => f.EstaDisponible) // Solo mostrar disponibles
+                .ToList();
+
+            franjasBorder.IsVisible = true;
         }
 
         private void OnFranjaSeleccionada(object sender, SelectionChangedEventArgs e)

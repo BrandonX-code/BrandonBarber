@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Barber.Maui.BrandonBarber.Controls;
+using System.Globalization;
 
 namespace Barber.Maui.BrandonBarber.Pages
 {
@@ -359,7 +360,6 @@ namespace Barber.Maui.BrandonBarber.Pages
 
         private async void OnMakeAppointmentClicked(object sender, EventArgs e)
         {
-            // Primero mostrar los servicios disponibles
             var servicioService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ServicioService>();
             var servicios = await servicioService.GetServiciosAsync();
 
@@ -369,21 +369,12 @@ namespace Barber.Maui.BrandonBarber.Pages
                 return;
             }
 
-            // Crear lista de nombres para el ActionSheet
-            var nombresServicios = servicios.Select(s => $"{s.Nombre} - ${s.Precio:N0}").ToArray();
+            // ✅ USAR EL NUEVO POPUP
+            var popup = new ServicioSelectionPopup(servicios);
+            var servicioSeleccionado = await popup.ShowAsync();
 
-            var seleccion = await DisplayActionSheet(
-                "Selecciona un servicio",
-                "Cancelar",
-                null,
-                nombresServicios);
-
-            if (seleccion == "Cancelar" || seleccion == null)
+            if (servicioSeleccionado == null)
                 return;
-
-            // Encontrar el servicio seleccionado
-            var indice = Array.IndexOf(nombresServicios, seleccion);
-            var servicioSeleccionado = servicios[indice];
 
             // Navegar a reserva con barbero Y servicio preseleccionados
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();

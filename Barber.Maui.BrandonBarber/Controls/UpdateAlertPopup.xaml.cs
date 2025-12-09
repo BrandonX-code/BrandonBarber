@@ -9,11 +9,15 @@ namespace Barber.Maui.BrandonBarber.Controls
         private string _apkUrl = "";
         private TaskCompletionSource<bool> _tcs = new();
 
-        public UpdateAlertPopup(string mensaje, string apkUrl)
+        public UpdateAlertPopup(string mensaje, string apkUrl, string currentVersion, string newVersion)
         {
             InitializeComponent();
             MessageLabel.Text = mensaje;
             _apkUrl = apkUrl;
+
+            // ✅ MOSTRAR VERSIONES
+            CurrentVersionLabel.Text = $"Versión actual: {currentVersion}";
+            NewVersionLabel.Text = $"Nueva versión: {newVersion}";
         }
 
         public async Task<bool> ShowAsync()
@@ -36,12 +40,6 @@ namespace Barber.Maui.BrandonBarber.Controls
                 await Application.Current.MainPage.DisplayAlert("Error", $"No se pudo abrir el enlace: {ex.Message}", "OK");
             }
             _tcs.TrySetResult(true);
-            await Application.Current.MainPage.Navigation.PopModalAsync();
-        }
-
-        private async void OnCloseClicked(object sender, EventArgs e)
-        {
-            _tcs.TrySetResult(false);
             await Application.Current.MainPage.Navigation.PopModalAsync();
         }
     }

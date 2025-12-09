@@ -27,8 +27,8 @@
 		<ApplicationId>com.companyname.Barber.maui.BrandonBarber</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationVersion>4</ApplicationVersion>
-		<ApplicationDisplayVersion>1.0.4</ApplicationDisplayVersion>
+		<ApplicationVersion>5</ApplicationVersion>
+		<ApplicationDisplayVersion>1.0.5</ApplicationDisplayVersion>
 
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
@@ -111,6 +111,9 @@
 
 	<ItemGroup>
 	  <MauiXaml Update="Controls\LoadingControl.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Controls\ServicioSelectionPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Controls\UpdateAlertPopup.xaml">

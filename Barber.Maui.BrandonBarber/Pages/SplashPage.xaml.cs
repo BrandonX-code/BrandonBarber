@@ -82,14 +82,19 @@ namespace Barber.Maui.BrandonBarber.Pages
                 {
                     Console.WriteLine("🆕 Nueva versión detectada, mostrando popup");
 
-                    var popup = new UpdateAlertPopup(updateInfo.Mensaje, updateInfo.ApkUrl);
+                    var currentVersion = VersionTracking.CurrentVersion;
+                    var popup = new UpdateAlertPopup(
+                        updateInfo.Mensaje,
+                        updateInfo.ApkUrl,
+                        currentVersion,        // ← Versión actual
+                        updateInfo.Version     // ← Nueva versión
+                    );
                     await popup.ShowAsync();
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"⚠️ Error al verificar actualización: {ex.Message}");
-                // Continuar con la carga normal
             }
         }
 

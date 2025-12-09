@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Barber.Maui.BrandonBarber.Controls.ServicioSelectionPopup"
+             BackgroundColor="#80000000">
+
+    <Border Padding="0" 
+           BackgroundColor="White" 
+           StrokeShape="RoundRectangle 20" 
+           VerticalOptions="Center" 
+           HorizontalOptions="Center" 
+           WidthRequest="340">
+
+        <VerticalStackLayout Spacing="0">
+
+            <!-- Header -->
+            <Border BackgroundColor="#0E2A36" 
+                    StrokeShape="RoundRectangle 20,20,0,0" 
+                    Padding="20"
+                    StrokeThickness="0">
+                <Label Text="Selecciona un servicio" 
+                       FontSize="20" 
+                       FontAttributes="Bold" 
+                       TextColor="White" 
+                       HorizontalOptions="Center"/>
+            </Border>
+
+            <!-- Lista de servicios -->
+            <ScrollView MaximumHeightRequest="350" 
+                        VerticalScrollBarVisibility="Never">
+                <CollectionView x:Name="ServiciosCollection" 
+                                SelectionMode="Single"
+                                SelectionChanged="OnServicioSelected">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Padding="15" 
+                                    BackgroundColor="Transparent"
+                                    StrokeThickness="0">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnServicioTapped" 
+                                                          CommandParameter="{Binding .}"/>
+                                </Border.GestureRecognizers>
+
+                                <Grid ColumnDefinitions="80,*,Auto">
+                                    <!-- Imagen -->
+                                    <Border Grid.Column="0" 
+                                            BackgroundColor="#F0F0F0" 
+                                            StrokeShape="RoundRectangle 10"
+                                            WidthRequest="70"
+                                            HeightRequest="70"
+                                            StrokeThickness="0">
+                                        <Image Source="{Binding Imagen}" 
+                                               Aspect="AspectFill"/>
+                                    </Border>
+
+                                    <!-- Info -->
+                                    <VerticalStackLayout Grid.Column="1" 
+                                                         Spacing="5" 
+                                                         VerticalOptions="Center"
+                                                         Margin="10,0,0,0">
+                                        <Label Text="{Binding Nombre}" 
+                                               FontSize="16" 
+                                               FontAttributes="Bold" 
+                                               TextColor="#0E2A36"/>
+                                        <Label Text="{Binding Precio, StringFormat='${0:N0}'}" 
+                                               FontSize="14" 
+                                               TextColor="#FF6F91"
+                                               FontAttributes="Bold"/>
+                                    </VerticalStackLayout>
+
+                                    <!-- Icono -->
+                                    <Image Grid.Column="2" 
+                                           Source="chevron.png" 
+                                           WidthRequest="20" 
+                                           HeightRequest="20"
+                                           VerticalOptions="Center"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+
+            <!-- Botón cancelar -->
+            <Button Text="Cancelar" 
+                    BackgroundColor="#717d7e" 
+                    TextColor="Black" 
+                    CornerRadius="15" 
+                    Margin="20,10,20,20"
+                    Clicked="OnCancelarClicked"/>
+
+        </VerticalStackLayout>
+    </Border>
+</ContentPage>
