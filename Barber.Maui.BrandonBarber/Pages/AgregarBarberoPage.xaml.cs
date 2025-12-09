@@ -43,15 +43,11 @@
 
         private async void OnAgregarBarberoClicked(object sender, EventArgs e)
         {
-            if (!ValidarFormulario())
-            {
+            if (!await ValidarFormulario())
                 return;
-            }
 
             LoadingIndicator.IsVisible = true;
             LoadingIndicator.IsLoading = true;
-            ErrorLabel.IsVisible = false;
-            SuccessLabel.IsVisible = false;
 
             var agregarButton = (Button)sender;
             agregarButton.IsEnabled = false;
@@ -68,7 +64,7 @@
                     Telefono = TelefonoEntry.Text ?? "",
                     Direccion = DireccionEntry.Text ?? "",
                     Especialidades = EspecialidadesEntry.Text ?? "",
-                    Rol = "barbero", // Siempre barbero
+                    Rol = "barbero",
                     IdBarberia = _barberiaSeleccionadaId
                 };
 
@@ -77,19 +73,16 @@
                 if (response.IsSuccess)
                 {
                     LimpiarFormulario();
-
                     await AppUtils.MostrarSnackbar("El barbero ha sido agregado correctamente", Colors.Green, Colors.White);
                 }
                 else
                 {
-                    ErrorLabel.Text = response.Message;
-                    ErrorLabel.IsVisible = true;
+                    await AppUtils.MostrarSnackbar(response.Message!, Colors.Red, Colors.White);
                 }
             }
             catch (Exception ex)
             {
-                ErrorLabel.Text = $"Error: {ex.Message}";
-                ErrorLabel.IsVisible = true;
+                await AppUtils.MostrarSnackbar($"Error: {ex.Message}", Colors.Red, Colors.White);
             }
             finally
             {
@@ -101,15 +94,15 @@
 
         private void LimpiarFormulario()
         {
-            NombreEntry.Text = "";
-            CedulaEntry.Text = "";
-            EmailEntry.Text = "";
-            TelefonoEntry.Text = "";
-            DireccionEntry.Text = "";
-            EspecialidadesEntry.Text = "";
-            ExperienciaEntry.Text = "";
-            PasswordEntry.Text = "";
-            ConfirmPasswordEntry.Text = "";
+            NombreEntry.Text = string.Empty;
+            CedulaEntry.Text = string.Empty;
+            EmailEntry.Text = string.Empty;
+            TelefonoEntry.Text = string.Empty;
+            DireccionEntry.Text = string.Empty;
+            EspecialidadesEntry.Text = string.Empty;
+            ExperienciaEntry.Text = string.Empty;
+            PasswordEntry.Text = string.Empty;
+            ConfirmPasswordEntry.Text = string.Empty;
             // Agregar al final del método, antes del cierre
             _barberiaSeleccionadaId = 0;
             if (BarberiaPicker != null && _barberias?.Any() == true)
@@ -119,12 +112,8 @@
             //ActivoSwitch.IsToggled = true;
         }
 
-        private bool ValidarFormulario()
+        private async Task<bool> ValidarFormulario()
         {
-            // Limpiar mensajes anteriores
-            ErrorLabel.IsVisible = false;
-            SuccessLabel.IsVisible = false;
-
             // Validar campos obligatorios
             if (string.IsNullOrWhiteSpace(NombreEntry.Text) ||
                 string.IsNullOrWhiteSpace(CedulaEntry.Text) ||
@@ -132,60 +121,56 @@
                 string.IsNullOrWhiteSpace(PasswordEntry.Text) ||
                 string.IsNullOrWhiteSpace(ConfirmPasswordEntry.Text))
             {
-                ErrorLabel.Text = "Por favor, completa todos los campos obligatorios (*)";
-                ErrorLabel.IsVisible = true;
+                await AppUtils.MostrarSnackbar("Por favor, completa todos los campos obligatorios (*)", Colors.Red, Colors.White);
                 return false;
             }
 
             // Validar cédula numérica
             if (!long.TryParse(CedulaEntry.Text, out _))
             {
-                ErrorLabel.Text = "La cédula debe ser un número válido";
-                ErrorLabel.IsVisible = true;
+                await AppUtils.MostrarSnackbar("La cédula debe ser un número válido", Colors.Red, Colors.White);
                 return false;
             }
 
             // Validar email
             if (!IsValidEmail(EmailEntry.Text))
             {
-                ErrorLabel.Text = "El formato del correo electrónico no es válido";
-                ErrorLabel.IsVisible = true;
+                await AppUtils.MostrarSnackbar("El formato del correo electrónico no es válido", Colors.Red, Colors.White);
                 return false;
             }
 
             // Validar coincidencia de contraseñas
             if (PasswordEntry.Text != ConfirmPasswordEntry.Text)
             {
-                ErrorLabel.Text = "Las contraseñas no coinciden";
-                ErrorLabel.IsVisible = true;
+                await AppUtils.MostrarSnackbar("Las contraseñas no coinciden", Colors.Red, Colors.White);
                 return false;
             }
 
             // Validar seguridad de contraseña
             if (!IsPasswordSecure(PasswordEntry.Text))
             {
-                ErrorLabel.Text = "La contraseña debe tener al menos 8 caracteres, incluir letras mayúsculas, minúsculas y números";
-                ErrorLabel.IsVisible = true;
+                await AppUtils.MostrarSnackbar("La contraseña debe tener al menos 8 caracteres, incluir letras mayúsculas, minúsculas y números", Colors.Red, Colors.White);
                 return false;
             }
 
-            // Validar experiencia si se proporciona
+            // Validar experiencia si existe
             if (!string.IsNullOrWhiteSpace(ExperienciaEntry.Text) &&
-                !int.TryParse(ExperienciaEntry.Text, out int experiencia))
+                !int.TryParse(ExperienciaEntry.Text, out _))
             {
-                ErrorLabel.Text = "Los años de experiencia deben ser un número válido";
-                ErrorLabel.IsVisible = true;
+                await AppUtils.MostrarSnackbar("Los años de experiencia deben ser un número válido", Colors.Red, Colors.White);
                 return false;
             }
-            // Validar barbería seleccionada (agregar después de las validaciones existentes y antes del return true)
+
+            // Validar barbería seleccionada
             if (_barberiaSeleccionadaId == 0)
             {
-                ErrorLabel.Text = "Debe seleccionar una barbería";
-                ErrorLabel.IsVisible = true;
+                await AppUtils.MostrarSnackbar("Debe seleccionar una barbería", Colors.Red, Colors.White);
                 return false;
             }
+
             return true;
         }
+
 
         private bool IsValidEmail(string email)
         {

@@ -78,9 +78,6 @@
                         <Entry x:Name="ConfirmPasswordEntry" FontSize="16" HeightRequest="45" VerticalOptions="Center" Margin="10,0"  Placeholder="Confirmar contraseña" IsPassword="True" />
                     </Border>
                 </VerticalStackLayout>
-                <Label x:Name="ErrorLabel" TextColor="#ff0000" FontSize="14" HorizontalOptions="Center" IsVisible="False" />
-                <Label x:Name="SuccessLabel" TextColor="#00ff00" FontSize="14" HorizontalOptions="Center" IsVisible="False" />
-
                 <Grid ColumnSpacing="15" Margin="0,20,0,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
