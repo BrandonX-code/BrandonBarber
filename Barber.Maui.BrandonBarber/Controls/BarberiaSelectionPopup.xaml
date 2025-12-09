@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Barber.Maui.BrandonBarber.Controls.ServicioSelectionPopup"
+             x:Class="Barber.Maui.BrandonBarber.Controls.BarberiaSelectionPopup"
              BackgroundColor="#80000000">
 
     <Border Padding="0" 
-           BackgroundColor="White" 
-           StrokeShape="RoundRectangle 20" 
+           BackgroundColor="White"
+           StrokeShape="RoundRectangle 20"
            VerticalOptions="Center" 
            HorizontalOptions="Center" 
            WidthRequest="340">
@@ -18,38 +18,38 @@
                     StrokeShape="RoundRectangle 20,20,0,0" 
                     Padding="20"
                     StrokeThickness="0">
-                <Label Text="Selecciona un servicio" 
+                <Label Text="Selecciona una barbería" 
                        FontSize="20" 
                        FontAttributes="Bold" 
                        TextColor="White" 
                        HorizontalOptions="Center"/>
             </Border>
 
-            <!-- Lista de servicios -->
-            <ScrollView MaximumHeightRequest="350" 
+            <!-- Lista de barberías -->
+            <ScrollView MaximumHeightRequest="400" 
                         VerticalScrollBarVisibility="Never">
-                <CollectionView x:Name="ServiciosCollection" 
-                                SelectionMode="Single"
-                                SelectionChanged="OnServicioSelected">
+                <CollectionView x:Name="BarberiasCollection" 
+                                SelectionMode="Single">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
                             <Border Padding="15" 
                                     BackgroundColor="Transparent"
                                     StrokeThickness="0">
                                 <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnServicioTapped" 
+                                    <TapGestureRecognizer Tapped="OnBarberiaTapped" 
                                                           CommandParameter="{Binding .}"/>
                                 </Border.GestureRecognizers>
 
-                                <Grid ColumnDefinitions="80,*,Auto">
-                                    <!-- Imagen -->
+                                <Grid ColumnDefinitions="70,*,Auto" RowSpacing="5">
+                                    <!-- Logo -->
                                     <Border Grid.Column="0" 
+                                            Grid.RowSpan="2"
                                             BackgroundColor="#F0F0F0" 
                                             StrokeShape="RoundRectangle 10"
                                             WidthRequest="70"
                                             HeightRequest="70"
                                             StrokeThickness="0">
-                                        <Image Source="{Binding Imagen}" 
+                                        <Image Source="{Binding LogoUrl}" 
                                                Aspect="AspectFill"/>
                                     </Border>
 
@@ -57,15 +57,16 @@
                                     <VerticalStackLayout Grid.Column="1" 
                                                          Spacing="5" 
                                                          VerticalOptions="Center"
-                                                         Margin="10,0,0,0">
+                                                         Margin="15,0,0,0">
                                         <Label Text="{Binding Nombre}" 
                                                FontSize="16" 
                                                FontAttributes="Bold" 
-                                               TextColor="#0E2A36"/>
-                                        <Label Text="{Binding Precio, StringFormat='${0:N0}'}" 
-                                               FontSize="14" 
-                                               TextColor="#FF6F91"
-                                               FontAttributes="Bold"/>
+                                               TextColor="#0E2A36"
+                                               LineBreakMode="TailTruncation"/>
+                                        <Label Text="{Binding Direccion}" 
+                                               FontSize="12" 
+                                               TextColor="#666666"
+                                               LineBreakMode="TailTruncation"/>
                                     </VerticalStackLayout>
 
                                     <!-- Icono -->

@@ -1,35 +1,37 @@
-﻿namespace Barber.Maui.BrandonBarber.Controls
+﻿using Barber.Maui.BrandonBarber.Models;
+
+namespace Barber.Maui.BrandonBarber.Controls
 {
-    public partial class ServicioSelectionPopup : ContentPage
+    public partial class BarberiaSelectionPopup : ContentPage
     {
-        private TaskCompletionSource<ServicioModel?> _tcs = new();
+        private TaskCompletionSource<Barberia?> _tcs = new();
         private bool _isSelecting = false;
 
-        public ServicioSelectionPopup(List<ServicioModel> servicios)
+        public BarberiaSelectionPopup(List<Barberia> barberias)
         {
             InitializeComponent();
-            ServiciosCollection.ItemsSource = servicios;
+            BarberiasCollection.ItemsSource = barberias;
         }
 
-        public async Task<ServicioModel?> ShowAsync()
+        public async Task<Barberia?> ShowAsync()
         {
             await Application.Current.MainPage.Navigation.PushModalAsync(this);
             return await _tcs.Task;
         }
 
-        private async void OnServicioTapped(object sender, EventArgs e)
+        private async void OnBarberiaTapped(object sender, EventArgs e)
         {
             if (_isSelecting) return;
             _isSelecting = true;
             try
             {
-                if (sender is Border border && border.BindingContext is ServicioModel servicio)
+                if (sender is Border border && border.BindingContext is Barberia barberia)
                 {
                     border.IsEnabled = false;
                     await border.ScaleTo(0.95, 100);
                     await border.ScaleTo(1, 100);
 
-                    _tcs.TrySetResult(servicio);
+                    _tcs.TrySetResult(barberia);
                     await Application.Current.MainPage.Navigation.PopModalAsync();
                 }
             }
@@ -37,11 +39,6 @@
             {
                 _isSelecting = false;
             }
-        }
-
-        private void OnServicioSelected(object sender, SelectionChangedEventArgs e)
-        {
-            // Opcional: manejar selección
         }
 
         private async void OnCancelarClicked(object sender, EventArgs e)

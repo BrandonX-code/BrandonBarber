@@ -1,4 +1,6 @@
-﻿namespace Barber.Maui.BrandonBarber
+﻿using Barber.Maui.BrandonBarber.Controls;
+
+namespace Barber.Maui.BrandonBarber
 {
     public partial class MainPage : ContentPage
     {
@@ -6,28 +8,28 @@
         private readonly AuthService _authService;
         private readonly UsuarioModels? _barberoPreseleccionado;
         private ServicioModel? _servicioSeleccionado; // ✅ NUEVO CAMPO
+        private DateTime _fechaPreseleccionada;
         private bool _isCancelling = false;
         private FranjaHorariaModel? _franjaSeleccionada;
         private List<FranjaHorariaModel>? _todasLasFranjas;
+        private List<UsuarioModels>? _barberos;
+        private int _barberoSeleccionadoIndex = -1;
+        private UsuarioModels? _barberoSeleccionado;
 
         public MainPage(ReservationService reservationService, AuthService authService,
-            UsuarioModels? barberoPreseleccionado = null, ServicioModel? servicioSeleccionado = null)
+            UsuarioModels? barberoPreseleccionado = null, ServicioModel? servicioSeleccionado = null, DateTime fechaPreseleccionada = default)
         {
             InitializeComponent();
             _reservationServices = reservationService;
             _authService = authService;
             _barberoPreseleccionado = barberoPreseleccionado;
             _servicioSeleccionado = servicioSeleccionado; // ✅ GUARDAR SERVICIO
+            _fechaPreseleccionada = fechaPreseleccionada;
         }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
-            BarberoPicker.SelectedIndexChanged += async (s, e) =>
-            {
-                LimpiarSeleccionFranja();
-                await CargarFranjasDisponibles();
-            };
 
             FechaPicker.DateSelected += async (s, e) =>
             {
@@ -35,8 +37,7 @@
                 await CargarFranjasDisponibles();
             };
 
-
-            // ✅ CONFIGURAR SERVICIO ANTES DE LAS ANIMACIONES
+            // ✅ CONFIGURAR SERVICIO
             if (_servicioSeleccionado != null)
             {
                 servicioBorder.IsVisible = true;
@@ -49,22 +50,18 @@
                 servicioBorder.IsVisible = false;
             }
 
-            await StartEntryAnimations();
-            await CargarBarberosAsync();
-
-            // LÓGICA PARA BARBERO PRESELECCIONADO
-            if (_barberoPreseleccionado != null && BarberoPicker.ItemsSource is List<UsuarioModels> barberos)
+            // ✅ CONFIGURAR FECHA PRESELECCIONADA
+            if (_fechaPreseleccionada == default || _fechaPreseleccionada.Year <2000)
             {
-                BarberoPicker.IsEnabled = false;
-                int index = barberos.FindIndex(b => b.Cedula == _barberoPreseleccionado.Cedula);
-                if (index >= 0)
-                    BarberoPicker.SelectedIndex = index;
+                FechaPicker.Date = DateTime.Today;
             }
             else
             {
-                BarberoPicker.IsEnabled = true;
+                FechaPicker.Date = _fechaPreseleccionada;
             }
 
+            await StartEntryAnimations();
+            await CargarBarberosAsync();
         }
 
         private async Task StartEntryAnimations()
@@ -125,21 +122,98 @@
             }
 
             int? idBarberia = AuthService.CurrentUser.IdBarberia;
-            var barberos = await _authService.ObtenerBarberos(idBarberia);
-            BarberoPicker.ItemsSource = barberos;
-            BarberoPicker.SelectedIndex = -1;
+            _barberos = await _authService.ObtenerBarberos(idBarberia);
+            BarberoSelectButton.IsVisible = _barberos.Count > 1;
+
+            if (_barberos.Count > 0)
+            {
+                // Selecciona el primero por defecto
+                _barberoSeleccionadoIndex = 0;
+                _barberoSeleccionado = _barberos[0];
+                BarberoSelectedLabel.Text = _barberoSeleccionado.Nombre ?? "Seleccionar Barbero";
+                BarberoTelefonoLabel.Text = _barberoSeleccionado.Telefono ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(_barberoSeleccionado.ImagenPath))
+                {
+                    BarberoFotoImage.Source = _barberoSeleccionado.ImagenPath.StartsWith("http")
+                        ? ImageSource.FromUri(new Uri(_barberoSeleccionado.ImagenPath))
+                        : ImageSource.FromFile(_barberoSeleccionado.ImagenPath);
+                }
+                else
+                {
+                    BarberoFotoImage.Source = "dotnet_bot.png";
+                }
+            }
+            else
+            {
+                BarberoSelectedLabel.Text = "Seleccionar Barbero";
+                BarberoTelefonoLabel.Text = string.Empty;
+                BarberoFotoImage.Source = "dotnet_bot.png";
+                _barberoSeleccionado = null;
+            }
+            LimpiarSeleccionFranja();
+            await CargarFranjasDisponibles();
+        }
+
+        private async void OnBarberoPickerTapped(object sender, EventArgs e)
+        {
+            if (_barberos == null || _barberos.Count <= 1)
+                return;
+
+            var popup = new BarberoSelectionPopup(_barberos);
+            var seleccionada = await popup.ShowAsync();
+            if (seleccionada != null)
+            {
+                int idx = _barberos.FindIndex(b => b.Cedula == seleccionada.Cedula);
+                if (idx >= 0)
+                {
+                    _barberoSeleccionadoIndex = idx;
+                    _barberoSeleccionado = seleccionada;
+                    BarberoSelectedLabel.Text = seleccionada.Nombre ?? "Seleccionar Barbero";
+                    BarberoTelefonoLabel.Text = seleccionada.Telefono ?? string.Empty;
+                    if (!string.IsNullOrWhiteSpace(seleccionada.ImagenPath))
+                    {
+                        BarberoFotoImage.Source = seleccionada.ImagenPath.StartsWith("http")
+                            ? ImageSource.FromUri(new Uri(seleccionada.ImagenPath))
+                            : ImageSource.FromFile(seleccionada.ImagenPath);
+                    }
+                    else
+                    {
+                        BarberoFotoImage.Source = "dotnet_bot.png";
+                    }
+                    LimpiarSeleccionFranja();
+                    await CargarFranjasDisponibles();
+                }
+            }
+            else if (_barberoSeleccionadoIndex >= 0 && _barberos.Count > _barberoSeleccionadoIndex)
+            {
+                // Restaurar selección anterior si se cancela
+                var barbero = _barberos[_barberoSeleccionadoIndex];
+                _barberoSeleccionado = barbero;
+                BarberoSelectedLabel.Text = barbero.Nombre ?? "Seleccionar Barbero";
+                BarberoTelefonoLabel.Text = barbero.Telefono ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(barbero.ImagenPath))
+                {
+                    BarberoFotoImage.Source = barbero.ImagenPath.StartsWith("http")
+                        ? ImageSource.FromUri(new Uri(barbero.ImagenPath))
+                        : ImageSource.FromFile(barbero.ImagenPath);
+                }
+                else
+                {
+                    BarberoFotoImage.Source = "dotnet_bot.png";
+                }
+            }
         }
 
         private async Task CargarFranjasDisponibles()
         {
-            if (BarberoPicker.SelectedItem is not UsuarioModels barberoSeleccionado)
+            if (_barberoSeleccionado == null)
                 return;
 
             var disponibilidadService = App.Current!.Handler.MauiContext!.Services
                 .GetRequiredService<DisponibilidadService>();
 
             var disponibilidad = await disponibilidadService.GetDisponibilidad(
-                FechaPicker.Date, barberoSeleccionado.Cedula);
+                FechaPicker.Date, _barberoSeleccionado.Cedula);
 
             if (disponibilidad == null || !disponibilidad.HorariosDict.Any(h => h.Value))
             {
@@ -158,7 +232,7 @@
             var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date,
                 AuthService.CurrentUser!.IdBarberia ?? 0);
 
-            var citasBarbero = citasDelDia.Where(c => c.BarberoId == barberoSeleccionado.Cedula).ToList();
+            var citasBarbero = citasDelDia.Where(c => c.BarberoId == _barberoSeleccionado.Cedula).ToList();
 
             // ✅ NUEVA VALIDACIÓN: Marcar franjas pasadas como no disponibles
             var ahora = DateTime.Now;
@@ -271,7 +345,7 @@
                 DateTime fechaSeleccionadaLocal = FechaPicker.Date.Add(_franjaSeleccionada.HoraInicio);
                 DateTime fechaSeleccionada = DateTime.SpecifyKind(fechaSeleccionadaLocal, DateTimeKind.Local).ToUniversalTime();
 
-                if (BarberoPicker.SelectedItem is not UsuarioModels barberoSeleccionado)
+                if (_barberoSeleccionado == null)
                 {
                     await AppUtils.MostrarSnackbar("Debe seleccionar un barbero.", Colors.Orange, Colors.White);
                     return;
@@ -285,7 +359,7 @@
 
                 // ✅ Validar que el día tiene disponibilidad (opcional, ya lo validamos antes)
                 var disponibilidadService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<DisponibilidadService>();
-                var disponibilidad = await disponibilidadService.GetDisponibilidad(FechaPicker.Date, barberoSeleccionado.Cedula);
+                var disponibilidad = await disponibilidadService.GetDisponibilidad(FechaPicker.Date, _barberoSeleccionado.Cedula);
 
                 if (disponibilidad == null || disponibilidad.HorariosDict == null || !disponibilidad.HorariosDict.Any())
                 {
@@ -313,7 +387,7 @@
                     Nombre = cliente.Nombre,
                     Telefono = cliente.Telefono,
                     Fecha = fechaSeleccionada, // UTC
-                    BarberoId = barberoSeleccionado.Cedula,
+                    BarberoId = _barberoSeleccionado.Cedula,
                     BarberoNombre = string.Empty,
                     ServicioId = _servicioSeleccionado.Id,
                     ServicioNombre = _servicioSeleccionado.Nombre,

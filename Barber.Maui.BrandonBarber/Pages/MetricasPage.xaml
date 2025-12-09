@@ -18,8 +18,20 @@
                         </Label>
                     </Grid>
                     <VerticalStackLayout x:Name="PickerSection" Spacing="5" IsVisible="False">
-                        <Border BackgroundColor="#90A4AE" Padding="15" StrokeShape="RoundRectangle 12" StrokeThickness="0"  HeightRequest="100">
-                            <Picker x:Name="BarberiaPicker"  SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged"  ItemDisplayBinding="{Binding Nombre}"  Title="Seleccionar Barbería"  TitleColor="Black" TextColor="Black"  VerticalOptions="Center" />
+                        <Border BackgroundColor="#90A4AE" Padding="15" StrokeShape="RoundRectangle 12" StrokeThickness="0" HeightRequest="100">
+                            <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+                                <!-- Logo de la barbería -->
+                                <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#F0F0F0" StrokeShape="RoundRectangle 50" VerticalOptions="Center">
+                                    <Image x:Name="BarberiaLogoImage" Source="picture.png" Aspect="AspectFill"/>
+                                </Border>
+                                <!-- Info de la barbería -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" Margin="12,0,0,0">
+                                    <Label x:Name="BarberiaSelectedLabel" Text="Seleccionar Barbería" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                                    <Label x:Name="BarberiaTelefonoLabel" Text="" TextColor="#333" FontSize="14"/>
+                                </VerticalStackLayout>
+                                <!-- Botón cambiar -->
+                                <Button x:Name="BarberiaSelectButton" Grid.Column="2" Text="Cambiar" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center"  Clicked="OnBarberiaPickerTapped" Margin="0,0,10,0" IsVisible="False"/>
+                            </Grid>
                         </Border>
                     </VerticalStackLayout>
                     <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10">

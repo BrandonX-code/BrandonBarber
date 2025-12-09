@@ -1,35 +1,37 @@
-﻿namespace Barber.Maui.BrandonBarber.Controls
-{
-    public partial class ServicioSelectionPopup : ContentPage
-    {
-        private TaskCompletionSource<ServicioModel?> _tcs = new();
-        private bool _isSelecting = false;
+﻿using Barber.Maui.BrandonBarber.Models;
 
-        public ServicioSelectionPopup(List<ServicioModel> servicios)
+namespace Barber.Maui.BrandonBarber.Controls
+{
+    public partial class BarberoSelectionPopup : ContentPage
+    {
+        private TaskCompletionSource<UsuarioModels?> _tcs = new();
+        private bool _isSelecting = false; // Previene doble clic
+
+        public BarberoSelectionPopup(List<UsuarioModels> barberos)
         {
             InitializeComponent();
-            ServiciosCollection.ItemsSource = servicios;
+            BarberosCollection.ItemsSource = barberos;
         }
 
-        public async Task<ServicioModel?> ShowAsync()
+        public async Task<UsuarioModels?> ShowAsync()
         {
             await Application.Current.MainPage.Navigation.PushModalAsync(this);
             return await _tcs.Task;
         }
 
-        private async void OnServicioTapped(object sender, EventArgs e)
+        private async void OnBarberoTapped(object sender, EventArgs e)
         {
-            if (_isSelecting) return;
+            if (_isSelecting) return; // Previene doble clic
             _isSelecting = true;
             try
             {
-                if (sender is Border border && border.BindingContext is ServicioModel servicio)
+                if (sender is Border border && border.BindingContext is UsuarioModels barbero)
                 {
-                    border.IsEnabled = false;
+                    border.IsEnabled = false; // Deshabilita el border visualmente
                     await border.ScaleTo(0.95, 100);
                     await border.ScaleTo(1, 100);
 
-                    _tcs.TrySetResult(servicio);
+                    _tcs.TrySetResult(barbero);
                     await Application.Current.MainPage.Navigation.PopModalAsync();
                 }
             }
@@ -39,14 +41,9 @@
             }
         }
 
-        private void OnServicioSelected(object sender, SelectionChangedEventArgs e)
-        {
-            // Opcional: manejar selección
-        }
-
         private async void OnCancelarClicked(object sender, EventArgs e)
         {
-            if (_isSelecting) return;
+            if (_isSelecting) return; // Previene doble clic en cancelar
             _isSelecting = true;
             try
             {

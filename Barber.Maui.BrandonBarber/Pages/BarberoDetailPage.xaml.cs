@@ -369,18 +369,24 @@ namespace Barber.Maui.BrandonBarber.Pages
                 return;
             }
 
-            // ✅ USAR EL NUEVO POPUP
             var popup = new ServicioSelectionPopup(servicios);
             var servicioSeleccionado = await popup.ShowAsync();
 
             if (servicioSeleccionado == null)
                 return;
 
-            // Navegar a reserva con barbero Y servicio preseleccionados
+            // Navegar a reserva con barbero, servicio Y FECHA preseleccionados
             var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
             var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
 
-            await Navigation.PushAsync(new MainPage(reservationService, authService, _barbero, servicioSeleccionado));
+            // ✅ PASAR LA FECHA SELECCIONADA
+            await Navigation.PushAsync(new MainPage(
+                reservationService,
+                authService,
+                _barbero,
+                servicioSeleccionado,
+                _diaSeleccionado ?? DateTime.Today // ← Nueva fecha
+            ));
         }
         private async void OnVerResenasClicked(object sender, EventArgs e)
         {
