@@ -148,6 +148,7 @@
             CitasCollectionView.ItemsSource = citasFiltradas;
             EmptyStateLayout.IsVisible = citasFiltradas.Count == 0;
             ActualizarEstilosBotones();
+            _ = MostrarHintDeslizar();
         }
 
         private void ActualizarEstilosBotones()
@@ -157,7 +158,25 @@
             BtnCanceladas.BackgroundColor = _estadoActual == "Cancelada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
             BtnFinalizadas.BackgroundColor = _estadoActual == "Finalizada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
         }
+        private async Task MostrarHintDeslizar()
+        {
+            if (CitasCollectionView.ItemsSource is IEnumerable<CitaModel> citas && citas.Any())
+            {
+                await Task.Delay(500);
 
+                var labels = CitasCollectionView.GetVisualTreeDescendants()
+                    .OfType<Label>()
+                    .Where(l => l.Text == " ⋘ Desliza para eliminar")
+                    .Take(1);
+
+                foreach (var label in labels)
+                {
+                    await label.FadeTo(0.8, 300);
+                    await Task.Delay(2500);
+                    await label.FadeTo(0, 500);
+                }
+            }
+        }
         private void UpdateVisibility()
         {
             HasProximasCitas = ProximasCitas.Count > 0;
@@ -168,12 +187,21 @@
         {
             if (sender is SwipeItem swipeItem && swipeItem.CommandParameter is int citaId)
             {
-                CitaModel? cita = ProximasCitas.FirstOrDefault(c => c.Id == citaId);
+                // Buscar la cita en la lista filtrada actual
+                var citasActuales = CitasCollectionView.ItemsSource as IEnumerable<CitaModel>;
+                CitaModel? cita = citasActuales?.FirstOrDefault(c => c.Id == citaId);
                 if (cita == null)
                 {
                     await AppUtils.MostrarSnackbar("No se puede encontrar la cita seleccionada.", Colors.Red, Colors.White);
                     return;
                 }
+                // Evita eliminar citas finalizadas
+                if (string.Equals(cita.Estado, "Finalizada", StringComparison.OrdinalIgnoreCase))
+                {
+                    await AppUtils.MostrarSnackbar("No puedes eliminar una cita finalizada.", Colors.Orange, Colors.White);
+                    return;
+                }
+
                 var popup = new CustomAlertPopup($"¿Seguro Que Quieres Eliminar la cita de {cita.Nombre}?");
                 bool confirmacion = await popup.ShowAsync(this);
                 if (!confirmacion) return;
@@ -186,9 +214,8 @@
 
                     if (eliminado)
                     {
-                        ProximasCitas.Remove(cita);
-                        UpdateVisibility();
                         await AppUtils.MostrarSnackbar("Cita eliminada exitosamente.", Colors.Green, Colors.White);
+                        await ActualizarListaEstados(); // Recarga la lista y los tabs
                     }
                     else
                     {

@@ -34,12 +34,25 @@
                                     <Border Grid.Row="0" Grid.Column="1" BackgroundColor="{Binding Estado, Converter={StaticResource EstadoColorConverter}}" StrokeShape="RoundRectangle 10" Padding="10,5" StrokeThickness="0" VerticalOptions="Start">
                                         <Label Text="{Binding Estado}" TextColor="White" FontSize="12" FontAttributes="Bold"/>
                                     </Border>
+                                    <!-- HINT DE DESLIZAR -->
+                                    <Label Grid.Row="4" 
+       Grid.Column="0" 
+       Grid.ColumnSpan="2"
+       Text=" ⋘ Desliza para eliminar"
+       FontSize="12" 
+       TextColor="White" 
+       FontAttributes="Bold"
+       HorizontalOptions="End"
+       Margin="0,5,0,0"
+       Opacity="0"
+       IsVisible="{Binding Estado, Converter={StaticResource EstadoPendienteConverter}}"/>
                                 </Grid>
                             </Border>
                         </SwipeView>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+            
         </Grid>
         <VerticalStackLayout x:Name="EmptyStateLayout" IsVisible="False" VerticalOptions="Center" HorizontalOptions="Center" Spacing="15">
             <Image Source="calendarblanco.png" WidthRequest="80" HeightRequest="80" Opacity="0.6"/>
