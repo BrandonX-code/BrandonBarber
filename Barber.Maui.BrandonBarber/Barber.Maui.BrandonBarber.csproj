@@ -116,6 +116,9 @@
 	  <MauiXaml Update="Controls\BarberoSelectionPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Controls\ChartTypeSelectionControl.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Controls\LoadingControl.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

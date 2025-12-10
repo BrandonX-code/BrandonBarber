@@ -19,6 +19,7 @@ namespace Barber.Maui.BrandonBarber.Pages
         private int _barberiaPickerLastIndex = -1; // Para restaurar selección si se cancela
         private readonly CultureInfo _cultura;
         private readonly RegionInfo _region;
+        private bool _barberiaButtonLocked = false;
         public Command RefreshCommand { get; }
 
         public MetricasPage(ReservationService reservationService, AuthService authService)
@@ -31,10 +32,6 @@ namespace Barber.Maui.BrandonBarber.Pages
             _region = new RegionInfo(_cultura.Name);
             RefreshCommand = new Command(async () => await RefreshMetricas());
             BindingContext = this;
-            ChartTypePicker.SelectedIndex =0;
-            RankingChartTypePicker.SelectedIndex =0;
-            AsistenciaChartTypePicker.SelectedIndex =0;
-            GananciasChartTypePicker.SelectedIndex =0;
             _ = CargarBarberias();
         }
 
@@ -68,8 +65,8 @@ namespace Barber.Maui.BrandonBarber.Pages
                     BarberiaTelefonoLabel.Text = _barberias[0].Telefono ?? string.Empty;
                     if (!string.IsNullOrWhiteSpace(_barberias[0].LogoUrl))
                     {
-                        BarberiaLogoImage.Source = _barberias[0].LogoUrl.StartsWith("http")
-                            ? ImageSource.FromUri(new Uri(_barberias[0].LogoUrl))
+                        BarberiaLogoImage.Source = _barberias[0].LogoUrl!.StartsWith("http")
+                            ? ImageSource.FromUri(new Uri(_barberias[0].LogoUrl!))
                             : ImageSource.FromFile(_barberias[0].LogoUrl);
                     }
                     else
@@ -116,57 +113,70 @@ namespace Barber.Maui.BrandonBarber.Pages
         // Nuevo método para mostrar el popup solo cuando el usuario toca el Picker
         private async void OnBarberiaPickerTapped(object sender, EventArgs e)
         {
-            if (_barberias == null || _barberias.Count <= 1)
-                return;
+            if (_barberiaButtonLocked) return;
+            _barberiaButtonLocked = true;
 
-            var popup = new BarberiaSelectionPopup(_barberias);
-            var seleccionada = await popup.ShowAsync();
-            if (seleccionada != null)
+            try
             {
-                int idx = _barberias.FindIndex(b => b.Idbarberia == seleccionada.Idbarberia);
-                if (idx >= 0)
+                if (_barberias == null || _barberias.Count <= 1)
+                    return;
+
+                var popup = new BarberiaSelectionPopup(_barberias);
+                var seleccionada = await popup.ShowAsync();
+
+                if (seleccionada != null)
                 {
-                    _barberiaSeleccionadaId = seleccionada.Idbarberia;
-                    _barberiaPickerLastIndex = idx;
-                    BarberiaSelectedLabel.Text = seleccionada.Nombre ?? "Seleccionar Barbería";
-                    BarberiaTelefonoLabel.Text = seleccionada.Telefono ?? string.Empty;
-                    if (!string.IsNullOrWhiteSpace(seleccionada.LogoUrl))
+                    int idx = _barberias.FindIndex(b => b.Idbarberia == seleccionada.Idbarberia);
+                    if (idx >= 0)
                     {
-                        BarberiaLogoImage.Source = seleccionada.LogoUrl.StartsWith("http")
-                            ? ImageSource.FromUri(new Uri(seleccionada.LogoUrl))
-                            : ImageSource.FromFile(seleccionada.LogoUrl);
+                        _barberiaSeleccionadaId = seleccionada.Idbarberia;
+                        _barberiaPickerLastIndex = idx;
+
+                        BarberiaSelectedLabel.Text = seleccionada.Nombre ?? "Seleccionar Barbería";
+                        BarberiaTelefonoLabel.Text = seleccionada.Telefono ?? string.Empty;
+
+                        if (!string.IsNullOrWhiteSpace(seleccionada.LogoUrl))
+                        {
+                            BarberiaLogoImage.Source = seleccionada.LogoUrl.StartsWith("http")
+                                ? ImageSource.FromUri(new Uri(seleccionada.LogoUrl))
+                                : ImageSource.FromFile(seleccionada.LogoUrl);
+                        }
+                        else
+                        {
+                            BarberiaLogoImage.Source = "picture.png";
+                        }
+
+                        var cambiarButton = this.FindByName<Button>("BarberiaSelectButton");
+                        if (cambiarButton != null)
+                        {
+                            cambiarButton.Text = "Cambiar";
+                        }
+
+                        await CargarMetricas();
+                    }
+                }
+                else if (_barberiaPickerLastIndex >= 0 && _barberias.Count > _barberiaPickerLastIndex)
+                {
+                    var barberia = _barberias[_barberiaPickerLastIndex];
+
+                    BarberiaSelectedLabel.Text = barberia.Nombre ?? "Seleccionar Barbería";
+                    BarberiaTelefonoLabel.Text = barberia.Telefono ?? string.Empty;
+
+                    if (!string.IsNullOrWhiteSpace(barberia.LogoUrl))
+                    {
+                        BarberiaLogoImage.Source = barberia.LogoUrl.StartsWith("http")
+                            ? ImageSource.FromUri(new Uri(barberia.LogoUrl))
+                            : ImageSource.FromFile(barberia.LogoUrl);
                     }
                     else
                     {
                         BarberiaLogoImage.Source = "picture.png";
                     }
-
-                    // Cambiar texto del botón a "Cambiar"
-                    var cambiarButton = this.FindByName<Button>("BarberiaSelectButton");
-                    if (cambiarButton != null)
-                    {
-                        cambiarButton.Text = "Cambiar";
-                    }
-
-                    await CargarMetricas();
                 }
             }
-            else if (_barberiaPickerLastIndex >= 0 && _barberias.Count > _barberiaPickerLastIndex)
+            finally
             {
-                // Restaurar selección anterior si se cancela
-                var barberia = _barberias[_barberiaPickerLastIndex];
-                BarberiaSelectedLabel.Text = barberia.Nombre ?? "Seleccionar Barbería";
-                BarberiaTelefonoLabel.Text = barberia.Telefono ?? string.Empty;
-                if (!string.IsNullOrWhiteSpace(barberia.LogoUrl))
-                {
-                    BarberiaLogoImage.Source = barberia.LogoUrl.StartsWith("http")
-                        ? ImageSource.FromUri(new Uri(barberia.LogoUrl))
-                        : ImageSource.FromFile(barberia.LogoUrl);
-                }
-                else
-                {
-                    BarberiaLogoImage.Source = "picture.png";
-                }
+                _barberiaButtonLocked = false;
             }
         }
 
@@ -255,11 +265,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
         }
 
-        private void OnAsistenciaChartTypeChanged(object sender, EventArgs e)
+        private void OnAsistenciaChartTypeChanged(object sender, int selectedIndex)
         {
             CargarGraficoTasaAsistencia().ConfigureAwait(false);
         }
-        private void OnGananciasChartTypeChanged(object sender, EventArgs e)
+        private void OnGananciasChartTypeChanged(object sender, int selectedIndex)
         {
             CargarGraficoGanancias().ConfigureAwait(false);
         }
@@ -273,7 +283,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var entries = await ObtenerDatosGanancias();
 
                 Chart chart;
-                if (GananciasChartTypePicker.SelectedIndex == 0)
+                if (GananciasChartControl.SelectedIndex == 0)
                 {
                     chart = new BarChart
                     {
@@ -319,7 +329,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var entries = await ObtenerDatosTasaAsistencia();
 
                 Chart chart;
-                if (AsistenciaChartTypePicker.SelectedIndex == 0)
+                if (AsistenciaChartControl.SelectedIndex == 0)
                 {
                     chart = new BarChart
                     {
@@ -400,7 +410,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 // Calcular ganancias del mes
                 decimal gananciasMes = citasDelMes
                     .Where(c => c.ServicioPrecio.HasValue)
-                    .Sum(c => c.ServicioPrecio.Value);
+                    .Sum(c => c.ServicioPrecio!.Value);
 
                 entries.Add(new ChartEntry((float)gananciasMes)
                 {
@@ -498,12 +508,12 @@ namespace Barber.Maui.BrandonBarber.Pages
             return entries;
         }
 
-        private void OnChartTypeChanged(object sender, EventArgs e)
+        private void OnChartTypeChanged(object sender, int selectedIndex)
         {
             CargarGraficoAsistencia().ConfigureAwait(false);
         }
 
-        private void OnRankingChartTypeChanged(object sender, EventArgs e)
+        private void OnRankingChartTypeChanged(object sender, int selectedIndex)
         {
             CargarRankingBarberos().ConfigureAwait(false);
         }
@@ -517,7 +527,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var entries = await ObtenerDatosAsistencia();
 
                 Chart chart;
-                if (ChartTypePicker.SelectedIndex == 0)
+                if (ChartTypeControl.SelectedIndex == 0)
                 {
                     chart = new BarChart
                     {
@@ -696,7 +706,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 }
 
                 Chart chart;
-                if (RankingChartTypePicker.SelectedIndex == 0)
+                if (RankingChartControl.SelectedIndex == 0)
                 {
                     chart = new BarChart
                     {
@@ -766,17 +776,17 @@ namespace Barber.Maui.BrandonBarber.Pages
                 // ✅ FILTRAR SOLO CITAS FINALIZADAS
                 var fechaLimite = DateTime.Now.AddMonths(-6);
                 var citasFinalizadas = todasLasCitas
-                    .Where(c => c.Fecha >= fechaLimite &&
-                               c.Estado?.ToLower() == "finalizada") // ← CAMBIO AQUÍ
-                    .ToList();
+            .Where(c => c.Fecha >= fechaLimite &&
+                c.Estado?.ToLower() == "finalizada")
+                  .ToList();
 
                 var clientesFrecuentes = citasFinalizadas
-                    .Where(c => c.Cedula > 0)
-                    .GroupBy(c => c.Cedula)
-                    .Select(g => new { Cedula = g.Key, Visitas = g.Count() })
-                    .OrderByDescending(x => x.Visitas)
-                    .Take(5)
-                    .ToList();
+          .Where(c => c.Cedula > 0)
+             .GroupBy(c => c.Cedula)
+                .Select(g => new { Cedula = g.Key, Visitas = g.Count() })
+        .OrderByDescending(x => x.Visitas)
+                .Take(5)
+        .ToList();
 
                 var clientesDetallados = new List<ClienteFrecuenteExtendido>();
                 int position = 1;
@@ -794,15 +804,19 @@ namespace Barber.Maui.BrandonBarber.Pages
                     }
                 }
 
+                // Mostrar/ocultar según si hay datos
+                ClientesFrecuentesCollection.IsVisible = clientesDetallados.Count > 0;
+                ClientesFrecuentesEmptyState.IsVisible = clientesDetallados.Count == 0;
+
+                ClientesFrecuentesCollection.ItemsSource = clientesDetallados;
+
                 if (clientesDetallados.Count == 0)
                 {
                     var mensaje = _barberiaSeleccionadaId > 0
-                        ? "No hay datos de clientes para la barbería seleccionada."
-                        : "No hay datos de clientes para mostrar en el ranking.";
+                 ? "No hay datos de clientes para la barbería seleccionada."
+                : "No hay datos de clientes para mostrar en el ranking.";
                     await AppUtils.MostrarSnackbar(mensaje, Colors.Orange, Colors.White);
                 }
-
-                ClientesFrecuentesCollection.ItemsSource = clientesDetallados;
             }
             catch (Exception ex)
             {

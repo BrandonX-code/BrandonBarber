@@ -18,21 +18,24 @@
                         </Label>
                     </Grid>
                     <VerticalStackLayout x:Name="PickerSection" Spacing="5" IsVisible="False">
-                        <Border BackgroundColor="#90A4AE" Padding="15" StrokeShape="RoundRectangle 12" StrokeThickness="0" HeightRequest="100">
-                            <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
-                                <!-- Logo de la barbería -->
-                                <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#F0F0F0" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
-                                    <Image x:Name="BarberiaLogoImage" Source="picture.png" Aspect="AspectFill"/>
+                        <Border BackgroundColor="#90A4AE" Padding="0" StrokeShape="RoundRectangle 16" StrokeThickness="0" HeightRequest="160">
+                            <VerticalStackLayout Spacing="0">
+                                <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
+                                    <Label Text="Barbería" TextColor="White" FontSize="16" FontAttributes="Bold"/>
                                 </Border>
-                                <!-- Info de la barbería -->
-                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" Margin="12,0,0,0">
-                                    <Label x:Name="BarberiaSelectedLabel" Text="Seleccionar Barbería" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
-                                    <Label x:Name="BarberiaTelefonoLabel" Text="" TextColor="#333" FontSize="14"/>
-                                </VerticalStackLayout>
-                                <!-- Botón cambiar -->
-                                <Button x:Name="BarberiaSelectButton" Grid.Column="2" Text="Seleccionar" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center"  Clicked="OnBarberiaPickerTapped" Margin="0,0,10,0" IsVisible="False"/>
-                            </Grid>
+                                <Grid Padding="15" ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center" Margin="0,10,0,0">
+                                    <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#F0F0F0" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
+                                        <Image x:Name="BarberiaLogoImage" Source="picture.png" Aspect="AspectFill"/>
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" Margin="12,0,0,0">
+                                        <Label x:Name="BarberiaSelectedLabel" Text="Seleccionar Barbería" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                                        <Label x:Name="BarberiaTelefonoLabel" Text="" TextColor="#333" FontSize="14"/>
+                                    </VerticalStackLayout>
+                                    <Button x:Name="BarberiaSelectButton" Grid.Column="2" Text="Seleccionar" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,10,0" Clicked="OnBarberiaPickerTapped" IsVisible="False"/>
+                                </Grid>
+                            </VerticalStackLayout>
                         </Border>
+
                     </VerticalStackLayout>
                     <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="10">
                         <Border Grid.Column="0" Grid.Row="0" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 12" Padding="16" StrokeThickness="0">
@@ -51,15 +54,8 @@
                     </Grid>
                     <Border BackgroundColor="#90A4AE" Padding="5" StrokeShape="RoundRectangle 16" StrokeThickness="0">
                         <VerticalStackLayout>
-                            <Grid ColumnDefinitions="*,Auto" Padding="5">
-                                <Label Text="Ganancias" VerticalOptions="Center" TextColor="Black" FontSize="20" FontAttributes="Bold"/>
-                                <Picker x:Name="GananciasChartTypePicker" Grid.Column="1" TextColor="Black" BackgroundColor="#90A4AE" SelectedIndexChanged="OnGananciasChartTypeChanged">
-                                    <Picker.Items>
-                                        <x:String>Barras</x:String>
-                                        <x:String>Líneas</x:String>
-                                    </Picker.Items>
-                                </Picker>
-                            </Grid>
+                            <Label Text="Ganancias" VerticalOptions="Center" TextColor="Black" FontSize="20" FontAttributes="Bold" Margin="5,5,5,0"/>
+                            <controls:ChartTypeSelectionControl x:Name="GananciasChartControl" SelectionChanged="OnGananciasChartTypeChanged" Margin="5,10"/>
                             <Border BackgroundColor="#0E2A36" Padding="0" StrokeShape="RoundRectangle 16" StrokeThickness="0">
                                 <microcharts:ChartView x:Name="GananciasChart" Margin="0,10,0,-10" HeightRequest="220" BackgroundColor="Transparent" />
                             </Border>
@@ -85,15 +81,9 @@
                     <!-- Agregar después del Grid con TotalCitasLabel y TasaAsistenciaLabel -->
                     <Border BackgroundColor="#90A4AE" Padding="5" StrokeShape="RoundRectangle 16" StrokeThickness="0">
                         <VerticalStackLayout>
-                            <Grid ColumnDefinitions="*,Auto" Padding="5">
-                                <Label Text="Tasa de Asistencia Mensual" VerticalOptions="Center" TextColor="Black" FontSize="20" FontAttributes="Bold"/>
-                                <Picker x:Name="AsistenciaChartTypePicker" Grid.Column="1" TextColor="Black" BackgroundColor="#90A4AE" SelectedIndexChanged="OnAsistenciaChartTypeChanged">
-                                    <Picker.Items>
-                                        <x:String>Barras</x:String>
-                                        <x:String>Líneas</x:String>
-                                    </Picker.Items>
-                                </Picker>
-                            </Grid>
+                            <Label Text="Tasa de Asistencia Mensual" VerticalOptions="Center" TextColor="Black" FontSize="20" FontAttributes="Bold" Margin="5,5,5,0"/>
+                            <controls:ChartTypeSelectionControl x:Name="AsistenciaChartControl" SelectionChanged="OnAsistenciaChartTypeChanged" Margin="5,10"/>
+
                             <Border BackgroundColor="#0E2A36" Padding="0" StrokeShape="RoundRectangle 16" StrokeThickness="0">
                                 <microcharts:ChartView x:Name="TasaAsistenciaChart" Margin="0,10,0,-10" HeightRequest="220" BackgroundColor="Transparent" />
                             </Border>
@@ -101,15 +91,9 @@
                     </Border>
                     <Border BackgroundColor="#90A4AE" Padding="5" StrokeShape="RoundRectangle 16" StrokeThickness="0">
                         <VerticalStackLayout>
-                            <Grid ColumnDefinitions="*,Auto" Padding="5">
-                                <Label Text="Asistencia Mensual" VerticalOptions="Center" TextColor="Black" FontSize="20" FontAttributes="Bold"/>
-                                <Picker x:Name="ChartTypePicker" Grid.Column="1" TextColor="Black" BackgroundColor="#90A4AE" SelectedIndexChanged="OnChartTypeChanged">
-                                    <Picker.Items>
-                                        <x:String>Barras</x:String>
-                                        <x:String>Líneas</x:String>
-                                    </Picker.Items>
-                                </Picker>
-                            </Grid>
+                            <Label Text="Asistencia Mensual" VerticalOptions="Center" TextColor="Black" FontSize="20" FontAttributes="Bold" Margin="5,5,5,0"/>
+                                <controls:ChartTypeSelectionControl x:Name="ChartTypeControl" SelectionChanged="OnChartTypeChanged" Margin="5,10"/>
+                            
                             <Border BackgroundColor="#0E2A36" Padding="0" StrokeShape="RoundRectangle 16" StrokeThickness="0">
                                 <microcharts:ChartView x:Name="AsistenciaChart" Margin="0,10,0,-10" HeightRequest="220" BackgroundColor="Transparent" />
                             </Border>
@@ -119,15 +103,8 @@
 
                     <Border BackgroundColor="#90A4AE" Padding="5" StrokeShape="RoundRectangle 16" StrokeThickness="0">
                         <VerticalStackLayout>
-                            <Grid ColumnDefinitions="*,Auto" Padding="5">
-                                <Label Text="Top Barberos" VerticalOptions="Center" TextColor="Black" FontSize="20"  FontAttributes="Bold"/>
-                                <Picker x:Name="RankingChartTypePicker" Grid.Column="1" TextColor="Black" BackgroundColor="#90A4AE" SelectedIndexChanged="OnRankingChartTypeChanged">
-                                    <Picker.Items>
-                                        <x:String>Barras</x:String>
-                                        <x:String>Líneas</x:String>
-                                    </Picker.Items>
-                                </Picker>
-                            </Grid>
+                            <Label Text="Top Barberos" VerticalOptions="Center" TextColor="Black" FontSize="20"  FontAttributes="Bold" Margin="5,5,5,0"/>
+                            <controls:ChartTypeSelectionControl x:Name="RankingChartControl" SelectionChanged="OnRankingChartTypeChanged" Margin="5,10"/>
                             <Border BackgroundColor="#0E2A36" Padding="0" StrokeShape="RoundRectangle 16" StrokeThickness="0">
                                 <microcharts:ChartView x:Name="RankingBarberosChart"  Margin="0,10,0,-10" HeightRequest="220" BackgroundColor="Transparent"/>
                             </Border>
@@ -151,6 +128,11 @@
                                     </DataTemplate>
                                 </CollectionView.ItemTemplate>
                             </CollectionView>
+                            <VerticalStackLayout x:Name="ClientesFrecuentesEmptyState" IsVisible="False"  Spacing="15">
+                                <Image Source="id.png" WidthRequest="80" HeightRequest="80" Opacity="0.6" />
+                                <Label Text="Sin clientes frecuentes" FontSize="18" FontAttributes="Bold" TextColor="Black" HorizontalTextAlignment="Center"/>
+                                <Label Text="Los clientes frecuentes aparecerán aquí" FontSize="14" TextColor="#333" HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>

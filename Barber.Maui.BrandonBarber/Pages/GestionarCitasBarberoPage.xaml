@@ -41,7 +41,7 @@
                                 </HorizontalStackLayout>
 
                                 <HorizontalStackLayout Grid.Row="4" VerticalOptions="Start" Grid.Column="0" Grid.ColumnSpan="2" Spacing="10" Margin="0,10,0,0" IsVisible="{Binding Estado, Converter={StaticResource EstadoAceptadaConverter}}">
-                                    <Button Text="✓ Completar" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="10" Padding="15,8" Clicked="OnCompletarCitaClicked" CommandParameter="{Binding .}" />
+                                    <Button Text="✓ Comfirmar" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="10" Padding="15,8" Clicked="OnCompletarCitaClicked" CommandParameter="{Binding .}" />
                                 </HorizontalStackLayout>
 
                                 <Border Grid.Row="0" Grid.Column="1"  BackgroundColor="{Binding Estado, Converter={StaticResource EstadoColorConverter}}" StrokeShape="RoundRectangle 10" Padding="10,5" StrokeThickness="0" VerticalOptions="Start">

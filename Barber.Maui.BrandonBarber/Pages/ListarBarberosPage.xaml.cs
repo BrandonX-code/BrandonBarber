@@ -11,6 +11,7 @@ namespace Barber.Maui.BrandonBarber.Pages
         private List<Barberia>? _barberias;
         private int? _barberiaSeleccionadaId = null;
         private bool _isNavigating = false;
+        private bool _barberiaCambiarLocked = false;
         public Command RefreshCommand { get; }
         public ObservableCollection<UsuarioModels> BarberosFiltrados
         {
@@ -114,51 +115,60 @@ namespace Barber.Maui.BrandonBarber.Pages
 
         private async void OnBarberiaCambiarClicked(object sender, EventArgs e)
         {
-            if (_barberias == null || _barberias.Count == 0)
-                return;
+            // Evita doble clic
+            if (_barberiaCambiarLocked) return;
+            _barberiaCambiarLocked = true;
 
-            var popup = new BarberiaSelectionPopup(_barberias);
-            var barberiaSeleccionada = await popup.ShowAsync();
-
-            if (barberiaSeleccionada != null)
+            try
             {
-                // Actualizar la UI usando FindByName
-                var nombreLabel = this.FindByName<Label>("BarberiaNombreLabel");
-                var direccionLabel = this.FindByName<Label>("BarberiaDireccionLabel");
-                var logoImage = this.FindByName<Image>("BarberialogoImage");
-                var cambiarButton = this.FindByName<Button>("BarberiaCambiarButton");
+                if (_barberias == null || _barberias.Count == 0)
+                    return;
 
-                if (nombreLabel != null)
-                    nombreLabel.Text = barberiaSeleccionada.Nombre ?? "Seleccionar Barbería";
+                var popup = new BarberiaSelectionPopup(_barberias);
+                var barberiaSeleccionada = await popup.ShowAsync();
 
-                if (direccionLabel != null)
-                    direccionLabel.Text = barberiaSeleccionada.Direccion ?? string.Empty;
-
-                if (logoImage != null)
+                if (barberiaSeleccionada != null)
                 {
-                    if (!string.IsNullOrWhiteSpace(barberiaSeleccionada.LogoUrl))
+                    // Actualizar UI por FindByName
+                    var nombreLabel = this.FindByName<Label>("BarberiaNombreLabel");
+                    var direccionLabel = this.FindByName<Label>("BarberiaDireccionLabel");
+                    var logoImage = this.FindByName<Image>("BarberialogoImage");
+                    var cambiarButton = this.FindByName<Button>("BarberiaCambiarButton");
+
+                    if (nombreLabel != null)
+                        nombreLabel.Text = barberiaSeleccionada.Nombre ?? "Seleccionar Barbería";
+
+                    if (direccionLabel != null)
+                        direccionLabel.Text = barberiaSeleccionada.Direccion ?? string.Empty;
+
+                    if (logoImage != null)
                     {
-                        logoImage.Source = barberiaSeleccionada.LogoUrl.StartsWith("http")
-                                    ? ImageSource.FromUri(new Uri(barberiaSeleccionada.LogoUrl))
-                         : ImageSource.FromFile(barberiaSeleccionada.LogoUrl);
+                        if (!string.IsNullOrWhiteSpace(barberiaSeleccionada.LogoUrl))
+                        {
+                            logoImage.Source = barberiaSeleccionada.LogoUrl.StartsWith("http")
+                                ? ImageSource.FromUri(new Uri(barberiaSeleccionada.LogoUrl))
+                                : ImageSource.FromFile(barberiaSeleccionada.LogoUrl);
+                        }
+                        else
+                        {
+                            logoImage.Source = "picture.png";
+                        }
                     }
-                    else
-                    {
-                        logoImage.Source = "picture.png";
-                    }
+
+                    // Cambiar texto del botón a "Cambiar"
+                    if (cambiarButton != null)
+                        cambiarButton.Text = "Cambiar";
+
+                    // Guardar ID de la barbería seleccionada
+                    _barberiaSeleccionadaId = barberiaSeleccionada.Idbarberia;
+
+                    // Cargar los barberos
+                    await LoadBarberos();
                 }
-
-                // Cambiar texto del botón a "Cambiar"
-                if (cambiarButton != null)
-                {
-                    cambiarButton.Text = "Cambiar";
-                }
-
-                // Actualizar el ID de la barbería seleccionada
-                _barberiaSeleccionadaId = barberiaSeleccionada.Idbarberia;
-
-                // Cargar los barberos de la barbería seleccionada
-                await LoadBarberos();
+            }
+            finally
+            {
+                _barberiaCambiarLocked = false; // Reactivar botón
             }
         }
         protected override void OnAppearing()

@@ -12,110 +12,104 @@
             <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Grid.Row="1">
                 <VerticalStackLayout x:Name="formLayout" Padding="20" Spacing="7" BackgroundColor="Transparent" TranslationY="50" Opacity="0">
                     <!-- Servicio Seleccionado -->
-                    <Border x:Name="servicioBorder" StrokeThickness="0" StrokeShape="RoundRectangle 10"  BackgroundColor="#28475C" Padding="15,12" Margin="0,0,0,10" Opacity="0" IsVisible="False">
-                        <VerticalStackLayout Spacing="10">
-                            <HorizontalStackLayout Spacing="15">
-                                <Border Grid.Column="0" WidthRequest="100" HeightRequest="100" StrokeShape="RoundRectangle 50" BackgroundColor="#E0F7FA"  VerticalOptions="Center"  StrokeThickness="0">
-                                    <Image x:Name="ServicioImagen"  Aspect="AspectFill">
-                                        <Image.Clip>
-                                            <RoundRectangleGeometry CornerRadius="50" Rect="0,0,100,100" />
-                                        </Image.Clip>
-                                    </Image>
-                                </Border>
-                                <VerticalStackLayout Spacing="5" VerticalOptions="Center">
-                                    <Label x:Name="ServicioNombreLabel" Text="Nombre del servicio" TextColor="White" FontSize="18" FontAttributes="Bold"/>
-                                    <Label x:Name="ServicioPrecioLabel" Text="$0" TextColor="White" FontSize="14" FontAttributes="Bold"/>
-                                </VerticalStackLayout>
-                            </HorizontalStackLayout>
-                            <Button Text="Cambiar servicio" Clicked="OnCambiarServicioClicked" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="15"  FontSize="14" FontAttributes="Bold"/>
+                    <Border x:Name="servicioBorder" StrokeThickness="0" StrokeShape="RoundRectangle 16" BackgroundColor="#90A4AE" Padding="0" Margin="0,0,0,10" Opacity="0" IsVisible="False">
+                        <VerticalStackLayout Spacing="0">
+                            <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
+                                <Label Text="Servicio" TextColor="White" FontSize="16" FontAttributes="Bold"/>
+                            </Border>
+                            <VerticalStackLayout Spacing="10" Padding="15" Margin="0,10,0,0">
+                                <HorizontalStackLayout Spacing="15">
+                                    <Border WidthRequest="100" HeightRequest="100" StrokeShape="RoundRectangle 50" BackgroundColor="#E0F7FA" VerticalOptions="Center" StrokeThickness="0">
+                                        <Image x:Name="ServicioImagen" Aspect="AspectFill">
+                                            <Image.Clip>
+                                                <RoundRectangleGeometry CornerRadius="50" Rect="0,0,100,100"/>
+                                            </Image.Clip>
+                                        </Image>
+                                    </Border>
+                                    <VerticalStackLayout Spacing="5" VerticalOptions="Center">
+                                        <Label x:Name="ServicioNombreLabel" Text="Nombre del servicio" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                                        <Label x:Name="ServicioPrecioLabel" Text="$0" TextColor="Black" FontSize="14" FontAttributes="Bold"/>
+                                    </VerticalStackLayout>
+                                </HorizontalStackLayout>
+                                <Button Text="Cambiar servicio" Clicked="OnCambiarServicioClicked" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="15" FontSize="14" FontAttributes="Bold"/>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
-                    <Border x:Name="barberoBorder" StrokeThickness="0" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0">
-                        <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
-                            <!-- Foto del barbero -->
-                            <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
-                                <Image x:Name="BarberoFotoImage" Source="dotnet_bot.png" Aspect="AspectFill"/>
+
+                    <Border x:Name="barberoBorder" StrokeThickness="0" StrokeShape="RoundRectangle 16" BackgroundColor="#90A4AE" Padding="0" Margin="0,0,0,10" Opacity="0">
+                        <VerticalStackLayout Spacing="0">
+                            <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
+                                <Label Text="Barbero" TextColor="White" FontSize="16" FontAttributes="Bold"/>
                             </Border>
-                            <!-- Info del barbero -->
-                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" Margin="12,0,0,0">
-                                <Label x:Name="BarberoSelectedLabel"
-                                       Text="Seleccionar Barbero"
-                                       TextColor="Black"
-                                       FontSize="18"
-                                       FontAttributes="Bold"/>
-                                <Label x:Name="BarberoTelefonoLabel"
-                                       Text=""
-                                       TextColor="#333"
-                                       FontSize="14"/>
-                            </VerticalStackLayout>
-                            <!-- Botón cambiar -->
-                            <Button x:Name="BarberoSelectButton"
-                                    Grid.Column="2"
-                                    Text="Cambiar"
-                                    BackgroundColor="#0E2A36"
-                                    TextColor="White"
-                                    CornerRadius="10"
-                                    FontAttributes="Bold"
-                                    HorizontalOptions="End"
-                                    VerticalOptions="Center"
-                                    WidthRequest="120"
-                                    HeightRequest="40"
-                                    Clicked="OnBarberoPickerTapped"
-                                    Margin="0,0,10,0"
-                                    IsVisible="False"/>
-                        </Grid>
+                            <Grid Padding="15" ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center" Margin="0,10,0,0">
+                                <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
+                                    <Image x:Name="BarberoFotoImage" Source="dotnet_bot.png" Aspect="AspectFill"/>
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" Margin="12,0,0,0">
+                                    <Label x:Name="BarberoSelectedLabel" Text="Seleccionar Barbero" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                                    <Label x:Name="BarberoTelefonoLabel" Text="" TextColor="#333" FontSize="14"/>
+                                </VerticalStackLayout>
+                                <Button x:Name="BarberoSelectButton" Grid.Column="2" Text="Cambiar" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" WidthRequest="120" HeightRequest="40" Margin="0,0,10,0" Clicked="OnBarberoPickerTapped" IsVisible="False"/>
+                            </Grid>
+                        </VerticalStackLayout>
                     </Border>
+
 
                     <!-- Fecha -->
-                    <Border x:Name="fechaBorder"  StrokeThickness="0" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0">
-                        <VerticalStackLayout Spacing="10">
-                            <Label Text="Fecha:" TextColor="Black" FontSize="16"/>
-                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10"  StrokeThickness="0"  Padding="0" HorizontalOptions="Fill">
-                                <DatePicker x:Name="FechaPicker" TextColor="Black" VerticalOptions="Center" />
+                    <Border x:Name="fechaBorder" StrokeThickness="0" StrokeShape="RoundRectangle 16" BackgroundColor="#90A4AE" Padding="0" Margin="0,0,0,10" Opacity="0">
+                        <VerticalStackLayout Spacing="0">
+                            <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
+                                <Label Text="Fecha" TextColor="White" FontSize="16" FontAttributes="Bold"/>
                             </Border>
+                            <VerticalStackLayout Spacing="10" Padding="15">
+                                <Label Text="Selecciona una fecha:" TextColor="Black" FontSize="16"/>
+                                <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0" Padding="0" HorizontalOptions="Fill">
+                                    <DatePicker x:Name="FechaPicker" TextColor="Black" VerticalOptions="Center"/>
+                                </Border>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
 
-                    <Border x:Name="franjasBorder" StrokeThickness="0" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" Opacity="0" IsVisible="False">
-                        <VerticalStackLayout Spacing="10">
-                            <Label Text="Horas disponibles" TextColor="Black" FontSize="16" FontAttributes="Bold"/>
 
-                            <ScrollView HeightRequest="150" VerticalScrollBarVisibility="Never">
-                                <CollectionView x:Name="FranjasCollectionView" SelectionMode="Single" SelectionChanged="OnFranjaSeleccionada">
-                                    <CollectionView.ItemsLayout>
-                                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="8"/>
-                                    </CollectionView.ItemsLayout>
-
-                                    <CollectionView.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Padding="12,8" StrokeThickness="0" StrokeShape="RoundRectangle 8">
-                                                <Border.BackgroundColor>
-                                                    <Binding Path="EstaDisponible">
-                                                        <Binding.Converter>
-                                                            <StaticResource Key="DisponibilidadColorConverter"/>
-                                                        </Binding.Converter>
-                                                    </Binding>
-                                                </Border.BackgroundColor>
-                                                <VisualStateManager.VisualStateGroups>
-                                                    <VisualStateGroup Name="CommonStates">
-                                                        <VisualState Name="Normal"/>
-                                                        <VisualState Name="Selected">
-                                                            <VisualState.Setters>
-                                                                <Setter Property="BackgroundColor" Value="#FF6F91"/>
-                                                            </VisualState.Setters>
-                                                        </VisualState>
-                                                    </VisualStateGroup>
-                                                </VisualStateManager.VisualStateGroups>
-
-                                                <Label Text="{Binding HoraTexto}" TextColor="Black" FontSize="14" HorizontalOptions="Center"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </CollectionView.ItemTemplate>
-
-                                </CollectionView>
-                            </ScrollView>
-
-                            <Label x:Name="FranjaSeleccionadaLabel" Text="Ninguna hora seleccionada" TextColor="Black" FontSize="15" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                    <Border x:Name="franjasBorder" StrokeThickness="0" StrokeShape="RoundRectangle 16" BackgroundColor="#90A4AE" Padding="0" Margin="0,0,0,10" Opacity="0" IsVisible="False">
+                        <VerticalStackLayout Spacing="0">
+                            <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
+                                <Label Text="Horas Disponibles" TextColor="White" FontSize="16" FontAttributes="Bold"/>
+                            </Border>
+                            <VerticalStackLayout Spacing="10" Padding="15">
+                                <ScrollView HeightRequest="150" VerticalScrollBarVisibility="Never">
+                                    <CollectionView x:Name="FranjasCollectionView" SelectionMode="Single" SelectionChanged="OnFranjaSeleccionada">
+                                        <CollectionView.ItemsLayout>
+                                            <LinearItemsLayout Orientation="Vertical" ItemSpacing="8"/>
+                                        </CollectionView.ItemsLayout>
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Padding="12,8" StrokeThickness="0" StrokeShape="RoundRectangle 8">
+                                                    <Border.BackgroundColor>
+                                                        <Binding Path="EstaDisponible">
+                                                            <Binding.Converter>
+                                                                <StaticResource Key="DisponibilidadColorConverter"/>
+                                                            </Binding.Converter>
+                                                        </Binding>
+                                                    </Border.BackgroundColor>
+                                                    <VisualStateManager.VisualStateGroups>
+                                                        <VisualStateGroup Name="CommonStates">
+                                                            <VisualState Name="Normal"/>
+                                                            <VisualState Name="Selected">
+                                                                <VisualState.Setters>
+                                                                    <Setter Property="BackgroundColor" Value="#FF6F91"/>
+                                                                </VisualState.Setters>
+                                                            </VisualState>
+                                                        </VisualStateGroup>
+                                                    </VisualStateManager.VisualStateGroups>
+                                                    <Label Text="{Binding HoraTexto}" TextColor="Black" FontSize="14" HorizontalOptions="Center"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                </ScrollView>
+                                <Label x:Name="FranjaSeleccionadaLabel" Text="Ninguna hora seleccionada" TextColor="Black" FontSize="15" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
+                            </VerticalStackLayout>
                         </VerticalStackLayout>
                     </Border>
 

@@ -7,8 +7,7 @@ namespace Barber.Maui.BrandonBarber.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             string? estado = value?.ToString();
-            return !string.Equals(estado, "Finalizada", StringComparison.OrdinalIgnoreCase)
-                   && !string.IsNullOrEmpty(estado);
+            return string.Equals(estado, "Pendiente", StringComparison.OrdinalIgnoreCase);
         }
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {

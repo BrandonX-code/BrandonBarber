@@ -15,6 +15,7 @@ namespace Barber.Maui.BrandonBarber
         private List<UsuarioModels>? _barberos;
         private int _barberoSeleccionadoIndex = -1;
         private UsuarioModels? _barberoSeleccionado;
+        private bool _barberoPickerLocked = false;
 
         public MainPage(ReservationService reservationService, AuthService authService,
             UsuarioModels? barberoPreseleccionado = null, ServicioModel? servicioSeleccionado = null, DateTime fechaPreseleccionada = default)
@@ -156,51 +157,69 @@ namespace Barber.Maui.BrandonBarber
 
         private async void OnBarberoPickerTapped(object sender, EventArgs e)
         {
-            if (_barberos == null || _barberos.Count <= 1)
-                return;
+            // ⛔ Evitar doble clic
+            if (_barberoPickerLocked) return;
+            _barberoPickerLocked = true;
 
-            var popup = new BarberoSelectionPopup(_barberos);
-            var seleccionada = await popup.ShowAsync();
-            if (seleccionada != null)
+            try
             {
-                int idx = _barberos.FindIndex(b => b.Cedula == seleccionada.Cedula);
-                if (idx >= 0)
+                if (_barberos == null || _barberos.Count <= 1)
+                    return;
+
+                var popup = new BarberoSelectionPopup(_barberos);
+                var seleccionada = await popup.ShowAsync();
+
+                if (seleccionada != null)
                 {
-                    _barberoSeleccionadoIndex = idx;
-                    _barberoSeleccionado = seleccionada;
-                    BarberoSelectedLabel.Text = seleccionada.Nombre ?? "Seleccionar Barbero";
-                    BarberoTelefonoLabel.Text = seleccionada.Telefono ?? string.Empty;
-                    if (!string.IsNullOrWhiteSpace(seleccionada.ImagenPath))
+                    int idx = _barberos.FindIndex(b => b.Cedula == seleccionada.Cedula);
+                    if (idx >= 0)
                     {
-                        BarberoFotoImage.Source = seleccionada.ImagenPath.StartsWith("http")
-                            ? ImageSource.FromUri(new Uri(seleccionada.ImagenPath))
-                            : ImageSource.FromFile(seleccionada.ImagenPath);
+                        _barberoSeleccionadoIndex = idx;
+                        _barberoSeleccionado = seleccionada;
+
+                        BarberoSelectedLabel.Text = seleccionada.Nombre ?? "Seleccionar Barbero";
+                        BarberoTelefonoLabel.Text = seleccionada.Telefono ?? string.Empty;
+
+                        if (!string.IsNullOrWhiteSpace(seleccionada.ImagenPath))
+                        {
+                            BarberoFotoImage.Source = seleccionada.ImagenPath.StartsWith("http")
+                                ? ImageSource.FromUri(new Uri(seleccionada.ImagenPath))
+                                : ImageSource.FromFile(seleccionada.ImagenPath);
+                        }
+                        else
+                        {
+                            BarberoFotoImage.Source = "dotnet_bot.png";
+                        }
+
+                        LimpiarSeleccionFranja();
+                        await CargarFranjasDisponibles();
+                    }
+                }
+                else if (_barberoSeleccionadoIndex >= 0 && _barberos.Count > _barberoSeleccionadoIndex)
+                {
+                    // Restaurar selección anterior al cancelar
+                    var barbero = _barberos[_barberoSeleccionadoIndex];
+                    _barberoSeleccionado = barbero;
+
+                    BarberoSelectedLabel.Text = barbero.Nombre ?? "Seleccionar Barbero";
+                    BarberoTelefonoLabel.Text = barbero.Telefono ?? string.Empty;
+
+                    if (!string.IsNullOrWhiteSpace(barbero.ImagenPath))
+                    {
+                        BarberoFotoImage.Source = barbero.ImagenPath.StartsWith("http")
+                            ? ImageSource.FromUri(new Uri(barbero.ImagenPath))
+                            : ImageSource.FromFile(barbero.ImagenPath);
                     }
                     else
                     {
                         BarberoFotoImage.Source = "dotnet_bot.png";
                     }
-                    LimpiarSeleccionFranja();
-                    await CargarFranjasDisponibles();
                 }
             }
-            else if (_barberoSeleccionadoIndex >= 0 && _barberos.Count > _barberoSeleccionadoIndex)
+            finally
             {
-                // Restaurar selección anterior si se cancela
-                var barbero = _barberos[_barberoSeleccionadoIndex];
-                _barberoSeleccionado = barbero;
-                BarberoSelectedLabel.Text = barbero.Nombre ?? "Seleccionar Barbero";
-                BarberoTelefonoLabel.Text = barbero.Telefono ?? string.Empty;
-                if (!string.IsNullOrWhiteSpace(barbero.ImagenPath))
-                {
-                    BarberoFotoImage.Source = barbero.ImagenPath.StartsWith("http")
-                        ? ImageSource.FromUri(new Uri(barbero.ImagenPath))
-                        : ImageSource.FromFile(barbero.ImagenPath);
-                }
-                else
-                {
-                    BarberoFotoImage.Source = "dotnet_bot.png";
-                }
+                // 🔓 Permitir clic nuevamente
+                _barberoPickerLocked = false;
             }
         }
 

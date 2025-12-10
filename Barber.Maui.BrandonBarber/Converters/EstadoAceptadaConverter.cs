@@ -8,7 +8,7 @@ namespace Barber.Maui.BrandonBarber.Converters
         {
             var estado = value?.ToString()?.ToLower();
 
-            return estado == "completada" || estado == "aceptada";
+            return estado == "completada";
         }
 
 

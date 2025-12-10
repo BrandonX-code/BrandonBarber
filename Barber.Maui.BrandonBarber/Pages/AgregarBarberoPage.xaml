@@ -10,35 +10,28 @@
             <VerticalStackLayout Spacing="20">
                 <Label Text="Agregar Nuevo Barbero" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" Margin="0,0,0,20" />
                 <VerticalStackLayout x:Name="PickerSection" Spacing="5" IsVisible="False">
-                    <Label Text="Seleccionar Barbería *" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="10,0,0,0" BackgroundColor="#E0F7FA" HeightRequest="100" StrokeThickness="0">
-                        <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
-                            <!-- Logo de la barbería -->
-                            <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#F0F0F0" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
-                                <Image x:Name="BarberiaLogoImage" Source="picture.png" Aspect="AspectFill"/>
+                    <Border StrokeShape="RoundRectangle 16" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="160" StrokeThickness="0">
+                        <VerticalStackLayout Spacing="0">
+                            <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
+                                <Label Text="Barbería" TextColor="White" FontSize="16" FontAttributes="Bold"/>
                             </Border>
-                            <!-- Info de la barbería -->
-                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" Margin="10,0,0,0">
-                                <Label x:Name="BarberiaSelectedLabel" Text="Seleccionar Barbería" TextColor="Black" FontSize="16" FontAttributes="Bold"/>
-                                <Label x:Name="BarberiaTelefonoLabel" Text="" TextColor="#333" FontSize="13"/>
-                            </VerticalStackLayout>
-                            <!-- Botón cambiar -->
-                            <Button x:Name="BarberiaSelectButton"
-                                    Grid.Column="2"
-                                    Text="Seleccionar"
-                                    BackgroundColor="#0E2A36"
-                                    TextColor="White"
-                                    CornerRadius="10"
-                                    FontAttributes="Bold"
-                                    HorizontalOptions="End"
-                                    VerticalOptions="Center"
-                                    WidthRequest="100"
-                                    HeightRequest="35"
-                                    Clicked="OnBarberiaPickerTapped"
-                                    Margin="0,0,10,0"
-                                    IsVisible="False"/>
-                        </Grid>
+
+                            <Grid Padding="10" ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center" Margin="0,10,0,0">
+                                <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#F0F0F0" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
+                                    <Image x:Name="BarberiaLogoImage" Source="picture.png" Aspect="AspectFill"/>
+                                </Border>
+
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" Margin="10,0,0,0">
+                                    <Label x:Name="BarberiaSelectedLabel" Text="Seleccionar Barbería" TextColor="Black" FontSize="16" FontAttributes="Bold"/>
+                                    <Label x:Name="BarberiaTelefonoLabel" Text="" TextColor="#333" FontSize="13"/>
+                                </VerticalStackLayout>
+
+                                <Button x:Name="BarberiaSelectButton" Grid.Column="2" Text="Seleccionar" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" WidthRequest="100" HeightRequest="35" Clicked="OnBarberiaPickerTapped" Margin="0,0,10,0" IsVisible="False"/>
+                            </Grid>
+                        </VerticalStackLayout>
                     </Border>
+
+
                 </VerticalStackLayout>
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Nombre completo *" TextColor="White" FontSize="16" />

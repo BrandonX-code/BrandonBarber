@@ -12,6 +12,7 @@ namespace Barber.Maui.BrandonBarber.Pages
         private DateTime? _diaSeleccionado;
         private List<DisponibilidadModel>? _disponibilidades;
         private HashSet<DateTime> _diasDisponibles = new();
+        private bool _isAppointmentLocked = false;
 
         public BarberoDetailPage(UsuarioModels barbero)
         {
@@ -360,33 +361,44 @@ namespace Barber.Maui.BrandonBarber.Pages
 
         private async void OnMakeAppointmentClicked(object sender, EventArgs e)
         {
-            var servicioService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ServicioService>();
-            var servicios = await servicioService.GetServiciosAsync();
+            // ⛔ Evita doble clic
+            if (_isAppointmentLocked) return;
+            _isAppointmentLocked = true;
 
-            if (servicios == null || servicios.Count == 0)
+            try
             {
-                await DisplayAlert("Aviso", "No hay servicios disponibles", "OK");
-                return;
+                var servicioService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ServicioService>();
+                var servicios = await servicioService.GetServiciosAsync();
+
+                if (servicios == null || servicios.Count == 0)
+                {
+                    await DisplayAlert("Aviso", "No hay servicios disponibles", "OK");
+                    return;
+                }
+
+                var popup = new ServicioSelectionPopup(servicios);
+                var servicioSeleccionado = await popup.ShowAsync();
+
+                if (servicioSeleccionado == null)
+                    return;
+
+                // Navegar a reserva con barbero, servicio Y FECHA preseleccionados
+                var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
+                var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
+
+                await Navigation.PushAsync(new MainPage(
+                    reservationService,
+                    authService,
+                    _barbero,
+                    servicioSeleccionado,
+                    _diaSeleccionado ?? DateTime.Today
+                ));
             }
-
-            var popup = new ServicioSelectionPopup(servicios);
-            var servicioSeleccionado = await popup.ShowAsync();
-
-            if (servicioSeleccionado == null)
-                return;
-
-            // Navegar a reserva con barbero, servicio Y FECHA preseleccionados
-            var reservationService = App.Current.Handler.MauiContext.Services.GetRequiredService<ReservationService>();
-            var authService = App.Current.Handler.MauiContext.Services.GetRequiredService<AuthService>();
-
-            // ✅ PASAR LA FECHA SELECCIONADA
-            await Navigation.PushAsync(new MainPage(
-                reservationService,
-                authService,
-                _barbero,
-                servicioSeleccionado,
-                _diaSeleccionado ?? DateTime.Today // ← Nueva fecha
-            ));
+            finally
+            {
+                // 🔓 Libera el clic
+                _isAppointmentLocked = false;
+            }
         }
         private async void OnVerResenasClicked(object sender, EventArgs e)
         {

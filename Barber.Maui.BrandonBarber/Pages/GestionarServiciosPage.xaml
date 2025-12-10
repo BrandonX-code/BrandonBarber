@@ -5,61 +5,54 @@
 
     <Grid>
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
-            <VerticalStackLayout Padding="20" Spacing="20" BackgroundColor="#0E2A36">
+            <VerticalStackLayout Padding="20" BackgroundColor="#0E2A36">
                 <Label Text="Gestión de Servicios" FontSize="24" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center"/>
-                <VerticalStackLayout x:Name="PickerSection" Spacing="5" IsVisible="False">
-                    <Label Text="Seleccionar Barbería" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="10,0,0,0" BackgroundColor="#90A4AE" HeightRequest="100" StrokeThickness="0">
-                        <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
-                            <!-- Logo de la barbería -->
-                            <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#F0F0F0" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
-                                <Image x:Name="BarberiaLogoImage" Source="picture.png" Aspect="AspectFill"/>
+                <VerticalStackLayout x:Name="PickerSection" Spacing="5" IsVisible="False" Margin="0,10,0,10">
+                    <Border x:Name="barberiaBorder" StrokeThickness="0" StrokeShape="RoundRectangle 16" BackgroundColor="#90A4AE" Padding="0" Margin="0,0,0,10">
+                        <VerticalStackLayout Spacing="0">
+                            <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
+                                <Label Text="Barbería" TextColor="White" FontSize="16" FontAttributes="Bold"/>
                             </Border>
-                            <!-- Info de la barbería -->
-                            <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" Margin="10,0,0,0">
-                                <Label x:Name="BarberiaSelectedLabel" Text="Seleccionar Barbería" TextColor="Black" FontSize="16" FontAttributes="Bold"/>
-                                <Label x:Name="BarberiaTelefonoLabel" Text="" TextColor="#333" FontSize="13"/>
-                            </VerticalStackLayout>
-                            <!-- Botón cambiar -->
-                            <Button x:Name="BarberiaSelectButton"
-                                    Grid.Column="2"
-                                    Text="Seleccionar"
-                                    BackgroundColor="#0E2A36"
-                                    TextColor="White"
-                                    CornerRadius="10"
-                                    FontAttributes="Bold"
-                                    HorizontalOptions="End"
-                                    VerticalOptions="Center"
-                                    WidthRequest="100"
-                                    HeightRequest="35"
-                                    Clicked="OnBarberiaPickerTapped"
-                                    Margin="0,0,10,0"
-                                    IsVisible="False"/>
-                        </Grid>
+                            <Grid Padding="15,12" ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+                                <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
+                                    <Image x:Name="BarberiaLogoImage" Source="picture.png" Aspect="AspectFill"/>
+                                </Border>
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" Margin="12,0,0,0">
+                                    <Label x:Name="BarberiaSelectedLabel" Text="Seleccionar Barbería" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                                    <Label x:Name="BarberiaTelefonoLabel" Text="" TextColor="#333" FontSize="14"/>
+                                </VerticalStackLayout>
+                                <Button x:Name="BarberiaSelectButton" Grid.Column="2" Text="Seleccionar" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" WidthRequest="120" HeightRequest="40" Clicked="OnBarberiaPickerTapped" Margin="0,0,10,0" IsVisible="False"/>
+                            </Grid>
+                        </VerticalStackLayout>
                     </Border>
                 </VerticalStackLayout>
-                <Border StrokeThickness="0" Background="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15">
-                    <VerticalStackLayout Spacing="10">
-                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
-                            <Entry x:Name="NombreEntry" Margin="10,0" Placeholder="Nombre del Servicio" TextColor="Black"/>
+                <Border StrokeThickness="0" Background="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" Margin="0,0,0,10">
+                    <VerticalStackLayout Spacing="0">
+                        <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 10,10,0,0">
+                            <Label Text="Servicio" TextColor="White" FontSize="16" FontAttributes="Bold"/>
                         </Border>
-                        <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
-                            <Entry x:Name="PrecioEntry"  Margin="10,0" Placeholder="Precio" Keyboard="Numeric" TextColor="Black" TextChanged="OnPrecioEntryTextChanged"/>
-                        </Border>
-                        <Border x:Name="PreviewImageBorder" StrokeShape="RoundRectangle 10" HeightRequest="100" WidthRequest="100" HorizontalOptions="Fill" Padding="0" StrokeThickness="0" IsVisible="False">
-                            <Image x:Name="PreviewImage" HeightRequest="100" WidthRequest="100" Aspect="AspectFill"/>
-                        </Border>
+                        <VerticalStackLayout Spacing="10" Padding="15">
+                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
+                                <Entry x:Name="NombreEntry" Margin="10,0" Placeholder="Nombre del Servicio" TextColor="Black"/>
+                            </Border>
+                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
+                                <Entry x:Name="PrecioEntry"  Margin="10,0" Placeholder="Precio" Keyboard="Numeric" TextColor="Black" TextChanged="OnPrecioEntryTextChanged"/>
+                            </Border>
+                            <Border x:Name="PreviewImageBorder" StrokeShape="RoundRectangle 10" HeightRequest="100" WidthRequest="100" HorizontalOptions="Fill" Padding="0" StrokeThickness="0" IsVisible="False">
+                                <Image x:Name="PreviewImage" HeightRequest="100" WidthRequest="100" Aspect="AspectFill"/>
+                            </Border>
 
-                        <Button Text="Seleccionar Imagen" Clicked="OnSeleccionarImagen" CornerRadius="15" HorizontalOptions="Fill" BackgroundColor="#0E2A36" TextColor="White"/>
+                            <Button Text="Seleccionar Imagen" Clicked="OnSeleccionarImagen" CornerRadius="15" HorizontalOptions="Fill" BackgroundColor="#0E2A36" TextColor="White"/>
 
-                        <Grid ColumnDefinitions="Auto, *, Auto">
-                            <Button x:Name="AgregarBtn" Text="Agregar" Clicked="OnAgregarServicio" CornerRadius="15" BackgroundColor="#FF6F91" TextColor="Black"  HorizontalOptions="Center" Grid.Column="1"/>
-                        </Grid>
+                            <Grid ColumnDefinitions="Auto, *, Auto">
+                                <Button x:Name="AgregarBtn" Text="Agregar" Clicked="OnAgregarServicio" CornerRadius="15" BackgroundColor="#FF6F91" TextColor="Black"  HorizontalOptions="Center" Grid.Column="1"/>
+                            </Grid>
 
-                        <Grid ColumnDefinitions="*, *" ColumnSpacing="10" HorizontalOptions="Center">
-                            <Button x:Name="EditarBtn" CornerRadius="15" Text="Guardar Cambios" Clicked="OnEditarServicio" BackgroundColor="#FF6F91" TextColor="Black" IsVisible="False" Grid.Column="0"/>
-                            <Button x:Name="CancelarBtn" CornerRadius="15" Text="Cancelar" Clicked="OnCancelarEdicion" BackgroundColor="#828282" TextColor="Black" IsVisible="False" Grid.Column="1"/>
-                        </Grid>
+                            <Grid ColumnDefinitions="*, *" ColumnSpacing="10" HorizontalOptions="Center">
+                                <Button x:Name="EditarBtn" CornerRadius="15" Text="Guardar Cambios" Clicked="OnEditarServicio" BackgroundColor="#FF6F91" TextColor="Black" IsVisible="False" Grid.Column="0"/>
+                                <Button x:Name="CancelarBtn" CornerRadius="15" Text="Cancelar" Clicked="OnCancelarEdicion" BackgroundColor="#828282" TextColor="Black" IsVisible="False" Grid.Column="1"/>
+                            </Grid>
+                        </VerticalStackLayout>
                     </VerticalStackLayout>
                 </Border>
 
