@@ -38,6 +38,9 @@ namespace Barber.Maui.BrandonBarber
                 await CargarFranjasDisponibles();
             };
 
+            // ✅ DESHABILITAR FECHAS PASADAS
+            FechaPicker.MinimumDate = DateTime.Today;
+
             // ✅ CONFIGURAR SERVICIO
             if (_servicioSeleccionado != null)
             {
@@ -281,10 +284,22 @@ namespace Barber.Maui.BrandonBarber
                     franjaOcupada.EstaDisponible = false;
             }
 
-            FranjasCollectionView.ItemsSource = _todasLasFranjas
-                .Where(f => f.EstaDisponible) // Solo mostrar disponibles
+            var franjasDisponibles = _todasLasFranjas
+                .Where(f => f.EstaDisponible)
                 .ToList();
 
+            // ✅ MOSTRAR MENSAJE SI NO HAY FRANJAS DISPONIBLES
+            if (franjasDisponibles.Count == 0)
+            {
+                FranjasCollectionView.ItemsSource = null;
+                FranjasVaciasLabel.IsVisible = true;
+                FranjaSeleccionadaLabel.Text = "Ninguna hora seleccionada";
+                franjasBorder.IsVisible = true;
+                return;
+            }
+
+            FranjasVaciasLabel.IsVisible = false;
+            FranjasCollectionView.ItemsSource = franjasDisponibles;
             franjasBorder.IsVisible = true;
         }
 
@@ -391,6 +406,7 @@ namespace Barber.Maui.BrandonBarber
                 var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date, idBarberia);
                 var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? [];
 
+                // ✅ VALIDAR QUE NO HAYA CITA DEL CLIENTE ESE DÍA (PROBLEMA 3)
                 bool cedulaYaRegistrada = citasActuales.Any(c => c.Cedula == usuario.Cedula);
                 if (cedulaYaRegistrada)
                 {

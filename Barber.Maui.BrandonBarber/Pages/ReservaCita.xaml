@@ -108,6 +108,8 @@
                                         </CollectionView.ItemTemplate>
                                     </CollectionView>
                                 </ScrollView>
+                                <!-- ✅ MENSAJE CUANDO NO HAY FRANJAS -->
+                                <Label x:Name="FranjasVaciasLabel" Text="No hay franjas horarias disponibles para esta fecha" TextColor="Black" FontSize="14" FontAttributes="Bold" HorizontalTextAlignment="Center" IsVisible="False"/>
                                 <Label x:Name="FranjaSeleccionadaLabel" Text="Ninguna hora seleccionada" TextColor="Black" FontSize="15" FontAttributes="Bold" HorizontalTextAlignment="Center"/>
                             </VerticalStackLayout>
                         </VerticalStackLayout>

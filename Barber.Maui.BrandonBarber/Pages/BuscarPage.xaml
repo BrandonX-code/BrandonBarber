@@ -22,7 +22,7 @@
                         <SwipeView SwipeStarted="OnSwipeStarted">
                             <SwipeView.RightItems>
                                 <SwipeItems>
-                                    <SwipeItem IconImageSource="delete.png" BackgroundColor="Transparent" Invoked="EliminarCitaSwipeInvoked" CommandParameter="{Binding Id}" IsVisible="{Binding Estado, Converter={StaticResource EstadoPendienteConverter}}"/>
+                                    <SwipeItem IconImageSource="delete.png" BackgroundColor="Transparent" Invoked="EliminarCitaSwipeInvoked" CommandParameter="{Binding Id}" IsVisible="{Binding Estado, Converter={StaticResource EstadoEliminableConverter}}"/>
                                 </SwipeItems>
                             </SwipeView.RightItems>
                             <Border BackgroundColor="#28475C" StrokeShape="RoundRectangle 15" Padding="15" Margin="0,5" StrokeThickness="0">
@@ -45,7 +45,7 @@
        HorizontalOptions="End"
        Margin="0,5,0,0"
        Opacity="0"
-       IsVisible="{Binding Estado, Converter={StaticResource EstadoPendienteConverter}}"/>
+       IsVisible="{Binding Estado, Converter={StaticResource EstadoEliminableConverter}}"/>
                                 </Grid>
                             </Border>
                         </SwipeView>

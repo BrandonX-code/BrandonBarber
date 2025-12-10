@@ -16,6 +16,8 @@
             <converters:EstadoPendienteConverter x:Key="EstadoPendienteConverter" />
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
             <converters:EstadoAceptadaConverter x:Key="EstadoAceptadaConverter" />
+            <!-- ✅ NUEVO CONVERTIDOR PARA PERMITIR ELIMINAR TODOS EXCEPTO FINALIZADA -->
+            <converters:EstadoEliminableConverter x:Key="EstadoEliminableConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>
