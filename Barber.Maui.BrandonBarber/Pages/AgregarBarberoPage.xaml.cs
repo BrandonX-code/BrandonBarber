@@ -1,4 +1,6 @@
-﻿namespace Barber.Maui.BrandonBarber.Pages
+﻿using Barber.Maui.BrandonBarber.Controls;
+
+namespace Barber.Maui.BrandonBarber.Pages
 {
     public partial class AgregarBarberoPage : ContentPage
     {
@@ -6,6 +8,7 @@
         private readonly BarberiaService _barberiaService;
         private List<Barberia>? _barberias;
         private int _barberiaSeleccionadaId;
+        private int _barberiaSeleccionadaIndex = -1;
         public AgregarBarberoPage()
         {
             InitializeComponent();
@@ -20,9 +23,33 @@
             {
                 long idAdministrador = AuthService.CurrentUser!.Cedula;
                 _barberias = await _barberiaService.GetBarberiasByAdministradorAsync(idAdministrador);
-
-                BarberiaPicker.ItemsSource = _barberias;
                 PickerSection.IsVisible = _barberias.Any();
+                BarberiaSelectButton.IsVisible = _barberias.Count >1;
+                if (_barberias.Count >0)
+                {
+                    _barberiaSeleccionadaIndex =0;
+                    var barberia = _barberias[0];
+                    _barberiaSeleccionadaId = barberia.Idbarberia;
+                    BarberiaSelectedLabel.Text = barberia.Nombre ?? "Seleccionar Barbería";
+                    BarberiaTelefonoLabel.Text = barberia.Telefono ?? string.Empty;
+                    if (!string.IsNullOrWhiteSpace(barberia.LogoUrl))
+                    {
+                        BarberiaLogoImage.Source = barberia.LogoUrl.StartsWith("http")
+                            ? ImageSource.FromUri(new Uri(barberia.LogoUrl))
+                            : ImageSource.FromFile(barberia.LogoUrl);
+                    }
+                    else
+                    {
+                        BarberiaLogoImage.Source = "picture.png";
+                    }
+                }
+                else
+                {
+                    _barberiaSeleccionadaId =0;
+                    BarberiaSelectedLabel.Text = "Seleccionar Barbería";
+                    BarberiaTelefonoLabel.Text = string.Empty;
+                    BarberiaLogoImage.Source = "picture.png";
+                }
             }
             catch (Exception ex)
             {
@@ -30,14 +57,50 @@
             }
         }
 
-        private void BarberiaPicker_SelectedIndexChanged(object sender, EventArgs e)
+        private async void OnBarberiaPickerTapped(object sender, EventArgs e)
         {
-            var picker = (Picker)sender;
-            int selectedIndex = picker.SelectedIndex;
-            if (selectedIndex != -1)
+            if (_barberias == null || _barberias.Count <=1)
+                return;
+            var popup = new BarberiaSelectionPopup(_barberias);
+            var seleccionada = await popup.ShowAsync();
+            if (seleccionada != null)
             {
-                var barberiaSeleccionada = (Barberia)picker.SelectedItem;
-                _barberiaSeleccionadaId = barberiaSeleccionada.Idbarberia;
+                int idx = _barberias.FindIndex(b => b.Idbarberia == seleccionada.Idbarberia);
+                if (idx >=0)
+                {
+                    _barberiaSeleccionadaIndex = idx;
+                    _barberiaSeleccionadaId = seleccionada.Idbarberia;
+                    BarberiaSelectedLabel.Text = seleccionada.Nombre ?? "Seleccionar Barbería";
+                    BarberiaTelefonoLabel.Text = seleccionada.Telefono ?? string.Empty;
+                    if (!string.IsNullOrWhiteSpace(seleccionada.LogoUrl))
+                    {
+                        BarberiaLogoImage.Source = seleccionada.LogoUrl.StartsWith("http")
+                            ? ImageSource.FromUri(new Uri(seleccionada.LogoUrl))
+                            : ImageSource.FromFile(seleccionada.LogoUrl);
+                    }
+                    else
+                    {
+                        BarberiaLogoImage.Source = "picture.png";
+                    }
+                }
+            }
+            else if (_barberiaSeleccionadaIndex >=0 && _barberias.Count > _barberiaSeleccionadaIndex)
+            {
+                // Restaurar selección anterior si se cancela
+                var barberia = _barberias[_barberiaSeleccionadaIndex];
+                _barberiaSeleccionadaId = barberia.Idbarberia;
+                BarberiaSelectedLabel.Text = barberia.Nombre ?? "Seleccionar Barbería";
+                BarberiaTelefonoLabel.Text = barberia.Telefono ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(barberia.LogoUrl))
+                {
+                    BarberiaLogoImage.Source = barberia.LogoUrl.StartsWith("http")
+                        ? ImageSource.FromUri(new Uri(barberia.LogoUrl))
+                        : ImageSource.FromFile(barberia.LogoUrl);
+                }
+                else
+                {
+                    BarberiaLogoImage.Source = "picture.png";
+                }
             }
         }
 
@@ -105,10 +168,6 @@
             ConfirmPasswordEntry.Text = string.Empty;
             // Agregar al final del método, antes del cierre
             _barberiaSeleccionadaId = 0;
-            if (BarberiaPicker != null && _barberias?.Any() == true)
-            {
-                BarberiaPicker.SelectedIndex = -1;
-            }
             //ActivoSwitch.IsToggled = true;
         }
 

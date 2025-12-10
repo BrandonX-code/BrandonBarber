@@ -21,7 +21,7 @@
                         <Border BackgroundColor="#90A4AE" Padding="15" StrokeShape="RoundRectangle 12" StrokeThickness="0" HeightRequest="100">
                             <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
                                 <!-- Logo de la barbería -->
-                                <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#F0F0F0" StrokeShape="RoundRectangle 50" VerticalOptions="Center">
+                                <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#F0F0F0" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
                                     <Image x:Name="BarberiaLogoImage" Source="picture.png" Aspect="AspectFill"/>
                                 </Border>
                                 <!-- Info de la barbería -->
