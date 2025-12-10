@@ -48,14 +48,22 @@ namespace Barber.Maui.BrandonBarber.Pages
                 _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
 
 
-                PickerSection.IsVisible = _barberias.Count >0;
-                BarberiaSelectButton.IsVisible = _barberias.Count >1;
+                PickerSection.IsVisible = _barberias.Count > 0;
+                BarberiaSelectButton.IsVisible = _barberias.Count > 1;
 
-                if (_barberias.Count >0)
+                // Mostrar botón cambiar solo si hay más de 1 barbería
+                var cambiarButton = this.FindByName<Button>("BarberiaSelectButton");
+                if (cambiarButton != null)
+                {
+                    cambiarButton.IsVisible = _barberias.Count > 1;
+                    cambiarButton.Text = "Seleccionar";
+                }
+
+                if (_barberias.Count > 0)
                 {
                     // Selecciona la primera barbería por defecto
                     _barberiaSeleccionadaId = _barberias[0].Idbarberia;
-                    _barberiaPickerLastIndex =0;
+                    _barberiaPickerLastIndex = 0;
                     BarberiaSelectedLabel.Text = _barberias[0].Nombre ?? "Seleccionar Barbería";
                     BarberiaTelefonoLabel.Text = _barberias[0].Telefono ?? string.Empty;
                     if (!string.IsNullOrWhiteSpace(_barberias[0].LogoUrl))
@@ -68,11 +76,15 @@ namespace Barber.Maui.BrandonBarber.Pages
                     {
                         BarberiaLogoImage.Source = "picture.png";
                     }
+                    if (cambiarButton != null)
+                    {
+                        cambiarButton.Text = "Cambiar";
+                    }
                     await CargarMetricas();
                 }
                 else
                 {
-                    _barberiaSeleccionadaId =0;
+                    _barberiaSeleccionadaId = 0;
                     BarberiaSelectedLabel.Text = "Seleccionar Barbería";
                     BarberiaTelefonoLabel.Text = string.Empty;
                     BarberiaLogoImage.Source = "picture.png";
@@ -82,7 +94,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             catch (Exception ex)
             {
                 await AppUtils.MostrarSnackbar($"Error al cargar barberías: {ex.Message}", Colors.Red, Colors.White);
-                _barberiaSeleccionadaId =0;
+                _barberiaSeleccionadaId = 0;
                 BarberiaSelectedLabel.Text = "Seleccionar Barbería";
                 BarberiaTelefonoLabel.Text = string.Empty;
                 BarberiaLogoImage.Source = "picture.png";
@@ -104,7 +116,7 @@ namespace Barber.Maui.BrandonBarber.Pages
         // Nuevo método para mostrar el popup solo cuando el usuario toca el Picker
         private async void OnBarberiaPickerTapped(object sender, EventArgs e)
         {
-            if (_barberias == null || _barberias.Count <=1)
+            if (_barberias == null || _barberias.Count <= 1)
                 return;
 
             var popup = new BarberiaSelectionPopup(_barberias);
@@ -112,7 +124,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             if (seleccionada != null)
             {
                 int idx = _barberias.FindIndex(b => b.Idbarberia == seleccionada.Idbarberia);
-                if (idx >=0)
+                if (idx >= 0)
                 {
                     _barberiaSeleccionadaId = seleccionada.Idbarberia;
                     _barberiaPickerLastIndex = idx;
@@ -128,10 +140,18 @@ namespace Barber.Maui.BrandonBarber.Pages
                     {
                         BarberiaLogoImage.Source = "picture.png";
                     }
+
+                    // Cambiar texto del botón a "Cambiar"
+                    var cambiarButton = this.FindByName<Button>("BarberiaSelectButton");
+                    if (cambiarButton != null)
+                    {
+                        cambiarButton.Text = "Cambiar";
+                    }
+
                     await CargarMetricas();
                 }
             }
-            else if (_barberiaPickerLastIndex >=0 && _barberias.Count > _barberiaPickerLastIndex)
+            else if (_barberiaPickerLastIndex >= 0 && _barberias.Count > _barberiaPickerLastIndex)
             {
                 // Restaurar selección anterior si se cancela
                 var barberia = _barberias[_barberiaPickerLastIndex];

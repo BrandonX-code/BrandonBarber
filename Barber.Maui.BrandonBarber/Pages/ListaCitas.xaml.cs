@@ -44,6 +44,15 @@ namespace Barber.Maui.BrandonBarber.Pages
                     _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
                     PickerSection.IsVisible = _barberias.Count != 0;
                     BarberiaSelectButton.IsVisible = _barberias.Count > 1;
+
+                    // Mostrar botón cambiar solo si hay más de 1 barbería
+                    var cambiarButton = this.FindByName<Button>("BarberiaSelectButton");
+                    if (cambiarButton != null)
+                    {
+                        cambiarButton.IsVisible = _barberias.Count > 1;
+                        cambiarButton.Text = "Seleccionar";
+                    }
+
                     if (_barberias.Count > 0)
                     {
                         _barberiaSeleccionadaIndex = 0;
@@ -60,6 +69,11 @@ namespace Barber.Maui.BrandonBarber.Pages
                         else
                         {
                             BarberiaLogoImage.Source = "picture.png";
+                        }
+                        // Cambiar texto del botón a "Cambiar" porque ya hay una barbería seleccionada
+                        if (cambiarButton != null)
+                        {
+                            cambiarButton.Text = "Cambiar";
                         }
                     }
                     else
@@ -113,6 +127,14 @@ namespace Barber.Maui.BrandonBarber.Pages
                     {
                         BarberiaLogoImage.Source = "picture.png";
                     }
+
+                    // Cambiar texto del botón a "Cambiar"
+                    var cambiarButton = this.FindByName<Button>("BarberiaSelectButton");
+                    if (cambiarButton != null)
+                    {
+                        cambiarButton.Text = "Cambiar";
+                    }
+
                     // Limpiar citas actuales cuando cambie de barbería
                     CitasFiltradas.Clear();
                 }

@@ -1,4 +1,6 @@
-﻿namespace Barber.Maui.BrandonBarber.Pages
+﻿using Barber.Maui.BrandonBarber.Controls;
+
+namespace Barber.Maui.BrandonBarber.Pages
 {
     public partial class GestionarServiciosPage : ContentPage
     {
@@ -8,6 +10,7 @@
         private readonly BarberiaService? _barberiaService;
         private List<Barberia>? _barberias;
         private int _barberiaSeleccionadaId;
+        private int _barberiaSeleccionadaIndex = -1;
         bool _isUpdatingText = false;
         private bool _isNavigating = false;
 
@@ -28,14 +31,50 @@
                 LoadingIndicator.IsLoading = true;
                 long idAdministrador = AuthService.CurrentUser!.Cedula;
                 _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
+                PickerSection.IsVisible = _barberias.Any();
+                BarberiaSelectButton.IsVisible = _barberias.Count > 1;
 
-                Picker.ItemsSource = _barberias;
-                Picker.ItemDisplayBinding = new Binding("Nombre");
-                PickerSection.IsVisible = _barberias.Count != 0;
-
-                if (_barberias.Count != 0)
+                // Mostrar botón cambiar solo si hay más de 1 barbería
+                var cambiarButton = this.FindByName<Button>("BarberiaSelectButton");
+                if (cambiarButton != null)
                 {
-                    Picker.SelectedIndex = 0; // Dispara Picker_SelectedIndexChanged
+                    cambiarButton.IsVisible = _barberias.Count > 1;
+                    cambiarButton.Text = "Seleccionar";
+                }
+
+                if (_barberias.Count > 0)
+                {
+                    _barberiaSeleccionadaIndex = 0;
+                    var barberia = _barberias[0];
+                    _barberiaSeleccionadaId = barberia.Idbarberia;
+                    BarberiaSelectedLabel.Text = barberia.Nombre ?? "Seleccionar Barbería";
+                    BarberiaTelefonoLabel.Text = barberia.Telefono ?? string.Empty;
+                    if (!string.IsNullOrWhiteSpace(barberia.LogoUrl))
+                    {
+                        BarberiaLogoImage.Source = barberia.LogoUrl.StartsWith("http")
+                            ? ImageSource.FromUri(new Uri(barberia.LogoUrl))
+                            : ImageSource.FromFile(barberia.LogoUrl);
+                    }
+                    else
+                    {
+                        BarberiaLogoImage.Source = "picture.png";
+                    }
+                    // Cambiar texto del botón a "Cambiar" porque ya hay una barbería seleccionada
+                    if (cambiarButton != null)
+                    {
+                        cambiarButton.Text = "Cambiar";
+                    }
+                    // Mostrar servicios de la barbería seleccionada por defecto
+                    await CargarServicios(_barberiaSeleccionadaId);
+                }
+                else
+                {
+                    _barberiaSeleccionadaId = 0;
+                    BarberiaSelectedLabel.Text = "Seleccionar Barbería";
+                    BarberiaTelefonoLabel.Text = string.Empty;
+                    BarberiaLogoImage.Source = "picture.png";
+                    // Limpiar servicios si no hay barberías
+                    ServiciosListView.ItemsSource = null;
                 }
             }
             catch (Exception ex)
@@ -49,54 +88,82 @@
             }
         }
 
-        private async void Picker_SelectedIndexChanged(object sender, EventArgs e)
+        private async void OnBarberiaPickerTapped(object sender, EventArgs e)
         {
-            var picker = (Picker)sender;
-            int selectedIndex = picker.SelectedIndex;
-            if (selectedIndex != -1)
+            if (_barberias == null || _barberias.Count <= 1)
+                return;
+            var popup = new BarberiaSelectionPopup(_barberias);
+            var seleccionada = await popup.ShowAsync();
+            if (seleccionada != null)
             {
-                var barberiaSeleccionada = (Barberia)picker.SelectedItem;
-                _barberiaSeleccionadaId = barberiaSeleccionada.Idbarberia;
-
-                // Cargar los servicios de la nueva barbería
-                await CargarServicios(_barberiaSeleccionadaId);
-
-                // Si estamos editando, buscar el servicio equivalente en esta barbería
-                if (_servicioEditando != null)
+                int idx = _barberias.FindIndex(b => b.Idbarberia == seleccionada.Idbarberia);
+                if (idx >= 0)
                 {
-                    var servicios = await _servicioService.GetServiciosByBarberiaAsync(_barberiaSeleccionadaId);
-                    var servicioEnNuevaBarberia = servicios.FirstOrDefault(s => s.Id == _servicioEditando.Id);
-
-                    if (servicioEnNuevaBarberia != null)
+                    _barberiaSeleccionadaIndex = idx;
+                    _barberiaSeleccionadaId = seleccionada.Idbarberia;
+                    BarberiaSelectedLabel.Text = seleccionada.Nombre ?? "Seleccionar Barbería";
+                    BarberiaTelefonoLabel.Text = seleccionada.Telefono ?? string.Empty;
+                    if (!string.IsNullOrWhiteSpace(seleccionada.LogoUrl))
                     {
-                        _servicioEditando = servicioEnNuevaBarberia;
-                        NombreEntry.Text = _servicioEditando.Nombre;
-                        PrecioEntry.Text = _servicioEditando.Precio.ToString("N0");
-
-                        if (!string.IsNullOrEmpty(_servicioEditando.Imagen))
-                        {
-                            PreviewImage.Source = _servicioEditando.Imagen;
-                            PreviewImage.IsVisible = true;
-                            PreviewImageBorder.IsVisible = true;
-                        }
-                        else
-                        {
-                            PreviewImage.IsVisible = false;
-                            PreviewImageBorder.IsVisible = false;
-                        }
-
-                        AgregarBtn.IsVisible = false;
-                        EditarBtn.IsVisible = true;
-                        CancelarBtn.IsVisible = true;
+                        BarberiaLogoImage.Source = seleccionada.LogoUrl.StartsWith("http")
+                            ? ImageSource.FromUri(new Uri(seleccionada.LogoUrl))
+                            : ImageSource.FromFile(seleccionada.LogoUrl);
                     }
                     else
+                    {
+                        BarberiaLogoImage.Source = "picture.png";
+                    }
+
+                    // Cambiar texto del botón a "Cambiar"
+                    var cambiarButton = this.FindByName<Button>("BarberiaSelectButton");
+                    if (cambiarButton != null)
+                    {
+                        cambiarButton.Text = "Cambiar";
+                    }
+
+                    // Cargar los servicios de la barbería seleccionada
+                    await CargarServicios(_barberiaSeleccionadaId);
+                    // Si se está editando un servicio, limpiar si no existe en la nueva barbería
+                    if (_servicioEditando != null)
+                    {
+                        var servicios = ServiciosListView.ItemsSource as IEnumerable<ServicioModel>;
+                        if (servicios == null || !servicios.Any(s => s.Id == _servicioEditando.Id))
+                        {
+                            LimpiarFormulario();
+                        }
+                    }
+                }
+            }
+            else if (_barberiaSeleccionadaIndex >= 0 && _barberias.Count > _barberiaSeleccionadaIndex)
+            {
+                // Restaurar selección anterior si se cancela
+                var barberia = _barberias[_barberiaSeleccionadaIndex];
+                _barberiaSeleccionadaId = barberia.Idbarberia;
+                BarberiaSelectedLabel.Text = barberia.Nombre ?? "Seleccionar Barbería";
+                BarberiaTelefonoLabel.Text = barberia.Telefono ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(barberia.LogoUrl))
+                {
+                    BarberiaLogoImage.Source = barberia.LogoUrl.StartsWith("http")
+                        ? ImageSource.FromUri(new Uri(barberia.LogoUrl))
+                        : ImageSource.FromFile(barberia.LogoUrl);
+                }
+                else
+                {
+                    BarberiaLogoImage.Source = "picture.png";
+                }
+                // Cargar los servicios de la barbería restaurada
+                await CargarServicios(_barberiaSeleccionadaId);
+                // Si se está editando un servicio, limpiar si no existe en la barbería restaurada
+                if (_servicioEditando != null)
+                {
+                    var servicios = ServiciosListView.ItemsSource as IEnumerable<ServicioModel>;
+                    if (servicios == null || !servicios.Any(s => s.Id == _servicioEditando.Id))
                     {
                         LimpiarFormulario();
                     }
                 }
             }
         }
-
 
         private async Task CargarServicios(int idBarberia)
         {

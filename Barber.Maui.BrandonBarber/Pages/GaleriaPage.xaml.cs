@@ -1,5 +1,6 @@
 ﻿namespace Barber.Maui.BrandonBarber.Pages
 {
+    using Barber.Maui.BrandonBarber.Controls; // Agregado using para BarberoSelectionPopup
     public partial class GaleriaPage : ContentPage
     {
         private bool _isNavigating = false;
@@ -49,14 +50,39 @@
                 if (addButton != null) addButton.IsVisible = false;
             }
         }
-        private void Picker_SelectedIndexChanged(object sender, EventArgs e)
+        private async void OnBarberoPickerTapped(object sender, EventArgs e)
         {
-            var picker = (Picker)sender;
-            int selectedIndex = picker.SelectedIndex;
-            if (selectedIndex != -1)
+            if (_todosLosBarberos == null || _todosLosBarberos.Count == 0)
+                return;
+
+            var popup = new BarberoSelectionPopup(_todosLosBarberos);
+            var seleccionado = await popup.ShowAsync();
+
+            if (seleccionado != null)
             {
-                UsuarioModels barbero = (UsuarioModels)picker.SelectedItem;
-                LoadGaleria(barbero.Cedula);
+                // Actualizar la UI con el barbero seleccionado
+                BarberoSelectedLabel.Text = seleccionado.Nombre ?? "Seleccionar Barbero";
+                BarberoTelefonoLabel.Text = seleccionado.Telefono ?? string.Empty;
+
+                if (!string.IsNullOrWhiteSpace(seleccionado.ImagenPath))
+                {
+                    BarberoFotoImage.Source = seleccionado.ImagenPath.StartsWith("http")
+                       ? ImageSource.FromUri(new Uri(seleccionado.ImagenPath))
+                        : ImageSource.FromFile(seleccionado.ImagenPath);
+                }
+                else
+                {
+                    BarberoFotoImage.Source = "dotnet_bot.png";
+                }
+
+                // Cambiar texto del botón a "Cambiar" en el hilo principal
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    BarberoSelectButton.Text = "Cambiar";
+                });
+
+                // Cargar la galería del barbero seleccionado
+                await LoadGaleriaAsync(seleccionado.Cedula);
             }
         }
         private async Task LoadBarberos()
@@ -77,7 +103,9 @@
                     var admin = AuthService.CurrentUser;
                     var barberos = usuarios?.Where(u => u.Rol!.ToLower() == "barbero" && u.IdBarberia == admin!.IdBarberia).ToList() ?? [];
                     TodosLosBarberos = barberos;
-                    Picker.ItemsSource = TodosLosBarberos;
+
+                    // Asegurar que el botón muestre "Seleccionar" inicialmente
+                    BarberoSelectButton.Text = "Seleccionar";
                 }
 
 
@@ -467,6 +495,24 @@
                 var usuarioActual = AuthService.CurrentUser;
                 long barberoId = usuarioActual!.Cedula;
                 int idBarberia = usuarioActual.IdBarberia ?? 0;
+                imagenes = await _galeriaService.ObtenerImagenes(barberoId, idBarberia);
+                UpdateGaleriaUI();
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"❌ Error al recargar galería: {ex.Message}");
+                await DisplayAlert("Error", $"No se pudieron recargar las imágenes: {ex.Message}", "OK");
+            }
+        }
+
+        // Sobrecarga para cargar galería de un barbero específico
+        private async Task LoadGaleriaAsync(long barberoId)
+        {
+            try
+            {
+                Debug.WriteLine($"🔄 Recargando galería del barbero {barberoId}...");
+                var usuarioActual = AuthService.CurrentUser;
+                int idBarberia = usuarioActual!.IdBarberia ?? 0;
                 imagenes = await _galeriaService.ObtenerImagenes(barberoId, idBarberia);
                 UpdateGaleriaUI();
             }

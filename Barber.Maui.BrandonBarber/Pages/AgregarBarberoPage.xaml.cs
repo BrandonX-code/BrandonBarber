@@ -24,10 +24,19 @@ namespace Barber.Maui.BrandonBarber.Pages
                 long idAdministrador = AuthService.CurrentUser!.Cedula;
                 _barberias = await _barberiaService.GetBarberiasByAdministradorAsync(idAdministrador);
                 PickerSection.IsVisible = _barberias.Any();
-                BarberiaSelectButton.IsVisible = _barberias.Count >1;
-                if (_barberias.Count >0)
+                BarberiaSelectButton.IsVisible = _barberias.Count > 1;
+
+                // Mostrar botón cambiar solo si hay más de 1 barbería
+                var cambiarButton = this.FindByName<Button>("BarberiaSelectButton");
+                if (cambiarButton != null)
                 {
-                    _barberiaSeleccionadaIndex =0;
+                    cambiarButton.IsVisible = _barberias.Count > 1;
+                    cambiarButton.Text = "Seleccionar";
+                }
+
+                if (_barberias.Count > 0)
+                {
+                    _barberiaSeleccionadaIndex = 0;
                     var barberia = _barberias[0];
                     _barberiaSeleccionadaId = barberia.Idbarberia;
                     BarberiaSelectedLabel.Text = barberia.Nombre ?? "Seleccionar Barbería";
@@ -42,10 +51,15 @@ namespace Barber.Maui.BrandonBarber.Pages
                     {
                         BarberiaLogoImage.Source = "picture.png";
                     }
+                    // Cambiar texto del botón a "Cambiar" porque ya hay una barbería seleccionada
+                    if (cambiarButton != null)
+                    {
+                        cambiarButton.Text = "Cambiar";
+                    }
                 }
                 else
                 {
-                    _barberiaSeleccionadaId =0;
+                    _barberiaSeleccionadaId = 0;
                     BarberiaSelectedLabel.Text = "Seleccionar Barbería";
                     BarberiaTelefonoLabel.Text = string.Empty;
                     BarberiaLogoImage.Source = "picture.png";
@@ -59,14 +73,14 @@ namespace Barber.Maui.BrandonBarber.Pages
 
         private async void OnBarberiaPickerTapped(object sender, EventArgs e)
         {
-            if (_barberias == null || _barberias.Count <=1)
+            if (_barberias == null || _barberias.Count <= 1)
                 return;
             var popup = new BarberiaSelectionPopup(_barberias);
             var seleccionada = await popup.ShowAsync();
             if (seleccionada != null)
             {
                 int idx = _barberias.FindIndex(b => b.Idbarberia == seleccionada.Idbarberia);
-                if (idx >=0)
+                if (idx >= 0)
                 {
                     _barberiaSeleccionadaIndex = idx;
                     _barberiaSeleccionadaId = seleccionada.Idbarberia;
@@ -82,9 +96,16 @@ namespace Barber.Maui.BrandonBarber.Pages
                     {
                         BarberiaLogoImage.Source = "picture.png";
                     }
+
+                    // Cambiar texto del botón a "Cambiar"
+                    var cambiarButton = this.FindByName<Button>("BarberiaSelectButton");
+                    if (cambiarButton != null)
+                    {
+                        cambiarButton.Text = "Cambiar";
+                    }
                 }
             }
-            else if (_barberiaSeleccionadaIndex >=0 && _barberias.Count > _barberiaSeleccionadaIndex)
+            else if (_barberiaSeleccionadaIndex >= 0 && _barberias.Count > _barberiaSeleccionadaIndex)
             {
                 // Restaurar selección anterior si se cancela
                 var barberia = _barberias[_barberiaSeleccionadaIndex];

@@ -45,7 +45,7 @@
                                         <!-- Botón cambiar -->
                                         <Button x:Name="BarberiaSelectButton"
                                                 Grid.Column="2"
-                                                Text="Cambiar"
+                                                Text="Seleccionar"
                                                 BackgroundColor="#0E2A36"
                                                 TextColor="White"
                                                 CornerRadius="10"

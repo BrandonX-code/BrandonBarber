@@ -30,7 +30,7 @@
                                     <Label x:Name="BarberiaTelefonoLabel" Text="" TextColor="#333" FontSize="14"/>
                                 </VerticalStackLayout>
                                 <!-- Botón cambiar -->
-                                <Button x:Name="BarberiaSelectButton" Grid.Column="2" Text="Cambiar" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center"  Clicked="OnBarberiaPickerTapped" Margin="0,0,10,0" IsVisible="False"/>
+                                <Button x:Name="BarberiaSelectButton" Grid.Column="2" Text="Seleccionar" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center"  Clicked="OnBarberiaPickerTapped" Margin="0,0,10,0" IsVisible="False"/>
                             </Grid>
                         </Border>
                     </VerticalStackLayout>

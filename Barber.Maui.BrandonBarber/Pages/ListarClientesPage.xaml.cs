@@ -1,4 +1,5 @@
-ï»¿using System.Text.Json;
+using System.Text.Json;
+using Barber.Maui.BrandonBarber.Controls;
 
 namespace Barber.Maui.BrandonBarber.Pages
 {
@@ -35,6 +36,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             CargarBarberias();
             _ = LoadClientes();
         }
+
         private async void CargarBarberias()
         {
             try
@@ -44,14 +46,52 @@ namespace Barber.Maui.BrandonBarber.Pages
                 long idAdministrador = AuthService.CurrentUser!.Cedula;
                 _barberias = await _barberiaService!.GetBarberiasByAdministradorAsync(idAdministrador);
 
-                BarberiaPicker.ItemsSource = _barberias;
                 PickerSection.IsVisible = _barberias.Count > 0;
 
-                // No seleccionar nada por defecto, quedarÃ¡ vacÃ­o
+                // Mostrar botón cambiar solo si hay más de 1 barbería
+                var cambiarButton = this.FindByName<Button>("BarberiaCambiarButton");
+                if (cambiarButton != null)
+                {
+                    cambiarButton.IsVisible = _barberias.Count > 1;
+                    cambiarButton.Text = "Seleccionar";
+                }
+
+                // Si hay solo una barbería, seleccionarla automáticamente
+                if (_barberias.Count == 1)
+                {
+                    _barberiaSeleccionadaId = _barberias[0].Idbarberia;
+
+                    // Actualizar la UI con la barbería seleccionada
+                    var nombreLabel = this.FindByName<Label>("BarberiaNombreLabel");
+                    var direccionLabel = this.FindByName<Label>("BarberiaDireccionLabel");
+                    var logoImage = this.FindByName<Image>("BarberialogoImage");
+
+                    if (nombreLabel != null)
+                        nombreLabel.Text = _barberias[0].Nombre ?? "Seleccionar Barbería";
+
+                    if (direccionLabel != null)
+                        direccionLabel.Text = _barberias[0].Direccion ?? string.Empty;
+
+                    if (logoImage != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(_barberias[0].LogoUrl))
+                        {
+                            logoImage.Source = _barberias[0].LogoUrl.StartsWith("http")
+                  ? ImageSource.FromUri(new Uri(_barberias[0].LogoUrl))
+             : ImageSource.FromFile(_barberias[0].LogoUrl);
+                        }
+                        else
+                        {
+                            logoImage.Source = "picture.png";
+                        }
+                    }
+
+                    await LoadClientes();
+                }
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", "No se pudieron cargar las barberÃ­as: " + ex.Message, "OK");
+                await DisplayAlert("Error", "No se pudieron cargar las barberías: " + ex.Message, "OK");
             }
             finally
             {
@@ -60,17 +100,6 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
         }
 
-        private async void BarberiaPicker_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            var picker = (Picker)sender;
-            int selectedIndex = picker.SelectedIndex;
-            if (selectedIndex != -1)
-            {
-                var barberiaSeleccionada = (Barberia)picker.SelectedItem;
-                _barberiaSeleccionadaId = barberiaSeleccionada.Idbarberia;
-                await LoadClientes();
-            }
-        }
         private async Task RefreshClienteList()
         {
             if (ClienteRefreshView.IsRefreshing)
@@ -79,17 +108,69 @@ namespace Barber.Maui.BrandonBarber.Pages
                 ClienteRefreshView.IsRefreshing = false;
             }
         }
+
+        private async void OnBarberiaCambiarClicked(object sender, EventArgs e)
+        {
+            if (_barberias == null || _barberias.Count == 0)
+                return;
+
+            var popup = new BarberiaSelectionPopup(_barberias);
+            var barberiaSeleccionada = await popup.ShowAsync();
+
+            if (barberiaSeleccionada != null)
+            {
+                // Actualizar la UI usando FindByName
+                var nombreLabel = this.FindByName<Label>("BarberiaNombreLabel");
+                var direccionLabel = this.FindByName<Label>("BarberiaDireccionLabel");
+                var logoImage = this.FindByName<Image>("BarberialogoImage");
+                var cambiarButton = this.FindByName<Button>("BarberiaCambiarButton");
+
+                if (nombreLabel != null)
+                    nombreLabel.Text = barberiaSeleccionada.Nombre ?? "Seleccionar Barbería";
+
+                if (direccionLabel != null)
+                    direccionLabel.Text = barberiaSeleccionada.Direccion ?? string.Empty;
+
+                if (logoImage != null)
+                {
+                    if (!string.IsNullOrWhiteSpace(barberiaSeleccionada.LogoUrl))
+                    {
+                        logoImage.Source = barberiaSeleccionada.LogoUrl.StartsWith("http")
+                  ? ImageSource.FromUri(new Uri(barberiaSeleccionada.LogoUrl))
+             : ImageSource.FromFile(barberiaSeleccionada.LogoUrl);
+                    }
+                    else
+                    {
+                        logoImage.Source = "picture.png";
+                    }
+                }
+
+                // Cambiar texto del botón a "Cambiar"
+                if (cambiarButton != null)
+                {
+                    cambiarButton.Text = "Cambiar";
+                }
+
+                // Actualizar el ID de la barbería seleccionada
+                _barberiaSeleccionadaId = barberiaSeleccionada.Idbarberia;
+
+                // Cargar los clientes de la barbería seleccionada
+                await LoadClientes();
+            }
+        }
+
         protected override void OnAppearing()
         {
             base.OnAppearing();
             _ = LoadClientes();
         }
+
         private static readonly JsonSerializerOptions _jsonOptions = new()
         {
             PropertyNameCaseInsensitive = true
         };
-        private async Task LoadClientes()
 
+        private async Task LoadClientes()
         {
             try
             {
@@ -97,7 +178,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 LoadingIndicator.IsLoading = true;
                 ContentContainer.IsVisible = false;
 
-                // Si no hay barberÃ­a seleccionada, no mostrar clientes
+                // Si no hay barbería seleccionada, no mostrar clientes
                 if (_barberiaSeleccionadaId == null)
                 {
                     _todosLosClientes.Clear();
@@ -107,7 +188,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                     return;
                 }
 
-                // Llamar a la API para obtener todos los usuarios de la barberÃ­a seleccionada
+                // Llamar a la API para obtener todos los usuarios de la barbería seleccionada
                 var response = await _authService._BaseClient.GetAsync($"api/auth/cliente/{_barberiaSeleccionadaId}");
 
                 if (response.IsSuccessStatusCode)
@@ -116,7 +197,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                     var usuarios = System.Text.Json.JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent, _jsonOptions);
 
                     // Filtrar solo los clientes
-                    var clientes = usuarios?.Where(u => string.Equals(u.Rol, "cliente", StringComparison.OrdinalIgnoreCase)&& u.IdBarberia == _barberiaSeleccionadaId) .ToList() ?? [];
+                    var clientes = usuarios?.Where(u => string.Equals(u.Rol, "cliente", StringComparison.OrdinalIgnoreCase) && u.IdBarberia == _barberiaSeleccionadaId).ToList() ?? [];
                     _todosLosClientes.Clear();
                     _clientesFiltrados.Clear();
 
@@ -143,7 +224,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 LoadingIndicator.IsLoading = false;
                 ContentContainer.IsVisible = true;
 
-                // Mostrar estado vacÃ­o si no hay clientes
+                // Mostrar estado vacío si no hay clientes
                 EmptyStateFrame.IsVisible = !_clientesFiltrados.Any();
             }
         }
@@ -160,11 +241,11 @@ namespace Barber.Maui.BrandonBarber.Pages
             _clientesFiltrados.Clear();
 
             var filtered = string.IsNullOrWhiteSpace(searchText)
-                ? _todosLosClientes
-                : _todosLosClientes.Where(c =>
-                    c.Nombre!.ToLower().Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
-                    c.Email!.ToLower().Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
-                    c.Cedula.ToString().Contains(searchText, StringComparison.InvariantCultureIgnoreCase));
+                 ? _todosLosClientes
+           : _todosLosClientes.Where(c =>
+                 c.Nombre!.ToLower().Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+                  c.Email!.ToLower().Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ||
+          c.Cedula.ToString().Contains(searchText, StringComparison.InvariantCultureIgnoreCase));
 
             foreach (var cliente in filtered)
             {
@@ -199,11 +280,10 @@ namespace Barber.Maui.BrandonBarber.Pages
             try
             {
                 if (sender is Image image &&
-                    image.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tap &&
-                    tap.CommandParameter is UsuarioModels cliente)
+          image.GestureRecognizers.FirstOrDefault() is TapGestureRecognizer tap &&
+           tap.CommandParameter is UsuarioModels cliente)
                 {
-
-                    var popup = new CustomAlertPopup($"Â¿EstÃ¡ seguro de que desea eliminar al cliente {cliente.Nombre}?");
+                    var popup = new CustomAlertPopup($"¿Está seguro de que desea eliminar al cliente {cliente.Nombre}?");
                     bool confirm = await popup.ShowAsync(this);
                     if (confirm)
                     {

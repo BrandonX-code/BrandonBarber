@@ -8,7 +8,7 @@
 
         <RefreshView x:Name="ClienteRefreshView" Command="{Binding RefreshCommand}">
             <Grid Grid.Row="1" Padding="20">
-               
+
                 <Grid x:Name="ContentContainer" IsVisible="False">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -34,8 +34,34 @@
 
                     <VerticalStackLayout Grid.Row="2" x:Name="PickerSection" Spacing="5" IsVisible="False" Margin="0,10,0,10">
                         <Label Text="Seleccionar Barbería" TextColor="White" FontSize="16" />
-                        <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#90A4AE" HeightRequest="45" StrokeThickness="0">
-                            <Picker x:Name="BarberiaPicker" SelectedIndexChanged="BarberiaPicker_SelectedIndexChanged" ItemDisplayBinding="{Binding Nombre}"  Title="Seleccionar Barbería"  TitleColor="Gray"  TextColor="Black"  FontSize="16"  HeightRequest="45"  VerticalOptions="Center"  Margin="10,0" />
+                        <Border x:Name="barberiaBorder" StrokeThickness="0" StrokeShape="RoundRectangle 10" BackgroundColor="#90A4AE" Padding="15,12" Margin="0,0,0,10" >
+                            <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+                                <!-- Logo de la barbería -->
+                                <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
+                                    <Image x:Name="BarberialogoImage" Source="picture.png" Aspect="AspectFill"/>
+                                </Border>
+                                <!-- Info de la barbería -->
+                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" Margin="12,0,0,0">
+                                    <Label x:Name="BarberiaNombreLabel" Text="Seleccionar Barbería" TextColor="Black" FontSize="18"
+                                 FontAttributes="Bold"/>
+                                    <Label x:Name="BarberiaDireccionLabel" Text="" TextColor="#333" FontSize="14"/>
+                                </VerticalStackLayout>
+                                <!-- Botón cambiar -->
+                                <Button x:Name="BarberiaCambiarButton"
+                                     Grid.Column="2"
+                                     Text="Seleccionar"
+                                     BackgroundColor="#264570"
+                                     TextColor="White"
+                                     CornerRadius="10"
+                                     FontAttributes="Bold"
+                                     HorizontalOptions="End"
+                                     VerticalOptions="Center"
+                                     WidthRequest="120"
+                                     HeightRequest="40"
+                                     Clicked="OnBarberiaCambiarClicked"
+                                     Margin="0,0,10,0"
+                                     IsVisible="True"/>
+                            </Grid>
                         </Border>
                     </VerticalStackLayout>
 

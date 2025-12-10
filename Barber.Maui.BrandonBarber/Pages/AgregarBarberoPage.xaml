@@ -14,7 +14,7 @@
                     <Border StrokeShape="RoundRectangle 10" Padding="10,0,0,0" BackgroundColor="#E0F7FA" HeightRequest="100" StrokeThickness="0">
                         <Grid ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
                             <!-- Logo de la barbería -->
-                            <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#F0F0F0" StrokeShape="RoundRectangle 50" VerticalOptions="Center">
+                            <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#F0F0F0" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
                                 <Image x:Name="BarberiaLogoImage" Source="picture.png" Aspect="AspectFill"/>
                             </Border>
                             <!-- Info de la barbería -->
@@ -25,7 +25,7 @@
                             <!-- Botón cambiar -->
                             <Button x:Name="BarberiaSelectButton"
                                     Grid.Column="2"
-                                    Text="Cambiar"
+                                    Text="Seleccionar"
                                     BackgroundColor="#0E2A36"
                                     TextColor="White"
                                     CornerRadius="10"
