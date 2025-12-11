@@ -2,6 +2,7 @@
 using Plugin.Firebase.CloudMessaging.EventArgs;
 using Plugin.LocalNotification;
 using System.Net.Http.Json;
+using Barber.Maui.BrandonBarber.Pages;
 
 namespace Barber.Maui.BrandonBarber.Services
 {
@@ -34,6 +35,31 @@ namespace Barber.Maui.BrandonBarber.Services
                 CrossFirebaseCloudMessaging.Current.NotificationReceived += OnNotificationReceived;
                 CrossFirebaseCloudMessaging.Current.TokenChanged += OnTokenChanged;
 
+                // ✅ MANEJAR CLIC EN NOTIFICACIONES
+                LocalNotificationCenter.Current.NotificationActionTapped += async (eventArgs) =>
+                {
+                    Console.WriteLine($"📲 Notificación tocada: {eventArgs.Request.NotificationId}");
+
+                    try
+                    {
+                        var tipo = "cita"; // Por defecto es una cita
+                        var usuario = AuthService.CurrentUser;
+
+                        if (usuario != null)
+                        {
+                            Console.WriteLine($"📲 Tipo de notificación: {tipo}");
+                            Console.WriteLine($"👤 Rol del usuario: {usuario.Rol}");
+
+                            // ✅ NAVEGAR SEGÚN EL TIPO Y ROL
+                            await NavigarSegunNotificacion(tipo);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"❌ Error al procesar clic en notificación: {ex.Message}");
+                    }
+                };
+
                 _initialized = true;
             }
             catch (Exception ex)
@@ -46,6 +72,13 @@ namespace Barber.Maui.BrandonBarber.Services
         {
             Console.WriteLine($"📩 Notificación recibida: {e.Notification.Title}");
 
+            // ✅ EXTRAER DATOS DE LA NOTIFICACIÓN
+            string tipo = "default";
+            if (e.Notification.Data.ContainsKey("tipo"))
+            {
+                tipo = e.Notification.Data["tipo"];
+            }
+
             var notification = new NotificationRequest
             {
                 NotificationId = Random.Shared.Next(),
@@ -57,14 +90,76 @@ namespace Barber.Maui.BrandonBarber.Services
             await LocalNotificationCenter.Current.Show(notification);
 
             // Actualizar UI si es necesario
-            if (e.Notification.Data.ContainsKey("tipo"))
-            {
-                var tipo = e.Notification.Data["tipo"];
+            MainThread.BeginInvokeOnMainThread(() =>
+                   {
+                       WeakReferenceMessenger.Default.Send(new NotificacionRecibidaMessage(tipo));
+                   });
+        }
 
-                MainThread.BeginInvokeOnMainThread(() =>
+        // ✅ NUEVO MÉTODO: NAVEGAR SEGÚN TIPO DE NOTIFICACIÓN Y ROL
+        private async Task NavigarSegunNotificacion(string tipo)
+        {
+            try
+            {
+                var usuario = AuthService.CurrentUser;
+                if (usuario == null)
                 {
-                    WeakReferenceMessenger.Default.Send(new NotificacionRecibidaMessage(tipo));
-                });
+                    Console.WriteLine("⚠️ Usuario no autenticado, no se puede navegar");
+                    return;
+                }
+
+                // ✅ VALIDAR QUE LA APP ESTÉ LISTA
+                if (Application.Current?.MainPage == null)
+                {
+                    Console.WriteLine("⚠️ MainPage no está disponible");
+                    return;
+                }
+
+                // Obtener la página actual
+                var navigationPage = Application.Current.MainPage as NavigationPage;
+                if (navigationPage == null)
+                {
+                    Console.WriteLine("⚠️ No hay NavigationPage");
+                    return;
+                }
+
+                // ✅ NAVEGAR SEGÚN EL ROL DEL USUARIO
+                if (usuario.Rol!.Equals("barbero", StringComparison.OrdinalIgnoreCase))
+                {
+                    // BARBERO -> GestionarCitasBarberoPage
+                    if (tipo.Contains("cita", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Console.WriteLine("🎯 Navegando a GestionarCitasBarberoPage (Barbero)");
+                        var reservationService = App.Current!.Handler.MauiContext!.Services
+                            .GetRequiredService<ReservationService>();
+
+                        await navigationPage.Navigation.PushAsync(
+                   new GestionarCitasBarberoPage(reservationService)
+                        );
+                    }
+                }
+                else if (usuario.Rol!.Equals("cliente", StringComparison.OrdinalIgnoreCase))
+                {
+                    // CLIENTE -> BuscarPage
+                    if (tipo.Contains("cita", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Console.WriteLine("🎯 Navegando a BuscarPage (Cliente)");
+                        var reservationService = App.Current!.Handler.MauiContext!.Services
+                           .GetRequiredService<ReservationService>();
+
+                        await navigationPage.Navigation.PushAsync(
+                         new BuscarPage(reservationService)
+                           );
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"ℹ️ Rol no configurado para navegación: {usuario.Rol}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Error al navegar: {ex.Message}");
             }
         }
 

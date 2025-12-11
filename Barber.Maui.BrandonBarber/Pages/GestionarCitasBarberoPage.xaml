@@ -22,7 +22,7 @@
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <Border BackgroundColor="#28475C" StrokeShape="RoundRectangle 15" Padding="15"  Margin="0,5" StrokeThickness="0">
-                            <Grid RowDefinitions="Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+                            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
 
                                 <!-- Cliente -->
                                 <Label Grid.Row="0" Grid.Column="0" Text="{Binding Nombre}" TextColor="White"  FontSize="18"  FontAttributes="Bold"/>
@@ -31,8 +31,8 @@
                                 <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding FechaConFormato}" TextColor="#E0F7FA" FontSize="14"/>
 
                                 <!-- Servicio -->
-                                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ServicioNombre, StringFormat='Servicio: {0}'}"  TextColor="#90A4AE"  FontSize="14" IsVisible="{Binding ServicioNombre, Converter={StaticResource ServicioVisibleConverter}}"/>
-
+                                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ServicioNombre, StringFormat='Servicio: {0}'}"  TextColor="White"  FontSize="14" IsVisible="{Binding ServicioNombre}"/>
+                                <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding ServicioPrecio, StringFormat='Precio: ${0:N0}'}" TextColor="White" FontSize="14" IsVisible="{Binding ServicioNombre}"/>
                                 <HorizontalStackLayout Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Spacing="10" Margin="0,10,0,0" IsVisible="{Binding Estado, Converter={StaticResource EstadoPendienteConverter}}">
 
                                     <Button Text="✓ Aceptar" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="10" Padding="15,8" Clicked="OnAceptarCitaClicked" CommandParameter="{Binding .}" />

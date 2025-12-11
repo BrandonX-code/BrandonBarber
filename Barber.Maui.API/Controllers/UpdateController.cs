@@ -20,7 +20,7 @@ namespace Barber.Maui.API.Controllers
             Console.WriteLine("Verificando actualización de la aplicación...");
             try
             {
-                var currentVersion = _configuration["AppUpdate:CurrentVersion"] ?? "1.0.6";
+                var currentVersion = _configuration["AppUpdate:CurrentVersion"] ?? "1.0.7";
                 var apkUrl = _configuration["AppUpdate:ApkUrl"] ?? "";
                 var mensaje = _configuration["AppUpdate:UpdateMessage"] ?? "Nueva versión disponible";
 
