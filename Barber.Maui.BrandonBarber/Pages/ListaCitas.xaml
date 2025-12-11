@@ -100,13 +100,13 @@
                                                         <Image Source="call.png" WidthRequest="20" HeightRequest="20" />
                                                         <Label Text="{Binding Telefono}" FontSize="14" TextColor="Black" />
                                                     </HorizontalStackLayout>
-                                                    <HorizontalStackLayout Spacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
+                                                    <HorizontalStackLayout Spacing="5" IsVisible="{Binding .}">
                                                         <Image Source="servicio.png" WidthRequest="20" HeightRequest="20" />
                                                         <Label Text="Servicio: " FontSize="16" TextColor="Black" FontAttributes="Bold"/>
                                                         <Label Text="{Binding ServicioNombre}" FontSize="16" TextColor="Black" />
                                                     </HorizontalStackLayout>
 
-                                                    <HorizontalStackLayout Spacing="5" IsVisible="{Binding ., Converter={StaticResource ServicioVisibleConverter}}">
+                                                    <HorizontalStackLayout Spacing="5" IsVisible="{Binding .}">
                                                         <Image Source="precio.png" WidthRequest="20" HeightRequest="20" />
                                                         <Label Text="Precio: " FontSize="16" TextColor="Black" FontAttributes="Bold"/>
                                                         <Label Text="{Binding ServicioPrecio, StringFormat='${0:N0}'}" FontSize="15" TextColor="Black"/>

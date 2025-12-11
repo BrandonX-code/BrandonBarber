@@ -27,8 +27,8 @@
 		<ApplicationId>com.companyname.Barber.maui.BrandonBarber</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationVersion>6</ApplicationVersion>
-		<ApplicationDisplayVersion>1.0.6</ApplicationDisplayVersion>
+		<ApplicationVersion>7</ApplicationVersion>
+		<ApplicationDisplayVersion>1.0.7</ApplicationDisplayVersion>
 
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
@@ -82,6 +82,9 @@
 	<ItemGroup>
 	  <AndroidResource Remove="Platforms\Android\Resources\values\strings.xml" />
 	</ItemGroup>
+	<ItemGroup>
+	  <MauiImage Remove="Resources\Images\iconalert.png" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="11.2.0" />
@@ -98,6 +101,7 @@
 
 	<ItemGroup>
 	  <MauiIcon Include="Resources\AppIcon\barbericons.png" />
+	  <MauiIcon Include="Resources\Images\iconalert.png" />
 	</ItemGroup>
 
 	<ItemGroup>

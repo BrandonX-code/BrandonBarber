@@ -14,7 +14,7 @@
         <VerticalStackLayout Spacing="20" HorizontalOptions="Center">
 
             <!-- Logo -->
-            <Image Source="logobarbergoblanco.png" 
+            <Image Source="iconalert.png" 
                    WidthRequest="120" 
                    HeightRequest="120" 
                    HorizontalOptions="Center"/>
