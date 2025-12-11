@@ -209,12 +209,19 @@
                 {
                     LoadingIndicator.IsVisible = true;
                     LoadingIndicator.IsLoading = true;
+     
+                    // ✅ ELIMINAR DEL SERVIDOR
                     bool eliminado = await _reservationService.DeleteReservation(cita.Id);
 
                     if (eliminado)
                     {
+                        // ✅ ELIMINAR INMEDIATAMENTE DE LA LISTA LOCAL
+                        _todasLasCitas.Remove(cita);
+   
+                        // ✅ REFRESCAR LA VISTA ACTUAL (sin ir al servidor)
+                        FiltrarPorEstado(_estadoActual);
+              
                         await AppUtils.MostrarSnackbar("Cita cancelada exitosamente.", Colors.Green, Colors.White);
-                        await ActualizarListaEstados(); // Recarga la lista y los tabs
                     }
                     else
                     {

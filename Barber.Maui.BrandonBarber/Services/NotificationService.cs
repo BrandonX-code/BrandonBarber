@@ -22,16 +22,21 @@ namespace Barber.Maui.BrandonBarber.Services
 
             try
             {
+                Console.WriteLine("🔥 Iniciando Firebase Cloud Messaging...");
+
                 await CrossFirebaseCloudMessaging.Current.CheckIfValidAsync();
 
                 var token = await CrossFirebaseCloudMessaging.Current.GetTokenAsync();
-                Console.WriteLine($"🔥 FCM Token: {token}");
+                Console.WriteLine($"🔥 FCM Token obtenido: {token.Substring(0, 20)}...");
 
+                // ✅ REGISTRAR TOKEN INMEDIATAMENTE (NO ESPERAR)
                 if (AuthService.CurrentUser != null)
                 {
-                    await RegistrarTokenEnServidor(token);
+                    // Lanzar sin esperar para no bloquear la inicialización
+                    _ = RegistrarTokenEnServidor(token);
                 }
 
+                // ✅ SUSCRIBIRSE A NOTIFICACIONES - ESTO DEBE SER INMEDIATO
                 CrossFirebaseCloudMessaging.Current.NotificationReceived += OnNotificationReceived;
                 CrossFirebaseCloudMessaging.Current.TokenChanged += OnTokenChanged;
 
@@ -42,25 +47,23 @@ namespace Barber.Maui.BrandonBarber.Services
 
                     try
                     {
-                        var tipo = "cita"; // Por defecto es una cita
+                        var tipo = "cita";
                         var usuario = AuthService.CurrentUser;
 
                         if (usuario != null)
                         {
-                            Console.WriteLine($"📲 Tipo de notificación: {tipo}");
-                            Console.WriteLine($"👤 Rol del usuario: {usuario.Rol}");
-
-                            // ✅ NAVEGAR SEGÚN EL TIPO Y ROL
+                            Console.WriteLine($"📲 Navegando por notificación (Rol: {usuario.Rol})");
                             await NavigarSegunNotificacion(tipo);
                         }
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"❌ Error al procesar clic en notificación: {ex.Message}");
+                        Console.WriteLine($"❌ Error al procesar clic: {ex.Message}");
                     }
                 };
 
                 _initialized = true;
+                Console.WriteLine("✅ Firebase Cloud Messaging inicializado correctamente");
             }
             catch (Exception ex)
             {
@@ -70,30 +73,45 @@ namespace Barber.Maui.BrandonBarber.Services
 
         private async void OnNotificationReceived(object? sender, FCMNotificationReceivedEventArgs e)
         {
-            Console.WriteLine($"📩 Notificación recibida: {e.Notification.Title}");
+            Console.WriteLine($"📩 Notificación RECIBIDA (Firebase): {e.Notification.Title}");
+            Console.WriteLine($"📩 Mensaje: {e.Notification.Body}");
+            Console.WriteLine($"📩 Timestamp: {DateTime.Now:HH:mm:ss.fff}");
 
-            // ✅ EXTRAER DATOS DE LA NOTIFICACIÓN
-            string tipo = "default";
-            if (e.Notification.Data.ContainsKey("tipo"))
+            // ✅ EXTRAER DATOS
+            string tipo = "cita";
+            if (e.Notification.Data?.ContainsKey("tipo") == true)
             {
                 tipo = e.Notification.Data["tipo"];
             }
 
+            // ✅ MOSTRAR NOTIFICACIÓN LOCAL INMEDIATAMENTE
             var notification = new NotificationRequest
             {
-                NotificationId = Random.Shared.Next(),
-                Title = e.Notification.Title,
-                Description = e.Notification.Body,
+                NotificationId = Random.Shared.Next(1, 10000),
+                Title = e.Notification.Title ?? "Notificación",
+                Description = e.Notification.Body ?? "Tienes una nueva notificación",
                 CategoryType = NotificationCategoryType.Status
             };
 
-            await LocalNotificationCenter.Current.Show(notification);
+            // ✅ MOSTRAR NOTIFICACIÓN EN EL HILO PRINCIPAL
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                try
+                {
+                    await LocalNotificationCenter.Current.Show(notification);
+                    Console.WriteLine($"✅ Notificación local mostrada al usuario");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"⚠️ Error mostrando notificación local: {ex.Message}");
+                }
+            });
 
-            // Actualizar UI si es necesario
+            // ✅ ACTUALIZAR UI MESSENGER
             MainThread.BeginInvokeOnMainThread(() =>
-                   {
-                       WeakReferenceMessenger.Default.Send(new NotificacionRecibidaMessage(tipo));
-                   });
+            {
+                WeakReferenceMessenger.Default.Send(new NotificacionRecibidaMessage(tipo));
+            });
         }
 
         // ✅ NUEVO MÉTODO: NAVEGAR SEGÚN TIPO DE NOTIFICACIÓN Y ROL

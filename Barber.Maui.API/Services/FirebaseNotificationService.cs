@@ -78,6 +78,13 @@ namespace Barber.Maui.API.Services
                     return false;
                 }
 
+                // ✅ AGREGAR DATOS OBLIGATORIOS
+                var datosNotificacion = data ?? new Dictionary<string, string>();
+                if (!datosNotificacion.ContainsKey("tipo"))
+                {
+                    datosNotificacion["tipo"] = "cita";
+                }
+
                 var message = new MulticastMessage
                 {
                     Tokens = tokens,
@@ -85,26 +92,74 @@ namespace Barber.Maui.API.Services
                     {
                         Title = titulo,
                         Body = mensaje,
-                        // Usar URL completa y pública de la imagen
                         ImageUrl = "https://i.pinimg.com/736x/74/2e/a6/742ea6bccad14b6b92535cd27f3e1f10.jpg"
                     },
-                    Data = data ?? new Dictionary<string, string>(),
+                    Data = datosNotificacion,
+                    // ✅ CONFIGURACIÓN CRÍTICA PARA VELOCIDAD
                     Android = new AndroidConfig
                     {
-                        Priority = Priority.High, // ✅ AÑADIR PRIORIDAD
+                        Priority = Priority.High, // ✅ MÁXIMA PRIORIDAD
                         Notification = new AndroidNotification
                         {
                             Color = "#0E2A36",
                             Sound = "default",
                             ChannelId = "barber_notifications",
-                            Icon = "barber_notification", // ✅ Referencia al icono pequeño
-                            ImageUrl = null // ✅ No duplicar aquí
+                            Icon = "barber_notification",
+                            ImageUrl = null,
+                            // ✅ AGREGAR VIBRACIÓN INMEDIATA
+                            VibrateTimingsMillis = new long[] { 0, 100, 100, 100 },
+                            LocalOnly = false,
+                            Tag = $"cita_{usuarioCedula}_{DateTime.UtcNow.Ticks}", // Evitar duplicados
+                        }
+                    },
+                    // ✅ CONFIGURACIÓN PARA IOS
+                    Apns = new ApnsConfig
+                    {
+                        Headers = new Dictionary<string, string>
+                        {
+                            { "apns-priority", "10" }, // ✅ MÁXIMA PRIORIDAD EN IOS
+                            { "apns-push-type", "alert" },
+                        },
+                        Aps = new Aps
+                        {
+                            Alert = new ApsAlert
+                            {
+                                Title = titulo,
+                                Body = mensaje,
+                            },
+                            Sound = "default",
+                            ContentAvailable = true,
+                            MutableContent = true,
+                            Badge = 1, // ✅ CORREGIR A INT
+                        }
+                    },
+                    // ✅ CONFIGURACIÓN WEBPUSH
+                    Webpush = new WebpushConfig
+                    {
+                        Data = datosNotificacion,
+                        FcmOptions = new WebpushFcmOptions
+                        {
+                            Link = "https://barbergo.com"
                         }
                     }
                 };
 
+                Console.WriteLine($"📤 Enviando notificación a {tokens.Count} dispositivo(s)...");
                 var response = await FirebaseMessaging.DefaultInstance.SendEachForMulticastAsync(message);
-                Console.WriteLine($"✅ Notificación enviada: {response.SuccessCount}/{tokens.Count}");
+                Console.WriteLine($"✅ Notificación enviada: {response.SuccessCount}/{tokens.Count} exitosas");
+
+                // ✅ LOG DE ERRORES
+                if (response.FailureCount > 0)
+                {
+                    Console.WriteLine($"⚠️ {response.FailureCount} notificaciones fallaron");
+                    for (int i = 0; i < response.Responses.Count; i++)
+                    {
+                        if (!response.Responses[i].IsSuccess)
+                        {
+                            Console.WriteLine($"  - Token {i}: {response.Responses[i].Exception?.Message}");
+                        }
+                    }
+                }
 
                 return response.SuccessCount > 0;
             }
