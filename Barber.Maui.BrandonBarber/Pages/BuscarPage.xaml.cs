@@ -51,7 +51,7 @@
             _lastOpenedSwipeView = sender as SwipeView;
         }
         private void OnPendientesClicked(object sender, EventArgs e) => FiltrarPorEstado("Pendiente");
-        private void OnCompletadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Completada");
+        private void OnCompletadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Confirmada");
         private void OnCanceladasClicked(object sender, EventArgs e) => FiltrarPorEstado("Cancelada");
         private void OnFinalizadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Finalizada");
 
@@ -114,31 +114,41 @@
         private void FiltrarPorEstado(string estado)
         {
             _estadoActual = estado;
-            var citasFiltradas = _todasLasCitas
-                .Where(c => c.Estado?.ToLower() == estado.ToLower())
-                .OrderByDescending(c => c.Fecha)
-                .ToList();
-            
-            // ✅ LOG PARA DEBUG
-            Debug.WriteLine($"✅ Citas filtradas por '{estado}': {citasFiltradas.Count}");
-            foreach (var cita in citasFiltradas)
-            {
+        var citasFiltradas = _todasLasCitas
+            .Where(c => 
+       {
+       var estadoCita = c.Estado?.ToLower() ?? "";
+     var estadoBuscado = estado.ToLower();
+   
+          // ✅ Aceptar "Confirmada" o "Completada" como equivalentes
+     if (estadoBuscado == "confirmada" && (estadoCita == "confirmada" || estadoCita == "completada"))
+    return true;
+
+            return estadoCita == estadoBuscado;
+     })
+             .OrderByDescending(c => c.Fecha)
+     .ToList();
+       
+         // ✅ LOG PARA DEBUG
+    Debug.WriteLine($"✅ Citas filtradas por '{estado}': {citasFiltradas.Count}");
+     foreach (var cita in citasFiltradas)
+       {
                 Debug.WriteLine($"  - {cita.Nombre} | Servicio: {cita.ServicioNombre} | Precio: ${cita.ServicioPrecio}");
             }
-            
-            CitasCollectionView.ItemsSource = citasFiltradas;
-            EmptyStateLayout.IsVisible = citasFiltradas.Count == 0;
-            ActualizarEstilosBotones();
-            _ = MostrarHintDeslizar();
-        }
+      
+ CitasCollectionView.ItemsSource = citasFiltradas;
+          EmptyStateLayout.IsVisible = citasFiltradas.Count == 0;
+      ActualizarEstilosBotones();
+    _ = MostrarHintDeslizar();
+     }
 
-        private void ActualizarEstilosBotones()
+   private void ActualizarEstilosBotones()
         {
-            BtnPendientes.BackgroundColor = _estadoActual == "Pendiente" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
-            BtnCompletadas.BackgroundColor = _estadoActual == "Completada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+      BtnPendientes.BackgroundColor = _estadoActual == "Pendiente" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+          BtnCompletadas.BackgroundColor = _estadoActual == "Confirmada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
             BtnCanceladas.BackgroundColor = _estadoActual == "Cancelada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
-            BtnFinalizadas.BackgroundColor = _estadoActual == "Finalizada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
-        }
+    BtnFinalizadas.BackgroundColor = _estadoActual == "Finalizada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+   }
         private async Task MostrarHintDeslizar()
         {
             if (CitasCollectionView.ItemsSource is IEnumerable<CitaModel> citas && citas.Any())
@@ -179,25 +189,12 @@
                     return;
                 }
 
-                // ✅ VALIDACIÓN 1: No eliminar si NO es Pendiente
-                if (!string.Equals(cita.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase))
+                // ✅ VALIDACIÓN: Solo eliminar si está en PENDIENTE o CONFIRMADA
+                if (!string.Equals(cita.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(cita.Estado, "Confirmada", StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(cita.Estado, "Completada", StringComparison.OrdinalIgnoreCase))
                 {
-                    await AppUtils.MostrarSnackbar("Solo puedes cancelar citas en estado Pendiente.", Colors.Orange, Colors.White);
-                    return;
-                }
-
-                // ✅ VALIDACIÓN 2: No eliminar si falta <24 horas
-                var horasRestantes = (cita.Fecha - DateTime.UtcNow).TotalHours;
-                if (horasRestantes < 24)
-                {
-                    await AppUtils.MostrarSnackbar($"No puedes cancelar citas con menos de 24 horas de anticipación. Faltan {Math.Round(horasRestantes, 1)} horas.", Colors.Orange, Colors.White);
-                    return;
-                }
-
-                // ✅ VALIDACIÓN 3: Bloquear citas finalizadas (por seguridad)
-                if (string.Equals(cita.Estado, "Finalizada", StringComparison.OrdinalIgnoreCase))
-                {
-                    await AppUtils.MostrarSnackbar("No puedes eliminar una cita finalizada.", Colors.Orange, Colors.White);
+                    await AppUtils.MostrarSnackbar("Solo puedes cancelar citas en estado Pendiente o Confirmada.", Colors.Orange, Colors.White);
                     return;
                 }
 
@@ -249,7 +246,7 @@
                 if (!PuedeEditarCita(cita))
                 {
                     await AppUtils.MostrarSnackbar(
-                    "Solo puedes editar citas pendientes con más de 24 horas.",
+                    "Solo puedes editar citas en estado Pendiente o Confirmada.",
                     Colors.Orange, Colors.White);
                     return;
                 }
@@ -302,16 +299,13 @@
             }
         }
 
-        // ✅ MÉTODO AUXILIAR: Validar si puede editar
+        // ✅ MÉTODO AUXILIAR: Validar si puede editar (SIN RESTRICCIÓN DE 24 HORAS)
         private bool PuedeEditarCita(CitaModel cita)
         {
-            // Solo citas pendientes
-            if (!string.Equals(cita.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase))
-                return false;
-
-            // Validar que falten al menos 24 horas
-            var tiempoRestante = cita.Fecha - DateTime.UtcNow;
-            return tiempoRestante.TotalHours >= 24;
+            // Solo citas en estado PENDIENTE o CONFIRMADA (incluir COMPLETADA por retrocompatibilidad)
+            return string.Equals(cita.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(cita.Estado, "Confirmada", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(cita.Estado, "Completada", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

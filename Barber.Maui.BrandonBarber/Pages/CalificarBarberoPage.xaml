@@ -17,8 +17,13 @@
                 </HorizontalStackLayout>
             </ScrollView>
             <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="10" Margin="0,20,0,0" StrokeThickness="0">
-                <Editor x:Name="ComentarioEditor" Placeholder="Escribe un comentario (opcional)" HeightRequest="80" TextColor="White" BackgroundColor="Transparent"/>
+                <Editor x:Name="ComentarioEditor" Placeholder="Escribe un comentario (opcional)" HeightRequest="80" TextColor="White" BackgroundColor="Transparent" TextChanged="ComentarioEditor_TextChanged"/>
             </Border>
+            <Label x:Name="ContadorLabel"
+       TextColor="White"
+       FontSize="12"
+       HorizontalOptions="End"
+       Text="0 / 150"/>
             <Grid>
                 <Button Grid.ColumnSpan="2" Text="Enviar Calificación" BackgroundColor="#FF6F91" TextColor="Black" FontSize="18" FontAttributes="Bold" CornerRadius="15" HorizontalOptions="Center" Clicked="OnEnviarCalificacionClicked"/>
             </Grid>

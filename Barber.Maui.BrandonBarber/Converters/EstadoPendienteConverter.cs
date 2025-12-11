@@ -32,7 +32,7 @@ namespace Barber.Maui.BrandonBarber.Converters
         }
     }
 
-    // ✅ CONVERTIDOR PARA PERMITIR ELIMINAR SOLO CITAS PENDIENTES CON >24 HORAS
+    // ✅ CONVERTIDOR PARA PERMITIR ELIMINAR SOLO CITAS PENDIENTES O CONFIRMADAS
     public class PuedeEliminarCitaConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -41,13 +41,10 @@ namespace Barber.Maui.BrandonBarber.Converters
             if (value is not CitaModel cita)
                 return false;
 
-            // ✅ Solo permitir eliminar si está en estado PENDIENTE
-            if (!string.Equals(cita.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase))
-                return false;
-
-            // ✅ Y faltan al menos 24 horas
-            var horasRestantes = (cita.Fecha - DateTime.UtcNow).TotalHours;
-            return horasRestantes >= 24;
+            // ✅ Permitir eliminar si está en estado PENDIENTE, CONFIRMADA o COMPLETADA
+            return string.Equals(cita.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(cita.Estado, "Confirmada", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(cita.Estado, "Completada", StringComparison.OrdinalIgnoreCase);
         }
 
         public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -56,7 +53,7 @@ namespace Barber.Maui.BrandonBarber.Converters
         }
     }
 
-    // ✅ CONVERTIDOR PARA PERMITIR EDITAR SOLO CITAS PENDIENTES CON >24 HORAS
+    // ✅ CONVERTIDOR PARA PERMITIR EDITAR SOLO CITAS PENDIENTES O CONFIRMADAS
     public class PuedeEditarCitaConverter : IValueConverter
     {
         public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -64,13 +61,10 @@ namespace Barber.Maui.BrandonBarber.Converters
             if (value is not CitaModel cita)
                 return false;
 
-            // ✅ Solo permitir editar si está en estado PENDIENTE
-            if (!string.Equals(cita.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase))
-                return false;
-
-            // ✅ Y faltan al menos 24 horas
-            var horasRestantes = (cita.Fecha - DateTime.UtcNow).TotalHours;
-            return horasRestantes >= 24;
+            // ✅ Permitir editar si está en estado PENDIENTE, CONFIRMADA o COMPLETADA
+            return string.Equals(cita.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(cita.Estado, "Confirmada", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(cita.Estado, "Completada", StringComparison.OrdinalIgnoreCase);
         }
 
         public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

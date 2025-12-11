@@ -257,7 +257,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 LoadingIndicator.IsVisible = false;
                 LoadingIndicator.IsLoading = false;
             }
-            _= ActualizarContador();
+            _ = ActualizarContador();
         }
 
 

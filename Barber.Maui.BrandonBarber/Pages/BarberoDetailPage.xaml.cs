@@ -159,7 +159,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var isToday = currentDate.Date == today.Date;
                 var isSelected = _diaSeleccionado.HasValue && _diaSeleccionado.Value.Date == currentDate.Date;
 
-                // Crear un Frame contenedor con mejor espaciado
+                // Crear un Frame contenedor with mejor espaciado
                 var border = new Border
                 {
                     Stroke = Colors.Transparent,
@@ -339,12 +339,14 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
-                var barberoCedula = AuthService.CurrentUser!.Cedula;
-                // Obtener todas las citas
-                var todasLasCitas = await _reservationService.GetReservationsById(barberoCedula);
+                var barberoCedula = _barbero.Cedula; // ✅ CAMBIO: Usar cedula del barbero actual
+                
+                 // Obtener todas las citas del barbero seleccionado
+                var todasLasCitasDelBarbero = await _reservationService.GetReservationsByBarbero(barberoCedula);
 
-                // Contar las citas donde el barbero sea el actual
-                int visitas = todasLasCitas.Count(c => c.BarberoId == _barbero.Cedula);
+                    // ✅ CONTAR SOLO LAS CITAS FINALIZADAS (citas completadas)
+               int visitas = todasLasCitasDelBarbero.Count(c => 
+                c.Estado?.ToLower() == "finalizada");
 
                 BarberoVisitasLabel.Text = $"Visitas: {visitas}";
             }

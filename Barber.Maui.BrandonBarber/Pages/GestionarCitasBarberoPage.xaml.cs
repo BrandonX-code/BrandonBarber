@@ -53,7 +53,17 @@
             _estadoActual = estado;
 
             var citasFiltradas = _todasLasCitas
-                .Where(c => c.Estado?.ToLower() == estado.ToLower())
+                .Where(c => 
+    {
+   var estadoCita = c.Estado?.ToLower() ?? "";
+    var estadoBuscado = estado.ToLower();
+  
+           // ✅ Aceptar "Confirmada" o "Completada" como equivalentes
+if (estadoBuscado == "confirmada" && (estadoCita == "confirmada" || estadoCita == "completada"))
+          return true;
+      
+       return estadoCita == estadoBuscado;
+  })
                 .OrderByDescending(c => c.Fecha) // 👈 más reciente primero
                 .ToList();
 
@@ -67,13 +77,13 @@
         private void ActualizarEstilosBotones()
         {
             BtnPendientes.BackgroundColor = _estadoActual == "Pendiente" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
-            BtnCompletadas.BackgroundColor = _estadoActual == "Completada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+            BtnCompletadas.BackgroundColor = _estadoActual == "Confirmada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
             BtnCanceladas.BackgroundColor = _estadoActual == "Cancelada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
             BtnFinalizadas.BackgroundColor = _estadoActual == "Finalizada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
         }
 
         private void OnPendientesClicked(object sender, EventArgs e) => FiltrarPorEstado("Pendiente");
-        private void OnCompletadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Completada");
+        private void OnCompletadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Confirmada");
         private void OnCanceladasClicked(object sender, EventArgs e) => FiltrarPorEstado("Cancelada");
         private void OnFinalizadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Finalizada");
         
@@ -85,7 +95,7 @@
                 bool confirm = await popup.ShowAsync(this);
                 if (confirm)
                 {
-                    var exito = await _reservationService.ActualizarEstadoCita(cita.Id, "Completada");
+                    var exito = await _reservationService.ActualizarEstadoCita(cita.Id, "Confirmada");
                     if (exito)
                     {
                         await AppUtils.MostrarSnackbar("Cita aceptada", Colors.Green, Colors.White);

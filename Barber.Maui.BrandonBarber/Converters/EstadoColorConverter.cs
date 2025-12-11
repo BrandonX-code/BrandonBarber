@@ -10,7 +10,8 @@ namespace Barber.Maui.BrandonBarber.Converters
             {
                 return estado.ToLower() switch
                 {
-                    "completada" or "aprobado" => Color.FromArgb("#4CAF50"),
+                    // ✅ Aceptar "confirmada" o "completada" como equivalentes
+                    "confirmada" or "completada" or "aprobado" => Color.FromArgb("#4CAF50"),
                     "cancelada" or "rechazado" => Color.FromArgb("#F44336"),
                     "pendiente" => Color.FromArgb("#FFA726"),
                     "finalizada" => Color.FromArgb("#4D5154"), // 👈 AÑADIDO

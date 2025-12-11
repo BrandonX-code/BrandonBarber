@@ -2,6 +2,7 @@
 {
     public partial class CalificarBarberoPage : ContentPage
     {
+        private const int MaxCharacters = 150;
         private readonly UsuarioModels _barbero;
         private int _calificacionSeleccionada;
         private readonly List<ImageButton> _estrellas;
@@ -13,7 +14,19 @@
             _estrellas = [ Estrella1, Estrella2, Estrella3, Estrella4, Estrella5 ];
             this.Appearing += async (s, e) => await CargarCalificacionPrevia();
         }
+        private void ComentarioEditor_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var editor = (Editor)sender;
 
+            // Si supera el límite, recorta el texto
+            if (!string.IsNullOrEmpty(editor.Text) && editor.Text.Length > MaxCharacters)
+            {
+                editor.Text = editor.Text.Substring(0, MaxCharacters);
+            }
+
+            // Actualiza contador
+            ContadorLabel.Text = $"{editor.Text?.Length ?? 0} / {MaxCharacters}";
+        }
         private async Task CargarCalificacionPrevia()
         {
             try

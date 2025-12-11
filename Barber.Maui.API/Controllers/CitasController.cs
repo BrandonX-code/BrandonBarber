@@ -196,93 +196,71 @@ public class CitasController : ControllerBase
     [HttpGet("{cedula}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorCedula(long cedula)
     {
-    var citas = await _context.Citas
-      .Where(c => c.Cedula == cedula)
-      .ToListAsync();
+        var citas = await _context.Citas
+          .Where(c => c.Cedula == cedula)
+          .ToListAsync();
 
         foreach (var cita in citas)
-  {
-   ConvertirCitaAFormatoLocal(cita);
-  var barbero = await _context.UsuarioPerfiles
- .FirstOrDefaultAsync(b => b.Cedula == cita.BarberoId);
+        {
+            ConvertirCitaAFormatoLocal(cita);
+            var barbero = await _context.UsuarioPerfiles
+           .FirstOrDefaultAsync(b => b.Cedula == cita.BarberoId);
 
-     cita.BarberoNombre = barbero?.Nombre ?? "No encontrado";
+            cita.BarberoNombre = barbero?.Nombre ?? "No encontrado";
 
-         // ✅ SIEMPRE ENRIQUECER CON DATOS DEL SERVICIO
-         // Esto asegura que incluso citas antiguas muestren datos del servicio
-  await EnriquecerCitaConServicio(cita);
-     }
+            // ✅ SIEMPRE ENRIQUECER CON DATOS DEL SERVICIO
+            // Esto asegura que incluso citas antiguas muestren datos del servicio
+            await EnriquecerCitaConServicio(cita);
+        }
 
-      return Ok(citas);
+        return Ok(citas);
     }
 
     [HttpGet("by-date/{fecha}&{idBarberia}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorFecha(DateTime fecha, int idBarberia)
     {
-        // ✅ CORREGIR: Convertir a UTC CORRECTAMENTE con zona horaria de Colombia
-        var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
-     
-        // La fecha que viene del cliente es en hora local de Colombia
-        // Convertirla a UTC para comparar en BD
-        var fechaInicio = TimeZoneInfo.ConvertTimeToUtc(fecha.Date.Add(TimeSpan.Zero), zonaColombia);
-        var fechaFin = TimeZoneInfo.ConvertTimeToUtc(fecha.Date.Add(TimeSpan.FromHours(23).Add(TimeSpan.FromMinutes(59).Add(TimeSpan.FromSeconds(59)))), zonaColombia);
+        fecha = fecha.ToUniversalTime();
 
-        Console.WriteLine($"📅 Buscando citas para: {fecha:yyyy-MM-dd}");
-      Console.WriteLine($"🕐 Convertido a UTC: {fechaInicio:yyyy-MM-dd HH:mm:ss} a {fechaFin:yyyy-MM-dd HH:mm:ss}");
-
-   var barberos = await _context.UsuarioPerfiles
+        var barberos = await _context.UsuarioPerfiles
             .Where(b => b.IdBarberia == idBarberia && b.Rol == "barbero")
             .Select(b => new { b.Cedula, b.Nombre })
-   .ToListAsync();
+            .ToListAsync();
 
         var barberoDict = barberos.ToDictionary(b => b.Cedula, b => b.Nombre);
- var barberoIds = barberos.Select(b => b.Cedula).ToList();
+        var barberoIds = barberos.Select(b => b.Cedula).ToList();
 
         var citas = await _context.Citas
-      .Where(c => c.Fecha >= fechaInicio && c.Fecha <= fechaFin && barberoIds.Contains(c.BarberoId))
-          .OrderBy(c => c.Fecha)
-    .ToListAsync();
-
-        Console.WriteLine($"✅ Citas encontradas: {citas.Count}");
+            .Where(c => c.Fecha.Date == fecha.Date && barberoIds.Contains(c.BarberoId))
+            .OrderBy(c => c.Fecha)
+            .ToListAsync();
 
         foreach (var cita in citas)
- {
+        {
             ConvertirCitaAFormatoLocal(cita);
             cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
-      await EnriquecerCitaConServicio(cita);
+            await EnriquecerCitaConServicio(cita);
         }
 
-     return Ok(citas);
+        return Ok(citas);
     }
 
     [HttpGet("barbero/{barberoId}/fecha/{fecha}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorBarberoYFecha(long barberoId, DateTime fecha)
     {
-        // ✅ CORREGIR: Convertir a UTC CORRECTAMENTE con zona horaria de Colombia
-      var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
-        
-   // La fecha que viene del cliente es en hora local de Colombia
-    // Convertirla a UTC para comparar en BD
-    var fechaInicio = TimeZoneInfo.ConvertTimeToUtc(fecha.Date.Add(TimeSpan.Zero), zonaColombia);
-       var fechaFin = TimeZoneInfo.ConvertTimeToUtc(fecha.Date.Add(TimeSpan.FromHours(23).Add(TimeSpan.FromMinutes(59).Add(TimeSpan.FromSeconds(59)))), zonaColombia);
+        fecha = fecha.ToUniversalTime();
 
- Console.WriteLine($"📅 Buscando citas del barbero {barberoId} para: {fecha:yyyy-MM-dd}");
-   Console.WriteLine($"🕐 Convertido a UTC: {fechaInicio:yyyy-MM-dd HH:mm:ss} a {fechaFin:yyyy-MM-dd HH:mm:ss}");
+        var citas = await _context.Citas
+            .Where(c => c.BarberoId == barberoId && c.Fecha.Date == fecha.Date)
+            .OrderBy(c => c.Fecha)
+            .ToListAsync();
 
-  var citas = await _context.Citas
- .Where(c => c.BarberoId == barberoId && c.Fecha >= fechaInicio && c.Fecha <= fechaFin)
-   .OrderBy(c => c.Fecha)
-    .ToListAsync();
+        foreach (var cita in citas)
+        {
+            ConvertirCitaAFormatoLocal(cita);
+            await EnriquecerCitaConServicio(cita);
+        }
 
- Console.WriteLine($"✅ Citas encontradas: {citas.Count}");
-
-    foreach (var cita in citas)
-   {
-       ConvertirCitaAFormatoLocal(cita);
-await EnriquecerCitaConServicio(cita);
-  }
-
-    return Ok(citas);
+        return Ok(citas);
     }
 
     [HttpGet("barbero/{barberoId}")]
@@ -366,19 +344,19 @@ await EnriquecerCitaConServicio(cita);
       { "clienteNombre", nuevaCita.Nombre ?? "" }
         };
 
-       await _notificationService.EnviarNotificacionAsync(
-       nuevaCita.BarberoId,
-    "Nueva Cita Pendiente",
-           $"{nuevaCita.Nombre} ha solicitado una cita para el {fechaLocal:dd/MM/yyyy - hh:mm tt}", // 🔥 FORMATO CORREGIDO
-  data
-    );
+            await _notificationService.EnviarNotificacionAsync(
+            nuevaCita.BarberoId,
+         "Nueva Cita Pendiente",
+                $"{nuevaCita.Nombre} ha solicitado una cita para el {fechaLocal:dd/MM/yyyy - hh:mm tt}", // 🔥 FORMATO CORREGIDO
+       data
+         );
 
             ConvertirCitaAFormatoLocal(nuevaCita);
-  return StatusCode(201, nuevaCita);
+            return StatusCode(201, nuevaCita);
         }
         catch (Exception ex)
         {
-        return StatusCode(500, new { message = "Error al guardar la cita.", error = ex.Message });
+            return StatusCode(500, new { message = "Error al guardar la cita.", error = ex.Message });
         }
     }
 
@@ -418,13 +396,13 @@ await EnriquecerCitaConServicio(cita);
         await _context.SaveChangesAsync();
 
         // 🔥 ENVIAR SOLO UNA NOTIFICACIÓN según el estado
-        if (req.Estado == "Completada")
+        if (req.Estado == "Completada" || req.Estado == "Confirmada")
         {
             await _notificationService.EnviarNotificacionAsync(
                 cita.Cedula,
-                "Cita Aceptada",
-                $"Tu cita con {barberoNombre} para {servicioNombre} el {fechaLocal:dd/MM/yyyy - hh:mm tt} fue aceptada",
-                new Dictionary<string, string> { { "tipo", "cita_aceptada" } }
+                "Cita Confirmada",
+                $"Tu cita con {barberoNombre} para {servicioNombre} el {fechaLocal:dd/MM/yyyy - hh:mm tt} fue confirmada",
+                new Dictionary<string, string> { { "tipo", "cita_confirmada" } }
             );
         }
         else if (req.Estado == "Cancelada")
@@ -449,36 +427,36 @@ await EnriquecerCitaConServicio(cita);
 
         try
         {
-      // ✅ Validar que no existe otra cita en el mismo horario con el mismo barbero
-        bool existeCita = await _context.Citas
-        .AnyAsync(c => c.Fecha == citaActualizada.Fecha && 
-      c.BarberoId == citaActualizada.BarberoId && 
-         c.Id != id);
+            // ✅ Validar que no existe otra cita en el mismo horario con el mismo barbero
+            bool existeCita = await _context.Citas
+            .AnyAsync(c => c.Fecha == citaActualizada.Fecha &&
+          c.BarberoId == citaActualizada.BarberoId &&
+             c.Id != id);
 
             if (existeCita)
- {
-   return Conflict("Ya existe una cita en esta fecha y hora con ese barbero.");
+            {
+                return Conflict("Ya existe una cita en esta fecha y hora con ese barbero.");
             }
 
             // ✅ Actualizar los campos
-   cita.Fecha = DateTime.SpecifyKind(citaActualizada.Fecha, DateTimeKind.Utc);
+            cita.Fecha = DateTime.SpecifyKind(citaActualizada.Fecha, DateTimeKind.Utc);
             cita.BarberoId = citaActualizada.BarberoId;
-      cita.ServicioId = citaActualizada.ServicioId;
-  
+            cita.ServicioId = citaActualizada.ServicioId;
+
             // ✅ Enriquecer con información del servicio
-await EnriquecerCitaConServicio(cita);
-            
-     _context.Citas.Update(cita);
+            await EnriquecerCitaConServicio(cita);
+
+            _context.Citas.Update(cita);
             await _context.SaveChangesAsync();
 
             // ✅ Notificar al barbero sobre la cita modificada
-       var barbero = await _context.UsuarioPerfiles
-          .FirstOrDefaultAsync(b => b.Cedula == cita.BarberoId);
+            var barbero = await _context.UsuarioPerfiles
+               .FirstOrDefaultAsync(b => b.Cedula == cita.BarberoId);
 
- var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
-          var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(cita.Fecha, zonaColombia);
+            var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
+            var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(cita.Fecha, zonaColombia);
 
-   var data = new Dictionary<string, string>
+            var data = new Dictionary<string, string>
    {
      { "tipo", "cita_modificada" },
       { "citaId", cita.Id.ToString() },
@@ -492,8 +470,8 @@ await EnriquecerCitaConServicio(cita);
          data
             );
 
-          ConvertirCitaAFormatoLocal(cita);
-    return Ok(cita);
+            ConvertirCitaAFormatoLocal(cita);
+            return Ok(cita);
         }
         catch (Exception ex)
         {
