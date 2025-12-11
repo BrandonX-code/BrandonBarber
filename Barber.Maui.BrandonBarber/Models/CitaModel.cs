@@ -33,10 +33,10 @@
 
         public bool MostrarBarberoInfo { get; set; }
         public int? ServicioId { get; set; }
-        public string? ServicioNombre { get; set; }
+        public string? ServicioNombre { get; set; } = string.Empty;
         public decimal? ServicioPrecio { get; set; }
         // ✅ NUEVA PROPIEDAD: Imagen del servicio
-        public string? ServicioImagen { get; set; }
+        public string? ServicioImagen { get; set; } = string.Empty;
     }
 
 }
