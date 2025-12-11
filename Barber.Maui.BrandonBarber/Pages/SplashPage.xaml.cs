@@ -25,6 +25,9 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             base.OnAppearing();
 
+            // ✅ INICIALIZAR FIREBASE PRIMERO
+            await InicializarFirebase();
+
             // Verificar actualización antes de cualquier otra acción
             await VerificarActualizacion();
 
@@ -134,6 +137,85 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 Console.WriteLine($"❌ Error navegando a LoginPage: {ex.Message}");
             }
+        }
+
+        // ✅ NUEVO MÉTODO: Inicializar Firebase
+        private async Task InicializarFirebase()
+        {
+            try
+            {
+                Console.WriteLine("🔥 Inicializando Firebase...");
+                await _notificationService.InicializarAsync();
+                Console.WriteLine("✅ Firebase inicializado correctamente");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"⚠️ Error inicializando Firebase (no crítico): {ex.Message}");
+                // No lanzar excepción, Firebase es opcional
+            }
+        }
+
+        // ✅ NUEVO MÉTODO: Registrar token con reintentos
+        private async Task RegistrarTokenConReintentos()
+        {
+            const int maxIntentos = 3;
+            int intento = 0;
+
+            while (intento < maxIntentos)
+            {
+                try
+                {
+                    intento++;
+                    Console.WriteLine($"📱 Intentando registrar token FCM ({intento}/{maxIntentos})...");
+
+                    // Esperar a que Firebase esté realmente listo
+                    await Task.Delay(500);
+
+                    var fcmToken = await Plugin.Firebase.CloudMessaging.CrossFirebaseCloudMessaging.Current.GetTokenAsync();
+
+                    if (!string.IsNullOrEmpty(fcmToken))
+                    {
+                        var request = new
+                        {
+                            UsuarioCedula = AuthService.CurrentUser!.Cedula,
+                            FcmToken = fcmToken
+                        };
+
+                        var json = System.Text.Json.JsonSerializer.Serialize(request);
+                        var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                        var httpClient = App.Current!.Handler.MauiContext!.Services
+                            .GetRequiredService<AuthService>()
+                            .GetType()
+                            .GetField("_BaseClient", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                            ?.GetValue(App.Current!.Handler.MauiContext!.Services.GetRequiredService<AuthService>()) as HttpClient;
+
+                        if (httpClient != null)
+                        {
+                            var response = await httpClient.PostAsync("api/notifications/register-token", content);
+
+                            if (response.IsSuccessStatusCode)
+                            {
+                                Console.WriteLine("✅ Token FCM registrado exitosamente");
+                                return; // ✅ ÉXITO - Salir
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"⚠️ Intento {intento} falló: {ex.Message}");
+
+                    if (intento < maxIntentos)
+                    {
+                        // Esperar más tiempo antes del siguiente intento
+                        await Task.Delay(1000 * intento); // 1s, 2s, 3s...
+                    }
+                }
+            }
+
+            Console.WriteLine($"⚠️ No se pudo registrar token FCM después de {maxIntentos} intentos");
+            // No lanzar excepción - permitir que la app continúe
         }
     }
 }

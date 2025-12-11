@@ -352,6 +352,10 @@ namespace Barber.Maui.BrandonBarber.Services
         {
             try
             {
+                // ✅ VALIDAR QUE FIREBASE ESTÉ LISTO
+                // Esperamos un momento a que Firebase se inicialice
+                await Task.Delay(500);
+
                 // Obtener el token FCM actual
                 var fcmToken = await CrossFirebaseCloudMessaging.Current.GetTokenAsync();
 
@@ -376,16 +380,17 @@ namespace Barber.Maui.BrandonBarber.Services
 
                 if (response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine("✅ Token FCM registrado exitosamente en CheckAuthStatus");
+                    Console.WriteLine("✅ Token FCM registrado exitosamente");
                 }
                 else
                 {
-                    Console.WriteLine($"❌ Error al registrar token FCM: {response.StatusCode}");
+                    Console.WriteLine($"⚠️ Error al registrar token FCM: {response.StatusCode}");
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Error al registrar token FCM: {ex.Message}");
+                Console.WriteLine($"⚠️ Error al registrar token FCM: {ex.Message}");
+                // No lanzar excepción para no romper el flujo de login
             }
         }
 
