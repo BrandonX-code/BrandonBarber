@@ -219,48 +219,68 @@ public class CitasController : ControllerBase
     [HttpGet("by-date/{fecha}&{idBarberia}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorFecha(DateTime fecha, int idBarberia)
     {
-        fecha = fecha.ToUniversalTime();
-
+        // 🔥 CORREGIR: Usar zona horaria de Colombia para la comparación
+        var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
+        
         var barberos = await _context.UsuarioPerfiles
             .Where(b => b.IdBarberia == idBarberia && b.Rol == "barbero")
             .Select(b => new { b.Cedula, b.Nombre })
             .ToListAsync();
 
-        var barberoDict = barberos.ToDictionary(b => b.Cedula, b => b.Nombre);
-        var barberoIds = barberos.Select(b => b.Cedula).ToList();
+    var barberoDict = barberos.ToDictionary(b => b.Cedula, b => b.Nombre);
+     var barberoIds = barberos.Select(b => b.Cedula).ToList();
 
         var citas = await _context.Citas
-            .Where(c => c.Fecha.Date == fecha.Date && barberoIds.Contains(c.BarberoId))
-            .OrderBy(c => c.Fecha)
-            .ToListAsync();
+            .Where(c => barberoIds.Contains(c.BarberoId))
+     .ToListAsync(); // Traer todas y filtrar en memoria
 
-        foreach (var cita in citas)
+        // 🔥 FILTRAR EN MEMORIA usando zona horaria correcta
+        var citasFiltradas = citas
+        .Where(c => 
+            {
+          var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(c.Fecha, DateTimeKind.Utc), zonaColombia);
+      return fechaLocal.Date == fecha.Date;
+       })
+ .OrderBy(c => c.Fecha)
+            .ToList();
+
+        foreach (var cita in citasFiltradas)
         {
-            ConvertirCitaAFormatoLocal(cita);
+       ConvertirCitaAFormatoLocal(cita);
             cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
             await EnriquecerCitaConServicio(cita);
         }
 
-        return Ok(citas);
+        return Ok(citasFiltradas);
     }
 
     [HttpGet("barbero/{barberoId}/fecha/{fecha}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorBarberoYFecha(long barberoId, DateTime fecha)
     {
-        fecha = fecha.ToUniversalTime();
+        // 🔥 CORREGIR: Usar zona horaria de Colombia para la comparación
+        var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
 
         var citas = await _context.Citas
-            .Where(c => c.BarberoId == barberoId && c.Fecha.Date == fecha.Date)
-            .OrderBy(c => c.Fecha)
-            .ToListAsync();
+   .Where(c => c.BarberoId == barberoId)
+       .ToListAsync(); // Traer todas y filtrar en memoria
 
-        foreach (var cita in citas)
+        // 🔥 FILTRAR EN MEMORIA usando zona horaria correcta
+    var citasFiltradas = citas
+.Where(c => 
+            {
+  var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(c.Fecha, DateTimeKind.Utc), zonaColombia);
+       return fechaLocal.Date == fecha.Date;
+            })
+   .OrderBy(c => c.Fecha)
+      .ToList();
+
+        foreach (var cita in citasFiltradas)
         {
             ConvertirCitaAFormatoLocal(cita);
-            await EnriquecerCitaConServicio(cita);
+          await EnriquecerCitaConServicio(cita);
         }
 
-        return Ok(citas);
+        return Ok(citasFiltradas);
     }
 
     [HttpGet("barbero/{barberoId}")]
