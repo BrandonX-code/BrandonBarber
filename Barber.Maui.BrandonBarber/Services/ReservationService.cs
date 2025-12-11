@@ -256,5 +256,41 @@ namespace Barber.Maui.BrandonBarber.Services
                 return [];
             }
         }
+
+        // ✅ NUEVO MÉTODO: ACTUALIZAR CITA
+        public async Task<bool> UpdateReservation(CitaModel cita)
+        {
+            try
+            {
+                var json = JsonSerializer.Serialize(cita);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                Console.WriteLine($"🔹 Actualizando cita ID {cita.Id}");
+                Console.WriteLine($"🔹 Datos enviados: {json}");
+
+                var response = await _httpClient.PutAsync($"api/citas/{cita.Id}", content);
+
+                string responseMessage = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"🔹 Código de estado API: {response.StatusCode}");
+                Console.WriteLine($"🔹 Respuesta API: {responseMessage}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"✅ Cita con ID {cita.Id} actualizada correctamente.");
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine($"❌ Error al actualizar la cita. Código: {response.StatusCode}");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ Excepción al actualizar cita: {ex.Message}");
+                Debug.WriteLine($"Error al actualizar cita: {ex.Message}");
+                return false;
+            }
+        }
     }
 }

@@ -18,6 +18,10 @@
             <converters:EstadoAceptadaConverter x:Key="EstadoAceptadaConverter" />
             <!-- ✅ NUEVO CONVERTIDOR PARA PERMITIR ELIMINAR TODOS EXCEPTO FINALIZADA -->
             <converters:EstadoEliminableConverter x:Key="EstadoEliminableConverter" />
+            <!-- ✅ CONVERTIDOR PARA VALIDAR SI PUEDE ELIMINAR (PENDIENTE + >24 HORAS) -->
+            <converters:PuedeEliminarCitaConverter x:Key="PuedeEliminarCitaConverter" />
+            <!-- ✅ CONVERTIDOR PARA VALIDAR SI PUEDE EDITAR (PENDIENTE + >24 HORAS) -->
+            <converters:PuedeEditarCitaConverter x:Key="PuedeEditarCitaConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

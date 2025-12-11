@@ -30,7 +30,6 @@ namespace Barber.Maui.BrandonBarber.Pages
 
             // Animaciones de entrada simples
             _ = AnimateElements();
-            await VerificarAutenticacion();
             // Esperar un mínimo de tiempo para mostrar el splash (opcional, para mejor UX)
             var minSplashTime = Task.Delay(1500); // 1.5 segundos mínimo
 
@@ -98,39 +97,19 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
         }
 
-        private async Task VerificarAutenticacion()
-        {
-            Console.WriteLine("🔷 Verificando autenticación...");
-
-            bool isAuthenticated = await _authService.CheckAuthStatus();
-
-            await MainThread.InvokeOnMainThreadAsync(() =>
-            {
-                if (isAuthenticated && AuthService.CurrentUser != null)
-                {
-                    Console.WriteLine($"🔷 Usuario autenticado: {AuthService.CurrentUser.Nombre}");
-
-                    // Navegar al AppShell principal (ajusta según tu estructura)
-                    Application.Current!.MainPage = new AppShell();
-                }
-                else
-                {
-                    Console.WriteLine("🔷 No hay sesión activa, navegando a LoginPage");
-                    Application.Current!.MainPage = new NavigationPage(new LoginPage());
-                }
-            });
-        }
+        // ✅ MÉTODO ÚNICO Y CORRECTO PARA NAVEGAR
         private void NavigateToMainPage()
         {
             try
             {
                 var serviciosService = App.Current!.Handler.MauiContext!.Services.GetRequiredService<ServicioService>();
+                // ✅ Envolver en NavigationPage para mantener consistencia
                 var mainPage = new NavigationPage(new InicioPages(_authService, serviciosService));
 
-                if (Application.Current?.Windows.Count > 0)
-                {
-                    Application.Current.Windows[0].Page = mainPage;
-                }
+                // ✅ USAR SOLO Application.Current.MainPage
+                Application.Current!.MainPage = mainPage;
+
+                Console.WriteLine("✅ Navegado a MainPage correctamente");
             }
             catch (Exception ex)
             {
@@ -138,16 +117,18 @@ namespace Barber.Maui.BrandonBarber.Pages
                 NavigateToLoginPage();
             }
         }
+
+        // ✅ MÉTODO ÚNICO Y CORRECTO PARA NAVEGAR AL LOGIN
         private void NavigateToLoginPage()
         {
             try
             {
                 var loginPage = new NavigationPage(new LoginPage());
 
-                if (Application.Current?.Windows.Count > 0)
-                {
-                    Application.Current.Windows[0].Page = loginPage;
-                }
+                // ✅ USAR SOLO Application.Current.MainPage
+                Application.Current!.MainPage = loginPage;
+
+                Console.WriteLine("✅ Navegado a LoginPage correctamente");
             }
             catch (Exception ex)
             {

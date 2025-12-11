@@ -16,9 +16,11 @@ namespace Barber.Maui.BrandonBarber
         private int _barberoSeleccionadoIndex = -1;
         private UsuarioModels? _barberoSeleccionado;
         private bool _barberoPickerLocked = false;
+        private CitaModel? _citaEnEdicion; // ✅ NUEVA VARIABLE PARA EDICIÓN
+        private bool _esEdicion = false; // ✅ BANDERA PARA MODO EDICIÓN
 
         public MainPage(ReservationService reservationService, AuthService authService,
-            UsuarioModels? barberoPreseleccionado = null, ServicioModel? servicioSeleccionado = null, DateTime fechaPreseleccionada = default)
+            UsuarioModels? barberoPreseleccionado = null, ServicioModel? servicioSeleccionado = null, DateTime fechaPreseleccionada = default, CitaModel? citaEnEdicion = null)
         {
             InitializeComponent();
             _reservationServices = reservationService;
@@ -26,6 +28,8 @@ namespace Barber.Maui.BrandonBarber
             _barberoPreseleccionado = barberoPreseleccionado;
             _servicioSeleccionado = servicioSeleccionado; // ✅ GUARDAR SERVICIO
             _fechaPreseleccionada = fechaPreseleccionada;
+            _citaEnEdicion = citaEnEdicion; // ✅ GUARDAR CITA EN EDICIÓN
+            _esEdicion = citaEnEdicion != null; // ✅ DETECTAR MODO EDICIÓN
         }
 
         protected override async void OnAppearing()
@@ -40,6 +44,23 @@ namespace Barber.Maui.BrandonBarber
 
             // ✅ DESHABILITAR FECHAS PASADAS
             FechaPicker.MinimumDate = DateTime.Today;
+
+            // ✅ SI ESTAMOS EN MODO EDICIÓN, CARGAR DATOS DE LA CITA
+            if (_esEdicion && _citaEnEdicion != null)
+            {
+                // Cambiar datos visibles para modo edición
+                // MainContent.Title = "Editar Cita"; // No disponible en ContentPage
+                // BtnGuardar.Text = "Actualizar"; // No disponible
+
+                // Cargar datos de la cita
+                _servicioSeleccionado = new ServicioModel
+                {
+                    Id = _citaEnEdicion.ServicioId ?? 0,
+                    Nombre = _citaEnEdicion.ServicioNombre,
+                    Precio = _citaEnEdicion.ServicioPrecio ?? 0
+                };
+                _fechaPreseleccionada = _citaEnEdicion.Fecha;
+            }
 
             // ✅ CONFIGURAR SERVICIO
             if (_servicioSeleccionado != null)
@@ -98,17 +119,57 @@ namespace Barber.Maui.BrandonBarber
 
             try
             {
-                var popup = new CustomAlertPopup("¿Deseas seleccionar otro servicio?");
-                bool confirm = await popup.ShowAsync(this);
-
-                if (confirm)
+                // ✅ SI ESTAMOS EDITANDO, MOSTRAR POPUP DE SELECCIÓN
+                if (_esEdicion)
                 {
-                    // Limpiar servicio seleccionado
-                    _servicioSeleccionado = null;
-                    servicioBorder.IsVisible = false;
+                    var servicioService = App.Current!.Handler.MauiContext!.Services
+                        .GetRequiredService<ServicioService>();
+                    
+                    try
+                    {
+                        LoadingIndicator.IsVisible = true;
+                        LoadingIndicator.IsLoading = true;
 
-                    // Volver a InicioPages
-                    await Navigation.PopAsync();
+                        var servicios = await servicioService.GetServiciosAsync();
+                        
+                        if (servicios != null && servicios.Count > 0)
+                        {
+                            var popup = new ServicioSelectionPopup(servicios);
+                            var servicioSeleccionado = await popup.ShowAsync();
+
+                            if (servicioSeleccionado != null)
+                            {
+                                // ✅ ACTUALIZAR EL SERVICIO Y MANTENER EN MODO EDICIÓN
+                                _servicioSeleccionado = servicioSeleccionado;
+                                servicioBorder.IsVisible = true;
+                                ServicioImagen.Source = _servicioSeleccionado.Imagen;
+                                ServicioNombreLabel.Text = _servicioSeleccionado.Nombre;
+                                ServicioPrecioLabel.Text = $"${_servicioSeleccionado.Precio:N0}";
+                            }
+                        }
+                        else
+                        {
+                            await AppUtils.MostrarSnackbar("No hay servicios disponibles", Colors.Orange, Colors.White);
+                        }
+                    }
+                    finally
+                    {
+                        LoadingIndicator.IsVisible = false;
+                        LoadingIndicator.IsLoading = false;
+                    }
+                }
+                else
+                {
+                    // ✅ SI NO ESTAMOS EDITANDO, LIMPIAR Y VOLVER A INICIO
+                    var popup = new CustomAlertPopup("¿Deseas seleccionar otro servicio?");
+                    bool confirm = await popup.ShowAsync(this);
+
+                    if (confirm)
+                    {
+                        _servicioSeleccionado = null;
+                        servicioBorder.IsVisible = false;
+                        await Navigation.PopToRootAsync();
+                    }
                 }
             }
             finally
@@ -401,42 +462,74 @@ namespace Barber.Maui.BrandonBarber
                     return;
                 }
 
-                // Validar que no haya otra cita del mismo cliente ese día
-                int idBarberia = usuario.IdBarberia ?? 0;
-                var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date, idBarberia);
-                var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? [];
-
-                // ✅ VALIDAR QUE NO HAYA CITA DEL CLIENTE ESE DÍA (PROBLEMA 3)
-                bool cedulaYaRegistrada = citasActuales.Any(c => c.Cedula == usuario.Cedula);
-                if (cedulaYaRegistrada)
+                // ✅ SI NO ES EDICIÓN, validar que no haya otra cita del mismo cliente ese día
+                if (!_esEdicion)
                 {
-                    await AppUtils.MostrarSnackbar("Ya existe una cita registrada con esta cédula para el día seleccionado.", Colors.OrangeRed, Colors.White);
-                    return;
+                    int idBarberia = usuario.IdBarberia ?? 0;
+                    var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date, idBarberia);
+                    var citasActuales = citasDelDia?.Where(c => c.Fecha.Date == FechaPicker.Date.Date).ToList() ?? [];
+
+                    // ✅ VALIDAR QUE NO HAYA CITA DEL CLIENTE ESE DÍA (PROBLEMA 3)
+                    bool cedulaYaRegistrada = citasActuales.Any(c => c.Cedula == usuario.Cedula);
+                    if (cedulaYaRegistrada)
+                    {
+                        await AppUtils.MostrarSnackbar("Ya existe una cita registrada con esta cédula para el día seleccionado.", Colors.OrangeRed, Colors.White);
+                        return;
+                    }
                 }
 
                 var cliente = AuthService.CurrentUser;
 
-                CitaModel nuevaReserva = new()
+                // ✅ SI ES EDICIÓN, actualizar la cita existente
+                if (_esEdicion && _citaEnEdicion != null)
                 {
-                    Cedula = cliente!.Cedula,
-                    Nombre = cliente.Nombre,
-                    Telefono = cliente.Telefono,
-                    Fecha = fechaSeleccionada, // UTC
-                    BarberoId = _barberoSeleccionado.Cedula,
-                    BarberoNombre = string.Empty,
-                    ServicioId = _servicioSeleccionado.Id,
-                    ServicioNombre = _servicioSeleccionado.Nombre,
-                    ServicioPrecio = _servicioSeleccionado.Precio
-                };
+                    _citaEnEdicion.Fecha = fechaSeleccionada;
+                    _citaEnEdicion.BarberoId = _barberoSeleccionado.Cedula;
+                    _citaEnEdicion.BarberoNombre = string.Empty;
+                    _citaEnEdicion.ServicioId = _servicioSeleccionado.Id;
+                    _citaEnEdicion.ServicioNombre = _servicioSeleccionado.Nombre;
+                    _citaEnEdicion.ServicioPrecio = _servicioSeleccionado.Precio;
 
-                bool guardadoExitoso = await _reservationServices.AddReservation(nuevaReserva);
+                    // ✅ ACTUALIZAR EN EL SERVIDOR
+                    bool actualizada = await _reservationServices.UpdateReservation(_citaEnEdicion);
 
-                if (guardadoExitoso)
+                    if (actualizada)
+                    {
+                        await AppUtils.MostrarSnackbar("Cita actualizada correctamente.", Colors.Green, Colors.White);
+                        Limpiarcampos();
+                        await AnimarSalida();
+                        await Navigation.PopAsync();
+                    }
+                    else
+                    {
+                        await AppUtils.MostrarSnackbar("No se pudo actualizar la cita.", Colors.Red, Colors.White);
+                    }
+                }
+                else
                 {
-                    await AppUtils.MostrarSnackbar("La reserva se guardó correctamente.", Colors.Green, Colors.White);
-                    Limpiarcampos();
-                    await AnimarSalida();
-                    await Navigation.PopToRootAsync();
+                    // ✅ SI NO ES EDICIÓN, crear nueva cita
+                    CitaModel nuevaReserva = new()
+                    {
+                        Cedula = cliente!.Cedula,
+                        Nombre = cliente.Nombre,
+                        Telefono = cliente.Telefono,
+                        Fecha = fechaSeleccionada, // UTC
+                        BarberoId = _barberoSeleccionado.Cedula,
+                        BarberoNombre = string.Empty,
+                        ServicioId = _servicioSeleccionado.Id,
+                        ServicioNombre = _servicioSeleccionado.Nombre,
+                        ServicioPrecio = _servicioSeleccionado.Precio
+                    };
+
+                    bool guardadoExitoso = await _reservationServices.AddReservation(nuevaReserva);
+
+                    if (guardadoExitoso)
+                    {
+                        await AppUtils.MostrarSnackbar("La reserva se guardó correctamente.", Colors.Green, Colors.White);
+                        Limpiarcampos();
+                        await AnimarSalida();
+                        await Navigation.PopToRootAsync();
+                    }
                 }
             }
             catch (Exception ex)

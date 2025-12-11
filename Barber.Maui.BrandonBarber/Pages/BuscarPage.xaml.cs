@@ -164,11 +164,13 @@
             {
                 await Task.Delay(500);
 
+                // ✅ BUSCAR AMBOS HINTS
                 var labels = CitasCollectionView.GetVisualTreeDescendants()
                     .OfType<Label>()
-                    .Where(l => l.Text == " ⋘ Desliza para eliminar")
-                    .Take(1);
+                    .Where(l => (l.Text == "⋙ Desliza para editar" || l.Text == "⋘ Desliza para eliminar"))
+                    .ToList();
 
+                // ✅ ANIMAR CADA HINT
                 foreach (var label in labels)
                 {
                     await label.FadeTo(0.8, 300);
@@ -195,14 +197,30 @@
                     await AppUtils.MostrarSnackbar("No se puede encontrar la cita seleccionada.", Colors.Red, Colors.White);
                     return;
                 }
-                // Evita eliminar citas finalizadas
+
+                // ✅ VALIDACIÓN 1: No eliminar si NO es Pendiente
+                if (!string.Equals(cita.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase))
+                {
+                    await AppUtils.MostrarSnackbar("Solo puedes cancelar citas en estado Pendiente.", Colors.Orange, Colors.White);
+                    return;
+                }
+
+                // ✅ VALIDACIÓN 2: No eliminar si falta <24 horas
+                var horasRestantes = (cita.Fecha - DateTime.UtcNow).TotalHours;
+                if (horasRestantes < 24)
+                {
+                    await AppUtils.MostrarSnackbar($"No puedes cancelar citas con menos de 24 horas de anticipación. Faltan {Math.Round(horasRestantes, 1)} horas.", Colors.Orange, Colors.White);
+                    return;
+                }
+
+                // ✅ VALIDACIÓN 3: Bloquear citas finalizadas (por seguridad)
                 if (string.Equals(cita.Estado, "Finalizada", StringComparison.OrdinalIgnoreCase))
                 {
                     await AppUtils.MostrarSnackbar("No puedes eliminar una cita finalizada.", Colors.Orange, Colors.White);
                     return;
                 }
 
-                var popup = new CustomAlertPopup($"¿Seguro Que Quieres Eliminar la cita de {cita.Nombre}?");
+                var popup = new CustomAlertPopup($"¿Seguro Que Quieres Cancelar la cita de {cita.Nombre}?");
                 bool confirmacion = await popup.ShowAsync(this);
                 if (!confirmacion) return;
 
@@ -214,17 +232,17 @@
 
                     if (eliminado)
                     {
-                        await AppUtils.MostrarSnackbar("Cita eliminada exitosamente.", Colors.Green, Colors.White);
+                        await AppUtils.MostrarSnackbar("Cita cancelada exitosamente.", Colors.Green, Colors.White);
                         await ActualizarListaEstados(); // Recarga la lista y los tabs
                     }
                     else
                     {
-                        await AppUtils.MostrarSnackbar("No se pudo eliminar la cita.", Colors.Red, Colors.White);
+                        await AppUtils.MostrarSnackbar("No se pudo cancelar la cita.", Colors.Red, Colors.White);
                     }
                 }
                 catch (Exception ex)
                 {
-                    await AppUtils.MostrarSnackbar($"Error al eliminar: {ex.Message}", Colors.DarkRed, Colors.White);
+                    await AppUtils.MostrarSnackbar($"Error al cancelar: {ex.Message}", Colors.DarkRed, Colors.White);
                 }
                 finally
                 {
@@ -232,6 +250,75 @@
                     LoadingIndicator.IsLoading = false;
                 }
             }
+        }
+
+        // ✅ NUEVO MÉTODO: EDITAR CITA
+        private async void EditarCitaSwipeInvoked(object sender, EventArgs e)
+        {
+            if (sender is SwipeItem swipeItem && swipeItem.CommandParameter is CitaModel cita)
+            {
+                // Validar que pueda editar
+                if (!PuedeEditarCita(cita))
+                {
+                    await AppUtils.MostrarSnackbar(
+                    "Solo puedes editar citas pendientes con más de 24 horas.",
+                    Colors.Orange, Colors.White);
+                    return;
+                }
+
+                try
+                {
+                    LoadingIndicator.IsVisible = true;
+                    LoadingIndicator.IsLoading = true;
+
+                    // ✅ Navegar a MainPage en modo edición pasando la cita
+                    var reservationService = App.Current!.Handler.MauiContext!.Services
+                        .GetRequiredService<ReservationService>();
+                    var authService = App.Current!.Handler.MauiContext!.Services
+                        .GetRequiredService<AuthService>();
+                    var servicioService = App.Current!.Handler.MauiContext!.Services
+                        .GetRequiredService<ServicioService>();
+
+                    // ✅ Obtener datos del servicio con la imagen
+                    ServicioModel? servicio = null;
+                    if (cita.ServicioId.HasValue && cita.ServicioId > 0)
+                    {
+                        var servicios = await servicioService.GetServiciosAsync();
+                        servicio = servicios?.FirstOrDefault(s => s.Id == cita.ServicioId);
+                    }
+
+                    // Crear una vista de edición pasando los datos de la cita existente
+                    await Navigation.PushAsync(new MainPage(
+                        reservationService,
+                        authService,
+                        null,
+                        servicio, // ✅ PASAR EL SERVICIO CON LA IMAGEN
+                        cita.Fecha,
+                        cita // ✅ PASAR LA CITA PARA EDICIÓN
+                    ));
+                }
+                catch (Exception ex)
+                {
+                    await AppUtils.MostrarSnackbar($"Error al editar: {ex.Message}", Colors.DarkRed, Colors.White);
+                }
+                finally
+                {
+                    LoadingIndicator.IsVisible = false;
+                    LoadingIndicator.IsLoading = false;
+                }
+            }
+        }
+
+        // ✅ MÉTODO AUXILIAR: Validar si puede editar
+        private bool PuedeEditarCita(CitaModel cita)
+        {
+            // Solo citas pendientes
+            if (!string.Equals(cita.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            // Validar que falten al menos 24 horas
+            var tiempoRestante = cita.Fecha - DateTime.UtcNow;
+            return tiempoRestante.TotalHours >= 24;
         }
     }
 }

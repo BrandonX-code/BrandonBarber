@@ -398,6 +398,67 @@ public class CitasController : ControllerBase
         return Ok();
     }
 
+    // ✅ NUEVO MÉTODO: ACTUALIZAR CITA COMPLETA
+    [HttpPut("{id}")]
+    public async Task<IActionResult> ActualizarCita(int id, [FromBody] Cita citaActualizada)
+    {
+        var cita = await _context.Citas.FirstOrDefaultAsync(c => c.Id == id);
+        if (cita == null) return NotFound();
+
+        try
+        {
+      // ✅ Validar que no existe otra cita en el mismo horario con el mismo barbero
+        bool existeCita = await _context.Citas
+        .AnyAsync(c => c.Fecha == citaActualizada.Fecha && 
+      c.BarberoId == citaActualizada.BarberoId && 
+         c.Id != id);
+
+            if (existeCita)
+ {
+   return Conflict("Ya existe una cita en esta fecha y hora con ese barbero.");
+            }
+
+            // ✅ Actualizar los campos
+   cita.Fecha = DateTime.SpecifyKind(citaActualizada.Fecha, DateTimeKind.Utc);
+            cita.BarberoId = citaActualizada.BarberoId;
+      cita.ServicioId = citaActualizada.ServicioId;
+  
+            // ✅ Enriquecer con información del servicio
+await EnriquecerCitaConServicio(cita);
+            
+     _context.Citas.Update(cita);
+            await _context.SaveChangesAsync();
+
+            // ✅ Notificar al barbero sobre la cita modificada
+       var barbero = await _context.UsuarioPerfiles
+          .FirstOrDefaultAsync(b => b.Cedula == cita.BarberoId);
+
+ var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
+          var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(cita.Fecha, zonaColombia);
+
+   var data = new Dictionary<string, string>
+   {
+     { "tipo", "cita_modificada" },
+      { "citaId", cita.Id.ToString() },
+        { "clienteNombre", cita.Nombre ?? "" }
+            };
+
+            await _notificationService.EnviarNotificacionAsync(
+      cita.BarberoId,
+        "Cita Modificada",
+        $"{cita.Nombre} ha modificado su cita para el {fechaLocal:dd/MM/yyyy - hh:mm tt}",
+         data
+            );
+
+          ConvertirCitaAFormatoLocal(cita);
+    return Ok(cita);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new { message = "Error al actualizar la cita.", error = ex.Message });
+        }
+    }
+
     public class EstadoRequest { public string Estado { get; set; } = string.Empty; }
 
 }
