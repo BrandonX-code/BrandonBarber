@@ -219,48 +219,70 @@ public class CitasController : ControllerBase
     [HttpGet("by-date/{fecha}&{idBarberia}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorFecha(DateTime fecha, int idBarberia)
     {
-        fecha = fecha.ToUniversalTime();
+        // ✅ CORREGIR: Convertir a UTC CORRECTAMENTE con zona horaria de Colombia
+        var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
+     
+        // La fecha que viene del cliente es en hora local de Colombia
+        // Convertirla a UTC para comparar en BD
+        var fechaInicio = TimeZoneInfo.ConvertTimeToUtc(fecha.Date.Add(TimeSpan.Zero), zonaColombia);
+        var fechaFin = TimeZoneInfo.ConvertTimeToUtc(fecha.Date.Add(TimeSpan.FromHours(23).Add(TimeSpan.FromMinutes(59).Add(TimeSpan.FromSeconds(59)))), zonaColombia);
 
-        var barberos = await _context.UsuarioPerfiles
+        Console.WriteLine($"📅 Buscando citas para: {fecha:yyyy-MM-dd}");
+      Console.WriteLine($"🕐 Convertido a UTC: {fechaInicio:yyyy-MM-dd HH:mm:ss} a {fechaFin:yyyy-MM-dd HH:mm:ss}");
+
+   var barberos = await _context.UsuarioPerfiles
             .Where(b => b.IdBarberia == idBarberia && b.Rol == "barbero")
             .Select(b => new { b.Cedula, b.Nombre })
-            .ToListAsync();
+   .ToListAsync();
 
         var barberoDict = barberos.ToDictionary(b => b.Cedula, b => b.Nombre);
-        var barberoIds = barberos.Select(b => b.Cedula).ToList();
+ var barberoIds = barberos.Select(b => b.Cedula).ToList();
 
         var citas = await _context.Citas
-            .Where(c => c.Fecha.Date == fecha.Date && barberoIds.Contains(c.BarberoId))
-            .OrderBy(c => c.Fecha)
-            .ToListAsync();
+      .Where(c => c.Fecha >= fechaInicio && c.Fecha <= fechaFin && barberoIds.Contains(c.BarberoId))
+          .OrderBy(c => c.Fecha)
+    .ToListAsync();
+
+        Console.WriteLine($"✅ Citas encontradas: {citas.Count}");
 
         foreach (var cita in citas)
-        {
+ {
             ConvertirCitaAFormatoLocal(cita);
             cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
-            await EnriquecerCitaConServicio(cita);
+      await EnriquecerCitaConServicio(cita);
         }
 
-        return Ok(citas);
+     return Ok(citas);
     }
 
     [HttpGet("barbero/{barberoId}/fecha/{fecha}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorBarberoYFecha(long barberoId, DateTime fecha)
     {
-        fecha = fecha.ToUniversalTime();
+        // ✅ CORREGIR: Convertir a UTC CORRECTAMENTE con zona horaria de Colombia
+      var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
+        
+   // La fecha que viene del cliente es en hora local de Colombia
+    // Convertirla a UTC para comparar en BD
+    var fechaInicio = TimeZoneInfo.ConvertTimeToUtc(fecha.Date.Add(TimeSpan.Zero), zonaColombia);
+       var fechaFin = TimeZoneInfo.ConvertTimeToUtc(fecha.Date.Add(TimeSpan.FromHours(23).Add(TimeSpan.FromMinutes(59).Add(TimeSpan.FromSeconds(59)))), zonaColombia);
 
-        var citas = await _context.Citas
-            .Where(c => c.BarberoId == barberoId && c.Fecha.Date == fecha.Date)
-            .OrderBy(c => c.Fecha)
-            .ToListAsync();
+ Console.WriteLine($"📅 Buscando citas del barbero {barberoId} para: {fecha:yyyy-MM-dd}");
+   Console.WriteLine($"🕐 Convertido a UTC: {fechaInicio:yyyy-MM-dd HH:mm:ss} a {fechaFin:yyyy-MM-dd HH:mm:ss}");
 
-        foreach (var cita in citas)
-        {
-            ConvertirCitaAFormatoLocal(cita);
-            await EnriquecerCitaConServicio(cita);
-        }
+  var citas = await _context.Citas
+ .Where(c => c.BarberoId == barberoId && c.Fecha >= fechaInicio && c.Fecha <= fechaFin)
+   .OrderBy(c => c.Fecha)
+    .ToListAsync();
 
-        return Ok(citas);
+ Console.WriteLine($"✅ Citas encontradas: {citas.Count}");
+
+    foreach (var cita in citas)
+   {
+       ConvertirCitaAFormatoLocal(cita);
+await EnriquecerCitaConServicio(cita);
+  }
+
+    return Ok(citas);
     }
 
     [HttpGet("barbero/{barberoId}")]
