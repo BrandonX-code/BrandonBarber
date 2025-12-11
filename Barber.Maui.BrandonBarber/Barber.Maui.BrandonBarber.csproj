@@ -27,8 +27,8 @@
 		<ApplicationId>com.companyname.Barber.maui.BrandonBarber</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationVersion>8</ApplicationVersion>
-		<ApplicationDisplayVersion>1.0.8</ApplicationDisplayVersion>
+		<ApplicationVersion>9</ApplicationVersion>
+		<ApplicationDisplayVersion>1.0.9</ApplicationDisplayVersion>
 
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
@@ -101,7 +101,6 @@
 
 	<ItemGroup>
 	  <MauiIcon Include="Resources\AppIcon\barbericons.png" />
-	  <MauiIcon Include="Resources\Images\iconalert.png" />
 	</ItemGroup>
 
 	<ItemGroup>
