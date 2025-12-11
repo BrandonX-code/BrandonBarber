@@ -62,59 +62,15 @@
         {
             base.OnAppearing();
             UpdateVisibility();
-            _ = ActualizarLista();
+            ProximasCitas.Clear();
+            HistorialCitas.Clear();
+            _todasLasCitas.Clear();
             await ActualizarListaEstados();
         }
 
         private async void OnSearchClicked(object sender, EventArgs e)
         {
-            await ActualizarLista();
-        }
-
-        private async Task ActualizarLista()
-        {
-            try
-            {
-                LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsLoading = true;
-
-                var clienteCedula = AuthService.CurrentUser!.Cedula;
-                var citas = await _reservationService.GetReservationsById(clienteCedula);
-
-                if (citas == null || citas.Count == 0)
-                {
-                    await AppUtils.MostrarSnackbar("No tienes citas agendadas.", Colors.Red, Colors.White);
-                    UpdateVisibility();
-                    return;
-                }
-
-                DateTime now = DateTime.Now.Date;
-
-                foreach (var cita in citas)
-                {
-                    if (cita.Fecha.Date >= now)
-                    {
-                        ProximasCitas.Add(cita);
-                    }
-                    else
-                    {
-                        HistorialCitas.Add(cita);
-                    }
-                }
-
-                UpdateVisibility();
-
-                await AppUtils.MostrarSnackbar($"Se encontraron {citas.Count} citas.", Colors.Green, Colors.White);
-            }
-            catch (Exception ex)
-            {
-                await AppUtils.MostrarSnackbar($"Ocurrió un error: {ex.Message}", Colors.DarkRed, Colors.White);
-            }
-            finally
-            {
-                LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsLoading = false;
-            }
+            await ActualizarListaEstados();
         }
 
         private async Task ActualizarListaEstados()
@@ -125,6 +81,23 @@
                 LoadingIndicator.IsLoading = true;
                 var clienteCedula = AuthService.CurrentUser!.Cedula;
                 _todasLasCitas = await _reservationService.GetReservationsById(clienteCedula);
+                
+                // ✅ MOSTRAR SNACKBAR SI NO HAY CITAS
+                if (_todasLasCitas == null || _todasLasCitas.Count == 0)
+                {
+                    await AppUtils.MostrarSnackbar("No tienes citas agendadas.", Colors.Red, Colors.White);
+                    UpdateVisibility();
+                    return;
+                }
+
+                // ✅ LOG PARA VERIFICAR QUE LOS DATOS VIENEN CORRECTAMENTE
+                Debug.WriteLine($"✅ Total de citas obtenidas: {_todasLasCitas.Count}");
+                foreach (var cita in _todasLasCitas)
+                {
+                    Debug.WriteLine($"📌 Cita: {cita.Nombre} - Servicio: {cita.ServicioNombre} - Precio: {cita.ServicioPrecio}");
+                }
+                
+                // ✅ FILTRAR POR ESTADO ACTUAL (Pendiente por defecto)
                 FiltrarPorEstado(_estadoActual);
             }
             catch (Exception ex)
@@ -145,6 +118,14 @@
                 .Where(c => c.Estado?.ToLower() == estado.ToLower())
                 .OrderByDescending(c => c.Fecha)
                 .ToList();
+            
+            // ✅ LOG PARA DEBUG
+            Debug.WriteLine($"✅ Citas filtradas por '{estado}': {citasFiltradas.Count}");
+            foreach (var cita in citasFiltradas)
+            {
+                Debug.WriteLine($"  - {cita.Nombre} | Servicio: {cita.ServicioNombre} | Precio: ${cita.ServicioPrecio}");
+            }
+            
             CitasCollectionView.ItemsSource = citasFiltradas;
             EmptyStateLayout.IsVisible = citasFiltradas.Count == 0;
             ActualizarEstilosBotones();
@@ -279,12 +260,17 @@
                     var servicioService = App.Current!.Handler.MauiContext!.Services
                         .GetRequiredService<ServicioService>();
 
-                    // ✅ Obtener datos del servicio con la imagen
+                    // ✅ CREAR SERVICIO CON LA IMAGEN QUE YA ESTÁ EN LA CITA
                     ServicioModel? servicio = null;
                     if (cita.ServicioId.HasValue && cita.ServicioId > 0)
                     {
-                        var servicios = await servicioService.GetServiciosAsync();
-                        servicio = servicios?.FirstOrDefault(s => s.Id == cita.ServicioId);
+                        servicio = new ServicioModel
+                        {
+                            Id = cita.ServicioId.Value,
+                            Nombre = cita.ServicioNombre,
+                            Precio = cita.ServicioPrecio ?? 0,
+                            Imagen = cita.ServicioImagen // ✅ USAR LA IMAGEN DE LA CITA
+                        };
                     }
 
                     // Crear una vista de edición pasando los datos de la cita existente

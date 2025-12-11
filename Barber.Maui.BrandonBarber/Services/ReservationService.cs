@@ -139,8 +139,20 @@ namespace Barber.Maui.BrandonBarber.Services
                     return new List<CitaModel>();
 
                 var json = await response.Content.ReadAsStringAsync();
+        
+                // ✅ LOG PARA DEBUG
+                Debug.WriteLine($"📥 JSON recibido de citas: {json}");
 
                 var citas = JsonSerializer.Deserialize<List<CitaModel>>(json, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                // ✅ LOG PARA VERIFICAR DESERIALIZACIÓN
+                if (citas != null)
+                {
+                    foreach (var cita in citas)
+                    {
+                        Debug.WriteLine($"✅ Cita deserializada: {cita.Nombre} | Servicio: {cita.ServicioNombre} | Precio: {cita.ServicioPrecio} | Imagen: {cita.ServicioImagen}");
+                    }
+                }
 
                 // Ordenar las citas por fecha
                 var sortedCitas = citas?.OrderByDescending(c => c.Fecha).ToList() ?? new List<CitaModel>();

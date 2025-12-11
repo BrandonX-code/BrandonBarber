@@ -30,6 +30,8 @@ public class CitasController : ControllerBase
             {
                 cita.ServicioNombre = servicio.Nombre;
                 cita.ServicioPrecio = servicio.Precio;
+                // ✅ AGREGAR LA IMAGEN DEL SERVICIO
+                cita.ServicioImagen = servicio.Imagen;
             }
         }
     }
@@ -194,21 +196,24 @@ public class CitasController : ControllerBase
     [HttpGet("{cedula}")]
     public async Task<ActionResult<IEnumerable<Cita>>> GetCitasPorCedula(long cedula)
     {
-        var citas = await _context.Citas
-            .Where(c => c.Cedula == cedula)
-            .ToListAsync();
+    var citas = await _context.Citas
+      .Where(c => c.Cedula == cedula)
+      .ToListAsync();
 
         foreach (var cita in citas)
-        {
-            ConvertirCitaAFormatoLocal(cita);
-            var barbero = await _context.UsuarioPerfiles
-                .FirstOrDefaultAsync(b => b.Cedula == cita.BarberoId);
+  {
+   ConvertirCitaAFormatoLocal(cita);
+  var barbero = await _context.UsuarioPerfiles
+ .FirstOrDefaultAsync(b => b.Cedula == cita.BarberoId);
 
-            cita.BarberoNombre = barbero?.Nombre ?? "No encontrado";
-            await EnriquecerCitaConServicio(cita);
-        }
+     cita.BarberoNombre = barbero?.Nombre ?? "No encontrado";
 
-        return Ok(citas);
+         // ✅ SIEMPRE ENRIQUECER CON DATOS DEL SERVICIO
+         // Esto asegura que incluso citas antiguas muestren datos del servicio
+  await EnriquecerCitaConServicio(cita);
+     }
+
+      return Ok(citas);
     }
 
     [HttpGet("by-date/{fecha}&{idBarberia}")]
@@ -308,7 +313,22 @@ public class CitasController : ControllerBase
 
         try
         {
-            await EnriquecerCitaConServicio(nuevaCita);
+            // ✅ ENRIQUECER LA CITA CON DATOS DEL SERVICIO (SI NO VIENEN DEL CLIENTE)
+            if (nuevaCita.ServicioId.HasValue && nuevaCita.ServicioId > 0)
+            {
+                var servicio = await _context.Servicios.FindAsync(nuevaCita.ServicioId.Value);
+                if (servicio != null)
+                {
+                    // ✅ Si no vienen del cliente, obtener del servicio
+                    if (string.IsNullOrEmpty(nuevaCita.ServicioNombre))
+                        nuevaCita.ServicioNombre = servicio.Nombre;
+                    if (nuevaCita.ServicioPrecio == null || nuevaCita.ServicioPrecio == 0)
+                        nuevaCita.ServicioPrecio = servicio.Precio;
+                    if (string.IsNullOrEmpty(nuevaCita.ServicioImagen))
+                        nuevaCita.ServicioImagen = servicio.Imagen;
+                }
+            }
+
             _context.Citas.Add(nuevaCita);
             await _context.SaveChangesAsync();
 
@@ -320,23 +340,23 @@ public class CitasController : ControllerBase
             var data = new Dictionary<string, string>
         {
             { "tipo", "nueva_cita" },
-            { "citaId", nuevaCita.Id.ToString() },
-            { "clienteNombre", nuevaCita.Nombre ?? "" }
+      { "citaId", nuevaCita.Id.ToString() },
+      { "clienteNombre", nuevaCita.Nombre ?? "" }
         };
 
-            await _notificationService.EnviarNotificacionAsync(
-                nuevaCita.BarberoId,
-                "Nueva Cita Pendiente",
-                $"{nuevaCita.Nombre} ha solicitado una cita para el {fechaLocal:dd/MM/yyyy - hh:mm tt}", // 🔥 FORMATO CORREGIDO
-                data
-            );
+       await _notificationService.EnviarNotificacionAsync(
+       nuevaCita.BarberoId,
+    "Nueva Cita Pendiente",
+           $"{nuevaCita.Nombre} ha solicitado una cita para el {fechaLocal:dd/MM/yyyy - hh:mm tt}", // 🔥 FORMATO CORREGIDO
+  data
+    );
 
             ConvertirCitaAFormatoLocal(nuevaCita);
-            return StatusCode(201, nuevaCita);
+  return StatusCode(201, nuevaCita);
         }
         catch (Exception ex)
         {
-            return StatusCode(500, new { message = "Error al guardar la cita.", error = ex.Message });
+        return StatusCode(500, new { message = "Error al guardar la cita.", error = ex.Message });
         }
     }
 

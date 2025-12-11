@@ -52,12 +52,13 @@ namespace Barber.Maui.BrandonBarber
                 // MainContent.Title = "Editar Cita"; // No disponible en ContentPage
                 // BtnGuardar.Text = "Actualizar"; // No disponible
 
-                // Cargar datos de la cita
+                // ✅ CARGAR DATOS DEL SERVICIO INCLUYENDO LA IMAGEN
                 _servicioSeleccionado = new ServicioModel
                 {
                     Id = _citaEnEdicion.ServicioId ?? 0,
                     Nombre = _citaEnEdicion.ServicioNombre,
-                    Precio = _citaEnEdicion.ServicioPrecio ?? 0
+                    Precio = _citaEnEdicion.ServicioPrecio ?? 0,
+                    Imagen = _citaEnEdicion.ServicioImagen // ✅ AGREGAR LA IMAGEN
                 };
                 _fechaPreseleccionada = _citaEnEdicion.Fecha;
             }
@@ -66,7 +67,24 @@ namespace Barber.Maui.BrandonBarber
             if (_servicioSeleccionado != null)
             {
                 servicioBorder.IsVisible = true;
-                ServicioImagen.Source = _servicioSeleccionado.Imagen;
+                
+                // ✅ MANEJO MEJORADO DE LA IMAGEN (URL O RUTA LOCAL)
+                if (!string.IsNullOrWhiteSpace(_servicioSeleccionado.Imagen))
+                {
+                    if (_servicioSeleccionado.Imagen.StartsWith("http"))
+                    {
+                        ServicioImagen.Source = ImageSource.FromUri(new Uri(_servicioSeleccionado.Imagen));
+                    }
+                    else
+                    {
+                        ServicioImagen.Source = ImageSource.FromFile(_servicioSeleccionado.Imagen);
+                    }
+                }
+                else
+                {
+                    ServicioImagen.Source = "placeholder.png"; // Imagen por defecto
+                }
+    
                 ServicioNombreLabel.Text = _servicioSeleccionado.Nombre;
                 ServicioPrecioLabel.Text = $"${_servicioSeleccionado.Precio:N0}";
             }
@@ -124,58 +142,92 @@ namespace Barber.Maui.BrandonBarber
                 {
                     var servicioService = App.Current!.Handler.MauiContext!.Services
                         .GetRequiredService<ServicioService>();
-                    
+      
                     try
                     {
                         LoadingIndicator.IsVisible = true;
                         LoadingIndicator.IsLoading = true;
 
                         var servicios = await servicioService.GetServiciosAsync();
-                        
+       
                         if (servicios != null && servicios.Count > 0)
-                        {
-                            var popup = new ServicioSelectionPopup(servicios);
-                            var servicioSeleccionado = await popup.ShowAsync();
+     {
+      // ✅ CREAR UN NUEVO POPUP CADA VEZ
+ var popup = new ServicioSelectionPopup(servicios);
+         var servicioSeleccionado = await popup.ShowAsync();
 
-                            if (servicioSeleccionado != null)
-                            {
-                                // ✅ ACTUALIZAR EL SERVICIO Y MANTENER EN MODO EDICIÓN
-                                _servicioSeleccionado = servicioSeleccionado;
-                                servicioBorder.IsVisible = true;
-                                ServicioImagen.Source = _servicioSeleccionado.Imagen;
-                                ServicioNombreLabel.Text = _servicioSeleccionado.Nombre;
-                                ServicioPrecioLabel.Text = $"${_servicioSeleccionado.Precio:N0}";
-                            }
-                        }
-                        else
-                        {
-                            await AppUtils.MostrarSnackbar("No hay servicios disponibles", Colors.Orange, Colors.White);
-                        }
-                    }
-                    finally
-                    {
-                        LoadingIndicator.IsVisible = false;
-                        LoadingIndicator.IsLoading = false;
-                    }
-                }
-                else
-                {
-                    // ✅ SI NO ESTAMOS EDITANDO, LIMPIAR Y VOLVER A INICIO
-                    var popup = new CustomAlertPopup("¿Deseas seleccionar otro servicio?");
-                    bool confirm = await popup.ShowAsync(this);
+        // ✅ VERIFICAR QUE SE SELECCIONÓ UN SERVICIO
+     if (servicioSeleccionado != null)
+     {
+     // ✅ LIMPIAR SELECCIÓN ANTERIOR
+   _servicioSeleccionado = null;
+    servicioBorder.IsVisible = false;
+            
+              // ✅ PEQUEÑO DELAY PARA ASEGURAR ACTUALIZACIÓN
+      await Task.Delay(100);
+        
+        // ✅ ACTUALIZAR CON EL NUEVO SERVICIO
+    _servicioSeleccionado = servicioSeleccionado;
+      servicioBorder.IsVisible = true;
+        
+       // ✅ ACTUALIZAR IMAGEN CON MANEJO DE URLs Y RUTAS LOCALES
+       if (!string.IsNullOrWhiteSpace(_servicioSeleccionado.Imagen))
+     {
+ if (_servicioSeleccionado.Imagen.StartsWith("http"))
+     {
+         ServicioImagen.Source = ImageSource.FromUri(new Uri(_servicioSeleccionado.Imagen));
+               }
+        else
+        {
+                   ServicioImagen.Source = ImageSource.FromFile(_servicioSeleccionado.Imagen);
+          }
+             }
+            else
+      {
+    ServicioImagen.Source = "placeholder.png"; // Imagen por defecto
+         }
 
-                    if (confirm)
-                    {
-                        _servicioSeleccionado = null;
-                        servicioBorder.IsVisible = false;
-                        await Navigation.PopToRootAsync();
-                    }
-                }
+        // ✅ ACTUALIZAR LABELS
+       ServicioNombreLabel.Text = _servicioSeleccionado.Nombre ?? "Servicio sin nombre";
+        ServicioPrecioLabel.Text = $"${_servicioSeleccionado.Precio:N0}";
+            
+  // ✅ LOG PARA DEBUG
+           Debug.WriteLine($"✅ Servicio actualizado: {_servicioSeleccionado.Nombre} - ${_servicioSeleccionado.Precio}");
+  }
+            else
+  {
+              Debug.WriteLine("❌ No se seleccionó ningún servicio");
             }
-            finally
+          }
+      else
+        {
+               await AppUtils.MostrarSnackbar("No hay servicios disponibles", Colors.Orange, Colors.White);
+         }
+         }
+    finally
+    {
+    LoadingIndicator.IsVisible = false;
+          LoadingIndicator.IsLoading = false;
+    }
+            }
+     else
+     {
+          // ✅ SI NO ESTAMOS EDITANDO, LIMPIAR Y VOLVER A INICIO
+          var popup = new CustomAlertPopup("¿Deseas seleccionar otro servicio?");
+           bool confirm = await popup.ShowAsync(this);
+
+     if (confirm)
+             {
+          _servicioSeleccionado = null;
+       servicioBorder.IsVisible = false;
+     await Navigation.PopToRootAsync();
+         }
+      }
+            }
+         finally
             {
-                _isCancelling = false;
-            }
+    _isCancelling = false;
+          }
         }
 
         private async Task CargarBarberosAsync()
@@ -489,6 +541,8 @@ namespace Barber.Maui.BrandonBarber
                     _citaEnEdicion.ServicioId = _servicioSeleccionado.Id;
                     _citaEnEdicion.ServicioNombre = _servicioSeleccionado.Nombre;
                     _citaEnEdicion.ServicioPrecio = _servicioSeleccionado.Precio;
+                    // ✅ GUARDAR LA IMAGEN DEL SERVICIO
+                    _citaEnEdicion.ServicioImagen = _servicioSeleccionado.Imagen;
 
                     // ✅ ACTUALIZAR EN EL SERVIDOR
                     bool actualizada = await _reservationServices.UpdateReservation(_citaEnEdicion);
@@ -518,19 +572,21 @@ namespace Barber.Maui.BrandonBarber
                         BarberoNombre = string.Empty,
                         ServicioId = _servicioSeleccionado.Id,
                         ServicioNombre = _servicioSeleccionado.Nombre,
-                        ServicioPrecio = _servicioSeleccionado.Precio
-                    };
+                        ServicioPrecio = _servicioSeleccionado.Precio,
+                        // ✅ AGREGAR LA IMAGEN DEL SERVICIO
+                        ServicioImagen = _servicioSeleccionado.Imagen
+                     };
 
-                    bool guardadoExitoso = await _reservationServices.AddReservation(nuevaReserva);
+      bool guardadoExitoso = await _reservationServices.AddReservation(nuevaReserva);
 
-                    if (guardadoExitoso)
-                    {
-                        await AppUtils.MostrarSnackbar("La reserva se guardó correctamente.", Colors.Green, Colors.White);
-                        Limpiarcampos();
-                        await AnimarSalida();
-                        await Navigation.PopToRootAsync();
-                    }
-                }
+    if (guardadoExitoso)
+             {
+        await AppUtils.MostrarSnackbar("La reserva se guardó correctamente.", Colors.Green, Colors.White);
+             Limpiarcampos();
+  await AnimarSalida();
+            await Navigation.PopToRootAsync();
+            }
+   }
             }
             catch (Exception ex)
             {

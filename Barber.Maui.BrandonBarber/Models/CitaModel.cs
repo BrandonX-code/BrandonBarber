@@ -35,6 +35,8 @@
         public int? ServicioId { get; set; }
         public string? ServicioNombre { get; set; }
         public decimal? ServicioPrecio { get; set; }
+        // ✅ NUEVA PROPIEDAD: Imagen del servicio
+        public string? ServicioImagen { get; set; }
     }
 
 }

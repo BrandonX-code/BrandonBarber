@@ -8,8 +8,8 @@ namespace Barber.Maui.BrandonBarber.Converters
         {
             if (value is CitaModel cita)
             {
-                return !string.IsNullOrWhiteSpace(cita.ServicioNombre)
-                       && cita.ServicioPrecio > 0;
+                // ✅ SIMPLIFICAR: Solo verificar que ServicioNombre no esté vacío
+                return !string.IsNullOrWhiteSpace(cita.ServicioNombre);
             }
 
             return false;

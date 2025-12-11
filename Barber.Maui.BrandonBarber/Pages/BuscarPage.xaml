@@ -33,6 +33,7 @@
                                 <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto,Auto">
                                     <Label Grid.Row="0" Grid.Column="0" Text="{Binding Nombre}" TextColor="White" FontSize="18" FontAttributes="Bold"/>
                                     <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding FechaConFormato}" TextColor="#E0F7FA" FontSize="14"/>
+                                    <!-- ✅ SERVICIO Y PRECIO -->
                                     <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding ServicioNombre, StringFormat='Servicio: {0}'}" TextColor="#90A4AE" FontSize="14" IsVisible="{Binding ServicioNombre, Converter={StaticResource ServicioVisibleConverter}}"/>
                                     <Label Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding ServicioPrecio, StringFormat='Precio: ${0:N0}'}" TextColor="#90A4AE" FontSize="14" IsVisible="{Binding ServicioNombre, Converter={StaticResource ServicioVisibleConverter}}"/>
                                     <Border Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" BackgroundColor="{Binding Estado, Converter={StaticResource EstadoColorConverter}}" StrokeShape="RoundRectangle 10" Padding="10,5" StrokeThickness="0" VerticalOptions="Start" HorizontalOptions="End">
