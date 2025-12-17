@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui" 
+			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+			 x:Class="Barber.Maui.BrandonBarber.Controls.DescripcionImagenPopup"
+			 BackgroundColor="#80000000">
+    <Border Padding="0" BackgroundColor="White" StrokeShape="RoundRectangle 20" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="340">
+        <VerticalStackLayout Spacing="0">
+            <Border BackgroundColor="#0E2A36" StrokeShape="RoundRectangle 20,20,0,0" Padding="20" StrokeThickness="0">
+                <Label Text="Descripción de la imagen" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
+            </Border>
+            <VerticalStackLayout Spacing="15" Padding="20">
+                <Label Text="Ingresa una descripción para la imagen (máximo 500 caracteres)" FontSize="14" TextColor="#333333"/>
+                <Border BackgroundColor="#F5F5F5" StrokeShape="RoundRectangle 8" StrokeThickness="1" Stroke="#E0E0E0" Padding="12">
+                    <Entry x:Name="DescripcionEntry" Placeholder="Ej: Corte fade con barba..." PlaceholderColor="#CCCCCC" TextColor="Black" BackgroundColor="Transparent" MaxLength="500" FontSize="14"/>
+                </Border>
+                <Label x:Name="ContadorLabel" Text="0/500" FontSize="12" TextColor="#999999" HorizontalOptions="End"/>
+            </VerticalStackLayout>
+            <HorizontalStackLayout Spacing="10" Padding="20,10,20,20">
+                <Button x:Name="CancelarButton" Text="Cancelar" BackgroundColor="#717d7e" TextColor="White" CornerRadius="10" HorizontalOptions="Fill" Clicked="OnCancelarClicked"/>
+                <Button x:Name="GuardarButton" Text="Guardar" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" HorizontalOptions="Fill" Clicked="OnGuardarClicked"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </Border>
+</ContentPage>

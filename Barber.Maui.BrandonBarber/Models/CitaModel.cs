@@ -23,7 +23,7 @@
             {
                 return Estado?.ToLower() switch
                 {
-                    "completada" => "Completada",
+                    "confirmada" => "Confirmada",
                     "cancelada" => "Rechazada",
                     "finalizada" => "Finalizada",
                     _ => "Pendiente"

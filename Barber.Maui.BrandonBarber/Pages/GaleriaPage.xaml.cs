@@ -1,6 +1,6 @@
 ﻿namespace Barber.Maui.BrandonBarber.Pages
 {
-    using Barber.Maui.BrandonBarber.Controls; // Agregado using para BarberoSelectionPopup
+    using Barber.Maui.BrandonBarber.Controls;
     public partial class GaleriaPage : ContentPage
     {
         private bool _isNavigating = false;
@@ -447,7 +447,8 @@
                 if (foto == null)
                     return;
 
-                string? descripcion = await DisplayPromptAsync("Descripción", "Ingresa una descripción para la imagen (opcional):", placeholder: "Ej: Corte fade con barba", maxLength: 500);
+                var popup = new DescripcionImagenPopup();
+                string? descripcion = await popup.ShowAsync();
 
                 if (descripcion == null)
                 {

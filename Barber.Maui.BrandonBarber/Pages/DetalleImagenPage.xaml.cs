@@ -1,4 +1,6 @@
-﻿namespace Barber.Maui.BrandonBarber.Pages
+﻿using Barber.Maui.BrandonBarber.Controls;
+
+namespace Barber.Maui.BrandonBarber.Pages
 {
     public partial class DetalleImagenPage : ContentPage
     {
@@ -36,12 +38,8 @@
             _isNavigating = true;
             try
             {
-                string nuevaDescripcion = await DisplayPromptAsync(
-                "Editar descripción",
-                "Modifica la descripción de la imagen:",
-                initialValue: _imagen.Descripcion ?? "",
-                maxLength: 500
-            );
+                var popup = new DescripcionImagenPopup(_imagen.Descripcion ?? "");
+                string? nuevaDescripcion = await popup.ShowAsync();
 
                 if (nuevaDescripcion == null)
                     return;
