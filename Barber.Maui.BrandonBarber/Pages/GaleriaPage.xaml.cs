@@ -6,6 +6,8 @@
         private bool _isNavigating = false;
         private readonly AuthService _authService;
         private List<UsuarioModels>? _todosLosBarberos;
+        private long _barberoSeleccionadoId = 0;
+        private bool _primeraVez = true;
         public List<UsuarioModels>? TodosLosBarberos
         {
             get => _todosLosBarberos;
@@ -21,7 +23,11 @@
 
             if (AuthService.CurrentUser?.Rol?.ToLower() != "barbero")
             {
-                _ = LoadBarberos();
+                if (_primeraVez)
+                {
+                    _ = LoadBarberiosYSeleccionarPrimero();
+                    _primeraVez = false;
+                }
             }
         }
         private List<ImagenGaleriaModel> imagenes = [];
@@ -32,7 +38,7 @@
             InitializeComponent();
             _galeriaService = galeriaService;
             _authService = barberoid;
-
+            BarberoFotoImage.Source = "usericons.png";
             bool esBarbero = AuthService.CurrentUser?.Rol?.ToLower() == "barbero";
 
             if (esBarbero)
@@ -72,17 +78,39 @@
                 }
                 else
                 {
-                    BarberoFotoImage.Source = "dotnet_bot.png";
+                    BarberoFotoImage.Source = "usericons.png";
                 }
 
                 // Cambiar texto del botón a "Cambiar" en el hilo principal
-                MainThread.BeginInvokeOnMainThread(() =>
-                {
-                    BarberoSelectButton.Text = "Cambiar";
-                });
+                // Cambiar texto del botón a "Cambiar"
+                // Guardar el barbero seleccionado
+                _barberoSeleccionadoId = seleccionado.Cedula;
 
                 // Cargar la galería del barbero seleccionado
-                await LoadGaleriaAsync(seleccionado.Cedula);
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
+
+                try
+                {
+                    var admin = AuthService.CurrentUser;
+                    int idBarberia = admin!.IdBarberia ?? 0;
+                    imagenes = await _galeriaService.ObtenerImagenes(seleccionado.Cedula, idBarberia);
+
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        UpdateGaleriaUI();
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"❌ Error al cargar galería del barbero: {ex.Message}");
+                    await DisplayAlert("Error", $"No se pudo cargar la galería: {ex.Message}", "OK");
+                }
+                finally
+                {
+                    LoadingIndicator.IsVisible = false;
+                    LoadingIndicator.IsLoading = false;
+                }
             }
         }
         private async Task LoadBarberos()
@@ -103,9 +131,6 @@
                     var admin = AuthService.CurrentUser;
                     var barberos = usuarios?.Where(u => u.Rol!.ToLower() == "barbero" && u.IdBarberia == admin!.IdBarberia).ToList() ?? [];
                     TodosLosBarberos = barberos;
-
-                    // Asegurar que el botón muestre "Seleccionar" inicialmente
-                    BarberoSelectButton.Text = "Seleccionar";
                 }
 
 
@@ -122,6 +147,41 @@
             {
                 LoadingIndicator.IsVisible = false;
                 LoadingIndicator.IsLoading = false;
+            }
+        }
+        private async Task LoadBarberiosYSeleccionarPrimero()
+        {
+            await LoadBarberos();
+
+            if (_todosLosBarberos != null && _todosLosBarberos.Count > 0)
+            {
+                // Seleccionar automáticamente el primer barbero
+                var primerBarbero = _todosLosBarberos[0];
+
+                BarberoSelectedLabel.Text = primerBarbero.Nombre ?? "Seleccionar Barbero";
+                BarberoTelefonoLabel.Text = primerBarbero.Telefono ?? string.Empty;
+
+                if (!string.IsNullOrWhiteSpace(primerBarbero.ImagenPath))
+                {
+                    BarberoFotoImage.Source = primerBarbero.ImagenPath.StartsWith("http")
+                       ? ImageSource.FromUri(new Uri(primerBarbero.ImagenPath))
+                        : ImageSource.FromFile(primerBarbero.ImagenPath);
+                }
+                else
+                {
+                    BarberoFotoImage.Source = "usericons.png";
+                }
+
+                // Mostrar botón "Cambiar" solo si hay más de un barbero
+                BarberoSelectButton.IsVisible = _todosLosBarberos.Count > 1;
+                if (_todosLosBarberos.Count > 1)
+                {
+                    BarberoSelectButton.Text = "Cambiar";
+                }
+                // Ocultar label de instrucción si solo hay un barbero
+                SeleccionarBarberoLabel.IsVisible = _todosLosBarberos.Count > 1;
+                // Cargar la galería del primer barbero
+                await LoadGaleriaAsync(primerBarbero.Cedula);
             }
         }
         // Método para cargar imágenes desde la API
@@ -148,7 +208,22 @@
 
                 // Obtener imágenes desde la API
                 var usuarioActual = AuthService.CurrentUser;
-                long cedulaBarbero = barberoId == 0 ? usuarioActual!.Cedula : barberoId;
+                // Si el usuario actual es barbero, usar su cédula
+                // Si es admin/cliente y no se especifica barberoId, usar el primero disponible
+                long cedulaBarbero;
+                if (barberoId != 0)
+                {
+                    cedulaBarbero = barberoId;
+                }
+                else if (usuarioActual!.Rol?.ToLower() == "barbero")
+                {
+                    cedulaBarbero = usuarioActual.Cedula;
+                }
+                else
+                {
+                    // Para admin/cliente sin barberoId especificado
+                    cedulaBarbero = _todosLosBarberos?.FirstOrDefault()?.Cedula ?? usuarioActual.Cedula;
+                }
                 int idBarberia = usuarioActual!.IdBarberia ?? 0;
                 imagenes = await _galeriaService.ObtenerImagenes(cedulaBarbero, idBarberia);
 
@@ -173,7 +248,8 @@
         private void UpdateGaleriaUI()
         {
             Debug.WriteLine($"🖼️ Actualizando UI con {imagenes.Count} imágenes");
-
+            // Ocultar label de instrucción si no hay imágenes
+            InstruccionGaleriaLabel.IsVisible = imagenes.Count > 0;
             // Limpiar el contenedor
             GaleriaContainer.Children.Clear();
 

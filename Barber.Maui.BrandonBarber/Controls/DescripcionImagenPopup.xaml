@@ -3,7 +3,7 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
 			 x:Class="Barber.Maui.BrandonBarber.Controls.DescripcionImagenPopup"
 			 BackgroundColor="#80000000">
-    <Border Padding="0" BackgroundColor="White" StrokeShape="RoundRectangle 20" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="340">
+    <Border Padding="0" BackgroundColor="White" StrokeShape="RoundRectangle 20" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="340" StrokeThickness="0">
         <VerticalStackLayout Spacing="0">
             <Border BackgroundColor="#0E2A36" StrokeShape="RoundRectangle 20,20,0,0" Padding="20" StrokeThickness="0">
                 <Label Text="Descripción de la imagen" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>

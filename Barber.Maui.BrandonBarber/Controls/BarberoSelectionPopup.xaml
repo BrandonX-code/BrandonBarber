@@ -4,138 +4,41 @@
              x:Class="Barber.Maui.BrandonBarber.Controls.BarberoSelectionPopup"
              BackgroundColor="#80000000">
 
-    <Border Padding="0" 
-           BackgroundColor="White" 
-           StrokeShape="RoundRectangle 20" 
-           VerticalOptions="Center" 
-           HorizontalOptions="Center" 
-           WidthRequest="340">
-
+    <Border Padding="0" BackgroundColor="White" StrokeShape="RoundRectangle 20" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="340" StrokeThickness="0">
         <VerticalStackLayout Spacing="0">
 
-            <!-- Header -->
-            <Border BackgroundColor="#0E2A36" 
-                    StrokeShape="RoundRectangle 20,20,0,0" 
-                    Padding="20"
-                    StrokeThickness="0">
-                <Label Text="Selecciona un barbero" 
-                       FontSize="20" 
-                       FontAttributes="Bold" 
-                       TextColor="White" 
-                       HorizontalOptions="Center"/>
+            <Border BackgroundColor="#0E2A36" StrokeShape="RoundRectangle 20,20,0,0" Padding="20" StrokeThickness="0">
+                <Label Text="Selecciona un barbero" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
             </Border>
 
-            <!-- Lista de barberos -->
-            <ScrollView MaximumHeightRequest="450" 
-                        VerticalScrollBarVisibility="Never">
-                <CollectionView x:Name="BarberosCollection" 
-                                SelectionMode="Single">
+            <ScrollView MaximumHeightRequest="450" VerticalScrollBarVisibility="Never">
+                <CollectionView x:Name="BarberosCollection" SelectionMode="Single">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Border Padding="15" 
-                                    BackgroundColor="Transparent"
-                                    StrokeThickness="0">
+                            <Border Padding="15" BackgroundColor="Transparent" StrokeThickness="0">
                                 <Border.GestureRecognizers>
-                                    <TapGestureRecognizer Tapped="OnBarberoTapped" 
-                                                          CommandParameter="{Binding .}"/>
+                                    <TapGestureRecognizer Tapped="OnBarberoTapped" CommandParameter="{Binding .}"/>
                                 </Border.GestureRecognizers>
 
                                 <Grid ColumnDefinitions="70,*,Auto" RowSpacing="5">
-                                    <!-- Imagen -->
-                                    <Border Grid.Column="0" 
-                                            Grid.RowSpan="2"
-                                            BackgroundColor="#F0F0F0" 
-                                            StrokeShape="RoundRectangle 50"
-                                            WidthRequest="70"
-                                            HeightRequest="70"
-                                            StrokeThickness="0">
-                                        <Image Source="{Binding ImagenPath}" 
-                                               Aspect="AspectFill"/>
+                                    <Border Grid.Column="0" Grid.RowSpan="2" BackgroundColor="#F0F0F0" StrokeShape="RoundRectangle 50" WidthRequest="70" HeightRequest="70" StrokeThickness="0">
+                                        <Image Source="{Binding ImagenPath, TargetNullValue=usericons.png, FallbackValue=usericons.png}" Aspect="AspectFill"/>
+
                                     </Border>
 
-                                    <!-- Info -->
-                                    <VerticalStackLayout Grid.Column="1" 
-                                                         Grid.Row="0"
-                                                         Spacing="5" 
-                                                         VerticalOptions="Center"
-                                                         Margin="15,0,0,0">
-                                        <Label Text="{Binding Nombre}" 
-                                               FontSize="16" 
-                                               FontAttributes="Bold" 
-                                               TextColor="#0E2A36"
-                                               LineBreakMode="TailTruncation"/>
-
-                                        <!-- Estrellas de calificación -->
+                                    <VerticalStackLayout Grid.Column="1" Grid.Row="0" Spacing="5" VerticalOptions="Center" Margin="15,0,0,0">
+                                        <Label Text="{Binding Nombre}" FontSize="16" FontAttributes="Bold" TextColor="#0E2A36" LineBreakMode="TailTruncation"/>
                                         <HorizontalStackLayout Spacing="2">
-                                            <Image Source="starblackrellena.png" 
-                                                   WidthRequest="16" 
-                                                   HeightRequest="16">
-                                                <Image.Triggers>
-                                                    <DataTrigger TargetType="Image" 
-                                                                 Binding="{Binding CalificacionPromedio}" 
-                                                                 Value="0">
-                                                        <Setter Property="Source" Value="starblacksinrelleno.png"/>
-                                                    </DataTrigger>
-                                                </Image.Triggers>
-                                            </Image>
-                                            <Image Source="starblackrellena.png" 
-                                                   WidthRequest="16" 
-                                                   HeightRequest="16">
-                                                <Image.Triggers>
-                                                    <DataTrigger TargetType="Image" 
-                                                                 Binding="{Binding CalificacionPromedio, Converter={StaticResource LessThanConverter}, ConverterParameter=2}" 
-                                                                 Value="True">
-                                                        <Setter Property="Source" Value="starblacksinrelleno.png"/>
-                                                    </DataTrigger>
-                                                </Image.Triggers>
-                                            </Image>
-                                            <Image Source="starblackrellena.png" 
-                                                   WidthRequest="16" 
-                                                   HeightRequest="16">
-                                                <Image.Triggers>
-                                                    <DataTrigger TargetType="Image" 
-                                                                 Binding="{Binding CalificacionPromedio, Converter={StaticResource LessThanConverter}, ConverterParameter=3}" 
-                                                                 Value="True">
-                                                        <Setter Property="Source" Value="starblacksinrelleno.png"/>
-                                                    </DataTrigger>
-                                                </Image.Triggers>
-                                            </Image>
-                                            <Image Source="starblackrellena.png" 
-                                                   WidthRequest="16" 
-                                                   HeightRequest="16">
-                                                <Image.Triggers>
-                                                    <DataTrigger TargetType="Image" 
-                                                                 Binding="{Binding CalificacionPromedio, Converter={StaticResource LessThanConverter}, ConverterParameter=4}" 
-                                                                 Value="True">
-                                                        <Setter Property="Source" Value="starblacksinrelleno.png"/>
-                                                    </DataTrigger>
-                                                </Image.Triggers>
-                                            </Image>
-                                            <Image Source="starblackrellena.png" 
-                                                   WidthRequest="16" 
-                                                   HeightRequest="16">
-                                                <Image.Triggers>
-                                                    <DataTrigger TargetType="Image" 
-                                                                 Binding="{Binding CalificacionPromedio, Converter={StaticResource LessThanConverter}, ConverterParameter=5}" 
-                                                                 Value="True">
-                                                        <Setter Property="Source" Value="starblacksinrelleno.png"/>
-                                                    </DataTrigger>
-                                                </Image.Triggers>
-                                            </Image>
-                                            <Label Text="{Binding CalificacionPromedio, StringFormat='({0:F1})'}" 
-                                                   FontSize="12" 
-                                                   TextColor="#666666"
-                                                   VerticalOptions="Center"/>
+                                            <Image Source="starblackrellena.png" WidthRequest="16" HeightRequest="16"/>
+                                            <Image Source="starblackrellena.png" WidthRequest="16" HeightRequest="16"/>
+                                            <Image Source="starblackrellena.png" WidthRequest="16" HeightRequest="16"/>
+                                            <Image Source="starblackrellena.png" WidthRequest="16" HeightRequest="16"/>
+                                            <Image Source="starblackrellena.png" WidthRequest="16" HeightRequest="16"/>
+                                            <Label Text="{Binding CalificacionPromedio, StringFormat='({0:F1})'}" FontSize="12" TextColor="#666666" VerticalOptions="Center"/>
                                         </HorizontalStackLayout>
                                     </VerticalStackLayout>
 
-                                    <!-- Icono -->
-                                    <Image Grid.Column="2" 
-                                           Grid.Row="0"
-                                           Source="chevron.png" 
-                                           WidthRequest="20" 
-                                           HeightRequest="20"
-                                           VerticalOptions="Center"/>
+                                    <Image Grid.Column="2" Grid.Row="0" Source="chevron.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center"/>
                                 </Grid>
                             </Border>
                         </DataTemplate>
@@ -143,14 +46,8 @@
                 </CollectionView>
             </ScrollView>
 
-            <!-- Botón cancelar -->
-            <Button Text="Cancelar" 
-                    BackgroundColor="#717d7e" 
-                    TextColor="White" 
-                    CornerRadius="15" 
-                    Margin="20,10,20,20"
-                    Clicked="OnCancelarClicked"/>
-
+            <Button Text="Cancelar" BackgroundColor="#717d7e" TextColor="White" CornerRadius="15" Margin="20,10,20,20" Clicked="OnCancelarClicked"/>
         </VerticalStackLayout>
     </Border>
+
 </ContentPage>

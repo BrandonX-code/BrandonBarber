@@ -9,7 +9,7 @@
            StrokeShape="RoundRectangle 20" 
            VerticalOptions="Center" 
            HorizontalOptions="Center" 
-           WidthRequest="340">
+           WidthRequest="340" StrokeThickness="0">
 
         <VerticalStackLayout Spacing="0">
 

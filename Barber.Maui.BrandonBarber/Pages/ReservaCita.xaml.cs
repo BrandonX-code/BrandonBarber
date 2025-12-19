@@ -82,7 +82,7 @@ namespace Barber.Maui.BrandonBarber
                 }
                 else
                 {
-                    ServicioImagen.Source = "placeholder.png"; // Imagen por defecto
+                    ServicioImagen.Source = "picture.png"; // Imagen por defecto
                 }
 
                 ServicioNombreLabel.Text = _servicioSeleccionado.Nombre;
@@ -184,7 +184,7 @@ namespace Barber.Maui.BrandonBarber
                                 }
                                 else
                                 {
-                                    ServicioImagen.Source = "placeholder.png"; // Imagen por defecto
+                                    ServicioImagen.Source = "picture.png"; // Imagen por defecto
                                 }
 
                                 // ✅ ACTUALIZAR LABELS
@@ -257,14 +257,14 @@ namespace Barber.Maui.BrandonBarber
                 }
                 else
                 {
-                    BarberoFotoImage.Source = "dotnet_bot.png";
+                    BarberoFotoImage.Source = "usericons.png";
                 }
             }
             else
             {
                 BarberoSelectedLabel.Text = "Seleccionar Barbero";
                 BarberoTelefonoLabel.Text = string.Empty;
-                BarberoFotoImage.Source = "dotnet_bot.png";
+                BarberoFotoImage.Source = "usericons.png";
                 _barberoSeleccionado = null;
             }
             LimpiarSeleccionFranja();
@@ -304,7 +304,7 @@ namespace Barber.Maui.BrandonBarber
                         }
                         else
                         {
-                            BarberoFotoImage.Source = "dotnet_bot.png";
+                            BarberoFotoImage.Source = "usericons.png";
                         }
 
                         LimpiarSeleccionFranja();
@@ -328,7 +328,7 @@ namespace Barber.Maui.BrandonBarber
                     }
                     else
                     {
-                        BarberoFotoImage.Source = "dotnet_bot.png";
+                        BarberoFotoImage.Source = "usericons.png";
                     }
                 }
             }

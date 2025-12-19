@@ -53,17 +53,17 @@
             _estadoActual = estado;
 
             var citasFiltradas = _todasLasCitas
-                .Where(c => 
+                .Where(c =>
     {
-   var estadoCita = c.Estado?.ToLower() ?? "";
-    var estadoBuscado = estado.ToLower();
-  
-           // ✅ Aceptar "Confirmada" o "Completada" como equivalentes
-if (estadoBuscado == "confirmada" && (estadoCita == "confirmada" || estadoCita == "completada"))
-          return true;
-      
-       return estadoCita == estadoBuscado;
-  })
+        var estadoCita = c.Estado?.ToLower() ?? "";
+        var estadoBuscado = estado.ToLower();
+
+        // ✅ Aceptar "Confirmada" o "Completada" como equivalentes
+        if (estadoBuscado == "confirmada" && (estadoCita == "confirmada" || estadoCita == "completada"))
+            return true;
+
+        return estadoCita == estadoBuscado;
+    })
                 .OrderByDescending(c => c.Fecha) // 👈 más reciente primero
                 .ToList();
 
@@ -86,7 +86,7 @@ if (estadoBuscado == "confirmada" && (estadoCita == "confirmada" || estadoCita =
         private void OnCompletadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Confirmada");
         private void OnCanceladasClicked(object sender, EventArgs e) => FiltrarPorEstado("Cancelada");
         private void OnFinalizadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Finalizada");
-        
+
         private async void OnAceptarCitaClicked(object sender, EventArgs e)
         {
             if (sender is Button button && button.CommandParameter is CitaModel cita)

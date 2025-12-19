@@ -9,14 +9,14 @@
            StrokeShape="RoundRectangle 20" 
            VerticalOptions="Center" 
            HorizontalOptions="Center" 
-           WidthRequest="320">
+           WidthRequest="320" StrokeThickness="0">
 
         <VerticalStackLayout Spacing="20" HorizontalOptions="Center">
 
             <!-- Logo -->
             <Image Source="iconalert.png" 
-                   WidthRequest="120" 
-                   HeightRequest="120" 
+                   WidthRequest="140" 
+                   HeightRequest="140" 
                    HorizontalOptions="Center"/>
 
             <!-- Título -->
