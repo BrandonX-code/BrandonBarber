@@ -218,6 +218,17 @@
                                 <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
                             </Grid>
                         </Border>
+                        <!-- En BarberoView, agregar después del botón de "Gestionar Disponibilidad" -->
+                        <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="GestionarExcepciones" />
+                            </Border.GestureRecognizers>
+                            <Grid ColumnDefinitions="Auto,*,Auto" HeightRequest="60" VerticalOptions="Center">
+                                <Image Grid.Column="0" Source="alert.png" WidthRequest="30" HeightRequest="30" />
+                                <Label Grid.Column="1" Text="Días No Disponibles" TextColor="Black" FontSize="24" VerticalOptions="Center" Margin="10,0,0,0"/>
+                                <Image Grid.Column="2" Source="chevron.png" WidthRequest="30" HeightRequest="30" />
+                            </Grid>
+                        </Border>
                         <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="15" StrokeThickness="0" >
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer Tapped="AddGaleri" />

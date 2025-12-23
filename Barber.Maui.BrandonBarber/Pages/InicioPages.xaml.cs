@@ -762,7 +762,19 @@ namespace Barber.Maui.BrandonBarber.Pages
                 _isNavigating = false;
             }
         }
-
+        private async void GestionarExcepciones(object sender, EventArgs e)
+        {
+            if (_isNavigating) return;
+            _isNavigating = true;
+            try
+            {
+                await Navigation.PushAsync(new GestionarExcepcionesPage());
+            }
+            finally
+            {
+                _isNavigating = false;
+            }
+        }
         private async void BarberiasReportadas(object sender, EventArgs e)
         {
             if (_isNavigating) return;

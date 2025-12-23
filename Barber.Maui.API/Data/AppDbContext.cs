@@ -17,9 +17,11 @@ namespace Barber.Maui.API.Data
         public DbSet<Calificacion> Calificaciones { get; set; }
         public DbSet<PasswordReset> PasswordResets { get; set; }
         public DbSet<FcmToken> FcmToken { get; set; }
+        public DbSet<DisponibilidadExcepcional> DisponibilidadesExcepcionales { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             // Tu configuración existente...
             modelBuilder.Entity<FcmToken>().ToTable("FcmToken"); // ← aquí la magia
             base.OnModelCreating(modelBuilder);
@@ -37,6 +39,19 @@ namespace Barber.Maui.API.Data
                 entity.Property(e => e.ExpiryDate).IsRequired();
                 entity.Property(e => e.IsUsed).IsRequired();
                 entity.Property(e => e.CreatedAt).IsRequired();
+            });
+            modelBuilder.Entity<DisponibilidadExcepcional>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.BarberoId).IsRequired();
+                entity.Property(e => e.Fecha).IsRequired();
+                entity.Property(e => e.TipoExcepcion).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.Motivo).HasMaxLength(500);
+                entity.Property(e => e.DiaCompleto).IsRequired();
+                entity.Property(e => e.ClientesNotificados).HasDefaultValue(false);
+
+                // Índices para mejorar el rendimiento
+                entity.HasIndex(e => new { e.BarberoId, e.Fecha }).IsUnique();
             });
 
             base.OnModelCreating(modelBuilder);
