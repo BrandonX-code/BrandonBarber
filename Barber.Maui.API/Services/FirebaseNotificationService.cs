@@ -91,8 +91,7 @@ namespace Barber.Maui.API.Services
                     Notification = new Notification
                     {
                         Title = titulo,
-                        Body = mensaje,
-                        ImageUrl = "https://i.pinimg.com/736x/74/2e/a6/742ea6bccad14b6b92535cd27f3e1f10.jpg"
+                        Body = mensaje
                     },
                     Data = datosNotificacion,
                     // ✅ CONFIGURACIÓN CRÍTICA PARA VELOCIDAD

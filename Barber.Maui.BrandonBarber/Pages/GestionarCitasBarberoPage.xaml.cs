@@ -64,7 +64,7 @@
 
         return estadoCita == estadoBuscado;
     })
-                .OrderByDescending(c => c.Fecha) // 👈 más reciente primero
+                .OrderBy(c => Math.Abs((c.Fecha.Date - DateTime.Today).TotalDays))
                 .ToList();
 
             CitasCollectionView.ItemsSource = citasFiltradas;

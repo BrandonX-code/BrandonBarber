@@ -27,8 +27,8 @@
 		<ApplicationId>com.companyname.Barber.maui.BrandonBarber</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationVersion>15</ApplicationVersion>
-		<ApplicationDisplayVersion>1.0.15</ApplicationDisplayVersion>
+		<ApplicationVersion>16</ApplicationVersion>
+		<ApplicationDisplayVersion>1.0.16</ApplicationDisplayVersion>
 
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->

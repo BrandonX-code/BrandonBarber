@@ -129,7 +129,8 @@
                         new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                     var admin = AuthService.CurrentUser;
-                    var barberos = usuarios?.Where(u => u.Rol!.ToLower() == "barbero" && u.IdBarberia == admin!.IdBarberia).ToList() ?? [];
+                    var barberiaActual = AuthService.CurrentUser!.IdBarberia;
+                    var barberos = usuarios!.Where(u => !string.IsNullOrEmpty(u.Rol) && u.Rol.Equals("barbero", StringComparison.CurrentCultureIgnoreCase)&& u.IdBarberia == barberiaActual).ToList();
                     TodosLosBarberos = barberos;
                 }
 
