@@ -493,13 +493,40 @@ namespace Barber.Maui.BrandonBarber.Pages
                         GaleriaClienteBorder.IsVisible = false;
                         break;
                     case "cliente":
-                        SuperAdminView.IsVisible = false;
-                        ClienteView.IsVisible = true;
-                        BarberoView.IsVisible = false;
-                        AdminView.IsVisible = false;
-                        GaleriaClienteBorder.IsVisible = true;
-                        CargarServicios();
-                        CargarBarberos();
+                        // 🔍 VALIDACIÓN CRÍTICA: Verificar que el cliente tenga barbería asignada
+                        if (AuthService.CurrentUser.IdBarberia == null || AuthService.CurrentUser.IdBarberia == 0)
+                        {
+                            Debug.WriteLine($"⚠️ ADVERTENCIA: Cliente {AuthService.CurrentUser.Nombre} sin barbería asignada");
+                            SuperAdminView.IsVisible = false;
+                            ClienteView.IsVisible = false;
+                            BarberoView.IsVisible = false;
+                            AdminView.IsVisible = false;
+                            GaleriaClienteBorder.IsVisible = false;
+
+                            // Mostrar un mensaje de error en la pantalla
+                            LoadingIndicator.IsVisible = true;
+                            LoadingIndicator.IsLoading = false;
+
+                            // Podemos mostrar un mensaje usando el snackbar o un popup
+                            _ = MainThread.InvokeOnMainThreadAsync(async () =>
+                            {
+                                await AppUtils.MostrarSnackbar(
+                                    "Tu perfil no tiene una barbería asociada. Por favor, contacta al administrador.",
+                                    Colors.Red,
+                                    Colors.White
+                                );
+                            });
+                        }
+                        else
+                        {
+                            SuperAdminView.IsVisible = false;
+                            ClienteView.IsVisible = true;
+                            BarberoView.IsVisible = false;
+                            AdminView.IsVisible = false;
+                            GaleriaClienteBorder.IsVisible = true;
+                            CargarServicios();
+                            CargarBarberos();
+                        }
                         break;
 
                     case "barbero":
@@ -526,6 +553,12 @@ namespace Barber.Maui.BrandonBarber.Pages
                         GaleriaClienteBorder.IsVisible = false;
                         break;
                 }
+            }
+            else
+            {
+                Debug.WriteLine("❌ ERROR CRÍTICO: AuthService.CurrentUser es null en LoadUserInfo");
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
             }
         }
 
@@ -560,6 +593,24 @@ namespace Barber.Maui.BrandonBarber.Pages
                 LoadingIndicator.IsLoading = true;
                 ContentContainer.IsVisible = false;
 
+                // 🔍 Validar que el usuario actual exista
+                if (AuthService.CurrentUser == null)
+                {
+                    Debug.WriteLine("❌ ERROR: AuthService.CurrentUser es null en LoadBarberos");
+                    await AppUtils.MostrarSnackbar("Usuario no autenticado", Colors.Red, Colors.White);
+                    return;
+                }
+
+                // 🔍 Validar que IdBarberia esté establecida
+                if (AuthService.CurrentUser.IdBarberia == null || AuthService.CurrentUser.IdBarberia == 0)
+                {
+                    Debug.WriteLine($"⚠️ IdBarberia no configurada para cliente. Valor: {AuthService.CurrentUser.IdBarberia}");
+                    // Para clientes sin barbería asignada, mostrar mensaje pero no cargar
+                    NoBarberosLabel.IsVisible = true;
+                    NoBarberosLabel.Text = "Por favor, selecciona una barbería";
+                    return;
+                }
+
                 var response = await _authService._BaseClient.GetAsync("api/auth");
 
                 if (response.IsSuccessStatusCode)
@@ -567,24 +618,54 @@ namespace Barber.Maui.BrandonBarber.Pages
                     var jsonContent = await response.Content.ReadAsStringAsync();
                     var usuarios = JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent, _jsonOptions);
 
-                    var admin = AuthService.CurrentUser;
-                    var barberos =usuarios?
-                        .Where(u => u.Rol!.Equals("barbero", StringComparison.CurrentCultureIgnoreCase)
-                                    && u.IdBarberia == admin!.IdBarberia)
-                        .ToList() ?? [];
+                    if (usuarios == null || usuarios.Count == 0)
+                    {
+                        Debug.WriteLine("⚠️ No hay usuarios en la respuesta de la API");
+                        NoBarberosLabel.IsVisible = true;
+                        BarberosCollectionView.IsVisible = false;
+                        return;
+                    }
+
+                    var barberiaActual = AuthService.CurrentUser.IdBarberia;
+                    var barberos = usuarios
+                        .Where(u => u.Rol != null 
+                                     && u.Rol.Equals("barbero", StringComparison.CurrentCultureIgnoreCase)
+                                     && u.IdBarberia == barberiaActual)
+                        .ToList();
 
                     TodosLosBarberos = barberos;
                     BarberosCollectionView.ItemsSource = barberos;
+
+                    Debug.WriteLine($"✅ Barberos cargados: {barberos.Count} para barbería {barberiaActual}");
+
+                    NoBarberosLabel.IsVisible = barberos.Count == 0;
+                    BarberosCollectionView.IsVisible = barberos.Count > 0;
+
+                    if (barberos.Count == 0)
+                    {
+                        NoBarberosLabel.Text = "No hay barberos disponibles en esta barbería";
+                    }
                 }
                 else
                 {
+                    Debug.WriteLine($"❌ Respuesta de API no exitosa - StatusCode: {response.StatusCode}");
                     await AppUtils.MostrarSnackbar("No se pudieron cargar los barberos", Colors.Red, Colors.White);
-                    //await DisplayAlert("Error", "No se pudieron cargar los barberos", "OK");
                 }
+            }
+            catch (NullReferenceException ex)
+            {
+                Debug.WriteLine($"❌ NullReferenceException en LoadBarberos: {ex.Message}");
+                Debug.WriteLine($"❌ StackTrace: {ex.StackTrace}");
+                await AppUtils.MostrarSnackbar("Error: datos incompletos del usuario", Colors.Red, Colors.White);
+                NoBarberosLabel.IsVisible = true;
+                NoBarberosLabel.Text = "Error al cargar los barberos";
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al cargar los barberos: {ex.Message}", "OK");
+                Debug.WriteLine($"❌ Error en LoadBarberos: {ex.Message}");
+                Debug.WriteLine($"❌ StackTrace: {ex.StackTrace}");
+                await AppUtils.MostrarSnackbar($"Error al cargar barberos: {ex.Message}", Colors.Red, Colors.White);
+                NoBarberosLabel.IsVisible = true;
             }
             finally
             {
@@ -628,33 +709,80 @@ namespace Barber.Maui.BrandonBarber.Pages
         {
             try
             {
-                var usuario = AuthService.CurrentUser!.IdBarberia ?? 0;
-                var response = await _authService._BaseClient.GetAsync($"api/auth/barberos/{usuario}");
+                LoadingIndicator.IsVisible = true;
+                LoadingIndicator.IsLoading = true;
+                ContentContainer.IsVisible = false;
+
+                // 🔍 Validar que el usuario actual exista
+                if (AuthService.CurrentUser == null)
+                {
+                    Debug.WriteLine("❌ ERROR: AuthService.CurrentUser es null");
+                    await AppUtils.MostrarSnackbar("Usuario no autenticado", Colors.Red, Colors.White);
+                    return;
+                }
+
+                // 🔍 Validar que IdBarberia esté establecida
+                if (AuthService.CurrentUser.IdBarberia == null || AuthService.CurrentUser.IdBarberia == 0)
+                {
+                    Debug.WriteLine($"❌ ERROR: IdBarberia no está establecida. Valor: {AuthService.CurrentUser.IdBarberia}");
+                    await AppUtils.MostrarSnackbar("Barbería no configurada para el usuario", Colors.Red, Colors.White);
+                    return;
+                }
+
+                var response = await _authService._BaseClient.GetAsync("api/auth");
 
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonContent = await response.Content.ReadAsStringAsync();
                     var usuarios = JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent, _jsonOptions);
 
-                    var admin = AuthService.CurrentUser;
-                    var barberos = usuarios?
-                        .Where(u => u.Rol!.Equals("barbero", StringComparison.CurrentCultureIgnoreCase)
-                                    && u.IdBarberia == admin.IdBarberia)
-                        .ToList() ?? [];
+                    if (usuarios == null)
+                    {
+                        Debug.WriteLine("❌ ERROR: La respuesta de la API no contiene usuarios válidos");
+                        await AppUtils.MostrarSnackbar("No se pudieron procesar los datos de barberos", Colors.Red, Colors.White);
+                        return;
+                    }
 
+                    var barberiaActual = AuthService.CurrentUser.IdBarberia;
+                    var barberos = usuarios
+                        .Where(u => u.Rol != null 
+                                     && u.Rol.Equals("barbero", StringComparison.CurrentCultureIgnoreCase)
+                   && u.IdBarberia == barberiaActual)
+                        .ToList();
+
+                    TodosLosBarberos = barberos;
                     BarberosCollectionView.ItemsSource = barberos;
+
+                    // 🔍 Logging para debugging
+                    Debug.WriteLine($"✅ Barberos cargados: {barberos.Count} para barbería {barberiaActual}");
+
+                    // Mostrar/ocultar labels según si hay barberos
                     NoBarberosLabel.IsVisible = barberos.Count == 0;
                     BarberosCollectionView.IsVisible = barberos.Count > 0;
                 }
                 else
                 {
+                    Debug.WriteLine($"❌ ERROR: Respuesta de API no exitosa - StatusCode: {response.StatusCode}");
                     await AppUtils.MostrarSnackbar("No se pudieron cargar los barberos", Colors.Red, Colors.White);
-                    //await DisplayAlert("Error", "No se pudieron cargar los barberos", "OK");
                 }
+            }
+            catch (NullReferenceException ex)
+            {
+                Debug.WriteLine($"❌ NullReferenceException en CargarBarberos: {ex.Message}");
+                Debug.WriteLine($"❌ StackTrace: {ex.StackTrace}");
+                await AppUtils.MostrarSnackbar("Error al cargar barberos: datos incompletos", Colors.Red, Colors.White);
             }
             catch (Exception ex)
             {
-                await DisplayAlert("Error", $"Error al cargar los barberos: {ex.Message}", "OK");
+                Debug.WriteLine($"❌ Error general en CargarBarberos: {ex.Message}");
+                Debug.WriteLine($"❌ StackTrace: {ex.StackTrace}");
+                await AppUtils.MostrarSnackbar($"Error al cargar los barberos: {ex.Message}", Colors.Red, Colors.White);
+            }
+            finally
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsLoading = false;
+                ContentContainer.IsVisible = true;
             }
         }
         private async void OnBarberoSelected(object sender, EventArgs e)

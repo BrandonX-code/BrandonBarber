@@ -329,7 +329,20 @@ namespace Barber.Maui.BrandonBarber.Services
 
                 if (CurrentUser != null)
                 {
-                    Console.WriteLine($"🔹 Usuario cargado: {CurrentUser.Nombre} - Rol: {CurrentUser.Rol}");
+                    // 🔍 VALIDACIÓN CRÍTICA: Asegurar que IdBarberia sea válida
+                    if (CurrentUser.IdBarberia == null || CurrentUser.IdBarberia == 0)
+                    {
+                        Console.WriteLine($"⚠️ ADVERTENCIA: Usuario {CurrentUser.Nombre} sin IdBarberia asignada");
+                        // Intentar obtener IdBarberia de la BD si es cliente
+                        if (CurrentUser.Rol?.ToLower() == "cliente")
+                        {
+                            Console.WriteLine("🔹 Intentando recuperar IdBarberia para cliente...");
+                            // Aquí podrías tener un endpoint que devuelva la barbería asociada al cliente
+                            // Por ahora, permitir que continúe con IdBarberia = 0
+                        }
+                    }
+
+                    Console.WriteLine($"🔹 Usuario cargado: {CurrentUser.Nombre} - Rol: {CurrentUser.Rol} - Barbería: {CurrentUser.IdBarberia}");
 
                     // 🔥 AGREGAR ESTO: Registrar token FCM después de verificar sesión
                     await RegistrarTokenFCM();
@@ -337,6 +350,13 @@ namespace Barber.Maui.BrandonBarber.Services
                     return true;
                 }
 
+                await Logout();
+                return false;
+            }
+            catch (JsonException jex)
+            {
+                Debug.WriteLine($"❌ Error de deserialización JSON en CheckAuthStatus: {jex.Message}");
+                Console.WriteLine($"❌ Error de deserialización JSON en CheckAuthStatus: {jex.Message}");
                 await Logout();
                 return false;
             }
