@@ -52,6 +52,7 @@
         }
         private void OnPendientesClicked(object sender, EventArgs e) => FiltrarPorEstado("Pendiente");
         private void OnCompletadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Confirmada");
+        private void OnReagendarClicked(object sender, EventArgs e) => FiltrarPorEstado("ReagendarPendiente");
         private void OnCanceladasClicked(object sender, EventArgs e) => FiltrarPorEstado("Cancelada");
         private void OnFinalizadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Finalizada");
 
@@ -81,7 +82,7 @@
                 LoadingIndicator.IsLoading = true;
                 var clienteCedula = AuthService.CurrentUser!.Cedula;
                 _todasLasCitas = await _reservationService.GetReservationsById(clienteCedula);
-                
+
                 // ✅ MOSTRAR SNACKBAR SI NO HAY CITAS
                 if (_todasLasCitas == null || _todasLasCitas.Count == 0)
                 {
@@ -96,7 +97,7 @@
                 {
                     Debug.WriteLine($"📌 Cita: {cita.Nombre} - Servicio: {cita.ServicioNombre} - Precio: {cita.ServicioPrecio}");
                 }
-                
+
                 // ✅ FILTRAR POR ESTADO ACTUAL (Pendiente por defecto)
                 FiltrarPorEstado(_estadoActual);
             }
@@ -114,41 +115,42 @@
         private void FiltrarPorEstado(string estado)
         {
             _estadoActual = estado;
-        var citasFiltradas = _todasLasCitas
-            .Where(c => 
-       {
-       var estadoCita = c.Estado?.ToLower() ?? "";
-     var estadoBuscado = estado.ToLower();
-   
-          // ✅ Aceptar "Confirmada" o "Completada" como equivalentes
-     if (estadoBuscado == "confirmada" && (estadoCita == "confirmada" || estadoCita == "completada"))
-    return true;
+            var citasFiltradas = _todasLasCitas
+                .Where(c =>
+                       {
+                           var estadoCita = c.Estado?.ToLower() ?? "";
+                           var estadoBuscado = estado.ToLower();
 
-            return estadoCita == estadoBuscado;
-     })
-             .OrderByDescending(c => c.Fecha)
-     .ToList();
-       
-         // ✅ LOG PARA DEBUG
-    Debug.WriteLine($"✅ Citas filtradas por '{estado}': {citasFiltradas.Count}");
-     foreach (var cita in citasFiltradas)
-       {
+                           // ✅ Aceptar "Confirmada" o "Completada" como equivalentes
+                           if (estadoBuscado == "confirmada" && (estadoCita == "confirmada" || estadoCita == "completada"))
+                               return true;
+
+                           return estadoCita == estadoBuscado;
+                       })
+                 .OrderByDescending(c => c.Fecha)
+         .ToList();
+
+            // ✅ LOG PARA DEBUG
+            Debug.WriteLine($"✅ Citas filtradas por '{estado}': {citasFiltradas.Count}");
+            foreach (var cita in citasFiltradas)
+            {
                 Debug.WriteLine($"  - {cita.Nombre} | Servicio: {cita.ServicioNombre} | Precio: ${cita.ServicioPrecio}");
             }
-      
- CitasCollectionView.ItemsSource = citasFiltradas;
-          EmptyStateLayout.IsVisible = citasFiltradas.Count == 0;
-      ActualizarEstilosBotones();
-    _ = MostrarHintDeslizar();
-     }
 
-   private void ActualizarEstilosBotones()
+            CitasCollectionView.ItemsSource = citasFiltradas;
+            EmptyStateLayout.IsVisible = citasFiltradas.Count == 0;
+            ActualizarEstilosBotones();
+            _ = MostrarHintDeslizar();
+        }
+
+        private void ActualizarEstilosBotones()
         {
-      BtnPendientes.BackgroundColor = _estadoActual == "Pendiente" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
-          BtnCompletadas.BackgroundColor = _estadoActual == "Confirmada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+            BtnPendientes.BackgroundColor = _estadoActual == "Pendiente" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+            BtnCompletadas.BackgroundColor = _estadoActual == "Confirmada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+            BtnReagendar.BackgroundColor = _estadoActual == "ReagendarPendiente" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE"); // ✅ NUEVO
             BtnCanceladas.BackgroundColor = _estadoActual == "Cancelada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
-    BtnFinalizadas.BackgroundColor = _estadoActual == "Finalizada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
-   }
+            BtnFinalizadas.BackgroundColor = _estadoActual == "Finalizada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+        }
         private async Task MostrarHintDeslizar()
         {
             if (CitasCollectionView.ItemsSource is IEnumerable<CitaModel> citas && citas.Any())
@@ -192,7 +194,8 @@
                 // ✅ VALIDACIÓN: Solo eliminar si está en PENDIENTE o CONFIRMADA
                 if (!string.Equals(cita.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase) &&
                     !string.Equals(cita.Estado, "Confirmada", StringComparison.OrdinalIgnoreCase) &&
-                    !string.Equals(cita.Estado, "Completada", StringComparison.OrdinalIgnoreCase))
+                    !string.Equals(cita.Estado, "Completada", StringComparison.OrdinalIgnoreCase) &&
+                    !string.Equals(cita.Estado, "ReagendarPendiente", StringComparison.OrdinalIgnoreCase))
                 {
                     await AppUtils.MostrarSnackbar("Solo puedes cancelar citas en estado Pendiente o Confirmada.", Colors.Orange, Colors.White);
                     return;
@@ -206,7 +209,7 @@
                 {
                     LoadingIndicator.IsVisible = true;
                     LoadingIndicator.IsLoading = true;
-     
+
                     // ✅ ELIMINAR DEL SERVIDOR
                     bool eliminado = await _reservationService.DeleteReservation(cita.Id);
 
@@ -214,10 +217,10 @@
                     {
                         // ✅ ELIMINAR INMEDIATAMENTE DE LA LISTA LOCAL
                         _todasLasCitas.Remove(cita);
-   
+
                         // ✅ REFRESCAR LA VISTA ACTUAL (sin ir al servidor)
                         FiltrarPorEstado(_estadoActual);
-              
+
                         await AppUtils.MostrarSnackbar("Cita cancelada exitosamente.", Colors.Green, Colors.White);
                     }
                     else
@@ -305,7 +308,8 @@
             // Solo citas en estado PENDIENTE o CONFIRMADA (incluir COMPLETADA por retrocompatibilidad)
             return string.Equals(cita.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase) ||
                 string.Equals(cita.Estado, "Confirmada", StringComparison.OrdinalIgnoreCase) ||
-                string.Equals(cita.Estado, "Completada", StringComparison.OrdinalIgnoreCase);
+                string.Equals(cita.Estado, "Completada", StringComparison.OrdinalIgnoreCase) ||
+                 string.Equals(cita.Estado, "ReagendarPendiente", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

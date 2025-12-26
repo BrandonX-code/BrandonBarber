@@ -15,6 +15,7 @@ namespace Barber.Maui.BrandonBarber.Converters
                     "cancelada" or "rechazado" => Color.FromArgb("#F44336"),
                     "pendiente" => Color.FromArgb("#FFA726"),
                     "finalizada" => Color.FromArgb("#4D5154"), // 👈 AÑADIDO
+                    "reagendarpendiente" => Color.FromArgb("#FF6F91"),
                     _ => Color.FromArgb("#90A4AE")
                 };
 

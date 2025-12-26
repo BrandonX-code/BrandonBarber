@@ -12,6 +12,7 @@
                 <HorizontalStackLayout Grid.Row="0" Padding="10" Spacing="10" HorizontalOptions="Center">
                     <Button x:Name="BtnPendientes" Text="Pendientes" Clicked="OnPendientesClicked" BackgroundColor="#FF6F91"  TextColor="Black"  CornerRadius="15" Padding="20,10"/>
                     <Button x:Name="BtnCompletadas" Text="Confirmadas" Clicked="OnCompletadasClicked" BackgroundColor="#90A4AE" TextColor="Black"  CornerRadius="15" Padding="20,10"/>
+                    <Button x:Name="BtnReagendar" Text="Por Reagendar" Clicked="OnReagendarClicked" BackgroundColor="#90A4AE" TextColor="Black" CornerRadius="15" Padding="20,10"/>
                     <Button x:Name="BtnCanceladas" Text="Rechazadas" Clicked="OnCanceladasClicked" BackgroundColor="#90A4AE"  TextColor="Black" CornerRadius="15" Padding="20,10"/>
                     <Button x:Name="BtnFinalizadas" Text="Finalizadas" Clicked="OnFinalizadasClicked" BackgroundColor="#90A4AE" TextColor="Black" CornerRadius="15" Padding="20,10"/>
                 </HorizontalStackLayout>
@@ -38,6 +39,32 @@
                                     <Button Text="✓ Aceptar" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="10" Padding="15,8" Clicked="OnAceptarCitaClicked" CommandParameter="{Binding .}" />
 
                                     <Button Text="✗ Rechazar" BackgroundColor="#717d7e" TextColor="Black" CornerRadius="10" Padding="15,8" Clicked="OnRechazarCitaClicked" CommandParameter="{Binding .}" />
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout
+    Grid.Row="4"
+    Grid.Column="0"
+    Grid.ColumnSpan="2"
+    Spacing="10"
+    Margin="0,10,0,0"
+    IsVisible="{Binding Estado, Converter={StaticResource EstadoReagendarPendienteConverter}}">
+
+                                    <Button
+        Text="✓ Aceptar reagendamiento"
+        BackgroundColor="#FF6F91"
+        TextColor="Black"
+        CornerRadius="10"
+        Padding="15,8"
+        Clicked="OnAceptarReagendarClicked"
+        CommandParameter="{Binding .}" />
+
+                                    <Button
+        Text="✗ Rechazar reagendamiento"
+        BackgroundColor="#717d7e"
+        TextColor="Black"
+        CornerRadius="10"
+        Padding="15,8"
+        Clicked="OnRechazarReagendarClicked"
+        CommandParameter="{Binding .}" />
                                 </HorizontalStackLayout>
 
                                 <HorizontalStackLayout Grid.Row="5" VerticalOptions="Start" Grid.Column="0" Grid.ColumnSpan="2" Spacing="10" Margin="0,10,0,0" IsVisible="{Binding Estado, Converter={StaticResource EstadoAceptadaConverter}}">

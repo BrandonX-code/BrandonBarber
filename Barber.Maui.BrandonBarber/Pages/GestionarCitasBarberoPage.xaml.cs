@@ -78,12 +78,14 @@
         {
             BtnPendientes.BackgroundColor = _estadoActual == "Pendiente" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
             BtnCompletadas.BackgroundColor = _estadoActual == "Confirmada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
+            BtnReagendar.BackgroundColor = _estadoActual == "ReagendarPendiente" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
             BtnCanceladas.BackgroundColor = _estadoActual == "Cancelada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
             BtnFinalizadas.BackgroundColor = _estadoActual == "Finalizada" ? Color.FromArgb("#FF6F91") : Color.FromArgb("#90A4AE");
         }
 
         private void OnPendientesClicked(object sender, EventArgs e) => FiltrarPorEstado("Pendiente");
         private void OnCompletadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Confirmada");
+        private void OnReagendarClicked(object sender, EventArgs e) => FiltrarPorEstado("ReagendarPendiente");
         private void OnCanceladasClicked(object sender, EventArgs e) => FiltrarPorEstado("Cancelada");
         private void OnFinalizadasClicked(object sender, EventArgs e) => FiltrarPorEstado("Finalizada");
 
@@ -147,5 +149,49 @@
                 }
             }
         }
+        private async void OnAceptarReagendarClicked(object sender, EventArgs e)
+        {
+            if (sender is Button b && b.CommandParameter is CitaModel cita)
+            {
+                var popup = new CustomAlertPopup(
+                    $"¿Aceptar el nuevo horario solicitado por {cita.Nombre}?");
+                if (!await popup.ShowAsync(this)) return;
+
+                var ok = await _reservationService
+                    .ActualizarEstadoCita(cita.Id, "Confirmada");
+
+                if (ok)
+                {
+                    await AppUtils.MostrarSnackbar(
+                        "Reagendamiento aceptado",
+                        Colors.Green,
+                        Colors.White);
+                    await CargarCitas();
+                }
+            }
+        }
+
+        private async void OnRechazarReagendarClicked(object sender, EventArgs e)
+        {
+            if (sender is Button b && b.CommandParameter is CitaModel cita)
+            {
+                var popup = new CustomAlertPopup(
+                    $"¿Rechazar el reagendamiento de {cita.Nombre}?");
+                if (!await popup.ShowAsync(this)) return;
+
+                var ok = await _reservationService
+                    .ActualizarEstadoCita(cita.Id, "Cancelada");
+
+                if (ok)
+                {
+                    await AppUtils.MostrarSnackbar(
+                        "Reagendamiento rechazado",
+                        Colors.Orange,
+                        Colors.White);
+                    await CargarCitas();
+                }
+            }
+        }
+
     }
 }

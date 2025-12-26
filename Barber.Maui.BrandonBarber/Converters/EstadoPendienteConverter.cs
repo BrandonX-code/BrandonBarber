@@ -44,7 +44,8 @@ namespace Barber.Maui.BrandonBarber.Converters
             // ✅ Permitir eliminar si está en estado PENDIENTE, CONFIRMADA o COMPLETADA
             return string.Equals(cita.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase) ||
                    string.Equals(cita.Estado, "Confirmada", StringComparison.OrdinalIgnoreCase) ||
-                   string.Equals(cita.Estado, "Completada", StringComparison.OrdinalIgnoreCase);
+                   string.Equals(cita.Estado, "Completada", StringComparison.OrdinalIgnoreCase) ||
+                   string.Equals(cita.Estado, "ReagendarPendiente", StringComparison.OrdinalIgnoreCase);
         }
 
         public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
@@ -64,7 +65,8 @@ namespace Barber.Maui.BrandonBarber.Converters
             // ✅ Permitir editar si está en estado PENDIENTE, CONFIRMADA o COMPLETADA
             return string.Equals(cita.Estado, "Pendiente", StringComparison.OrdinalIgnoreCase) ||
                    string.Equals(cita.Estado, "Confirmada", StringComparison.OrdinalIgnoreCase) ||
-                   string.Equals(cita.Estado, "Completada", StringComparison.OrdinalIgnoreCase);
+                   string.Equals(cita.Estado, "Completada", StringComparison.OrdinalIgnoreCase)||
+                    string.Equals(cita.Estado, "ReagendarPendiente", StringComparison.OrdinalIgnoreCase);
         }
 
         public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

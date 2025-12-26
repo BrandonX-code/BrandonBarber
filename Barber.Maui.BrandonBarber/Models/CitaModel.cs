@@ -26,6 +26,7 @@
                     "confirmada" => "Confirmada",
                     "cancelada" => "Rechazada",
                     "finalizada" => "Finalizada",
+                    "reagendarpendiente" => "Por Reagendar",
                     _ => "Pendiente"
                 };
             }

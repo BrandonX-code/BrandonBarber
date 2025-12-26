@@ -58,17 +58,111 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
         }
 
-        private void OnTipoExcepcionChanged(object sender, CheckedChangedEventArgs e)
+        private async void OnTipoExcepcionChanged(object sender, CheckedChangedEventArgs e)
         {
             if (sender is RadioButton radio && radio.IsChecked)
             {
                 HorariosModificadosContainer.IsVisible = radio == HorarioModificadoRadio;
+
+                // ✅ NUEVO: Si selecciona "Horarios diferentes", cargar disponibilidad del barbero
+                if (radio == HorarioModificadoRadio)
+                {
+                    await CargarHorariosDisponibilidad();
+                }
+            }
+        }
+        // ✅ NUEVO MÉTODO: Cargar horarios de la disponibilidad normal del barbero
+        private async Task CargarHorariosDisponibilidad()
+        {
+            try
+            {
+                var barbero = AuthService.CurrentUser;
+                if (barbero == null) return;
+
+                var disponibilidadService = App.Current!.Handler.MauiContext!.Services
+                    .GetService<DisponibilidadService>();
+
+                if (disponibilidadService == null) return;
+
+                // Obtener disponibilidad para la fecha seleccionada
+                var disponibilidad = await disponibilidadService.GetDisponibilidad(
+                    FechaPicker.Date, barbero.Cedula);
+
+                if (disponibilidad == null || !disponibilidad.HorariosDict.Any(h => h.Value))
+                {
+                    // Si no hay disponibilidad, usar horarios por defecto
+                    HoraInicioPicker.Time = new TimeSpan(9, 0, 0);  // 9:00 AM
+                    HoraFinPicker.Time = new TimeSpan(18, 0, 0);    // 6:00 PM
+                    return;
+                }
+
+                // ✅ Extraer primera y última hora de los horarios disponibles
+                var horariosDisponibles = disponibilidad.HorariosDict
+                    .Where(h => h.Value)
+                    .Select(h => h.Key)
+                    .ToList();
+
+                if (horariosDisponibles.Any())
+                {
+                    // Tomar el primer horario (ejemplo: "07:00 AM - 07:40 AM")
+                    var primerHorario = horariosDisponibles.First();
+                    var ultimoHorario = horariosDisponibles.Last();
+
+                    // Extraer hora de inicio del primer horario
+                    var horaInicio = ParsearHora(primerHorario.Split('-')[0].Trim());
+
+                    // Extraer hora de fin del último horario
+                    var horaFin = ParsearHora(ultimoHorario.Split('-')[1].Trim());
+
+                    HoraInicioPicker.Time = horaInicio;
+                    HoraFinPicker.Time = horaFin;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error cargando horarios: {ex.Message}");
+                // Valores por defecto en caso de error
+                HoraInicioPicker.Time = new TimeSpan(9, 0, 0);
+                HoraFinPicker.Time = new TimeSpan(18, 0, 0);
+            }
+        }
+
+        // ✅ NUEVO MÉTODO: Convertir texto de hora a TimeSpan
+        private TimeSpan ParsearHora(string horaTexto)
+        {
+            try
+            {
+                // Normalizar el texto (ej: "07:00 AM", "7:00 a.m.", etc)
+                horaTexto = horaTexto
+                    .Replace("a.m.", "AM", StringComparison.OrdinalIgnoreCase)
+                    .Replace("p.m.", "PM", StringComparison.OrdinalIgnoreCase)
+                    .Replace("a. m.", "AM", StringComparison.OrdinalIgnoreCase)
+                    .Replace("p. m.", "PM", StringComparison.OrdinalIgnoreCase)
+                    .Trim();
+
+                if (DateTime.TryParse(horaTexto, out DateTime resultado))
+                {
+                    return resultado.TimeOfDay;
+                }
+
+                // Si falla, retornar 9:00 AM por defecto
+                return new TimeSpan(9, 0, 0);
+            }
+            catch
+            {
+                return new TimeSpan(9, 0, 0);
             }
         }
 
         private async void OnFechaSelected(object sender, DateChangedEventArgs e)
         {
             await ActualizarCitasAfectadas();
+
+            // ✅ NUEVO: Si ya tiene seleccionado "Horarios diferentes", recargar horarios
+            if (HorarioModificadoRadio.IsChecked)
+            {
+                await CargarHorariosDisponibilidad();
+            }
         }
 
         private async Task ActualizarCitasAfectadas()

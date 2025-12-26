@@ -1,0 +1,14 @@
+﻿using System.Globalization;
+
+namespace Barber.Maui.BrandonBarber.Converters
+{
+    public class EstadoReagendarPendienteConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+            => value?.ToString() == "ReagendarPendiente";
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+            => throw new NotImplementedException();
+    }
+
+}

@@ -50,7 +50,8 @@ namespace Barber.Maui.API.Controllers
 
         // POST: api/disponibilidad-excepcional
         [HttpPost]
-        public async Task<ActionResult<DisponibilidadExcepcional>> CrearExcepcion([FromBody] DisponibilidadExcepcional excepcion)
+        public async Task<ActionResult<DisponibilidadExcepcional>> CrearExcepcion(
+            [FromBody] DisponibilidadExcepcional excepcion)
         {
             try
             {
@@ -80,23 +81,29 @@ namespace Barber.Maui.API.Controllers
                 _context.Set<DisponibilidadExcepcional>().Add(excepcion);
                 await _context.SaveChangesAsync();
 
-                // ✅ NUEVO: Procesar citas según el tipo de excepción
                 if (excepcion.DiaCompleto)
                 {
-                    // ESCENARIO 1: Eliminar todas las citas del día
                     foreach (var cita in citasAfectadas)
                     {
                         _context.Citas.Remove(cita);
                     }
+
                     await _context.SaveChangesAsync();
                 }
                 else if (!string.IsNullOrEmpty(excepcion.HorariosModificados))
                 {
-                    // ESCENARIO 2: Reagendar citas a nuevos horarios
-                    await ReagendarCitasANuevosHorarios(citasAfectadas, excepcion.HorariosModificados);
+                    // ESCENARIO 2: Horarios diferentes → NO reagendar automáticamente
+                    // Marcar citas para que el cliente seleccione nueva hora
+                    foreach (var cita in citasAfectadas)
+                    {
+                        cita.Estado = "ReagendarPendiente";
+                        _context.Citas.Update(cita);
+                    }
+
+                    await _context.SaveChangesAsync();
                 }
 
-                // Notificar a clientes afectados
+                // 🔔 Notificar a clientes afectados
                 if (citasAfectadas.Any())
                 {
                     await NotificarClientesAfectados(excepcion, citasAfectadas);
@@ -109,57 +116,14 @@ namespace Barber.Maui.API.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Error al crear excepción", error = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = "Error al crear excepción",
+                    error = ex.Message
+                });
             }
         }
-        private async Task ReagendarCitasANuevosHorarios(
-    List<Cita> citas,
-    string horariosModificados)
-        {
-            var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
 
-            var horariosDict = JsonSerializer.Deserialize<Dictionary<string, bool>>(horariosModificados);
-            if (horariosDict == null || !horariosDict.Any(h => h.Value))
-                return;
-
-            // Obtener hora inicial seleccionada (ej: 07:00 AM)
-            var primerHorario = horariosDict.First(h => h.Value).Key;
-            var horaTexto = primerHorario.Split('-')[0].Trim().ToLower();
-
-            // Normalizar a formato 24h
-            bool esPM = horaTexto.Contains("p");
-            horaTexto = horaTexto
-                .Replace("a.m.", "")
-                .Replace("p.m.", "")
-                .Trim();
-
-            var partes = horaTexto.Split(':');
-            int hora = int.Parse(partes[0]);
-            int minutos = int.Parse(partes[1]);
-
-            if (esPM && hora < 12) hora += 12;
-            if (!esPM && hora == 12) hora = 0;
-
-            var horaInicioNueva = new TimeSpan(hora, minutos, 0);
-
-
-            foreach (var cita in citas)
-            {
-                var fechaLocalOriginal = TimeZoneInfo.ConvertTimeFromUtc(
-                    DateTime.SpecifyKind(cita.Fecha, DateTimeKind.Utc),
-                    zonaColombia);
-
-                // 🔥 mantener minutos exactos de la cita
-                var nuevaFechaLocal = fechaLocalOriginal.Date
-                    .Add(horaInicioNueva)
-                    .AddMinutes(fechaLocalOriginal.Minute);
-
-                cita.Fecha = TimeZoneInfo.ConvertTimeToUtc(nuevaFechaLocal, zonaColombia);
-                _context.Citas.Update(cita);
-            }
-
-            await _context.SaveChangesAsync();
-        }
 
         // PUT: api/disponibilidad-excepcional/{id}
         [HttpPut("{id}")]

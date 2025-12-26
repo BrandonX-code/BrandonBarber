@@ -337,5 +337,6 @@ namespace Barber.Maui.BrandonBarber.Services
             }
             return franjas.OrderBy(f => f.HoraInicio).ToList();
         }
+
     }
 }

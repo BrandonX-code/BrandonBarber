@@ -20,6 +20,7 @@
             <converters:PuedeEliminarCitaConverter x:Key="PuedeEliminarCitaConverter" />
             <converters:PuedeEditarCitaConverter x:Key="PuedeEditarCitaConverter" />
             <converters:StringNotEmptyConverter x:Key="StringNotEmptyConverter"/>
+            <converters:EstadoReagendarPendienteConverter x:Key="EstadoReagendarPendienteConverter"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

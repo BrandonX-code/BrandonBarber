@@ -1,4 +1,5 @@
 ﻿using Barber.Maui.BrandonBarber.Controls;
+using System.Text.Json;
 
 namespace Barber.Maui.BrandonBarber
 {
@@ -347,35 +348,77 @@ namespace Barber.Maui.BrandonBarber
             var disponibilidadService = App.Current!.Handler.MauiContext!.Services
                 .GetRequiredService<DisponibilidadService>();
 
-            var disponibilidad = await disponibilidadService.GetDisponibilidad(
-                FechaPicker.Date, _barberoSeleccionado.Cedula);
+            // ✅ NUEVO: Verificar si hay excepciones para esta fecha
+            var excepcion = await VerificarExcepcionAsync(_barberoSeleccionado.Cedula, FechaPicker.Date);
 
-            if (disponibilidad == null || !disponibilidad.HorariosDict.Any(h => h.Value))
+            if (excepcion != null && excepcion.DiaCompleto)
             {
-                await AppUtils.MostrarSnackbar("El barbero no tiene disponibilidad para esta fecha",
+                await AppUtils.MostrarSnackbar(
+                    $"El barbero no está disponible este día.\n{(string.IsNullOrEmpty(excepcion.Motivo) ? "" : $"Motivo: {excepcion.Motivo}")}",
                     Colors.Orange, Colors.White);
                 LimpiarSeleccionFranja();
                 FranjasCollectionView.ItemsSource = null;
-                franjasBorder.IsVisible = false;
+                FranjasVaciasLabel.IsVisible = true;
+                FranjasVaciasLabel.Text = "El barbero no está disponible este día";
+                franjasBorder.IsVisible = true;
                 return;
             }
 
-            // Generar franjas de 40 minutos
-            _todasLasFranjas = disponibilidadService.GenerarFranjasHorarias(disponibilidad.HorariosDict);
+            // ✅ NUEVO: Determinar qué horarios usar (normales o modificados por excepción)
+            Dictionary<string, bool> horariosFinales;
+
+            if (excepcion != null && !string.IsNullOrEmpty(excepcion.HorariosModificados))
+            {
+                // Usar horarios modificados por la excepción
+                horariosFinales = JsonSerializer.Deserialize<Dictionary<string, bool>>(excepcion.HorariosModificados)
+                                  ?? new Dictionary<string, bool>();
+
+                if (!horariosFinales.Any(h => h.Value))
+                {
+                    await AppUtils.MostrarSnackbar("El barbero cambió sus horarios y no hay disponibilidad",
+                        Colors.Orange, Colors.White);
+                    LimpiarSeleccionFranja();
+                    FranjasCollectionView.ItemsSource = null;
+                    FranjasVaciasLabel.IsVisible = true;
+                    FranjasVaciasLabel.Text = "Horarios modificados - sin disponibilidad";
+                    franjasBorder.IsVisible = true;
+                    return;
+                }
+            }
+            else
+            {
+                // Usar disponibilidad normal
+                var disponibilidad = await disponibilidadService.GetDisponibilidad(
+                    FechaPicker.Date, _barberoSeleccionado.Cedula);
+
+                if (disponibilidad == null || !disponibilidad.HorariosDict.Any(h => h.Value))
+                {
+                    await AppUtils.MostrarSnackbar("El barbero no tiene disponibilidad para esta fecha",
+                        Colors.Orange, Colors.White);
+                    LimpiarSeleccionFranja();
+                    FranjasCollectionView.ItemsSource = null;
+                    FranjasVaciasLabel.IsVisible = true;
+                    franjasBorder.IsVisible = true;
+                    return;
+                }
+
+                horariosFinales = disponibilidad.HorariosDict;
+            }
+
+            // Generar franjas de 40 minutos usando los horarios finales
+            _todasLasFranjas = disponibilidadService.GenerarFranjasHorarias(horariosFinales);
 
             // Obtener citas ya agendadas
             var citasDelDia = await _reservationServices.GetReservations(FechaPicker.Date,
                 AuthService.CurrentUser!.IdBarberia ?? 0);
-
             var citasBarbero = citasDelDia.Where(c => c.BarberoId == _barberoSeleccionado.Cedula).ToList();
 
-            // ✅ NUEVA VALIDACIÓN: Marcar franjas pasadas como no disponibles
+            // ✅ Marcar franjas pasadas como no disponibles
             var ahora = DateTime.Now;
             var esFechaHoy = FechaPicker.Date.Date == DateTime.Today;
 
             foreach (var franja in _todasLasFranjas)
             {
-                // Si es hoy y la hora ya pasó, marcar como no disponible
                 if (esFechaHoy)
                 {
                     var horaFranja = DateTime.Today.Add(franja.HoraInicio);
@@ -392,7 +435,6 @@ namespace Barber.Maui.BrandonBarber
                 var horaCita = cita.Fecha.TimeOfDay;
                 var franjaOcupada = _todasLasFranjas.FirstOrDefault(f =>
                     horaCita >= f.HoraInicio && horaCita < f.HoraFin);
-
                 if (franjaOcupada != null)
                     franjaOcupada.EstaDisponible = false;
             }
@@ -401,7 +443,7 @@ namespace Barber.Maui.BrandonBarber
                 .Where(f => f.EstaDisponible)
                 .ToList();
 
-            // ✅ MOSTRAR MENSAJE SI NO HAY FRANJAS DISPONIBLES
+            // ✅ Mostrar mensaje si no hay franjas disponibles
             if (franjasDisponibles.Count == 0)
             {
                 FranjasCollectionView.ItemsSource = null;
@@ -414,6 +456,31 @@ namespace Barber.Maui.BrandonBarber
             FranjasVaciasLabel.IsVisible = false;
             FranjasCollectionView.ItemsSource = franjasDisponibles;
             franjasBorder.IsVisible = true;
+        }
+        // ✅ VERSIÓN SIN NECESIDAD DE _httpClient EN LA CLASE
+        private async Task<DisponibilidadExcepcionalModel?> VerificarExcepcionAsync(long barberoId, DateTime fecha)
+        {
+            try
+            {
+                var httpClient = App.Current!.Handler.MauiContext!.Services.GetService<HttpClient>();
+                if (httpClient == null)
+                    return null;
+
+                var response = await httpClient.GetAsync(
+                    $"api/disponibilidad-excepcional/barbero/{barberoId}/fecha/{fecha:yyyy-MM-dd}");
+
+                if (!response.IsSuccessStatusCode)
+                    return null;
+
+                var json = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<DisponibilidadExcepcionalModel>(json,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error verificando excepción: {ex.Message}");
+                return null;
+            }
         }
 
         private void OnFranjaSeleccionada(object sender, SelectionChangedEventArgs e)
