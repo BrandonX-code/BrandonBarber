@@ -68,7 +68,15 @@ namespace Barber.Maui.BrandonBarber.Pages
 
             DescripcionLabel.FormattedText = formatted;
         }
+        protected override async void OnAppearing()
+        {
+            base.OnAppearing();
+            LoadBarberoData();
+            ContarYMostrarVisita();
+            LoadCalendario();
 
+            _ = CargarPromedioCalificacion();
+        }
 
         private async void LoadCalendario()
         {

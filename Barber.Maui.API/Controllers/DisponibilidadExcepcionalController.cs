@@ -3,6 +3,7 @@ using Barber.Maui.API.Models;
 using Barber.Maui.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using System.Text.Json;
 
 namespace Barber.Maui.API.Controllers
@@ -50,8 +51,7 @@ namespace Barber.Maui.API.Controllers
 
         // POST: api/disponibilidad-excepcional
         [HttpPost]
-        public async Task<ActionResult<DisponibilidadExcepcional>> CrearExcepcion(
-            [FromBody] DisponibilidadExcepcional excepcion)
+        public async Task<ActionResult<DisponibilidadExcepcional>> CrearExcepcion([FromBody] DisponibilidadExcepcional excepcion)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace Barber.Maui.API.Controllers
 
                     await _context.SaveChangesAsync();
                 }
-
+                await SincronizarConDisponibilidadNormal(excepcion);
                 // 🔔 Notificar a clientes afectados
                 if (citasAfectadas.Any())
                 {
@@ -172,6 +172,7 @@ namespace Barber.Maui.API.Controllers
                 return NotFound();
 
             _context.Set<DisponibilidadExcepcional>().Remove(excepcion);
+            await RestaurarDisponibilidadNormal(excepcion);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -269,10 +270,21 @@ namespace Barber.Maui.API.Controllers
                     DateTime.SpecifyKind(cita.Fecha, DateTimeKind.Utc),
                     zonaColombia);
 
-                string mensaje = excepcion.DiaCompleto
-                    ? $"Lo sentimos, {barbero?.Nombre ?? "el barbero"} no estará disponible el {fechaLocal:dd/MM/yyyy}. Tu cita de las {citaFechaLocal:hh:mm tt} debe ser reagendada."
-                    : $"El horario de {barbero?.Nombre ?? "el barbero"} cambió el {fechaLocal:dd/MM/yyyy}. Tu cita de las {citaFechaLocal:hh:mm tt} puede verse afectada. Por favor, contacta para reagendar.";
-
+                string mensaje;
+                if (excepcion.DiaCompleto)
+                {
+                    mensaje = $"⚠️ AVISO IMPORTANTE" +
+                              $"{barbero?.Nombre ?? "El barbero"} no estará disponible el {fechaLocal:dd/MM/yyyy}." +
+                              $"Tu cita programada para las {citaFechaLocal:hh:mm tt} ha sido cancelada." +
+                              $"Por favor, agenda una nueva cita en otro día disponible.";
+                }
+                else
+                {
+                    mensaje = $"📅 CAMBIO DE HORARIO" +
+                              $"{barbero?.Nombre ?? "El barbero"} modificó su disponibilidad el {fechaLocal:dd/MM/yyyy}." +
+                              $"Tu cita de las {citaFechaLocal:hh:mm tt} puede verse afectada." +
+                              $"Por favor, verifica los nuevos horarios disponibles y reagenda si es necesario.";
+                }
                 if (!string.IsNullOrEmpty(excepcion.Motivo))
                 {
                     mensaje += $" Motivo: {excepcion.Motivo}";
@@ -280,7 +292,7 @@ namespace Barber.Maui.API.Controllers
 
                 await _notificationService.EnviarNotificacionAsync(
                     cita.Cedula,
-                    "⚠️ Cambio en tu cita",
+                    excepcion.DiaCompleto ? "⚠️ Cita Cancelada" : "📅 Cambio de Horario", // ✅ TÍTULO MEJORADO
                     mensaje,
                     new Dictionary<string, string>
                     {
@@ -291,7 +303,89 @@ namespace Barber.Maui.API.Controllers
                 );
             }
         }
+        private async Task SincronizarConDisponibilidadNormal(DisponibilidadExcepcional excepcion)
+        {
+            try
+            {
+                // Buscar disponibilidad existente para ese día
+                var disponibilidad = await _context.Disponibilidad
+                    .FirstOrDefaultAsync(d =>
+                        d.BarberoId == excepcion.BarberoId &&
+                        d.Fecha.Date == excepcion.Fecha.Date);
 
+                if (excepcion.DiaCompleto)
+                {
+                    // Si es día completo, eliminar la disponibilidad
+                    if (disponibilidad != null)
+                    {
+                        _context.Disponibilidad.Remove(disponibilidad);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                else if (!string.IsNullOrEmpty(excepcion.HorariosModificados))
+                {
+                    // Si son horarios modificados, actualizar o crear disponibilidad
+                    if (disponibilidad == null)
+                    {
+                        disponibilidad = new Disponibilidad
+                        {
+                            Fecha = excepcion.Fecha.Date,
+                            BarberoId = excepcion.BarberoId,
+                            Horarios = excepcion.HorariosModificados
+                        };
+                        _context.Disponibilidad.Add(disponibilidad);
+                    }
+                    else
+                    {
+                        disponibilidad.Horarios = excepcion.HorariosModificados;
+                        _context.Disponibilidad.Update(disponibilidad);
+                    }
+
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error sincronizando disponibilidad: {ex.Message}");
+                // No lanzar excepción para no romper el flujo principal
+            }
+        }
+        private async Task RestaurarDisponibilidadNormal(DisponibilidadExcepcional excepcion)
+        {
+            try
+            {
+                // Obtener el día de la semana
+                var nombreDia = excepcion.Fecha.ToString("dddd",
+                    new System.Globalization.CultureInfo("es-ES"));
+
+                // Buscar si hay disponibilidad "estándar" para ese día de la semana
+                var primerDiaDelMes = new DateTime(excepcion.Fecha.Year, excepcion.Fecha.Month, 1);
+                var disponibilidadReferencia = await _context.Disponibilidad
+                    .Where(d => d.BarberoId == excepcion.BarberoId &&
+                               d.Fecha.Month == excepcion.Fecha.Month &&
+                               d.Fecha.Year == excepcion.Fecha.Year)
+                    .OrderBy(d => d.Fecha)
+                    .FirstOrDefaultAsync(d => d.Fecha.DayOfWeek == excepcion.Fecha.DayOfWeek);
+
+                if (disponibilidadReferencia != null)
+                {
+                    // Restaurar con los horarios del mismo día de la semana
+                    var disponibilidadRestaurada = new Disponibilidad
+                    {
+                        Fecha = excepcion.Fecha.Date,
+                        BarberoId = excepcion.BarberoId,
+                        Horarios = disponibilidadReferencia.Horarios
+                    };
+
+                    _context.Disponibilidad.Add(disponibilidadRestaurada);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error restaurando disponibilidad: {ex.Message}");
+            }
+        }
         #endregion
     }
 }
