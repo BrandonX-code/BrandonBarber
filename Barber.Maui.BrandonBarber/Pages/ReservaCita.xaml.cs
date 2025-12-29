@@ -241,36 +241,57 @@ namespace Barber.Maui.BrandonBarber
 
             int? idBarberia = AuthService.CurrentUser.IdBarberia;
             _barberos = await _authService.ObtenerBarberos(idBarberia);
+
             BarberoSelectButton.IsVisible = _barberos.Count > 1;
 
-            if (_barberos.Count > 0)
+            if (_barberos.Count == 0)
             {
-                // Selecciona el primero por defecto
-                _barberoSeleccionadoIndex = 0;
-                _barberoSeleccionado = _barberos[0];
-                BarberoSelectedLabel.Text = _barberoSeleccionado.Nombre ?? "Seleccionar Barbero";
-                BarberoTelefonoLabel.Text = _barberoSeleccionado.Telefono ?? string.Empty;
-                if (!string.IsNullOrWhiteSpace(_barberoSeleccionado.ImagenPath))
-                {
-                    BarberoFotoImage.Source = _barberoSeleccionado.ImagenPath.StartsWith("http")
-                        ? ImageSource.FromUri(new Uri(_barberoSeleccionado.ImagenPath))
-                        : ImageSource.FromFile(_barberoSeleccionado.ImagenPath);
-                }
-                else
-                {
-                    BarberoFotoImage.Source = "usericons.png";
-                }
-            }
-            else
-            {
+                _barberoSeleccionado = null;
+                _barberoSeleccionadoIndex = -1;
+
                 BarberoSelectedLabel.Text = "Seleccionar Barbero";
                 BarberoTelefonoLabel.Text = string.Empty;
                 BarberoFotoImage.Source = "usericons.png";
-                _barberoSeleccionado = null;
+
+                LimpiarSeleccionFranja();
+                return;
             }
+
+            // ✅ SOLO seleccionar el primero si aún no hay selección previa
+            if (_barberoSeleccionado == null || _barberoSeleccionadoIndex < 0)
+            {
+                _barberoSeleccionadoIndex = 0;
+                _barberoSeleccionado = _barberos[0];
+            }
+            else
+            {
+                // 🔒 Mantener el barbero previamente seleccionado
+                var idx = _barberos.FindIndex(b => b.Cedula == _barberoSeleccionado.Cedula);
+                if (idx >= 0)
+                    _barberoSeleccionadoIndex = idx;
+                else
+                {
+                    _barberoSeleccionadoIndex = 0;
+                    _barberoSeleccionado = _barberos[0];
+                }
+            }
+
+            var barbero = _barberos[_barberoSeleccionadoIndex];
+
+            BarberoSelectedLabel.Text = barbero.Nombre ?? "Seleccionar Barbero";
+            BarberoTelefonoLabel.Text = barbero.Telefono ?? string.Empty;
+
+            BarberoFotoImage.Source =
+                !string.IsNullOrWhiteSpace(barbero.ImagenPath)
+                    ? (barbero.ImagenPath.StartsWith("http")
+                        ? ImageSource.FromUri(new Uri(barbero.ImagenPath))
+                        : ImageSource.FromFile(barbero.ImagenPath))
+                    : "usericons.png";
+
             LimpiarSeleccionFranja();
             await CargarFranjasDisponibles();
         }
+
 
         private async void OnBarberoPickerTapped(object sender, EventArgs e)
         {

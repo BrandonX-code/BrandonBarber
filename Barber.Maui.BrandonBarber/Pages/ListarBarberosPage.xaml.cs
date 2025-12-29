@@ -193,7 +193,6 @@ namespace Barber.Maui.BrandonBarber.Pages
                     var usuarios = System.Text.Json.JsonSerializer.Deserialize<List<UsuarioModels>>(jsonContent,
                         new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                    var admin = AuthService.CurrentUser;
                     // Si no hay barbería seleccionada, no mostrar barberos
                     if (_barberiaSeleccionadaId == null)
                     {
@@ -204,7 +203,13 @@ namespace Barber.Maui.BrandonBarber.Pages
                         return;
                     }
 
-                    var barberos = usuarios?.Where(u => u.Rol!.ToLower() == "barbero" && u.IdBarberia == _barberiaSeleccionadaId).ToList() ?? [];
+                    // ✅ CORRECCIÓN AQUÍ
+                    var barberos = usuarios?.Where(u =>
+                        !string.IsNullOrEmpty(u.Rol) &&
+                        u.Rol.Equals("barbero", StringComparison.OrdinalIgnoreCase) &&
+                        u.IdBarberia == _barberiaSeleccionadaId
+                    ).ToList() ?? [];
+
                     _todosLosBarberos.Clear();
                     _barberosFiltrados.Clear();
 
