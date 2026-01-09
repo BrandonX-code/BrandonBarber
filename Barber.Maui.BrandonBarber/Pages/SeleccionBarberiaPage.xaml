@@ -37,7 +37,7 @@
                                         <Label Text="{Binding Nombre}" Style="{StaticResource TitleLabelStyle}" />
                                         <Label Text="{Binding Direccion}" Style="{StaticResource InfoLabelStyle}" MaxLines="1" />
                                         <Label Text="{Binding Telefono}" Style="{StaticResource ContactLabelStyle}" />
-                                        <Label Text="{Binding Email}" Style="{StaticResource ContactLabelStyle}" MaxLines="1" />
+                                        <Label Text="{Binding Email}" TextColor="White" MaxLines="1" />
                                     </StackLayout>
                                 </Grid>
                             </Border>

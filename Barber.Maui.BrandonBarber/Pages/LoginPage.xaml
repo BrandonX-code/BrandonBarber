@@ -9,7 +9,7 @@
     <Grid>
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never" Padding="30">
             <VerticalStackLayout Spacing="10" VerticalOptions="Center">
-                <Image Source="logobarbergoblanco.png" WidthRequest="350" HeightRequest="350" HorizontalOptions="Center" />
+                <Image Source="logobarbergoblanco.png" WidthRequest="250" HeightRequest="250" HorizontalOptions="Center" />
 
                 <Label Text="Ingresa tus credenciales" FontSize="14" TextColor="White" HorizontalOptions="Center" />
 

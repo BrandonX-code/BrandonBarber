@@ -15,9 +15,9 @@
                 </Border>
                 <Label x:Name="ContadorLabel" Text="0/500" FontSize="12" TextColor="#999999" HorizontalOptions="End"/>
             </VerticalStackLayout>
-            <HorizontalStackLayout Spacing="10" Padding="20,10,20,20">
+            <HorizontalStackLayout Spacing="10" Padding="20,10,20,20" HorizontalOptions="Center">
                 <Button x:Name="CancelarButton" Text="Cancelar" BackgroundColor="#717d7e" TextColor="White" CornerRadius="10" HorizontalOptions="Fill" Clicked="OnCancelarClicked"/>
-                <Button x:Name="GuardarButton" Text="Guardar" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" HorizontalOptions="Fill" Clicked="OnGuardarClicked"/>
+                <Button x:Name="GuardarButton" Text="Guardar" BackgroundColor="#FF6F91" TextColor="Black" CornerRadius="10" HorizontalOptions="Fill" Clicked="OnGuardarClicked"/>
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </Border>
