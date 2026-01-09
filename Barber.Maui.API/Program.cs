@@ -22,7 +22,13 @@ builder.WebHost.ConfigureKestrel(options =>
     }
 });
 
+// ✅ SERVICIOS DE NOTIFICACIÓN Y EMAIL
 builder.Services.AddScoped<INotificationService, FirebaseNotificationService>();
+builder.Services.AddSingleton<IEmailService, SendGridEmailService>();
+
+// ✅ REGISTRAR SERVICIO DE RECORDATORIOS (BACKGROUND SERVICE)
+builder.Services.AddHostedService<ReminderService>();
+
 builder.Services.AddHttpClient();
 builder.Services.AddRazorPages();
 builder.Services.AddAntiforgery(options =>
@@ -38,7 +44,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     ));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddSingleton<IEmailService, SendGridEmailService>();
 
 var app = builder.Build();
 
@@ -71,5 +76,12 @@ app.UseAuthorization();
 app.UseAntiforgery();
 app.MapRazorPages();
 app.MapControllers();
+
+// ✅ LOG DE SERVICIOS REGISTRADOS
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation("✅ Aplicación iniciada con:");
+logger.LogInformation("  - Firebase Notification Service");
+logger.LogInformation("  - SendGrid Email Service");
+logger.LogInformation("  - Reminder Service (Background)");
 
 app.Run();

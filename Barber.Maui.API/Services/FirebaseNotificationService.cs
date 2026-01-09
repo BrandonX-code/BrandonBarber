@@ -12,10 +12,12 @@ namespace Barber.Maui.API.Services
         private readonly AppDbContext _context;
         private static readonly object _lock = new object();
         private static bool _initialized = false;
+        private readonly ILogger<FirebaseNotificationService> _logger;
 
-        public FirebaseNotificationService(AppDbContext context, IConfiguration configuration)
+        public FirebaseNotificationService(AppDbContext context, IConfiguration configuration, ILogger<FirebaseNotificationService> logger)
         {
             _context = context;
+            _logger = logger;
 
             lock (_lock)
             {
@@ -49,6 +51,7 @@ namespace Barber.Maui.API.Services
                             });
 
                             Console.WriteLine("✅ Firebase inicializado correctamente");
+                            _logger.LogInformation("✅ Firebase Admin SDK inicializado");
                         }
 
                         _initialized = true;
@@ -56,6 +59,7 @@ namespace Barber.Maui.API.Services
                     catch (Exception ex)
                     {
                         Console.WriteLine($"❌ Error inicializando Firebase: {ex.Message}");
+                        _logger.LogError($"❌ Error inicializando Firebase: {ex.Message}");
                         throw;
                     }
                 }
@@ -74,7 +78,7 @@ namespace Barber.Maui.API.Services
 
                 if (!tokens.Any())
                 {
-                    Console.WriteLine($"⚠️ No hay tokens para usuario {usuarioCedula}");
+                    _logger.LogWarning($"⚠️ No hay tokens para usuario {usuarioCedula}");
                     return false;
                 }
 
@@ -100,7 +104,7 @@ namespace Barber.Maui.API.Services
                         Priority = Priority.High, // ✅ MÁXIMA PRIORIDAD
                         Notification = new AndroidNotification
                         {
-                            Color = "#0E2A36",
+                            Color = "#FF6F91", // ✅ Color de la app
                             Sound = "default",
                             ChannelId = "barber_notifications",
                             Icon = "barber_notification",
@@ -129,7 +133,7 @@ namespace Barber.Maui.API.Services
                             Sound = "default",
                             ContentAvailable = true,
                             MutableContent = true,
-                            Badge = 1, // ✅ CORREGIR A INT
+                            Badge = 1,
                         }
                     },
                     // ✅ CONFIGURACIÓN WEBPUSH
@@ -143,19 +147,19 @@ namespace Barber.Maui.API.Services
                     }
                 };
 
-                Console.WriteLine($"📤 Enviando notificación a {tokens.Count} dispositivo(s)...");
+                _logger.LogInformation($"📤 Enviando notificación a {tokens.Count} dispositivo(s) para usuario {usuarioCedula}");
                 var response = await FirebaseMessaging.DefaultInstance.SendEachForMulticastAsync(message);
-                Console.WriteLine($"✅ Notificación enviada: {response.SuccessCount}/{tokens.Count} exitosas");
+                _logger.LogInformation($"✅ Notificación enviada: {response.SuccessCount}/{tokens.Count} exitosas");
 
                 // ✅ LOG DE ERRORES
                 if (response.FailureCount > 0)
                 {
-                    Console.WriteLine($"⚠️ {response.FailureCount} notificaciones fallaron");
+                    _logger.LogWarning($"⚠️ {response.FailureCount} notificaciones fallaron");
                     for (int i = 0; i < response.Responses.Count; i++)
                     {
                         if (!response.Responses[i].IsSuccess)
                         {
-                            Console.WriteLine($"  - Token {i}: {response.Responses[i].Exception?.Message}");
+                            _logger.LogWarning($"  - Token {i}: {response.Responses[i].Exception?.Message}");
                         }
                     }
                 }
@@ -164,21 +168,27 @@ namespace Barber.Maui.API.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Error enviando notificación: {ex.Message}");
+                _logger.LogError($"❌ Error enviando notificación: {ex.Message}\n{ex.StackTrace}");
                 return false;
             }
         }
+
         public async Task<bool> RegistrarTokenAsync(long usuarioCedula, string token)
         {
             try
             {
+                _logger.LogInformation($"📝 Registrando token para usuario {usuarioCedula}");
+
                 // 1. Eliminar cualquier token igual asignado a otro usuario
                 var tokensDuplicados = await _context.FcmToken
                     .Where(t => t.Token == token && t.UsuarioCedula != usuarioCedula)
                     .ToListAsync();
 
                 if (tokensDuplicados.Any())
+                {
+                    _logger.LogInformation($"🗑️ Eliminando {tokensDuplicados.Count} tokens duplicados");
                     _context.FcmToken.RemoveRange(tokensDuplicados);
+                }
 
                 // 2. Eliminar TODOS los tokens anteriores del usuario
                 var tokensUsuario = await _context.FcmToken
@@ -186,7 +196,10 @@ namespace Barber.Maui.API.Services
                     .ToListAsync();
 
                 if (tokensUsuario.Any())
+                {
+                    _logger.LogInformation($"🗑️ Eliminando {tokensUsuario.Count} tokens anteriores del usuario");
                     _context.FcmToken.RemoveRange(tokensUsuario);
+                }
 
                 // 3. Guardar SOLO el token nuevo
                 _context.FcmToken.Add(new FcmToken
@@ -197,15 +210,14 @@ namespace Barber.Maui.API.Services
                 });
 
                 await _context.SaveChangesAsync();
+                _logger.LogInformation($"✅ Token registrado exitosamente para usuario {usuarioCedula}");
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Error registrando token: {ex.Message}");
+                _logger.LogError($"❌ Error registrando token: {ex.Message}");
                 return false;
             }
         }
-
-
     }
 }
