@@ -22,64 +22,45 @@ if (_initialized) return;
 
             try
  {
-         Console.WriteLine("🔥 === INICIANDO FIREBASE CLOUD MESSAGING ===");
+       Console.WriteLine("🔥 === INICIANDO FIREBASE CLOUD MESSAGING ===");
 
-        await CrossFirebaseCloudMessaging.Current.CheckIfValidAsync();
-             Console.WriteLine("🔥 CheckIfValid completado");
+   await CrossFirebaseCloudMessaging.Current.CheckIfValidAsync();
+        Console.WriteLine("🔥 CheckIfValid completado");
 
        var token = await CrossFirebaseCloudMessaging.Current.GetTokenAsync();
        Console.WriteLine($"🔥 FCM Token obtenido: {token.Substring(0, Math.Min(50, token.Length))}...");
 
-          // ✅ REGISTRAR TOKEN INMEDIATAMENTE Y ESPERAR A QUE TERMINE
-                if (AuthService.CurrentUser != null)
-            {
-   Console.WriteLine($"🔥 Registrando token para usuario: {AuthService.CurrentUser.Cedula}");
-          var registrado = await RegistrarTokenEnServidor(token);
-           if (registrado)
-    {
-          Console.WriteLine($"✅ Token registrado exitosamente en el servidor");
-        }
-         else
-    {
-         Console.WriteLine($"⚠️ Fallo al registrar token en el servidor");
-             }
-            }
-      else
-            {
-Console.WriteLine("⚠️ Usuario no autenticado, se registrará token después del login");
-    }
-
-          // ✅ SUSCRIBIRSE A NOTIFICACIONES
-           CrossFirebaseCloudMessaging.Current.NotificationReceived += OnNotificationReceived;
-            CrossFirebaseCloudMessaging.Current.TokenChanged += OnTokenChanged;
+          // ✅ NO REGISTRAR AQUÍ - SOLO EN LOGIN/CHECKAUTH
+      CrossFirebaseCloudMessaging.Current.NotificationReceived += OnNotificationReceived;
+        CrossFirebaseCloudMessaging.Current.TokenChanged += OnTokenChanged;
      Console.WriteLine("✅ Listeners de notificaciones registrados");
 
          // ✅ MANEJAR CLIC EN NOTIFICACIONES
      LocalNotificationCenter.Current.NotificationActionTapped += async (eventArgs) =>
-       {
-         Console.WriteLine($"📲 Notificación tocada: {eventArgs.Request.NotificationId}");
+ {
+   Console.WriteLine($"📲 Notificación tocada: {eventArgs.Request.NotificationId}");
 
      try
     {
-        var tipo = "cita";
+     var tipo = "cita";
    var usuario = AuthService.CurrentUser;
 
  if (usuario != null)
-      {
+   {
        Console.WriteLine($"📲 Navegando por notificación (Rol: {usuario.Rol})");
               await NavigarSegunNotificacion(tipo);
-             }
+       }
     }
       catch (Exception ex)
    {
        Console.WriteLine($"❌ Error al procesar clic: {ex.Message}");
-       }
-                };
+    }
+            };
 
  _initialized = true;
          Console.WriteLine("✅ === FIREBASE CLOUD MESSAGING INICIALIZADO CORRECTAMENTE ===\n");
   }
-            catch (Exception ex)
+ catch (Exception ex)
      {
    Console.WriteLine($"❌ === ERROR INICIALIZANDO NOTIFICACIONES ===");
          Console.WriteLine($"❌ Mensaje: {ex.Message}");

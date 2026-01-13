@@ -64,7 +64,8 @@ namespace Barber.Maui.BrandonBarber.Services
 
                     Console.WriteLine($"🔹 Usuario logueado: {CurrentUser.Nombre} - Rol: {CurrentUser.Rol}");
 
-                    // 🔥 AGREGAR ESTO: Registrar token FCM después del login
+                    // 🔥 REGISTRAR TOKEN DESPUÉS DEL LOGIN
+                    Console.WriteLine($"🔥 Login completado, registrando token FCM...");
                     await RegistrarTokenFCM();
                 }
 
@@ -370,58 +371,77 @@ namespace Barber.Maui.BrandonBarber.Services
         }
         private async Task RegistrarTokenFCM()
         {
-            try
+            const int maxIntentos = 3;
+            for (int intento = 1; intento <= maxIntentos; intento++)
             {
-                Console.WriteLine($"🔥 [RegistrarTokenFCM] Iniciando...");
-     
-                // ✅ VALIDAR QUE FIREBASE ESTÉ LISTO
-                await Task.Delay(500);
-                Console.WriteLine($"🔥 [RegistrarTokenFCM] Firebase esperado 500ms");
-
-                // Obtener el token FCM actual
-                var fcmToken = await CrossFirebaseCloudMessaging.Current.GetTokenAsync();
-                Console.WriteLine($"🔥 [RegistrarTokenFCM] Token obtenido: {fcmToken?.Substring(0, Math.Min(30, fcmToken?.Length ?? 0)) ?? "NULL"}");
-
-                if (string.IsNullOrEmpty(fcmToken))
+                try
                 {
-                    Console.WriteLine("❌ [RegistrarTokenFCM] Token vacío o nulo");
-                    return;
+                    Console.WriteLine($"\n🔥 [RegistrarTokenFCM] Intento {intento}/{maxIntentos}");
+
+                    if (CurrentUser == null)
+                    {
+                        Console.WriteLine("❌ [RegistrarTokenFCM] CurrentUser es null");
+                        return;
+                    }
+
+                    // Esperar a que Firebase esté listo
+                    await Task.Delay(1000 * intento); // 1s, 2s, 3s
+
+                    Console.WriteLine($"🔥 [RegistrarTokenFCM] Obteniendo token FCM...");
+                    var fcmToken = await CrossFirebaseCloudMessaging.Current.GetTokenAsync();
+
+                    Console.WriteLine($"🔥 [RegistrarTokenFCM] Token obtenido: {fcmToken?.Substring(0, Math.Min(30, fcmToken?.Length ?? 0)) ?? "NULL"}");
+
+                    if (string.IsNullOrEmpty(fcmToken))
+                    {
+                        Console.WriteLine($"⚠️ [RegistrarTokenFCM] Token vacío en intento {intento}");
+                        if (intento < maxIntentos) continue;
+                        return;
+                    }
+
+                    Console.WriteLine($"✅ [RegistrarTokenFCM] Token válido: {fcmToken.Substring(0, 30)}...");
+
+                    var request = new
+                    {
+                        UsuarioCedula = CurrentUser.Cedula,
+                        FcmToken = fcmToken
+                    };
+
+                    var json = JsonSerializer.Serialize(request);
+                    Console.WriteLine($"🔥 [RegistrarTokenFCM] Enviando: Usuario={request.UsuarioCedula}, Token={fcmToken.Substring(0, 20)}...");
+
+                    var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    Console.WriteLine($"🔥 [RegistrarTokenFCM] POST a api/notifications/register-token");
+                    var response = await _BaseClient.PostAsync("api/notifications/register-token", content);
+
+                    Console.WriteLine($"🔥 [RegistrarTokenFCM] Response: {response.StatusCode}");
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine($"✅ [RegistrarTokenFCM] ¡ÉXITO! Token registrado en intento {intento}");
+                        return; // ÉXITO - SALIR
+                    }
+
+                    var error = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine($"❌ [RegistrarTokenFCM] Error {response.StatusCode}: {error}");
+
+                    if (intento < maxIntentos)
+                    {
+                        Console.WriteLine($"🔄 [RegistrarTokenFCM] Reintentando...");
+                    }
                 }
-
-                Console.WriteLine($"✅ [RegistrarTokenFCM] Token válido, registrando...");
-
-                var request = new
+                catch (Exception ex)
                 {
-                    UsuarioCedula = CurrentUser!.Cedula,
-                    FcmToken = fcmToken
-                };
+                    Console.WriteLine($"❌ [RegistrarTokenFCM] EXCEPCIÓN intento {intento}: {ex.GetType().Name}");
+                    Console.WriteLine($"❌ [RegistrarTokenFCM] Mensaje: {ex.Message}");
 
-                var json = JsonSerializer.Serialize(request);
-                Console.WriteLine($"🔥 [RegistrarTokenFCM] JSON: {json}");
-                
-                var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                Console.WriteLine($"🔥 [RegistrarTokenFCM] Enviando POST a api/notifications/register-token");
-                var response = await _BaseClient.PostAsync("api/notifications/register-token", content);
-
-                Console.WriteLine($"🔥 [RegistrarTokenFCM] Response status: {response.StatusCode}");
-     
-                if (response.IsSuccessStatusCode)
-                {
-                    Console.WriteLine("✅ [RegistrarTokenFCM] Token FCM registrado exitosamente");
+                    if (intento == maxIntentos)
+                    {
+                        Console.WriteLine($"❌ [RegistrarTokenFCM] FALLÓ después de {maxIntentos} intentos");
+                    }
                 }
-                else
-                {
-                   var error = await response.Content.ReadAsStringAsync();
-Console.WriteLine($"❌ [RegistrarTokenFCM] Error: {response.StatusCode} - {error}");
-       }
- }
-            catch (Exception ex)
-      {
-                Console.WriteLine($"❌ [RegistrarTokenFCM] EXCEPCIÓN: {ex.GetType().Name}");
-   Console.WriteLine($"❌ [RegistrarTokenFCM] Mensaje: {ex.Message}");
-      Console.WriteLine($"❌ [RegistrarTokenFCM] Stack: {ex.StackTrace}");
-  }
+            }
         }
 
         public async Task<bool> EliminarUsuario(long cedula)
