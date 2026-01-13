@@ -320,7 +320,6 @@ public class CitasController : ControllerBase
         }
 
         // 🔥 AGREGAR ESTO: Convertir la fecha a UTC antes de guardar
-        //nuevaCita.Fecha = nuevaCita.Fecha.ToUniversalTime();
         nuevaCita.Fecha = DateTime.SpecifyKind(nuevaCita.Fecha, DateTimeKind.Utc);
 
         bool existeCita = await _context.Citas
@@ -352,31 +351,56 @@ public class CitasController : ControllerBase
             _context.Citas.Add(nuevaCita);
             await _context.SaveChangesAsync();
 
-            // 🔥 MODIFICAR LA NOTIFICACIÓN: Convertir a hora local de Colombia
-            var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
-            var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(nuevaCita.Fecha, zonaColombia);
+            Console.WriteLine($"\n📢 === NUEVA CITA CREADA ===");
+          Console.WriteLine($"📢 Cita ID: {nuevaCita.Id}");
+   Console.WriteLine($"📢 Cliente: {nuevaCita.Nombre} ({nuevaCita.Cedula})");
+ Console.WriteLine($"📢 Barbero: {nuevaCita.BarberoId}");
 
+    // 🔥 NOTIFICACIÓN AL BARBERO
+        var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
+      var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(nuevaCita.Fecha, zonaColombia);
 
-            var data = new Dictionary<string, string>
-        {
-            { "tipo", "nueva_cita" },
-      { "citaId", nuevaCita.Id.ToString() },
-      { "clienteNombre", nuevaCita.Nombre ?? "" }
-        };
+  var data = new Dictionary<string, string>
+    {
+           { "tipo", "nueva_cita" },
+     { "citaId", nuevaCita.Id.ToString() },
+     { "clienteNombre", nuevaCita.Nombre ?? "" }
+      };
 
-            await _notificationService.EnviarNotificacionAsync(
-            nuevaCita.BarberoId,
-         "Nueva Cita Pendiente",
-                $"{nuevaCita.Nombre} ha solicitado una cita para el {fechaLocal:dd/MM/yyyy - hh:mm tt}", // 🔥 FORMATO CORREGIDO
-       data
-         );
+            Console.WriteLine($"📤 Enviando notificación al barbero {nuevaCita.BarberoId}");
+   try
+    {
+  bool enviado = await _notificationService.EnviarNotificacionAsync(
+    nuevaCita.BarberoId,
+   "Nueva Cita Pendiente",
+  $"{nuevaCita.Nombre} ha solicitado una cita para el {fechaLocal:dd/MM/yyyy - hh:mm tt}",
+  data
+    );
 
-            ConvertirCitaAFormatoLocal(nuevaCita);
-            return StatusCode(201, nuevaCita);
-        }
+   if (enviado)
+  {
+      Console.WriteLine($"✅ Notificación al barbero enviada exitosamente");
+   }
+           else
+ {
+         Console.WriteLine($"⚠️ No se pudo enviar notificación al barbero (posiblemente sin tokens registrados)");
+       }
+     }
+   catch (Exception exNotif)
+     {
+ Console.WriteLine($"❌ Error enviando notificación: {exNotif.Message}");
+ }
+
+         Console.WriteLine($"📢 === FIN NUEVA CITA ===\n");
+
+ ConvertirCitaAFormatoLocal(nuevaCita);
+  return StatusCode(201, nuevaCita);
+    }
         catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "Error al guardar la cita.", error = ex.Message });
+     {
+    Console.WriteLine($"❌ ERROR EN CrearCita: {ex.Message}");
+          Console.WriteLine($"❌ Stack: {ex.StackTrace}");
+      return StatusCode(500, new { message = "Error al guardar la cita.", error = ex.Message });
         }
     }
 
@@ -396,83 +420,104 @@ public class CitasController : ControllerBase
     [HttpPut("{id}/estado")]
     public async Task<IActionResult> ActualizarEstado(int id, [FromBody] EstadoRequest req)
     {
-        var cita = await _context.Citas.FirstOrDefaultAsync(c => c.Id == id);
-        if (cita == null) return NotFound();
+       var cita = await _context.Citas.FirstOrDefaultAsync(c => c.Id == id);
+      if (cita == null) return NotFound();
 
-        var barbero = await _context.UsuarioPerfiles
-            .FirstOrDefaultAsync(u => u.Cedula == cita.BarberoId);
+     var barbero = await _context.UsuarioPerfiles
+      .FirstOrDefaultAsync(u => u.Cedula == cita.BarberoId);
 
-        var servicio = await _context.Servicios
-            .FirstOrDefaultAsync(s => s.Id == cita.ServicioId);
+    var servicio = await _context.Servicios
+     .FirstOrDefaultAsync(s => s.Id == cita.ServicioId);
 
         string barberoNombre = barbero?.Nombre ?? "el barbero";
-        string servicioNombre = servicio?.Nombre ?? "tu servicio";
+     string servicioNombre = servicio?.Nombre ?? "tu servicio";
 
         var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
         var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(
             DateTime.SpecifyKind(cita.Fecha, DateTimeKind.Utc),
             zonaColombia);
 
-        var estadoAnterior = cita.Estado;
+       var estadoAnterior = cita.Estado;
 
-        cita.Estado = req.Estado;
+     cita.Estado = req.Estado;
         await _context.SaveChangesAsync();
 
-        // 🔔 NOTIFICACIONES AL CLIENTE
-        if (estadoAnterior == "ReagendarPendiente" && req.Estado == "Confirmada")
-        {
-            await _notificationService.EnviarNotificacionAsync(
-                cita.Cedula,
-                "Reagendamiento aceptado",
-                $"Tu nuevo horario con {barberoNombre} fue aprobado para el {fechaLocal:dd/MM/yyyy - hh:mm tt}",
-                new Dictionary<string, string>
-                {
-                { "tipo", "reagendamiento_aceptado" },
-                { "citaId", cita.Id.ToString() }
-                }
-            );
-        }
-        else if (estadoAnterior == "ReagendarPendiente" && req.Estado == "Cancelada")
-        {
-            await _notificationService.EnviarNotificacionAsync(
-                cita.Cedula,
-                "Reagendamiento rechazado",
-                $"El barbero no pudo aceptar el nuevo horario solicitado.",
-                new Dictionary<string, string>
-                {
-                { "tipo", "reagendamiento_rechazado" },
-                { "citaId", cita.Id.ToString() }
-                }
-            );
-        }
-        else if (req.Estado == "Confirmada" || req.Estado == "Completada")
-        {
-            await _notificationService.EnviarNotificacionAsync(
-                cita.Cedula,
-                "Cita confirmada",
-                $"Tu cita con {barberoNombre} para {servicioNombre} el {fechaLocal:dd/MM/yyyy - hh:mm tt} fue confirmada",
-                new Dictionary<string, string>
-                {
-                { "tipo", "cita_confirmada" }
-                }
-            );
-        }
-        else if (req.Estado == "Cancelada")
-        {
-            await _notificationService.EnviarNotificacionAsync(
-                cita.Cedula,
-                "Cita rechazada",
-                $"Tu cita con {barberoNombre} para {servicioNombre} el {fechaLocal:dd/MM/yyyy - hh:mm tt} fue rechazada",
-                new Dictionary<string, string>
-                {
-                { "tipo", "cita_rechazada" }
-                }
-            );
-        }
+    Console.WriteLine($"\n📢 === CAMBIO DE ESTADO DE CITA ===");
+      Console.WriteLine($"📢 Cita ID: {cita.Id}");
+            Console.WriteLine($"📢 Cliente: {cita.Nombre} ({cita.Cedula})");
+   Console.WriteLine($"📢 Estado anterior: {estadoAnterior}");
+   Console.WriteLine($"📢 Estado nuevo: {req.Estado}");
 
-        return Ok();
+// 🔔 NOTIFICACIONES AL CLIENTE
+   try
+   {
+   if (estadoAnterior == "ReagendarPendiente" && req.Estado == "Confirmada")
+          {
+        Console.WriteLine($"📤 Enviando: Reagendamiento aceptado");
+  await _notificationService.EnviarNotificacionAsync(
+    cita.Cedula,
+ "Reagendamiento aceptado",
+         $"Tu nuevo horario con {barberoNombre} fue aprobado para el {fechaLocal:dd/MM/yyyy - hh:mm tt}",
+   new Dictionary<string, string>
+       {
+      { "tipo", "reagendamiento_aceptado" },
+      { "citaId", cita.Id.ToString() }
+         }
+     );
+          Console.WriteLine($"✅ Notificación enviada");
+     }
+          else if (estadoAnterior == "ReagendarPendiente" && req.Estado == "Cancelada")
+        {
+     Console.WriteLine($"📤 Enviando: Reagendamiento rechazado");
+  await _notificationService.EnviarNotificacionAsync(
+       cita.Cedula,
+     "Reagendamiento rechazado",
+        $"El barbero no pudo aceptar el nuevo horario solicitado.",
+ new Dictionary<string, string>
+{
+            { "tipo", "reagendamiento_rechazado" },
+      { "citaId", cita.Id.ToString() }
+     }
+ );
+          Console.WriteLine($"✅ Notificación enviada");
+        }
+ else if (req.Estado == "Confirmada" || req.Estado == "Completada")
+   {
+        Console.WriteLine($"📤 Enviando: Cita confirmada");
+ await _notificationService.EnviarNotificacionAsync(
+     cita.Cedula,
+    "Cita confirmada",
+    $"Tu cita con {barberoNombre} para {servicioNombre} el {fechaLocal:dd/MM/yyyy - hh:mm tt} fue confirmada",
+     new Dictionary<string, string>
+  {
+   { "tipo", "cita_confirmada" }
     }
+             );
+      Console.WriteLine($"✅ Notificación enviada");
+    }
+    else if (req.Estado == "Cancelada")
+     {
+    Console.WriteLine($"📤 Enviando: Cita rechazada");
+ await _notificationService.EnviarNotificacionAsync(
+       cita.Cedula,
+"Cita rechazada",
+     $"Tu cita con {barberoNombre} para {servicioNombre} el {fechaLocal:dd/MM/yyyy - hh:mm tt} fue rechazada",
+     new Dictionary<string, string>
+    {
+  { "tipo", "cita_rechazada" }
+    }
+         );
+     Console.WriteLine($"✅ Notificación enviada");
+       }
+  }
+    catch (Exception ex)
+{
+      Console.WriteLine($"❌ Error enviando notificación: {ex.Message}");
+         }
 
+            Console.WriteLine($"📢 === FIN CAMBIO DE ESTADO ===\n");
+   return Ok();
+    }
 
     // ✅ NUEVO MÉTODO: ACTUALIZAR CITA COMPLETA
     [HttpPut("{id}")]
@@ -483,71 +528,90 @@ public class CitasController : ControllerBase
 
         try
         {
-            bool existeCita = await _context.Citas.AnyAsync(c =>
-                c.Fecha == citaActualizada.Fecha &&
-                c.BarberoId == citaActualizada.BarberoId &&
-                c.Id != id);
+bool existeCita = await _context.Citas.AnyAsync(c =>
+    c.Fecha == citaActualizada.Fecha &&
+   c.BarberoId == citaActualizada.BarberoId &&
+       c.Id != id);
 
-            if (existeCita)
-                return Conflict("Ya existe una cita en esta fecha y hora con ese barbero.");
+       if (existeCita)
+ return Conflict("Ya existe una cita en esta fecha y hora con ese barbero.");
 
-            var estadoAnterior = cita.Estado;
+     var estadoAnterior = cita.Estado;
 
-            cita.Fecha = DateTime.SpecifyKind(citaActualizada.Fecha, DateTimeKind.Utc);
-            cita.BarberoId = citaActualizada.BarberoId;
-            cita.ServicioId = citaActualizada.ServicioId;
+       cita.Fecha = DateTime.SpecifyKind(citaActualizada.Fecha, DateTimeKind.Utc);
+     cita.BarberoId = citaActualizada.BarberoId;
+    cita.ServicioId = citaActualizada.ServicioId;
 
-            await EnriquecerCitaConServicio(cita);
+     await EnriquecerCitaConServicio(cita);
 
-            _context.Citas.Update(cita);
-            await _context.SaveChangesAsync();
+      _context.Citas.Update(cita);
+ await _context.SaveChangesAsync();
 
-            var barbero = await _context.UsuarioPerfiles
-                .FirstOrDefaultAsync(b => b.Cedula == cita.BarberoId);
+ var barbero = await _context.UsuarioPerfiles
+   .FirstOrDefaultAsync(b => b.Cedula == cita.BarberoId);
 
-            var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
-            var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(cita.Fecha, zonaColombia);
+var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
+     var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(cita.Fecha, zonaColombia);
 
-            // 🔔 Notificación SOLO al barbero
-            if (estadoAnterior == "ReagendarPendiente")
-            {
-                await _notificationService.EnviarNotificacionAsync(
-                    cita.BarberoId,
-                    "Solicitud de reagendamiento",
-                    $"{cita.Nombre} propuso un nuevo horario para el {fechaLocal:dd/MM/yyyy - hh:mm tt}",
-                    new Dictionary<string, string>
-                    {
-                    { "tipo", "reagendamiento_solicitado" },
-                    { "citaId", cita.Id.ToString() }
-                    }
-                );
-            }
-            else
-            {
-                await _notificationService.EnviarNotificacionAsync(
-                    cita.BarberoId,
-                    "Cita modificada",
-                    $"{cita.Nombre} modificó su cita para el {fechaLocal:dd/MM/yyyy - hh:mm tt}",
-                    new Dictionary<string, string>
-                    {
-                    { "tipo", "cita_modificada" },
-                    { "citaId", cita.Id.ToString() }
-                    }
-                );
-            }
+      Console.WriteLine($"\n📢 === CITA ACTUALIZADA ===");
+  Console.WriteLine($"📢 Cita ID: {cita.Id}");
+  Console.WriteLine($"📢 Cliente: {cita.Nombre} ({cita.Cedula})");
+      Console.WriteLine($"📢 Barbero: {cita.BarberoId}");
+      Console.WriteLine($"📢 Nueva fecha: {fechaLocal:dd/MM/yyyy - hh:mm tt}");
 
-            ConvertirCitaAFormatoLocal(cita);
-            return Ok(cita);
+    // 🔔 Notificación SOLO al barbero
+try
+  {
+    if (estadoAnterior == "ReagendarPendiente")
+       {
+       Console.WriteLine($"📤 Enviando: Solicitud de reagendamiento");
+     await _notificationService.EnviarNotificacionAsync(
+  cita.BarberoId,
+     "Solicitud de reagendamiento",
+         $"{cita.Nombre} propuso un nuevo horario para el {fechaLocal:dd/MM/yyyy - hh:mm tt}",
+        new Dictionary<string, string>
+      {
+        { "tipo", "reagendamiento_solicitado" },
+      { "citaId", cita.Id.ToString() }
+     }
+     );
+    Console.WriteLine($"✅ Notificación enviada");
         }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new { message = "Error al actualizar la cita.", error = ex.Message });
-        }
+        else
+ {
+         Console.WriteLine($"📤 Enviando: Cita modificada");
+      await _notificationService.EnviarNotificacionAsync(
+      cita.BarberoId,
+    "Cita modificada",
+    $"{cita.Nombre} modificó su cita para el {fechaLocal:dd/MM/yyyy - hh:mm tt}",
+      new Dictionary<string, string>
+    {
+    { "tipo", "cita_modificada" },
+  { "citaId", cita.Id.ToString() }
+ }
+   );
+Console.WriteLine($"✅ Notificación enviada");
+   }
+  }
+ catch (Exception exNotif)
+   {
+      Console.WriteLine($"❌ Error enviando notificación: {exNotif.Message}");
+  }
+
+ Console.WriteLine($"📢 === FIN ACTUALIZACIÓN CITA ===\n");
+
+   ConvertirCitaAFormatoLocal(cita);
+    return Ok(cita);
+}
+    catch (Exception ex)
+ {
+Console.WriteLine($"❌ ERROR EN ActualizarCita: {ex.Message}");
+     Console.WriteLine($"❌ Stack: {ex.StackTrace}");
+       return StatusCode(500, new { message = "Error al actualizar la cita.", error = ex.Message });
     }
-
+   }
 
     public class EstadoRequest { public string Estado { get; set; } = string.Empty; }
-
 }
 
 public class EstadoUpdateDto

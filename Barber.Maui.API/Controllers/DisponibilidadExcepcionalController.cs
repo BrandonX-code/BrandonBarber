@@ -103,10 +103,18 @@ namespace Barber.Maui.API.Controllers
                     await _context.SaveChangesAsync();
                 }
                 await SincronizarConDisponibilidadNormal(excepcion);
-                // 🔔 Notificar a clientes afectados
+
+                // 🔔 NOTIFICAR A CLIENTES AFECTADOS - CON AWAIT COMPLETO
                 if (citasAfectadas.Any())
                 {
+                    Console.WriteLine($"\n📢 === INICIANDO NOTIFICACIÓN DE CLIENTES ===");
+                    Console.WriteLine($"📢 Total de citas afectadas: {citasAfectadas.Count}");
                     await NotificarClientesAfectados(excepcion, citasAfectadas);
+                    Console.WriteLine($"📢 === FIN NOTIFICACIÓN DE CLIENTES ===\n");
+                }
+                else
+                {
+                    Console.WriteLine($"ℹ️ No hay citas afectadas para notificar");
                 }
 
                 return CreatedAtAction(
@@ -116,6 +124,8 @@ namespace Barber.Maui.API.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"❌ ERROR EN CrearExcepcion: {ex.Message}");
+                Console.WriteLine($"❌ Stack: {ex.StackTrace}");
                 return StatusCode(500, new
                 {
                     message = "Error al crear excepción",
@@ -264,44 +274,74 @@ namespace Barber.Maui.API.Controllers
                 DateTime.SpecifyKind(excepcion.Fecha, DateTimeKind.Utc),
                 zonaColombia);
 
+            Console.WriteLine($"\n📤 === NOTIFICANDO {citasAfectadas.Count} CLIENTE(S) ===");
+
             foreach (var cita in citasAfectadas)
             {
-                var citaFechaLocal = TimeZoneInfo.ConvertTimeFromUtc(
-                    DateTime.SpecifyKind(cita.Fecha, DateTimeKind.Utc),
-                    zonaColombia);
+                try
+                {
+                    var citaFechaLocal = TimeZoneInfo.ConvertTimeFromUtc(
+                        DateTime.SpecifyKind(cita.Fecha, DateTimeKind.Utc),
+                        zonaColombia);
 
-                string mensaje;
-                if (excepcion.DiaCompleto)
-                {
-                    mensaje = $"⚠️ AVISO IMPORTANTE" +
-                              $"{barbero?.Nombre ?? "El barbero"} no estará disponible el {fechaLocal:dd/MM/yyyy}." +
-                              $"Tu cita programada para las {citaFechaLocal:hh:mm tt} ha sido cancelada." +
-                              $"Por favor, agenda una nueva cita en otro día disponible.";
-                }
-                else
-                {
-                    mensaje = $"📅 CAMBIO DE HORARIO" +
-                              $"{barbero?.Nombre ?? "El barbero"} modificó su disponibilidad el {fechaLocal:dd/MM/yyyy}." +
-                              $"Tu cita de las {citaFechaLocal:hh:mm tt} puede verse afectada." +
-                              $"Por favor, verifica los nuevos horarios disponibles y reagenda si es necesario.";
-                }
-                if (!string.IsNullOrEmpty(excepcion.Motivo))
-                {
-                    mensaje += $" Motivo: {excepcion.Motivo}";
-                }
+                    string mensaje;
+                    string titulo;
 
-                await _notificationService.EnviarNotificacionAsync(
-                    cita.Cedula,
-                    excepcion.DiaCompleto ? "⚠️ Cita Cancelada" : "📅 Cambio de Horario", // ✅ TÍTULO MEJORADO
-                    mensaje,
-                    new Dictionary<string, string>
+                    if (excepcion.DiaCompleto)
                     {
-                        { "tipo", "cita_modificada_barbero" },
-                        { "citaId", cita.Id.ToString() },
-                        { "excepcionId", excepcion.Id.ToString() }
+                        titulo = "⚠️ Cita Cancelada";
+                        mensaje = $"⚠️ AVISO IMPORTANTE\n\n" +
+                                  $"{barbero?.Nombre ?? "El barbero"} no estará disponible el {fechaLocal:dd/MM/yyyy}.\n\n" +
+                                  $"Tu cita programada para las {citaFechaLocal:hh:mm tt} ha sido cancelada.\n\n" +
+                                  $"Por favor, agenda una nueva cita en otro día disponible.";
                     }
-                );
+                    else
+                    {
+                        titulo = "📅 Cambio de Horario";
+                        mensaje = $"📅 CAMBIO DE HORARIO\n\n" +
+                                  $"{barbero?.Nombre ?? "El barbero"} modificó su disponibilidad el {fechaLocal:dd/MM/yyyy}.\n\n" +
+                                  $"Tu cita de las {citaFechaLocal:hh:mm tt} puede verse afectada.\n\n" +
+                                  $"Por favor, verifica los nuevos horarios disponibles y reagenda si es necesario.";
+                    }
+
+                    if (!string.IsNullOrEmpty(excepcion.Motivo))
+                    {
+                        mensaje += $"\n\nMotivo: {excepcion.Motivo}";
+                    }
+
+                    Console.WriteLine($"\n📤 Notificando a cliente:");
+                    Console.WriteLine($"   Nombre: {cita.Nombre}");
+                    Console.WriteLine($"   Cédula: {cita.Cedula}");
+                    Console.WriteLine($"   Título: {titulo}");
+
+                    bool enviado = await _notificationService.EnviarNotificacionAsync(
+                        cita.Cedula,
+                        titulo,
+                        mensaje,
+                        new Dictionary<string, string>
+                        {
+                            { "tipo", "cita_modificada_barbero" },
+                            { "citaId", cita.Id.ToString() },
+                            { "excepcionId", excepcion.Id.ToString() }
+                        }
+                    );
+
+                    if (enviado)
+                    {
+                        Console.WriteLine($"   ✅ Notificación enviada exitosamente");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"   ⚠️ Fallo al enviar notificación");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"   ❌ Error notificando a {cita.Nombre}: {ex.Message}");
+                }
             }
+
+            Console.WriteLine($"\n📤 === FIN NOTIFICACIÓN DE CLIENTES ===\n");
         }
         private async Task SincronizarConDisponibilidadNormal(DisponibilidadExcepcional excepcion)
         {

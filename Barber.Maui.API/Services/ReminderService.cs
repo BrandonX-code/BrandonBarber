@@ -45,6 +45,9 @@ namespace Barber.Maui.API.Services
         {
             try
             {
+                Console.WriteLine($"\n⏰ === VERIFICANDO RECORDATORIOS DE CITAS ===");
+                Console.WriteLine($"⏰ Hora actual (UTC): {DateTime.UtcNow:HH:mm:ss}");
+
                 using var scope = _serviceProvider.CreateScope();
                 var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 var notificationService = scope.ServiceProvider.GetRequiredService<INotificationService>();
@@ -53,9 +56,14 @@ namespace Barber.Maui.API.Services
                 var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
                 var ahoraColombia = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zonaColombia);
 
-                // ✅ BUSCAR CITAS CONFIRMADAS O COMPLETADAS EN LOS PRÓXIMOS 30 MINUTOS
-                // (Ampliamos el rango para evitar perder citas por sincronización)
+                Console.WriteLine($"⏰ Hora actual (Colombia): {ahoraColombia:HH:mm:ss}");
+
+                // ✅ BUSCAR CITAS CONFIRMADAS O COMPLETADA EN LOS PRÓXIMOS 30 MINUTAS
                 var todasLasCitas = await context.Citas.Where(c => c.Estado == "Confirmada" || c.Estado == "Completada").ToListAsync();
+
+                Console.WriteLine($"⏰ Total de citas activas: {todasLasCitas.Count}");
+
+                int citasParaRecordatorio = 0;
 
                 foreach (var cita in todasLasCitas)
                 {
@@ -66,7 +74,7 @@ namespace Barber.Maui.API.Services
                     // ✅ CALCULAR DIFERENCIA EN MINUTOS
                     var minutosAntesDelaCita = (fechaCitaLocal - ahoraColombia).TotalMinutes;
 
-                    _logger.LogDebug($"📊 Cita de {cita.Nombre}: en {minutosAntesDelaCita:F2} minutos");
+                    _logger.LogDebug($"⏰ Cita de {cita.Nombre}: en {minutosAntesDelaCita:F2} minutos ({fechaCitaLocal:HH:mm})");
 
                     // ✅ ENVIAR RECORDATORIO SI LA CITA ES EN 15 MINUTOS (rango: 14-16 minutos)
                     if (minutosAntesDelaCita >= 14 && minutosAntesDelaCita <= 16)
@@ -76,8 +84,16 @@ namespace Barber.Maui.API.Services
 
                         if (!yaEnviado)
                         {
-                            _logger.LogInformation($"📤 Enviando recordatorio para cita de {cita.Nombre} (ID: {cita.Id})");
-                            await EnviarRecordatorioCita(cita, fechaCitaLocal, notificationService, context, ahoraColombia);
+                            citasParaRecordatorio++;
+                            _logger.LogInformation($"⏰ Enviando recordatorio para cita de {cita.Nombre} (ID: {cita.Id})");
+                            try
+                            {
+                                await EnviarRecordatorioCita(cita, fechaCitaLocal, notificationService, context, ahoraColombia);
+                            }
+                            catch (Exception exRecordatorio)
+                            {
+                                _logger.LogError($"❌ Error enviando recordatorio para cita {cita.Id}: {exRecordatorio.Message}");
+                            }
                         }
                         else
                         {
@@ -85,10 +101,14 @@ namespace Barber.Maui.API.Services
                         }
                     }
                 }
+
+                Console.WriteLine($"⏰ Total citas con recordatorio enviado: {citasParaRecordatorio}");
+                Console.WriteLine($"⏰ === FIN VERIFICACIÓN RECORDATORIOS ===\n");
             }
             catch (Exception ex)
             {
                 _logger.LogError($"❌ Error en EnviarRecordatorios: {ex.Message}");
+                Console.WriteLine($"❌ Stack: {ex.StackTrace}");
             }
         }
 
@@ -122,6 +142,10 @@ namespace Barber.Maui.API.Services
         {
             try
             {
+                Console.WriteLine($"\n📤 === ENVIANDO RECORDATORIO ===");
+                Console.WriteLine($"📤 Cliente: {cita.Nombre} ({cita.Cedula})");
+                Console.WriteLine($"📤 Cita: {fechaCitaLocal:dd/MM/yyyy hh:mm tt}");
+
                 // ✅ OBTENER DATOS DEL BARBERO
                 var barbero = await context.UsuarioPerfiles
                          .FirstOrDefaultAsync(b => b.Cedula == cita.BarberoId);
@@ -133,16 +157,17 @@ namespace Barber.Maui.API.Services
 
                 // Incluir servicio si existe
                 string servicioInfo = !string.IsNullOrEmpty(cita.ServicioNombre)
-               ? $"• Servicio: {cita.ServicioNombre}"
+               ? $"• Servicio: {cita.ServicioNombre}\n"
           : "";
 
                 // ✅ MENSAJE ESTRUCTURADO Y PROFESIONAL
-                string mensaje = $"¡Hola {cita.Nombre}! 👋" +
-          $"Tu cita está a punto de comenzar:" +
-         $"👨‍💼 Barbero: {nombreBarbero}" +
-       servicioInfo +
-       $"📅 Fecha: {fechaCitaLocal:dddd, dd 'de' MMMM 'de' yyyy}" + $"🕐 Hora: {fechaCitaLocal:hh:mm tt}" +
-         $"⏱️ Te esperamos en 15 minutos ✂️";
+                string mensaje = $"¡Hola {cita.Nombre}! 👋\n\n" +
+       $"Tu cita está a punto de comenzar:\n\n" +
+ $"👨‍💼 Barbero: {nombreBarbero}\n" +
+      servicioInfo +
+      $"📅 Fecha: {fechaCitaLocal:dddd, dd 'de' MMMM 'de' yyyy}\n" +
+    $"🕐 Hora: {fechaCitaLocal:hh:mm tt}\n\n" +
+$"⏱️ Te esperamos en 15 minutos ✂️";
 
                 // ✅ INCLUIR TODOS LOS DATOS PARA LA APLICACIÓN
                 var data = new Dictionary<string, string>
@@ -160,6 +185,7 @@ namespace Barber.Maui.API.Services
                 };
 
                 // ✅ ENVIAR NOTIFICACIÓN POR FIREBASE
+                Console.WriteLine($"📤 Enviando notificación a cliente {cita.Cedula}");
                 bool enviado = await notificationService.EnviarNotificacionAsync(
                         cita.Cedula,
                     titulo,
@@ -169,10 +195,12 @@ namespace Barber.Maui.API.Services
 
                 if (enviado)
                 {
+                    Console.WriteLine($"✅ Notificación enviada exitosamente");
+
                     // ✅ ACTUALIZAR TIMESTAMP PARA NO REENVIAR
                     var tokens = await context.FcmToken
-                 .Where(t => t.UsuarioCedula == cita.Cedula)
-                .ToListAsync();
+                            .Where(t => t.UsuarioCedula == cita.Cedula)
+                          .ToListAsync();
 
                     if (tokens.Any())
                     {
@@ -181,6 +209,7 @@ namespace Barber.Maui.API.Services
                             token.UltimaActualizacion = DateTime.UtcNow;
                         }
                         await context.SaveChangesAsync();
+                        Console.WriteLine($"✅ Timestamp actualizado para evitar duplicados");
                     }
 
                     _logger.LogInformation(
@@ -188,14 +217,21 @@ namespace Barber.Maui.API.Services
                 }
                 else
                 {
+                    Console.WriteLine($"⚠️ No se pudo enviar notificación");
                     _logger.LogWarning(
-                     $"⚠️ No se pudo enviar recordatorio a {cita.Nombre} (Cédula: {cita.Cedula}) - Verifica si tiene tokens registrados");
+    $"⚠️ No se pudo enviar recordatorio a {cita.Nombre} (Cédula: {cita.Cedula}) - Verifica si tiene tokens registrados");
                 }
+
+                Console.WriteLine($"📤 === FIN ENVÍO RECORDATORIO ===\n");
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"❌ ERROR ENVIANDO RECORDATORIO:");
+                Console.WriteLine($"❌ {ex.Message}");
+                Console.WriteLine($"❌ {ex.StackTrace}");
+
                 _logger.LogError(
-               $"❌ Error enviando recordatorio para cita {cita.Id} de {cita.Nombre}: {ex.Message}{ex.StackTrace}");
+   $"❌ Error enviando recordatorio para cita {cita.Id} de {cita.Nombre}: {ex.Message}{ex.StackTrace}");
             }
         }
     }
