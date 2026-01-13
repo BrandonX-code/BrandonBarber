@@ -51,6 +51,11 @@ namespace Barber.Maui.BrandonBarber.Pages
                 if (isLoggedIn && AuthService.CurrentUser != null)
                 {
                     Console.WriteLine($"🔷 Usuario: {AuthService.CurrentUser.Nombre} - Rol: {AuthService.CurrentUser.Rol}");
+
+                    // ✅ REGISTRAR TOKEN AQUÍ (usuario ya autenticado)
+                    Console.WriteLine("🔷 Registrando token FCM...");
+                    await _authService.RegistrarTokenFCMDirecto();
+
                     NavigateToMainPage();
                 }
                 else

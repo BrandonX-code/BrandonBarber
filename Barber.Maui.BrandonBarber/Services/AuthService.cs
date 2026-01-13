@@ -66,7 +66,7 @@ namespace Barber.Maui.BrandonBarber.Services
 
                     // 🔥 REGISTRAR TOKEN DESPUÉS DEL LOGIN
                     Console.WriteLine($"🔥 Login completado, registrando token FCM...");
-                    await RegistrarTokenFCM();
+                    await RegistrarTokenFCMDirecto();
                 }
 
                 return authResponse ?? new AuthResponse { IsSuccess = false, Message = "Respuesta vacía del servidor" };
@@ -346,7 +346,7 @@ namespace Barber.Maui.BrandonBarber.Services
                     Console.WriteLine($"🔹 Usuario cargado: {CurrentUser.Nombre} - Rol: {CurrentUser.Rol} - Barbería: {CurrentUser.IdBarberia}");
 
                     // 🔥 AGREGAR ESTO: Registrar token FCM después de verificar sesión
-                    await RegistrarTokenFCM();
+                    await RegistrarTokenFCMDirecto();
 
                     return true;
                 }
@@ -369,78 +369,54 @@ namespace Barber.Maui.BrandonBarber.Services
                 return false;
             }
         }
-        private async Task RegistrarTokenFCM()
+
+        // ✅ MÉTODO PÚBLICO PARA REGISTRAR TOKEN DIRECTAMENTE
+        public async Task RegistrarTokenFCMDirecto()
         {
-            const int maxIntentos = 3;
-            for (int intento = 1; intento <= maxIntentos; intento++)
+            try
             {
-                try
+                Console.WriteLine($"\n🔥 [RegistrarTokenFCMDirecto] Iniciando...");
+
+                if (CurrentUser == null)
                 {
-                    Console.WriteLine($"\n🔥 [RegistrarTokenFCM] Intento {intento}/{maxIntentos}");
+                    Console.WriteLine("❌ [RegistrarTokenFCMDirecto] CurrentUser es null");
+                    return;
+                }
 
-                    if (CurrentUser == null)
-                    {
-                        Console.WriteLine("❌ [RegistrarTokenFCM] CurrentUser es null");
-                        return;
-                    }
+                // Esperar a Firebase
+                await Task.Delay(1000);
 
-                    // Esperar a que Firebase esté listo
-                    await Task.Delay(1000 * intento); // 1s, 2s, 3s
+                var fcmToken = await CrossFirebaseCloudMessaging.Current.GetTokenAsync();
+                Console.WriteLine($"🔥 [RegistrarTokenFCMDirecto] Token: {fcmToken?.Substring(0, 30) ?? "NULL"}");
 
-                    Console.WriteLine($"🔥 [RegistrarTokenFCM] Obteniendo token FCM...");
-                    var fcmToken = await CrossFirebaseCloudMessaging.Current.GetTokenAsync();
+                if (string.IsNullOrEmpty(fcmToken))
+                {
+                    Console.WriteLine("❌ [RegistrarTokenFCMDirecto] Token vacío");
+                    return;
+                }
 
-                    Console.WriteLine($"🔥 [RegistrarTokenFCM] Token obtenido: {fcmToken?.Substring(0, Math.Min(30, fcmToken?.Length ?? 0)) ?? "NULL"}");
+                var request = new { UsuarioCedula = CurrentUser.Cedula, FcmToken = fcmToken };
+                var json = JsonSerializer.Serialize(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-                    if (string.IsNullOrEmpty(fcmToken))
-                    {
-                        Console.WriteLine($"⚠️ [RegistrarTokenFCM] Token vacío en intento {intento}");
-                        if (intento < maxIntentos) continue;
-                        return;
-                    }
+                Console.WriteLine($"🔥 [RegistrarTokenFCMDirecto] Enviando token...");
+                var response = await _BaseClient.PostAsync("api/notifications/register-token", content);
 
-                    Console.WriteLine($"✅ [RegistrarTokenFCM] Token válido: {fcmToken.Substring(0, 30)}...");
+                Console.WriteLine($"🔥 [RegistrarTokenFCMDirecto] Response: {response.StatusCode}");
 
-                    var request = new
-                    {
-                        UsuarioCedula = CurrentUser.Cedula,
-                        FcmToken = fcmToken
-                    };
-
-                    var json = JsonSerializer.Serialize(request);
-                    Console.WriteLine($"🔥 [RegistrarTokenFCM] Enviando: Usuario={request.UsuarioCedula}, Token={fcmToken.Substring(0, 20)}...");
-
-                    var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-                    Console.WriteLine($"🔥 [RegistrarTokenFCM] POST a api/notifications/register-token");
-                    var response = await _BaseClient.PostAsync("api/notifications/register-token", content);
-
-                    Console.WriteLine($"🔥 [RegistrarTokenFCM] Response: {response.StatusCode}");
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        Console.WriteLine($"✅ [RegistrarTokenFCM] ¡ÉXITO! Token registrado en intento {intento}");
-                        return; // ÉXITO - SALIR
-                    }
-
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine($"✅ [RegistrarTokenFCMDirecto] ¡ÉXITO! Token registrado");
+                }
+                else
+                {
                     var error = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine($"❌ [RegistrarTokenFCM] Error {response.StatusCode}: {error}");
-
-                    if (intento < maxIntentos)
-                    {
-                        Console.WriteLine($"🔄 [RegistrarTokenFCM] Reintentando...");
-                    }
+                    Console.WriteLine($"❌ [RegistrarTokenFCMDirecto] Error: {error}");
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"❌ [RegistrarTokenFCM] EXCEPCIÓN intento {intento}: {ex.GetType().Name}");
-                    Console.WriteLine($"❌ [RegistrarTokenFCM] Mensaje: {ex.Message}");
-
-                    if (intento == maxIntentos)
-                    {
-                        Console.WriteLine($"❌ [RegistrarTokenFCM] FALLÓ después de {maxIntentos} intentos");
-                    }
-                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"❌ [RegistrarTokenFCMDirecto] EXCEPCIÓN: {ex.Message}");
             }
         }
 
