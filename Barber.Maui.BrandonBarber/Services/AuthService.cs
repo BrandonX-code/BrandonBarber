@@ -372,20 +372,23 @@ namespace Barber.Maui.BrandonBarber.Services
         {
             try
             {
+                Console.WriteLine($"🔥 [RegistrarTokenFCM] Iniciando...");
+     
                 // ✅ VALIDAR QUE FIREBASE ESTÉ LISTO
-                // Esperamos un momento a que Firebase se inicialice
                 await Task.Delay(500);
+                Console.WriteLine($"🔥 [RegistrarTokenFCM] Firebase esperado 500ms");
 
                 // Obtener el token FCM actual
                 var fcmToken = await CrossFirebaseCloudMessaging.Current.GetTokenAsync();
+                Console.WriteLine($"🔥 [RegistrarTokenFCM] Token obtenido: {fcmToken?.Substring(0, Math.Min(30, fcmToken?.Length ?? 0)) ?? "NULL"}");
 
                 if (string.IsNullOrEmpty(fcmToken))
                 {
-                    Console.WriteLine("⚠️ No se pudo obtener token FCM");
+                    Console.WriteLine("❌ [RegistrarTokenFCM] Token vacío o nulo");
                     return;
                 }
 
-                Console.WriteLine($"🔥 Registrando token FCM: {fcmToken}");
+                Console.WriteLine($"✅ [RegistrarTokenFCM] Token válido, registrando...");
 
                 var request = new
                 {
@@ -394,24 +397,31 @@ namespace Barber.Maui.BrandonBarber.Services
                 };
 
                 var json = JsonSerializer.Serialize(request);
+                Console.WriteLine($"🔥 [RegistrarTokenFCM] JSON: {json}");
+                
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
 
+                Console.WriteLine($"🔥 [RegistrarTokenFCM] Enviando POST a api/notifications/register-token");
                 var response = await _BaseClient.PostAsync("api/notifications/register-token", content);
 
+                Console.WriteLine($"🔥 [RegistrarTokenFCM] Response status: {response.StatusCode}");
+     
                 if (response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine("✅ Token FCM registrado exitosamente");
+                    Console.WriteLine("✅ [RegistrarTokenFCM] Token FCM registrado exitosamente");
                 }
                 else
                 {
-                    Console.WriteLine($"⚠️ Error al registrar token FCM: {response.StatusCode}");
-                }
-            }
+                   var error = await response.Content.ReadAsStringAsync();
+Console.WriteLine($"❌ [RegistrarTokenFCM] Error: {response.StatusCode} - {error}");
+       }
+ }
             catch (Exception ex)
-            {
-                Console.WriteLine($"⚠️ Error al registrar token FCM: {ex.Message}");
-                // No lanzar excepción para no romper el flujo de login
-            }
+      {
+                Console.WriteLine($"❌ [RegistrarTokenFCM] EXCEPCIÓN: {ex.GetType().Name}");
+   Console.WriteLine($"❌ [RegistrarTokenFCM] Mensaje: {ex.Message}");
+      Console.WriteLine($"❌ [RegistrarTokenFCM] Stack: {ex.StackTrace}");
+  }
         }
 
         public async Task<bool> EliminarUsuario(long cedula)
