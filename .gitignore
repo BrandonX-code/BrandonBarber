@@ -55,3 +55,6 @@ packages/
 *.log
 [Ll]og/
 [Ll]ogs/
+
+# Firebase
+**/firebase-adminsdk.json
