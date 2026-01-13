@@ -25,6 +25,7 @@ namespace Barber.Maui.API.Services
                     {
                         if (FirebaseApp.DefaultInstance == null)
                         {
+                            // 1️⃣ Intentar leer desde la variable de entorno (Render)
                             var firebaseJson = configuration["FIREBASE_ADMIN_CREDENTIALS"];
 
                             GoogleCredential credential;
@@ -36,7 +37,9 @@ namespace Barber.Maui.API.Services
                             }
                             else
                             {
+                                // 2️⃣ Si estás en LOCAL usar archivo JSON
                                 Console.WriteLine("📁 Cargando credenciales Firebase desde archivo local");
+
                                 credential = GoogleCredential.FromFile("firebase-adminsdk.json");
                             }
 
@@ -64,36 +67,18 @@ namespace Barber.Maui.API.Services
         {
             try
             {
-                Console.WriteLine($"\n📤 === INICIANDO ENVÍO DE NOTIFICACIÓN ===");
-                Console.WriteLine($"📤 Usuario: {usuarioCedula}");
-                Console.WriteLine($"📤 Título: {titulo}");
-                Console.WriteLine($"📤 Mensaje: {mensaje}");
-
                 var tokens = await _context.FcmToken
                     .Where(t => t.UsuarioCedula == usuarioCedula)
-                    .Select(t => new { t.Id, t.Token, t.FechaRegistro, t.UltimaActualizacion })
+                    .Select(t => t.Token)
                     .ToListAsync();
-
-                Console.WriteLine($"📤 Tokens encontrados: {tokens.Count}");
 
                 if (!tokens.Any())
                 {
-                    Console.WriteLine($"⚠️ ❌ NO HAY TOKENS para usuario {usuarioCedula}");
-                    Console.WriteLine($"⚠️ Este usuario probablemente:");
-                    Console.WriteLine($"   - No ha iniciado sesión en la app");
-                    Console.WriteLine($"   - No ha permitido notificaciones");
-                    Console.WriteLine($"   - Sus tokens han sido limpios");
+                    Console.WriteLine($"⚠️ No hay tokens para usuario {usuarioCedula}");
                     return false;
                 }
 
-                foreach (var token in tokens)
-                {
-                    Console.WriteLine($"  ✓ Token ID: {token.Id}");
-                    Console.WriteLine($"    Token: {token.Token.Substring(0, Math.Min(30, token.Token.Length))}...");
-                    Console.WriteLine($"    Registrado: {token.FechaRegistro}");
-                    Console.WriteLine($"    Actualizado: {token.UltimaActualizacion}");
-                }
-
+                // ✅ AGREGAR DATOS OBLIGATORIOS
                 var datosNotificacion = data ?? new Dictionary<string, string>();
                 if (!datosNotificacion.ContainsKey("tipo"))
                 {
@@ -102,27 +87,28 @@ namespace Barber.Maui.API.Services
 
                 var message = new MulticastMessage
                 {
-                    Tokens = tokens.Select(t => t.Token).ToList(),
+                    Tokens = tokens,
                     Notification = new Notification
                     {
                         Title = titulo,
                         Body = mensaje
                     },
                     Data = datosNotificacion,
-                    // ✅ CONFIGURACIÓN CRÍTICA
+                    // ✅ CONFIGURACIÓN CRÍTICA PARA VELOCIDAD
                     Android = new AndroidConfig
                     {
-                        Priority = Priority.High,
+                        Priority = Priority.High, // ✅ MÁXIMA PRIORIDAD
                         Notification = new AndroidNotification
                         {
                             Color = "#0E2A36",
                             Sound = "default",
-                            ChannelId = "barber_notifications", // ✅ IMPORTANTE: El cliente DEBE crear este canal
-                            Icon = "notification_icon", // Cambié a notification_icon (más estándar)
+                            ChannelId = "barber_notifications",
+                            Icon = "barber_notification",
+                            ImageUrl = null,
+                            // ✅ AGREGAR VIBRACIÓN INMEDIATA
                             VibrateTimingsMillis = new long[] { 0, 100, 100, 100 },
                             LocalOnly = false,
-                            // Evitar duplicados
-                            Tag = $"cita_{usuarioCedula}_{DateTime.UtcNow.Ticks}",
+                            Tag = $"cita_{usuarioCedula}_{DateTime.UtcNow.Ticks}", // Evitar duplicados
                         }
                     },
                     // ✅ CONFIGURACIÓN PARA IOS
@@ -130,7 +116,7 @@ namespace Barber.Maui.API.Services
                     {
                         Headers = new Dictionary<string, string>
                         {
-                            { "apns-priority", "10" },
+                            { "apns-priority", "10" }, // ✅ MÁXIMA PRIORIDAD EN IOS
                             { "apns-push-type", "alert" },
                         },
                         Aps = new Aps
@@ -143,7 +129,7 @@ namespace Barber.Maui.API.Services
                             Sound = "default",
                             ContentAvailable = true,
                             MutableContent = true,
-                            Badge = 1,
+                            Badge = 1, // ✅ CORREGIR A INT
                         }
                     },
                     // ✅ CONFIGURACIÓN WEBPUSH
@@ -157,104 +143,69 @@ namespace Barber.Maui.API.Services
                     }
                 };
 
-                Console.WriteLine($"📤 Enviando a {tokens.Count} dispositivo(s)...");
+                Console.WriteLine($"📤 Enviando notificación a {tokens.Count} dispositivo(s)...");
                 var response = await FirebaseMessaging.DefaultInstance.SendEachForMulticastAsync(message);
+                Console.WriteLine($"✅ Notificación enviada: {response.SuccessCount}/{tokens.Count} exitosas");
 
-                Console.WriteLine($"✅ Resultado del envío:");
-                Console.WriteLine($"   ✓ Exitosas: {response.SuccessCount}");
-                Console.WriteLine($"   ✗ Fallidas: {response.FailureCount}");
-
+                // ✅ LOG DE ERRORES
                 if (response.FailureCount > 0)
                 {
-                    Console.WriteLine($"\n⚠️ ERRORES EN {response.FailureCount} NOTIFICACIONES:");
+                    Console.WriteLine($"⚠️ {response.FailureCount} notificaciones fallaron");
                     for (int i = 0; i < response.Responses.Count; i++)
                     {
                         if (!response.Responses[i].IsSuccess)
                         {
-                            var token = tokens[i];
-                            var exception = response.Responses[i].Exception;
-                            Console.WriteLine($"   ✗ Token {token.Id}: {exception?.Message}");
-
-                            // Si es "Mismatched Credential" o "Invalid Registration Token", eliminar
-                            if (exception?.Message?.Contains("Invalid") == true ||
-                                exception?.Message?.Contains("Mismatched") == true)
-                            {
-                                Console.WriteLine($"     → Eliminando token inválido {token.Id}");
-                                _context.FcmToken.Where(t => t.Id == token.Id).ExecuteDelete();
-                            }
+                            Console.WriteLine($"  - Token {i}: {response.Responses[i].Exception?.Message}");
                         }
                     }
-                    await _context.SaveChangesAsync();
                 }
-
-                Console.WriteLine($"📤 === FIN ENVÍO DE NOTIFICACIÓN ===\n");
 
                 return response.SuccessCount > 0;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ ERROR ENVIANDO NOTIFICACIÓN:");
-                Console.WriteLine($"❌ Mensaje: {ex.Message}");
-                Console.WriteLine($"❌ Stack: {ex.StackTrace}");
+                Console.WriteLine($"❌ Error enviando notificación: {ex.Message}");
                 return false;
             }
         }
-
         public async Task<bool> RegistrarTokenAsync(long usuarioCedula, string token)
         {
             try
             {
-                Console.WriteLine($"\n🔐 === REGISTRANDO TOKEN ===");
-                Console.WriteLine($"🔐 Usuario: {usuarioCedula}");
-                Console.WriteLine($"🔐 Token: {token.Substring(0, Math.Min(50, token.Length))}...");
+                // 1. Eliminar cualquier token igual asignado a otro usuario
+                var tokensDuplicados = await _context.FcmToken
+                    .Where(t => t.Token == token && t.UsuarioCedula != usuarioCedula)
+                    .ToListAsync();
 
-                // 1. Eliminar PRIMERO tokens anteriores del mismo usuario
-                var tokensAntiguos = await _context.FcmToken
+                if (tokensDuplicados.Any())
+                    _context.FcmToken.RemoveRange(tokensDuplicados);
+
+                // 2. Eliminar TODOS los tokens anteriores del usuario
+                var tokensUsuario = await _context.FcmToken
                     .Where(t => t.UsuarioCedula == usuarioCedula)
                     .ToListAsync();
 
-                if (tokensAntiguos.Any())
-                {
-                    Console.WriteLine($"🔐 Eliminando {tokensAntiguos.Count} token(s) anterior(es)");
-                    _context.FcmToken.RemoveRange(tokensAntiguos);
-                    await _context.SaveChangesAsync();
-                }
+                if (tokensUsuario.Any())
+                    _context.FcmToken.RemoveRange(tokensUsuario);
 
-                // 2. Eliminar si existe en otro usuario (duplicado)
-                var tokenDuplicado = await _context.FcmToken
-                    .FirstOrDefaultAsync(t => t.Token == token && t.UsuarioCedula != usuarioCedula);
-
-                if (tokenDuplicado != null)
-                {
-                    Console.WriteLine($"🔐 Token existía en otro usuario ({tokenDuplicado.UsuarioCedula}), eliminando");
-                    _context.FcmToken.Remove(tokenDuplicado);
-                    await _context.SaveChangesAsync();
-                }
-
-                // 3. Guardar el nuevo token
-                var nuevoToken = new FcmToken
+                // 3. Guardar SOLO el token nuevo
+                _context.FcmToken.Add(new FcmToken
                 {
                     UsuarioCedula = usuarioCedula,
                     Token = token,
-                    FechaRegistro = DateTime.UtcNow,
                     UltimaActualizacion = DateTime.UtcNow
-                };
+                });
 
-                _context.FcmToken.Add(nuevoToken);
                 await _context.SaveChangesAsync();
-
-                Console.WriteLine($"✅ Token registrado exitosamente (ID: {nuevoToken.Id})");
-                Console.WriteLine($"🔐 === FIN REGISTRO TOKEN ===\n");
-
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ ERROR REGISTRANDO TOKEN:");
-                Console.WriteLine($"❌ Mensaje: {ex.Message}");
-                Console.WriteLine($"❌ Stack: {ex.StackTrace}");
+                Console.WriteLine($"❌ Error registrando token: {ex.Message}");
                 return false;
             }
         }
+
+
     }
 }
