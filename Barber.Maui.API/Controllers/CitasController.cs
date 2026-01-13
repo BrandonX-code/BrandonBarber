@@ -221,14 +221,14 @@ public class CitasController : ControllerBase
     {
         // 🔥 CORREGIR: Usar zona horaria de Colombia para la comparación
         var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
-        
+
         var barberos = await _context.UsuarioPerfiles
             .Where(b => b.IdBarberia == idBarberia && b.Rol == "barbero")
             .Select(b => new { b.Cedula, b.Nombre })
             .ToListAsync();
 
-    var barberoDict = barberos.ToDictionary(b => b.Cedula, b => b.Nombre);
-     var barberoIds = barberos.Select(b => b.Cedula).ToList();
+        var barberoDict = barberos.ToDictionary(b => b.Cedula, b => b.Nombre);
+        var barberoIds = barberos.Select(b => b.Cedula).ToList();
 
         var citas = await _context.Citas
             .Where(c => barberoIds.Contains(c.BarberoId))
@@ -236,17 +236,17 @@ public class CitasController : ControllerBase
 
         // 🔥 FILTRAR EN MEMORIA usando zona horaria correcta
         var citasFiltradas = citas
-        .Where(c => 
-            {
-          var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(c.Fecha, DateTimeKind.Utc), zonaColombia);
-      return fechaLocal.Date == fecha.Date;
-       })
+        .Where(c =>
+        {
+            var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(c.Fecha, DateTimeKind.Utc), zonaColombia);
+            return fechaLocal.Date == fecha.Date;
+        })
  .OrderBy(c => c.Fecha)
             .ToList();
 
         foreach (var cita in citasFiltradas)
         {
-       ConvertirCitaAFormatoLocal(cita);
+            ConvertirCitaAFormatoLocal(cita);
             cita.BarberoNombre = barberoDict.GetValueOrDefault(cita.BarberoId, "No encontrado");
             await EnriquecerCitaConServicio(cita);
         }
@@ -265,19 +265,19 @@ public class CitasController : ControllerBase
        .ToListAsync(); // Traer todas y filtrar en memoria
 
         // 🔥 FILTRAR EN MEMORIA usando zona horaria correcta
-    var citasFiltradas = citas
-.Where(c => 
-            {
-  var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(c.Fecha, DateTimeKind.Utc), zonaColombia);
-       return fechaLocal.Date == fecha.Date;
-            })
-   .OrderBy(c => c.Fecha)
-      .ToList();
+        var citasFiltradas = citas
+    .Where(c =>
+    {
+        var fechaLocal = TimeZoneInfo.ConvertTimeFromUtc(DateTime.SpecifyKind(c.Fecha, DateTimeKind.Utc), zonaColombia);
+        return fechaLocal.Date == fecha.Date;
+    })
+       .OrderBy(c => c.Fecha)
+          .ToList();
 
         foreach (var cita in citasFiltradas)
         {
             ConvertirCitaAFormatoLocal(cita);
-          await EnriquecerCitaConServicio(cita);
+            await EnriquecerCitaConServicio(cita);
         }
 
         return Ok(citasFiltradas);

@@ -322,48 +322,15 @@ namespace Barber.Maui.API.Controllers
         [HttpGet("usuario/{cedula}")]
         public async Task<ActionResult<Auth>> GetUsuario(long cedula)
         {
-            try
-            {
-                var usuario = await _context.UsuarioPerfiles
-                    .FirstOrDefaultAsync(u => u.Cedula == cedula);
+            var usuario = await _context.UsuarioPerfiles
+                .FirstOrDefaultAsync(u => u.Cedula == cedula);
 
-                if (usuario == null)
-                {
-                    Console.WriteLine($"❌ Usuario no encontrado con cédula: {cedula}");
-                    return NotFound(new { message = "Usuario no encontrado", cedula });
-                }
+            if (usuario == null)
+                return NotFound();
 
-                Console.WriteLine($"✅ Usuario encontrado: {usuario.Nombre}, Rol: {usuario.Rol}, IdBarberia: {usuario.IdBarberia}");
-
-                // 🔍 Asegurar que los campos críticos estén presentes
-                var response = new
-                {
-                    usuario.Cedula,
-                    usuario.Nombre,
-                    usuario.Email,
-                    usuario.Telefono,
-                    usuario.Rol,
-                    usuario.IdBarberia,
-                    usuario.ImagenPath,
-                    usuario.Especialidades,
-                    usuario.Direccion,
-                    usuario.CalificacionPromedio,
-                    usuario.TotalCalificaciones
-                };
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"❌ Error en GetUsuario: {ex.Message}");
-                return StatusCode(500, new { message = "Error al obtener usuario", error = ex.Message });
-            }
+            return Ok(usuario);
         }
 
-        public class TokenRequest
-        {
-            public string FcmToken { get; set; } = string.Empty;
-        }
         [HttpPost("register-admin")]
         public async Task<IActionResult> RegistrarAdministrador([FromBody] RegistroAdminDto dto)
         {
