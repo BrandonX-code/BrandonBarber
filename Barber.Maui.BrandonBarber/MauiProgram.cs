@@ -143,7 +143,7 @@ namespace Barber.Maui.BrandonBarber
                     }));
 #elif ANDROID
                 events.AddAndroid(android => android.OnCreate((activity, _) =>
-                CrossFirebase.Initialize(activity, () => activity)));
+                CrossFirebase.Initialize(activity)));
 #endif
             });
 
