@@ -28,9 +28,9 @@ namespace Barber.Maui.BrandonBarber
 
             var services = this.Handler?.MauiContext?.Services;
 
-            var authService = services.GetRequiredService<AuthService>();
-            var notificationService = services.GetRequiredService<NotificationService>();
-            var updateService = services.GetRequiredService<UpdateService>();
+            var authService = services!.GetRequiredService<AuthService>();
+            var notificationService = services!.GetRequiredService<NotificationService>();
+            var updateService = services!.GetRequiredService<UpdateService>();
 
             return new Window(
                 new NavigationPage(

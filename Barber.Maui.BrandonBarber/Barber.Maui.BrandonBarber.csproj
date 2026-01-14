@@ -24,7 +24,7 @@
 		<ApplicationTitle>BarberApp</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.Barber.maui.BrandonBarber</ApplicationId>
+		<ApplicationId>BarberGo.BarberGo</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationVersion>19</ApplicationVersion>
