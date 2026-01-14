@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "206004647035",
-    "project_id": "barberapp-21a92",
-    "storage_bucket": "barberapp-21a92.firebasestorage.app"
+    "project_number": "813054626999",
+    "project_id": "barbergo-62941",
+    "storage_bucket": "barbergo-62941.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:206004647035:android:6b10273a1f118bbfd6dede",
+        "mobilesdk_app_id": "1:813054626999:android:8d4b042217079d53ab1132",
         "android_client_info": {
           "package_name": "BarberGo.BarberGo"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB70EPGshR0wBqig0G921itSnfAUrzNvv0"
+          "current_key": "AIzaSyB0kAPpIa_38ETECLzpsCACr7ZU5vog1to"
         }
       ],
       "services": {
