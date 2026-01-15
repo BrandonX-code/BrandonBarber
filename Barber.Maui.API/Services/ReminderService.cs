@@ -13,7 +13,7 @@ namespace Barber.Maui.API.Services
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<ReminderService> _logger;
-        private readonly TimeSpan _checkInterval = TimeSpan.FromMinutes(1); // Verificar cada minuto
+        private readonly TimeSpan _checkInterval = TimeSpan.FromMinutes(2); // Verificar cada minuto
 
         public ReminderService(IServiceProvider serviceProvider, ILogger<ReminderService> logger)
         {
@@ -21,24 +21,33 @@ namespace Barber.Maui.API.Services
             _logger = logger;
         }
 
+        // En ReminderService.cs
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("🔔 Servicio de recordatorios de citas iniciado");
+
+            // ✅ Agregar delay inicial para no sobrecargar al inicio
+            await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
             {
                 try
                 {
+                    using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
+                    cts.CancelAfter(TimeSpan.FromSeconds(30)); // ⏱️ Timeout de 30s
+
                     await EnviarRecordatorios();
                     await Task.Delay(_checkInterval, stoppingToken);
                 }
+                catch (OperationCanceledException)
+                {
+                    _logger.LogWarning("⏱️ ReminderService timeout - próximo intento en 1 minuto");
+                }
                 catch (Exception ex)
                 {
-                    _logger.LogError($"❌ Error en ReminderService: {ex.Message}{ex.StackTrace}");
+                    _logger.LogError($"❌ Error en ReminderService: {ex.Message}");
                 }
             }
-
-            _logger.LogInformation("🛑 Servicio de recordatorios de citas detenido");
         }
 
         private async Task EnviarRecordatorios()
