@@ -22,11 +22,17 @@
                 </HorizontalStackLayout>
             </ScrollView>
             <Border BackgroundColor="White" StrokeShape="RoundRectangle 10" Padding="10" Margin="0,20,0,0" StrokeThickness="0">
-                <Editor x:Name="ComentarioEditor" Placeholder="Escribe un comentario (opcional)" HeightRequest="80" TextColor="Black" BackgroundColor="Transparent" TextChanged="ComentarioEditor_TextChanged"/>
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="White" Offset="0.0" />
+                        <GradientStop Color="#CFCFCF" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Border.Background>
+                <Editor x:Name="ComentarioEditor" Placeholder="Escribe un comentario (opcional)" HeightRequest="80" TextColor="Black" BackgroundColor="Transparent" PlaceholderColor="Gray" TextChanged="ComentarioEditor_TextChanged"/>
             </Border>
             <Label x:Name="ContadorLabel" TextColor="White" FontSize="12" HorizontalOptions="End" Text="0 / 150"/>
             <Grid>
-                <Button Grid.ColumnSpan="2" Text="Enviar Calificación" BackgroundColor="#FF6F91" TextColor="Black" FontSize="18" FontAttributes="Bold" CornerRadius="15" HorizontalOptions="Center" Clicked="OnEnviarCalificacionClicked"/>
+                <Button Grid.ColumnSpan="2" Text="Enviar Calificación" BackgroundColor="#FF6F91" TextColor="Black" FontAttributes="Bold" CornerRadius="15" HorizontalOptions="Center" Clicked="OnEnviarCalificacionClicked"/>
             </Grid>
         </VerticalStackLayout>
         <controls:LoadingControl x:Name="LoadingIndicator" IsVisible="False"/>
