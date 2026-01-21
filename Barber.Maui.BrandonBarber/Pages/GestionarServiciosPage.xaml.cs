@@ -302,14 +302,12 @@ namespace Barber.Maui.BrandonBarber.Pages
                 if (!string.IsNullOrEmpty(servicio.Imagen))
                 {
                     PreviewImage.Source = servicio.Imagen;
-                    PreviewImageBorder.HeightRequest = 100;
-                    PreviewImageBorder.WidthRequest = 100;
+                    PreviewImage.IsVisible = true;
                     PreviewImageBorder.IsVisible = true;
                 }
                 else
                 {
-                    PreviewImageBorder.HeightRequest = 0;
-                    PreviewImageBorder.WidthRequest = 0;
+                    PreviewImage.IsVisible = false;
                     PreviewImageBorder.IsVisible = false;
                 }
 
@@ -425,8 +423,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             NombreEntry.Text = "";
             PrecioEntry.Text = "";
             PreviewImage.Source = null;
-            PreviewImageBorder.HeightRequest = 0;
-            PreviewImageBorder.WidthRequest = 0;
+            PreviewImage.IsVisible = false;
             PreviewImageBorder.IsVisible = false;
             _imagenSeleccionada = null;
             _servicioEditando = null;
@@ -468,8 +465,7 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                         // Asignar la imagen y hacerla visible
                         PreviewImage.Source = ImageSource.FromStream(() => new MemoryStream(memoryStream.ToArray()));
-                        PreviewImageBorder.HeightRequest = 100;
-                        PreviewImageBorder.WidthRequest = 100;
+                        PreviewImage.IsVisible = true;
                         PreviewImageBorder.IsVisible = true;
                     }
                 }
