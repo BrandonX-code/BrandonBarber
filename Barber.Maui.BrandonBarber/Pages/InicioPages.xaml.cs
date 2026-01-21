@@ -69,6 +69,7 @@ namespace Barber.Maui.BrandonBarber.Pages
         protected override void OnAppearing()
         {
             base.OnAppearing();
+            HeaderGrid.SizeChanged += HeaderGrid_SizeChanged;
             Application.Current!.UserAppTheme = AppTheme.Light;
             if (ClienteView.IsVisible)
             {
@@ -86,7 +87,38 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
             _ = ActualizarBadgeSolicitudes();
         }
+        private void HeaderGrid_SizeChanged(object sender, EventArgs e)
+        {
+            var grid = (Grid)sender;
+            double width = grid.Width;
+            double height = grid.Height;
 
+            // Curva hacia abajo: los puntos de control están por debajo del borde inferior
+            var pathFigure = new PathFigure
+            {
+                StartPoint = new Point(0, 0), // Esquina superior izquierda
+                Segments = new PathSegmentCollection
+                {
+                    new LineSegment { Point = new Point(0, height - 30) }, // Borde izquierdo, más arriba
+                    new BezierSegment
+                    {
+                        // Puntos de control por debajo del borde inferior
+                        Point1 = new Point(width * 0.3, height + 0),   // Primer punto de control (más abajo)
+                        Point2 = new Point(width * 0.7, height + 0),   // Segundo punto de control (más abajo)
+                        Point3 = new Point(width, height - 50)         // Fin de la curva, borde derecho, más arriba
+                    },
+                    new LineSegment { Point = new Point(width, 0) },     // Esquina superior derecha
+                    new LineSegment { Point = new Point(0, 0) }          // Cierra la figura
+                }
+            };
+
+            var pathGeometry = new PathGeometry
+            {
+                Figures = new PathFigureCollection { pathFigure }
+            };
+
+            grid.Clip = pathGeometry;
+        }
         private async Task ActualizarBadgeCitasMes()
         {
             try
@@ -477,7 +509,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 // Mostrar información del usuario
                 WelcomeLabel.Text = $"Hola, {AuthService.CurrentUser.Nombre}";
-
+                CargarImagenUsuario();
                 // Ocultar indicador de carga
                 LoadingIndicator.IsVisible = false;
                 LoadingIndicator.IsLoading = false;
@@ -562,6 +594,34 @@ namespace Barber.Maui.BrandonBarber.Pages
             }
         }
 
+        private async void CargarImagenUsuario()
+        {
+            try
+            {
+                if (AuthService.CurrentUser != null && !string.IsNullOrWhiteSpace(AuthService.CurrentUser.ImagenPath))
+                {
+                    // Verificar si es una URL o una ruta local
+                    if (AuthService.CurrentUser.ImagenPath.StartsWith("http"))
+                    {
+                        UsuarioImagenProfile.Source = ImageSource.FromUri(new Uri(AuthService.CurrentUser.ImagenPath));
+                    }
+                    else
+                    {
+                        UsuarioImagenProfile.Source = ImageSource.FromFile(AuthService.CurrentUser.ImagenPath);
+                    }
+                }
+                else
+                {
+                    // Usar imagen por defecto si no hay imagen de usuario
+                    UsuarioImagenProfile.Source = ImageSource.FromFile("usericons.png");
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"❌ Error al cargar imagen del usuario: {ex.Message}");
+                UsuarioImagenProfile.Source = ImageSource.FromFile("usericons.png");
+            }
+        }
         // Add this method to the InicioPages class
         private async void GestionarDisponibilidad(object sender, EventArgs e)
         {

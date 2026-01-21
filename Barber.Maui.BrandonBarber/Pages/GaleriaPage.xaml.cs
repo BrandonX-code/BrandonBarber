@@ -422,7 +422,7 @@
                 },
                 Padding = new Thickness(5),
                 Margin = new Thickness(5, 5, 5, 15),
-                BackgroundColor = Color.FromArgb("#B0BEC5")
+                BackgroundColor = Color.FromArgb("#FFFFFF")
             };
 
             // Gesto para ver detalle

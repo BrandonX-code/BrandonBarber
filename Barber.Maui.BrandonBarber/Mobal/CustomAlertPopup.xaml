@@ -14,7 +14,12 @@
         HorizontalOptions="Center"
         VerticalOptions="Center" WidthRequest="350"
         MaximumHeightRequest="600">
-
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#226C8F" Offset="0.0" />
+                <GradientStop Color="#0E2A36" Offset="1.0" />
+            </LinearGradientBrush>
+        </Border.Background>
         <VerticalStackLayout Spacing="20">
 
             <Label x:Name="MessageLabel"

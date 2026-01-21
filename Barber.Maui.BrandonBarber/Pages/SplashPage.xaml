@@ -5,8 +5,13 @@
              BackgroundColor="#0E2A36"
              Shell.NavBarIsVisible="False"
              NavigationPage.HasNavigationBar="False">
-
-	<Grid VerticalOptions="Center" HorizontalOptions="Center">
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#0E2A36" Offset="0.0" />
+            <GradientStop Color="#265d82" Offset="1.0" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
+    <Grid VerticalOptions="Center" HorizontalOptions="Center">
         <VerticalStackLayout Spacing="30" HorizontalOptions="Center" VerticalOptions="Center">
             <Image x:Name="LogoImage" Source="logobarbergoblanco.png" WidthRequest="350" HeightRequest="350" HorizontalOptions="Center" Opacity="0" />
             <VerticalStackLayout Spacing="15" HorizontalOptions="Center" Margin="0,20,0,0">

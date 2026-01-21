@@ -74,7 +74,7 @@ namespace Barber.Maui.BrandonBarber.Controls
             {
                 bool selected = selectedIndex == 0;
 
-                barrasButton.BackgroundColor = selected ? Color.FromArgb("#0E2A36") : Color.FromArgb("#90A4AE");
+                barrasButton.BackgroundColor = selected ? Color.FromArgb("#0E2A36") : Color.FromArgb("#0090A4AE");
                 barrasButton.Stroke = selected ? Color.FromArgb("#0E2A36") : Color.FromArgb("#707070");
 
                 barrasIconWhite.IsVisible = selected;
@@ -89,7 +89,7 @@ namespace Barber.Maui.BrandonBarber.Controls
             {
                 bool selected = selectedIndex == 1;
 
-                lineasButton.BackgroundColor = selected ? Color.FromArgb("#0E2A36") : Color.FromArgb("#90A4AE");
+                lineasButton.BackgroundColor = selected ? Color.FromArgb("#0E2A36") : Color.FromArgb("#0090A4AE");
                 lineasButton.Stroke = selected ? Color.FromArgb("#0E2A36") : Color.FromArgb("#707070");
 
                 lineasIconWhite.IsVisible = selected;

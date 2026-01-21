@@ -5,7 +5,12 @@
              xmlns:controls="clr-namespace:Barber.Maui.BrandonBarber.Controls" Grid.RowSpan="1">
 
     <Grid>
-
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#0E2A36" Offset="0.0" />
+                <GradientStop Color="#265d82" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
         <RefreshView x:Name="ClienteRefreshView" Command="{Binding RefreshCommand}">
             <Grid Grid.Row="1" Padding="20">
 
@@ -32,23 +37,32 @@
                         </Grid>
                     </Border>
 
-                    <VerticalStackLayout Grid.Row="2" x:Name="PickerSection" Spacing="5" IsVisible="False" Margin="0,10,0,10">
-                        <Border x:Name="barberiaBorder" StrokeThickness="0" StrokeShape="RoundRectangle 16" BackgroundColor="#90A4AE" Padding="0" Margin="0,0,0,10">
-                            <VerticalStackLayout Spacing="0">
-                                <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
-                                    <Label Text="Barbería" TextColor="White" FontSize="16" FontAttributes="Bold"/>
-                                </Border>
-                                <Grid Padding="15,12" ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
-                                    <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
-                                        <Image x:Name="BarberialogoImage" Source="picture.png" Aspect="AspectFill"/>
+                    <VerticalStackLayout Grid.Row="1" x:Name="PickerSection" Spacing="5" IsVisible="False" Margin="0,10,0,10">
+                        <Border x:Name="barberiaBorder" StrokeThickness="0" HeightRequest="150" StrokeShape="RoundRectangle 16" Padding="0" Margin="0,0,0,10">
+                            <Grid>
+                                <Image Source="fondoblancoborder.jpg" Aspect="Fill" />
+                                <VerticalStackLayout Spacing="0">
+                                    <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                <GradientStop Color="#226C8F" Offset="0.0" />
+                                                <GradientStop Color="#0E2A36" Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Label Text="Barbería" TextColor="White" FontSize="16" FontAttributes="Bold"/>
                                     </Border>
-                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" Margin="12,0,0,0">
-                                        <Label x:Name="BarberiaNombreLabel" Text="Seleccionar Barbería" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
-                                        <Label x:Name="BarberiaDireccionLabel" Text="" TextColor="#333" FontSize="14"/>
-                                    </VerticalStackLayout>
-                                    <Button x:Name="BarberiaCambiarButton" Grid.Column="2" Text="Seleccionar" BackgroundColor="#264570" TextColor="White" CornerRadius="10" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" WidthRequest="120" HeightRequest="40" Clicked="OnBarberiaCambiarClicked" Margin="0,0,10,0" IsVisible="True"/>
-                                </Grid>
-                            </VerticalStackLayout>
+                                    <Grid Padding="15,12" ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+                                        <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
+                                            <Image x:Name="BarberialogoImage" Source="picture.png" Aspect="AspectFill"/>
+                                        </Border>
+                                        <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" Margin="12,0,0,0">
+                                            <Label x:Name="BarberiaNombreLabel" Text="Seleccionar Barbería" TextColor="Black" MaxLines="2" FontSize="18" FontAttributes="Bold"/>
+                                            <Label x:Name="BarberiaDireccionLabel" Text="" TextColor="#333" FontSize="14"/>
+                                        </VerticalStackLayout>
+                                        <Button x:Name="BarberiaCambiarButton" Grid.Column="2" Text="Seleccionar" BackgroundColor="#264570" TextColor="White" CornerRadius="10" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" WidthRequest="120" HeightRequest="40" Clicked="OnBarberiaCambiarClicked" Margin="0,0,10,0" IsVisible="True"/>
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Grid>
                         </Border>
                     </VerticalStackLayout>
 
@@ -59,53 +73,55 @@
 
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="10" Margin="0,10" StrokeThickness="0">
-
+                                <Border HeightRequest="120" StrokeShape="RoundRectangle 10" Padding="0" Margin="0,0,0,10" StrokeThickness="0">
                                     <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                            <RowDefinition Height="Auto" />
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*" />
-                                            <ColumnDefinition Width="Auto" />
-                                        </Grid.ColumnDefinitions>
+                                        <Image Source="fondoblancoborder.jpg" Aspect="Fill" />
+                                        <Grid Padding="10">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
 
-                                        <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="5">
-                                            <Label Text="{Binding Nombre}" FontSize="18" TextColor="Black" FontAttributes="Bold" />
-                                            <Label Text="{Binding Email}" FontSize="14" TextColor="Black" />
-                                        </VerticalStackLayout>
+                                            <VerticalStackLayout Grid.Row="0" Grid.Column="0" Spacing="5">
+                                                <Label Text="{Binding Nombre}" FontSize="18" TextColor="Black" FontAttributes="Bold" MaxLines="1"/>
+                                                <Label Text="{Binding Email}" FontSize="14" TextColor="Black" />
+                                            </VerticalStackLayout>
 
-                                        <VerticalStackLayout Grid.Row="0" Grid.Column="1" Padding="10,5" VerticalOptions="Start">
-                                            <Label Text="{Binding Rol}" FontSize="15" TextColor="Black" FontAttributes="Bold" />
-                                        </VerticalStackLayout>
+                                            <VerticalStackLayout Grid.Row="0" Grid.Column="1" Padding="10,5" VerticalOptions="Start">
+                                                <Label Text="{Binding Rol}" FontSize="15" TextColor="Black" FontAttributes="Bold" />
+                                            </VerticalStackLayout>
 
-                                        <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="15" Margin="0,10,0,0">
-                                            <HorizontalStackLayout Spacing="5">
-                                                <Image Source="id.png" WidthRequest="16" HeightRequest="16" />
-                                                <Label Text="{Binding Cedula}" FontSize="12" TextColor="Black" />
+                                            <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="15" Margin="0,10,0,0">
+                                                <HorizontalStackLayout Spacing="5">
+                                                    <Image Source="id.png" WidthRequest="16" HeightRequest="16" />
+                                                    <Label Text="{Binding Cedula}" FontSize="12" TextColor="Black" />
+                                                </HorizontalStackLayout>
                                             </HorizontalStackLayout>
-                                        </HorizontalStackLayout>
-                                        <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="10" Margin="0,15,0,0" HorizontalOptions="End">
-                                            <Button Text="Ver Detalles" FontSize="10" BackgroundColor="#264570" TextColor="White" CornerRadius="15" Padding="15,0" Clicked="OnVerDetallesClicked" CommandParameter="{Binding}" />
-                                            <Image Source="delete.png" WidthRequest="30" HeightRequest="30" Aspect="AspectFit">
-                                                <Image.GestureRecognizers>
-                                                    <TapGestureRecognizer Tapped="OnEliminarClienteClicked" CommandParameter="{Binding}" />
-                                                </Image.GestureRecognizers>
-                                            </Image>
-                                        </HorizontalStackLayout>
+                                            <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2" Spacing="10" Margin="0,-25,0,0" HorizontalOptions="End">
+                                                <Button Text="Ver Detalles" FontSize="10" BackgroundColor="#264570" TextColor="White" CornerRadius="15" Padding="15,0" Clicked="OnVerDetallesClicked" CommandParameter="{Binding}" />
+                                                <Image Source="delete.png" WidthRequest="30" HeightRequest="30" Aspect="AspectFit">
+                                                    <Image.GestureRecognizers>
+                                                        <TapGestureRecognizer Tapped="OnEliminarClienteClicked" CommandParameter="{Binding}" />
+                                                    </Image.GestureRecognizers>
+                                                </Image>
+                                            </HorizontalStackLayout>
+                                        </Grid>
                                     </Grid>
                                 </Border>
                             </DataTemplate>
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
-                    <Border Grid.Row="4" x:Name="EmptyStateFrame" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="30" IsVisible="False" StrokeThickness="0" VerticalOptions="Start" Margin="0,20,0,0">
+                    <Border Grid.Row="4" x:Name="EmptyStateFrame" BackgroundColor="Transparent" StrokeShape="RoundRectangle 10" Padding="30" IsVisible="False" StrokeThickness="0.3" VerticalOptions="Start" Margin="0,20,0,0">
                         <VerticalStackLayout Spacing="15" HorizontalOptions="Center">
-                            <Image Source="id.png" WidthRequest="64" HeightRequest="64" />
-                            <Label Text="No hay clientes registrados" FontSize="18" TextColor="Black" HorizontalOptions="Center" />
-                            <Label Text="Los clientes aparecerán aquí cuando se registren en la aplicación" FontSize="14" TextColor="Black" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
+                            <Image Source="chat.png" WidthRequest="64" HeightRequest="64" />
+                            <Label Text="No hay clientes registrados" FontSize="18" TextColor="White" HorizontalOptions="Center" />
+                            <Label Text="Los clientes aparecerán aquí cuando se registren en la aplicación" FontSize="14" TextColor="White" Opacity="0.5" HorizontalOptions="Center" HorizontalTextAlignment="Center" />
                         </VerticalStackLayout>
                     </Border>
 

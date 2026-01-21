@@ -7,7 +7,13 @@
     <Border Padding="0" BackgroundColor="White" StrokeShape="RoundRectangle 20" VerticalOptions="Center" HorizontalOptions="Center" WidthRequest="340" StrokeThickness="0">
         <VerticalStackLayout Spacing="0">
 
-            <Border BackgroundColor="#0E2A36" StrokeShape="RoundRectangle 20,20,0,0" Padding="20" StrokeThickness="0">
+            <Border StrokeShape="RoundRectangle 15,15,0,0" Padding="20" StrokeThickness="0">
+                <Border.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="#0E2A36" Offset="0.0" />
+                        <GradientStop Color="#265d82" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Border.Background>
                 <Label Text="Selecciona un barbero" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center"/>
             </Border>
 
@@ -15,7 +21,7 @@
                 <CollectionView x:Name="BarberosCollection" SelectionMode="Single">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <Border Padding="15" BackgroundColor="Transparent" StrokeThickness="0">
+                            <Border Padding="15" BackgroundColor="Transparent" StrokeThickness="0.2">
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="OnBarberoTapped" CommandParameter="{Binding .}"/>
                                 </Border.GestureRecognizers>

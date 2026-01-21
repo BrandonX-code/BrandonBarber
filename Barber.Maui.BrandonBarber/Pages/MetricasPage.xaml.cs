@@ -445,13 +445,13 @@ namespace Barber.Maui.BrandonBarber.Pages
             var fechaActual = DateTime.Now;
             var colores = new[]
             {
-        SKColor.Parse("#4CAF50"), // Verde para alta asistencia
-        SKColor.Parse("#8BC34A"),
-        SKColor.Parse("#FFC107"), // Amarillo para media
-        SKColor.Parse("#FF9800"),
-        SKColor.Parse("#FF5722"), // Rojo para baja
-        SKColor.Parse("#F44336")
-    };
+                SKColor.Parse("#4CAF50"), // Verde para alta asistencia
+                SKColor.Parse("#8BC34A"),
+                SKColor.Parse("#FFC107"), // Amarillo para media
+                SKColor.Parse("#FF9800"),
+                SKColor.Parse("#FF5722"), // Rojo para baja
+                SKColor.Parse("#F44336")
+            };
 
             // Obtener todas las citas históricas de una vez
             List<CitaModel> todasLasCitas;
@@ -571,8 +571,8 @@ namespace Barber.Maui.BrandonBarber.Pages
             var fechaActual = DateTime.Now;
             var colores = new[]
             {
-                SKColor.Parse("#3A7C9E"), // Azul oscuro profundo
-                SKColor.Parse("#2E5C8A"), // Azul medio
+                SKColor.Parse("#E3F7FF"), // Azul oscuro profundo
+                SKColor.Parse("#A6C1E3"), // Azul medio
                 SKColor.Parse("#4A90C8"), // Azul cielo
                 SKColor.Parse("#7FB3D5"), // Azul claro
                 SKColor.Parse("#B0D4E8"), // Azul pastel
@@ -642,13 +642,14 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var entries = new List<ChartEntry>();
                 var colores = new[]
                 {
-                    SKColor.Parse("#9BB9D4"), // Gris azulado claro
-                    SKColor.Parse("#546E7A"), // Gris azulado
-                    SKColor.Parse("#78909C"), // Gris azulado claro
-                    SKColor.Parse("#90A4AE"), // Gris plateado
-                    SKColor.Parse("#B0BEC5"), // Gris perla
-                    SKColor.Parse("#CFD8DC")  // Gris muy claro
-                };
+                SKColor.Parse("#E3F7FF"), // Azul oscuro profundo
+                SKColor.Parse("#A6C1E3"), // Azul medio
+                SKColor.Parse("#4A90C8"), // Azul cielo
+                SKColor.Parse("#7FB3D5"), // Azul claro
+                SKColor.Parse("#B0D4E8"), // Azul pastel
+                SKColor.Parse("#D4E8F5")  // Azul muy claro
+            };
+
 
                 int maxBarberosAMostrar = 5; // Mostrar máximo 5 barberos
                 int colorIndex = 0;

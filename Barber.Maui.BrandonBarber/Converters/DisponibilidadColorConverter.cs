@@ -8,9 +8,9 @@ namespace Barber.Maui.BrandonBarber.Converters
         {
             if (value is bool disponible)
             {
-                return disponible ? Color.FromArgb("#E0F7FA") : Color.FromArgb("#717d7e");
+                return disponible ? Color.FromArgb("#265d82") : Color.FromArgb("#717d7e");
             }
-            return Color.FromArgb("#E0F7FA");
+            return Color.FromArgb("#265d82");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

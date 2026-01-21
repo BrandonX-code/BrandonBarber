@@ -11,7 +11,13 @@
                 <Border BackgroundColor="White" StrokeShape="RoundRectangle 20" Margin="20" Padding="0" VerticalOptions="Center" StrokeThickness="0">
 
                     <StackLayout Spacing="0">
-                        <Border BackgroundColor="#0E2A36" StrokeShape="RoundRectangle 20,20,0,0" HeightRequest="80">
+                        <Border BackgroundColor="#0E2A36" StrokeThickness="0" StrokeShape="RoundRectangle 20,20,0,0" HeightRequest="80">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#226C8F" Offset="0.0" />
+                                    <GradientStop Color="#0E2A36" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Background>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*" />
@@ -71,7 +77,7 @@
 
                                 <StackLayout>
                                     <Label Text="Rol" FontSize="12" TextColor="#7F8C8D" FontAttributes="Bold" />
-                                    <Border BackgroundColor="#FEF9E7" StrokeShape="RoundRectangle 10" Padding="10" Margin="0,5,0,0">
+                                    <Border BackgroundColor="#FEF9E7" StrokeThickness="0" StrokeShape="RoundRectangle 10" Padding="10" Margin="0,5,0,0">
                                         <Label Text="{Binding Rol}" FontSize="14" TextColor="#E67E22" FontAttributes="Bold" />
                                     </Border>
                                 </StackLayout>

@@ -10,7 +10,7 @@
             </Grid>
         </Border>
 
-        <Border x:Name="LineasButton" Grid.Column="1" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 16" Padding="12" StrokeThickness="1" Stroke="#707070">
+        <Border x:Name="LineasButton" Grid.Column="1" BackgroundColor="Transparent" StrokeShape="RoundRectangle 16" Padding="12" StrokeThickness="1" Stroke="#707070">
             <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" VerticalOptions="Center">
                 <Image x:Name="LineasIconWhite" Source="lineasblancas.png" WidthRequest="24" HeightRequest="24" VerticalOptions="Center" Grid.Column="0" IsVisible="False"/>
                 <Image x:Name="LineasIconBlack" Source="lineasnegras.png" WidthRequest="24" HeightRequest="24" VerticalOptions="Center" Grid.Column="0"/>

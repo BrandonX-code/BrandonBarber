@@ -4,6 +4,12 @@
              BackgroundColor="#0E2A36" xmlns:controls="clr-namespace:Barber.Maui.BrandonBarber.Controls" Grid.RowSpan="1">
 
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#0E2A36" Offset="0.0" />
+                <GradientStop Color="#265d82" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -52,9 +58,17 @@
 
                     </VerticalStackLayout>
 
-                    <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 16" Padding="0" StrokeThickness="0">
-                        <VerticalStackLayout Spacing="0">
+                    <Border BackgroundColor="White" StrokeShape="RoundRectangle 16" HeightRequest="380" Padding="0" StrokeThickness="0">
+                        <Grid Clip="RoundRectangle 16">
+                            <Image Source="fondoblancoborder.jpg" Aspect="Fill"/>
+                            <VerticalStackLayout Spacing="0">
                             <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#226C8F" Offset="0.0" />
+                                        <GradientStop Color="#0E2A36" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
                                 <Label Text="Calendario de Disponibilidad" TextColor="White" FontSize="16" FontAttributes="Bold" HorizontalOptions="Center"/>
                             </Border>
                             <VerticalStackLayout Spacing="10" Padding="15">
@@ -83,15 +97,24 @@
                                 <Grid x:Name="CalendarioGrid" Padding="0,0,0,10"/>
                             </VerticalStackLayout>
                         </VerticalStackLayout>
+                        </Grid>
                     </Border>
 
 
 
                     <VerticalStackLayout Spacing="15">
-                        <Border x:Name="HorarioDisponibleBorder" BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 16" Padding="0" StrokeThickness="0" IsVisible="False">
-                            <VerticalStackLayout Spacing="0">
+                        <Border x:Name="HorarioDisponibleBorder" StrokeShape="RoundRectangle 16" Padding="0" HeightRequest="190" StrokeThickness="0" IsVisible="False">
+                            <Grid Clip="RoundRectangle 16">
+                                <Image Source="fondoblancoborder.jpg" Aspect="Fill"/>
+                                <VerticalStackLayout Spacing="0">
                                 <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
-                                    <Label Text="Horario Disponible" TextColor="White" FontSize="16" HorizontalOptions="Center" FontAttributes="Bold"/>
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                <GradientStop Color="#226C8F" Offset="0.0" />
+                                                <GradientStop Color="#0E2A36" Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Label Text="Horario Disponible" TextColor="White" FontSize="16" HorizontalOptions="Center" FontAttributes="Bold"/>
                                 </Border>
                                 <VerticalStackLayout Spacing="10" Padding="15" Margin="0,10,0,0">
                                     <HorizontalStackLayout Spacing="5" HorizontalOptions="Center">
@@ -105,6 +128,7 @@
                                     </HorizontalStackLayout>
                                 </VerticalStackLayout>
                             </VerticalStackLayout>
+                            </Grid>
                         </Border>
                         <Label x:Name="NoAvailabilityLabel" Text="No hay horarios disponibles para este día" TextColor="White" IsVisible="false" HorizontalTextAlignment="Center" Margin="0,10,0,0"/>
                     </VerticalStackLayout>

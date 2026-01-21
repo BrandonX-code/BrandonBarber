@@ -4,153 +4,187 @@
              x:Class="Barber.Maui.BrandonBarber.Pages.GestionarExcepcionesPage"
              BackgroundColor="#0E2A36"
              xmlns:controls="clr-namespace:Barber.Maui.BrandonBarber.Controls">
-	<Grid>
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#0E2A36" Offset="0.0" />
+                <GradientStop Color="#265d82" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
+        <Grid RowDefinitions="Auto,*">
 
-		<Grid RowDefinitions="Auto,*">
-
-			<Label Text="Gestionar Días No Disponibles"
+            <Label Text="Gestionar Días No Disponibles"
 					   FontSize="22"
 					   FontAttributes="Bold"
 					   TextColor="White"
 					   HorizontalOptions="Center"/>
 
-			<!-- Content -->
-			<ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
-				<VerticalStackLayout Padding="20" Spacing="20">
+            <!-- Content -->
+            <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
+                <VerticalStackLayout Padding="20" Spacing="20">
 
-					<!-- Información -->
-					<Border BackgroundColor="#28475C"
-							StrokeShape="RoundRectangle 15"
+                    <!-- Información -->
+                    <Border StrokeShape="RoundRectangle 15"
 							Padding="15"
 							StrokeThickness="0">
-						<VerticalStackLayout Spacing="8">
-							<Label Text="Información"
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#226C8F" Offset="0.0" />
+                                <GradientStop Color="#0E2A36" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <VerticalStackLayout Spacing="8">
+                            <Label Text="Información"
 								   FontSize="16"
 								   FontAttributes="Bold"
 								   TextColor="White"/>
-							<Label Text="Marca días donde no estarás disponible o tendrás horarios diferentes. Los clientes con citas serán notificados automáticamente."
+                            <Label Text="Marca días donde no estarás disponible o tendrás horarios diferentes. Los clientes con citas serán notificados automáticamente."
 								   FontSize="14"
-								   TextColor="#E0F7FA"
+								   TextColor="White"
 								   LineBreakMode="WordWrap"/>
-						</VerticalStackLayout>
-					</Border>
+                        </VerticalStackLayout>
+                    </Border>
 
-					<!-- Selector de Fecha -->
-					<Border BackgroundColor="#90A4AE"
-							StrokeShape="RoundRectangle 15"
-							Padding="15"
-							StrokeThickness="0">
-						<VerticalStackLayout Spacing="10">
-							<Label Text="Selecciona el día"
+                    <!-- Selector de Fecha -->
+                    <Border StrokeShape="RoundRectangle 15"
+							StrokeThickness="0" HeightRequest="110">
+                        <Grid>
+                            <Image Source="fondoblancoborder.jpg" Aspect="Fill" />
+
+                            <VerticalStackLayout Spacing="10" Padding="15">
+                                <Label Text="Selecciona el día"
 								   FontSize="16"
 								   FontAttributes="Bold"
 								   TextColor="Black"/>
-							<DatePicker x:Name="FechaPicker"
+                                <Border Background="White" StrokeShape="10" StrokeThickness="0">
+                                    <Border.Shadow>
+                                        <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.5" />
+                                    </Border.Shadow>
+                                    <DatePicker x:Name="FechaPicker"
 										MinimumDate="{x:Static x:DateTime.Today}"
 										TextColor="Black"
 										FontSize="16"
 										DateSelected="OnFechaSelected"/>
-						</VerticalStackLayout>
-					</Border>
+                                </Border>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
 
-					<!-- Tipo de Excepción -->
-					<Border BackgroundColor="#90A4AE"
-							StrokeShape="RoundRectangle 15"
-							Padding="15"
+                    <!-- Tipo de Excepción -->
+                    <Border StrokeShape="RoundRectangle 15"
+							HeightRequest="150"
 							StrokeThickness="0">
-						<VerticalStackLayout Spacing="10">
-							<Label Text="Tipo de cambio"
+                        <Grid>
+                            <Image Source="fondoblancoborder.jpg" Aspect="Fill" />
+
+                            <VerticalStackLayout Spacing="10" Padding="15">
+                                <Label Text="Tipo de cambio"
 								   FontSize="16"
 								   FontAttributes="Bold"
 								   TextColor="Black"/>
 
-							<RadioButton x:Name="DiaCompletoRadio"
+                                <RadioButton x:Name="DiaCompletoRadio"
 										 Content="No estaré disponible todo el día"
 										 TextColor="Black"
 										 GroupName="TipoExcepcion"
 										 IsChecked="True"
 										 CheckedChanged="OnTipoExcepcionChanged"/>
 
-							<RadioButton x:Name="HorarioModificadoRadio"
+                                <RadioButton x:Name="HorarioModificadoRadio"
 										 Content="Tendré horarios diferentes"
 										 TextColor="Black"
 										 GroupName="TipoExcepcion"
 										 CheckedChanged="OnTipoExcepcionChanged"/>
-						</VerticalStackLayout>
-					</Border>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
 
-					<!-- Horarios Modificados (solo si se selecciona esa opción) -->
-					<Border x:Name="HorariosModificadosContainer"
-							BackgroundColor="#90A4AE"
+                    <!-- Horarios Modificados (solo si se selecciona esa opción) -->
+                    <Border x:Name="HorariosModificadosContainer"
 							StrokeShape="RoundRectangle 15"
-							Padding="15"
 							StrokeThickness="0"
-							IsVisible="False">
-						<VerticalStackLayout Spacing="10">
-							<Label Text="Nuevos horarios disponibles"
+							IsVisible="False" HeightRequest="130">
+                        <Grid>
+                            <Image Source="fondoblancoborder.jpg" Aspect="Fill" />
+
+                            <VerticalStackLayout Spacing="10" Padding="15">
+                                <Label Text="Nuevos horarios disponibles"
 								   FontSize="16"
 								   FontAttributes="Bold"
 								   TextColor="Black"/>
 
-							<Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-								<VerticalStackLayout Grid.Column="0">
-									<Label Text="Hora inicio" TextColor="Black" FontSize="14"/>
-									<TimePicker x:Name="HoraInicioPicker"
+                                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                    <VerticalStackLayout Grid.Column="0" Spacing="5">
+                                        <Label Text="Hora inicio" TextColor="Black" FontSize="14"/>
+                                        <Border Background="White" StrokeShape="10" StrokeThickness="0">
+                                            <Border.Shadow>
+                                                <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.5" />
+                                            </Border.Shadow>
+                                            <TimePicker x:Name="HoraInicioPicker"
 												TextColor="Black"
 												Format="hh:mm tt"/>
-								</VerticalStackLayout>
+                                        </Border>
+                                    </VerticalStackLayout>
 
-								<VerticalStackLayout Grid.Column="1">
-									<Label Text="Hora fin" TextColor="Black" FontSize="14"/>
-									<TimePicker x:Name="HoraFinPicker"
+                                    <VerticalStackLayout Grid.Column="1" Spacing="5">
+                                        <Label Text="Hora fin" TextColor="Black" FontSize="14"/>
+                                        <Border Background="White" StrokeShape="10" StrokeThickness="0">
+                                            <Border.Shadow>
+                                                <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.5" />
+                                            </Border.Shadow>
+                                            <TimePicker x:Name="HoraFinPicker"
 												TextColor="Black"
 												Format="hh:mm tt"/>
-								</VerticalStackLayout>
-							</Grid>
-						</VerticalStackLayout>
-					</Border>
+                                        </Border>
+                                    </VerticalStackLayout>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
 
-					<!-- Motivo -->
-					<Border BackgroundColor="#90A4AE"
-							StrokeShape="RoundRectangle 15"
-							Padding="15"
-							StrokeThickness="0">
-						<VerticalStackLayout Spacing="10">
-							<Label Text="Motivo (opcional)"
+                    <!-- Motivo -->
+                    <Border StrokeShape="RoundRectangle 15"
+							StrokeThickness="0" HeightRequest="170">
+                        <Grid>
+                            <Image Source="fondoblancoborder.jpg" Aspect="Fill" />
+
+                            <VerticalStackLayout Spacing="10" Padding="15">
+                                <Label Text="Motivo (opcional)"
 								   FontSize="16"
 								   FontAttributes="Bold"
 								   TextColor="Black"/>
-							<Editor x:Name="MotivoEditor"
+                                <Editor x:Name="MotivoEditor"
 									Placeholder="Ej: Asunto personal, Capacitación, etc."
 									PlaceholderColor="#666"
 									TextColor="Black"
 									HeightRequest="100"
 									MaxLength="500"/>
-						</VerticalStackLayout>
-					</Border>
+                            </VerticalStackLayout>
+                        </Grid>
+                    </Border>
 
-					<!-- Vista previa de citas afectadas -->
-					<Border x:Name="CitasAfectadasContainer"
+                    <!-- Vista previa de citas afectadas -->
+                    <Border x:Name="CitasAfectadasContainer"
 							BackgroundColor="#FFF3E0"
 							StrokeShape="RoundRectangle 15"
 							Padding="15"
 							StrokeThickness="0"
 							IsVisible="False">
-						<VerticalStackLayout Spacing="10">
-							<Label x:Name="CitasAfectadasLabel"
+                        <VerticalStackLayout Spacing="10">
+                            <Label x:Name="CitasAfectadasLabel"
 								   Text="Citas afectadas: 0"
 								   FontSize="16"
 								   FontAttributes="Bold"
 								   TextColor="#E65100"/>
-							<Label x:Name="CitasDetalleLabel"
+                            <Label x:Name="CitasDetalleLabel"
 								   Text="Se notificará a los clientes automáticamente"
 								   FontSize="14"
 								   TextColor="#BF360C"/>
-						</VerticalStackLayout>
-					</Border>
+                        </VerticalStackLayout>
+                    </Border>
 
-					<!-- Botones -->
-					<Button Text="Guardar Excepción"
+                    <!-- Botones -->
+                    <Button Text="Guardar Excepción"
 							BackgroundColor="#FF6F91"
 							TextColor="Black"
 							FontAttributes="Bold"
@@ -158,59 +192,66 @@
 							HeightRequest="50"
 							Clicked="OnGuardarClicked"/>
 
-					<!-- Lista de excepciones existentes -->
-					<Border BackgroundColor="#28475C"
+                    <!-- Lista de excepciones existentes -->
+                    <Border BackgroundColor="#28475C"
 							StrokeShape="RoundRectangle 15"
 							Padding="15"
 							StrokeThickness="0">
-						<VerticalStackLayout Spacing="10">
-							<Label Text="Excepciones programadas"
+                        <Border.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#226C8F" Offset="0.0" />
+                                <GradientStop Color="#0E2A36" Offset="1.0" />
+                            </LinearGradientBrush>
+                        </Border.Background>
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Excepciones programadas"
 								   FontSize="18"
 								   FontAttributes="Bold"
 								   TextColor="White"/>
 
-							<CollectionView x:Name="ExcepcionesCollectionView">
-								<CollectionView.ItemTemplate>
-									<DataTemplate>
-										<Border BackgroundColor="#90A4AE"
-												StrokeShape="RoundRectangle 10"
-												Padding="15"
-												Margin="0,5"
+                            <CollectionView x:Name="ExcepcionesCollectionView">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border StrokeShape="RoundRectangle 10" HeightRequest="80"
 												StrokeThickness="0">
-											<Grid ColumnDefinitions="*,Auto">
-												<VerticalStackLayout Grid.Column="0" Spacing="5">
-													<Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}"
+                                            <Grid>
+                                                <Image Source="fondoblancoborder.jpg" Aspect="Fill" />
+
+                                                <Grid ColumnDefinitions="*,Auto" Padding="15">
+                                                    <VerticalStackLayout Grid.Column="0">
+                                                        <Label Text="{Binding Fecha, StringFormat='{0:dd/MM/yyyy}'}"
 														   FontSize="16"
 														   FontAttributes="Bold"
 														   TextColor="Black"/>
-													<Label Text="{Binding TipoExcepcion}"
+                                                        <Label Text="{Binding TipoExcepcion}"
 														   FontSize="14"
 														   TextColor="#333"/>
-													<Label Text="{Binding Motivo}"
+                                                        <Label Text="{Binding Motivo}"
        FontSize="12"
        TextColor="#666"
        IsVisible="{Binding Motivo, Converter={StaticResource StringNotEmptyConverter}}"/>
-												</VerticalStackLayout>
+                                                    </VerticalStackLayout>
 
-												<Button Grid.Column="1"
+                                                    <Button Grid.Column="1"
 														ImageSource="delete.png"
 														BackgroundColor="Transparent"
 														TextColor="White"
 														WidthRequest="60"
 														Clicked="OnEliminarExcepcionClicked"
 														CommandParameter="{Binding .}"/>
-											</Grid>
-										</Border>
-									</DataTemplate>
-								</CollectionView.ItemTemplate>
-							</CollectionView>
-						</VerticalStackLayout>
-					</Border>
+                                                </Grid>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+                        </VerticalStackLayout>
+                    </Border>
 
-				</VerticalStackLayout>
-			</ScrollView>
+                </VerticalStackLayout>
+            </ScrollView>
 
-		</Grid>
-		<controls:LoadingControl x:Name="LoadingIndicator" IsVisible="False"/>
-	</Grid>
+        </Grid>
+        <controls:LoadingControl x:Name="LoadingIndicator" IsVisible="False"/>
+    </Grid>
 </ContentPage>

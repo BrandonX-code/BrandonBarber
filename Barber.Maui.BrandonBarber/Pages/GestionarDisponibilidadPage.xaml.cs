@@ -43,7 +43,7 @@ namespace Barber.Maui.BrandonBarber.Pages
             {
                 var border = new Border
                 {
-                    BackgroundColor = Color.FromArgb("#90A4AE"),
+                    BackgroundColor = Color.FromArgb("#FFFFFF"),
                     StrokeShape = new RoundRectangle { CornerRadius =15 },
                     Padding = new Thickness(20,15),
                     StrokeThickness =0,
@@ -77,7 +77,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 {
                     IsToggled = dia.Habilitado,
                     OnColor = Color.FromArgb("#FF6F91"),
-                    ThumbColor = Colors.White,
+                    ThumbColor = Color.FromArgb("#265d82"),
                     VerticalOptions = LayoutOptions.Center
                 };
 
@@ -110,7 +110,7 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                 var borderInicio = new Border
                 {
-                    BackgroundColor = Color.FromArgb("#E0F7FA"),
+                    BackgroundColor = Color.FromArgb("#265d82"),
                     StrokeShape = new RoundRectangle { CornerRadius =10 },
                     StrokeThickness =0,
                     Padding = new Thickness(15,8)
@@ -119,7 +119,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var timePickerInicio = new TimePicker
                 {
                     Time = dia.HoraInicio,
-                    TextColor = Colors.Black,
+                    TextColor = Colors.White,
                     BackgroundColor = Colors.Transparent,
                     FontSize =16,
                     Format = "hh:mm tt",
@@ -150,7 +150,7 @@ namespace Barber.Maui.BrandonBarber.Pages
 
                 var borderFin = new Border
                 {
-                    BackgroundColor = Color.FromArgb("#E0F7FA"),
+                    BackgroundColor = Color.FromArgb("#265d82"),
                     StrokeShape = new RoundRectangle { CornerRadius =10 },
                     StrokeThickness =0,
                     Padding = new Thickness(15,8)
@@ -159,7 +159,7 @@ namespace Barber.Maui.BrandonBarber.Pages
                 var timePickerFin = new TimePicker
                 {
                     Time = dia.HoraFin,
-                    TextColor = Colors.Black,
+                    TextColor = Colors.White,
                     BackgroundColor = Colors.Transparent,
                     FontSize =16,
                     HorizontalOptions = LayoutOptions.Fill

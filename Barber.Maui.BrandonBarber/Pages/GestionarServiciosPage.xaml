@@ -4,39 +4,72 @@
              x:Class="Barber.Maui.BrandonBarber.Pages.GestionarServiciosPage" xmlns:controls="clr-namespace:Barber.Maui.BrandonBarber.Controls" Grid.RowSpan="1">
 
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#0E2A36" Offset="0.0" />
+                <GradientStop Color="#265d82" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never">
             <VerticalStackLayout Padding="20" BackgroundColor="#0E2A36">
                 <Label Text="Gestión de Servicios" FontSize="24" TextColor="#E0F7FA" FontAttributes="Bold" HorizontalOptions="Center"/>
                 <VerticalStackLayout x:Name="PickerSection" Spacing="5" IsVisible="False" Margin="0,10,0,10">
-                    <Border x:Name="barberiaBorder" StrokeThickness="0" StrokeShape="RoundRectangle 16" BackgroundColor="#90A4AE" Padding="0" Margin="0,0,0,10">
-                        <VerticalStackLayout Spacing="0">
-                            <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
-                                <Label Text="Barbería" TextColor="White" FontSize="16" FontAttributes="Bold"/>
-                            </Border>
-                            <Grid Padding="15,12" ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
-                                <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
-                                    <Image x:Name="BarberiaLogoImage" Source="picture.png" Aspect="AspectFill"/>
+                    <Border x:Name="barberiaBorder" StrokeThickness="0" HeightRequest="140" StrokeShape="RoundRectangle 17" Padding="0" Margin="0,0,0,10">
+                        <Grid>
+                            <Image Source="fondoblancoborder.jpg" Aspect="Fill" />
+                            <VerticalStackLayout Spacing="0">
+                                <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#226C8F" Offset="0.0" />
+                                            <GradientStop Color="#0E2A36" Offset="1.0" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                    <Label Text="Barbería" TextColor="White" FontSize="16" FontAttributes="Bold"/>
                                 </Border>
-                                <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" Margin="12,0,0,0">
-                                    <Label x:Name="BarberiaSelectedLabel" Text="Seleccionar Barbería" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
-                                    <Label x:Name="BarberiaTelefonoLabel" Text="" TextColor="#333" FontSize="14"/>
-                                </VerticalStackLayout>
-                                <Button x:Name="BarberiaSelectButton" Grid.Column="2" Text="Seleccionar" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" WidthRequest="120" HeightRequest="40" Clicked="OnBarberiaPickerTapped" Margin="0,0,10,0" IsVisible="False"/>
-                            </Grid>
-                        </VerticalStackLayout>
+                                <Grid Padding="15,12" ColumnDefinitions="Auto,*,Auto" VerticalOptions="Center">
+                                    <Border WidthRequest="70" HeightRequest="70" BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 50" VerticalOptions="Center" StrokeThickness="0">
+                                        <Image x:Name="BarberiaLogoImage" Source="picture.png" Aspect="AspectFill"/>
+                                    </Border>
+                                    <VerticalStackLayout Grid.Column="1" Spacing="2" VerticalOptions="Center" Margin="12,0,0,0">
+                                        <Label x:Name="BarberiaSelectedLabel" Text="Seleccionar Barbería" TextColor="Black" MaxLines="2" FontSize="18" FontAttributes="Bold"/>
+                                        <Label x:Name="BarberiaTelefonoLabel" Text="" TextColor="#333" FontSize="14"/>
+                                    </VerticalStackLayout>
+                                    <Button x:Name="BarberiaSelectButton" Grid.Column="2" Text="Seleccionar" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" WidthRequest="120" HeightRequest="40" Clicked="OnBarberiaPickerTapped" Margin="0,0,10,0" IsVisible="False"/>
+                                </Grid>
+                            </VerticalStackLayout>
+                        </Grid>
                     </Border>
                 </VerticalStackLayout>
-                <Border StrokeThickness="0" Background="#90A4AE" StrokeShape="RoundRectangle 10" Padding="0" Margin="0,0,0,10">
+                <Border StrokeThickness="0" StrokeShape="RoundRectangle 17" Padding="0" Margin="0,0,0,10">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <GradientStop Color="#CFCFCF" Offset="0.0" />
+                            <GradientStop Color="White" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Border.Background>
                     <VerticalStackLayout Spacing="0">
                         <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 10,10,0,0">
+                            <Border.Background>
+                                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                    <GradientStop Color="#226C8F" Offset="0.0" />
+                                    <GradientStop Color="#0E2A36" Offset="1.0" />
+                                </LinearGradientBrush>
+                            </Border.Background>
                             <Label Text="Servicio" TextColor="White" FontSize="16" FontAttributes="Bold"/>
                         </Border>
                         <VerticalStackLayout Spacing="10" Padding="15">
-                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
-                                <Entry x:Name="NombreEntry" Margin="10,0" Placeholder="Nombre del Servicio" TextColor="Black"/>
+                            <Border BackgroundColor="White" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.5" />
+                                </Border.Shadow>
+                                <Entry x:Name="NombreEntry" Margin="10,0" Placeholder="Nombre del Servicio" TextColor="Black" PlaceholderColor="Gray"/>
                             </Border>
-                            <Border BackgroundColor="#E0F7FA" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
-                                <Entry x:Name="PrecioEntry"  Margin="10,0" Placeholder="Precio" Keyboard="Numeric" TextColor="Black" TextChanged="OnPrecioEntryTextChanged"/>
+                            <Border BackgroundColor="White" StrokeShape="RoundRectangle 10" StrokeThickness="0"  Padding="0"  HorizontalOptions="Fill">
+                                <Border.Shadow>
+                                    <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.5" />
+                                </Border.Shadow>
+                                <Entry x:Name="PrecioEntry"  Margin="10,0" Placeholder="Precio" Keyboard="Numeric" TextColor="Black" PlaceholderColor="Gray" TextChanged="OnPrecioEntryTextChanged"/>
                             </Border>
                             <Border x:Name="PreviewImageBorder" StrokeShape="RoundRectangle 10" HeightRequest="100" WidthRequest="100" HorizontalOptions="Fill" Padding="0" StrokeThickness="0" IsVisible="False">
                                 <Image x:Name="PreviewImage" HeightRequest="100" WidthRequest="100" Aspect="AspectFill"/>
@@ -60,17 +93,21 @@
                     <CollectionView x:Name="ServiciosListView" SelectionMode="Single" SelectionChanged="OnServicioSeleccionado">
                         <CollectionView.ItemTemplate>
                             <DataTemplate>
-                                <Border BackgroundColor="#90A4AE" StrokeShape="RoundRectangle 10" Padding="10" Margin="5" StrokeThickness="0">
-                                    <Grid ColumnDefinitions="80,*,Auto,Auto" VerticalOptions="Center">
-                                        <Border StrokeShape="RoundRectangle 7" HeightRequest="60" WidthRequest="60" HorizontalOptions="Fill" Padding="0" StrokeThickness="0">
-                                            <Image Source="{Binding Imagen}" HeightRequest="60" WidthRequest="60" Grid.Column="0" Aspect="AspectFill"/>
-                                        </Border>
-                                        <VerticalStackLayout Grid.Column="1" Spacing="2">
-                                            <Label Text="{Binding Nombre}" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
-                                            <Label Text="{Binding Precio, StringFormat='${0:N0}'}" TextColor="Black" FontSize="16"/>
-                                        </VerticalStackLayout>
-                                        <Button ImageSource="editar.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Clicked="OnEditarBtnClicked" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="White" Padding="5,0"/>
-                                        <Button ImageSource="delete.png" HeightRequest="20" WidthRequest="20" Grid.Column="3" Clicked="OnEliminarBtnClicked" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="White" Padding="5,0"/>
+                                <Border StrokeShape="RoundRectangle 15" HeightRequest="90" Margin="4" StrokeThickness="0">
+                                    <Grid>
+                                        <Image Source="fondoblancoborder.jpg" Aspect="AspectFill" />
+
+                                        <Grid ColumnDefinitions="80,*,Auto,Auto" Padding="0" VerticalOptions="Center">
+                                            <Border StrokeShape="RoundRectangle 7" HeightRequest="60" WidthRequest="60" HorizontalOptions="Fill" Padding="0" StrokeThickness="0">
+                                                <Image Source="{Binding Imagen}" HeightRequest="60" WidthRequest="60" Grid.Column="0" Aspect="AspectFill"/>
+                                            </Border>
+                                            <VerticalStackLayout Grid.Column="1" Spacing="2">
+                                                <Label Text="{Binding Nombre}" TextColor="Black" FontSize="18" FontAttributes="Bold"/>
+                                                <Label Text="{Binding Precio, StringFormat='${0:N0}'}" TextColor="Black" FontSize="16"/>
+                                            </VerticalStackLayout>
+                                            <Button ImageSource="editar.png" HeightRequest="20" WidthRequest="20" Grid.Column="2" Clicked="OnEditarBtnClicked" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="White" Padding="5,0"/>
+                                            <Button ImageSource="delete.png" HeightRequest="20" WidthRequest="20" Grid.Column="3" Clicked="OnEliminarBtnClicked" CommandParameter="{Binding .}" BackgroundColor="Transparent" TextColor="White" Padding="5,0"/>
+                                        </Grid>
                                     </Grid>
                                 </Border>
                             </DataTemplate>

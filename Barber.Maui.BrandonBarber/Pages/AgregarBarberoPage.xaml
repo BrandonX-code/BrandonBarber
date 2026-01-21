@@ -6,13 +6,27 @@
              xmlns:controls="clr-namespace:Barber.Maui.BrandonBarber.Controls" Grid.RowSpan="1">
 
     <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#0E2A36" Offset="0.0" />
+                <GradientStop Color="#265d82" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
         <ScrollView VerticalScrollBarVisibility="Never" HorizontalScrollBarVisibility="Never"  Padding="20">
             <VerticalStackLayout Spacing="20">
                 <Label Text="Agregar Nuevo Barbero" FontSize="24" FontAttributes="Bold" TextColor="White" HorizontalOptions="Center" Margin="0,0,0,20" />
                 <VerticalStackLayout x:Name="PickerSection" Spacing="5" IsVisible="False">
-                    <Border StrokeShape="RoundRectangle 16" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="160" StrokeThickness="0">
+                    <Border StrokeShape="RoundRectangle 16" Padding="0" BackgroundColor="White" HeightRequest="160" StrokeThickness="0">
+                        <Grid>
+                            <Image Source="fondoblancoborder.jpg" Aspect="Fill"></Image>
                         <VerticalStackLayout Spacing="0">
                             <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#226C8F" Offset="0.0" />
+                                        <GradientStop Color="#0E2A36" Offset="1.0" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
                                 <Label Text="Barbería" TextColor="White" FontSize="16" FontAttributes="Bold"/>
                             </Border>
 
@@ -29,13 +43,14 @@
                                 <Button x:Name="BarberiaSelectButton" Grid.Column="2" Text="Seleccionar" BackgroundColor="#0E2A36" TextColor="White" CornerRadius="10" FontAttributes="Bold" HorizontalOptions="End" VerticalOptions="Center" WidthRequest="100" HeightRequest="35" Clicked="OnBarberiaPickerTapped" Margin="0,0,10,0" IsVisible="False"/>
                             </Grid>
                         </VerticalStackLayout>
+                        </Grid>
                     </Border>
 
 
                 </VerticalStackLayout>
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Nombre completo *" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0">
+                    <Border StrokeShape="RoundRectangle 10" Padding="0" BackgroundColor="White" HeightRequest="45" StrokeThickness="0">
                         <Entry x:Name="NombreEntry" TextColor="Black" Placeholder="Nombre completo del barbero" FontSize="16" HeightRequest="45" VerticalOptions="Center" Margin="10,0" />
                     </Border>
 
@@ -43,56 +58,56 @@
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Cédula *" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0" >
+                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="White" HeightRequest="45" StrokeThickness="0" >
                         <Entry x:Name="CedulaEntry" FontSize="16" HeightRequest="45" VerticalOptions="Center" Margin="10,0"  Placeholder="Número de cédula" Keyboard="Numeric" />
                     </Border>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Correo electrónico *" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0" >
+                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="White" HeightRequest="45" StrokeThickness="0" >
                         <Entry x:Name="EmailEntry" FontSize="16" HeightRequest="45" VerticalOptions="Center" Margin="10,0"  Placeholder="ejemplo@correo.com" Keyboard="Email" />
                     </Border>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Teléfono" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0" >
+                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="White" HeightRequest="45" StrokeThickness="0" >
                         <Entry x:Name="TelefonoEntry" FontSize="16" HeightRequest="45" VerticalOptions="Center" Margin="10,0"  Placeholder="Número de teléfono" Keyboard="Telephone" />
                     </Border>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Dirección" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0" >
+                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="White" HeightRequest="45" StrokeThickness="0" >
                         <Entry x:Name="DireccionEntry" FontSize="16" HeightRequest="45" VerticalOptions="Center" Margin="10,0"  Placeholder="Dirección del barbero" />
                     </Border>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Especialidades" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0" >
+                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="White" HeightRequest="45" StrokeThickness="0" >
                         <Entry x:Name="EspecialidadesEntry" FontSize="16" HeightRequest="45" VerticalOptions="Center" Margin="10,0"  Placeholder="Ej: Corte clásico, Barba, Afeitado" />
                     </Border>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Experiencia (años)" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0" >
+                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="White" HeightRequest="45" StrokeThickness="0" >
                         <Entry x:Name="ExperienciaEntry" FontSize="16" HeightRequest="45" VerticalOptions="Center" Margin="10,0"  Placeholder="Años de experiencia" Keyboard="Numeric" />
                     </Border>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Contraseña *" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0" >
+                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="White" HeightRequest="45" StrokeThickness="0" >
                         <Entry x:Name="PasswordEntry" FontSize="16" HeightRequest="45" VerticalOptions="Center" Margin="10,0"  Placeholder="Contraseña" IsPassword="True" />
                     </Border>
                 </VerticalStackLayout>
 
                 <VerticalStackLayout Spacing="5">
                     <Label Text="Confirmar contraseña *" TextColor="White" FontSize="16" />
-                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="#E0F7FA" HeightRequest="45" StrokeThickness="0" >
+                    <Border StrokeShape="RoundRectangle 10" Padding="0"   BackgroundColor="White" HeightRequest="45" StrokeThickness="0" >
                         <Entry x:Name="ConfirmPasswordEntry" FontSize="16" HeightRequest="45" VerticalOptions="Center" Margin="10,0"  Placeholder="Confirmar contraseña" IsPassword="True" />
                     </Border>
                 </VerticalStackLayout>
