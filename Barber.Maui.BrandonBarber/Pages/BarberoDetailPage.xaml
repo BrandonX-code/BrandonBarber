@@ -59,7 +59,7 @@
                     </VerticalStackLayout>
 
                     <Border BackgroundColor="White" StrokeShape="RoundRectangle 16" HeightRequest="380" Padding="0" StrokeThickness="0">
-                        <Grid Clip="RoundRectangle 16">
+                        <Grid>
                             <Image Source="fondoblancoborder.jpg" Aspect="Fill"/>
                             <VerticalStackLayout Spacing="0">
                             <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
@@ -104,7 +104,7 @@
 
                     <VerticalStackLayout Spacing="15">
                         <Border x:Name="HorarioDisponibleBorder" StrokeShape="RoundRectangle 16" Padding="0" HeightRequest="190" StrokeThickness="0" IsVisible="False">
-                            <Grid Clip="RoundRectangle 16">
+                            <Grid>
                                 <Image Source="fondoblancoborder.jpg" Aspect="Fill"/>
                                 <VerticalStackLayout Spacing="0">
                                 <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">

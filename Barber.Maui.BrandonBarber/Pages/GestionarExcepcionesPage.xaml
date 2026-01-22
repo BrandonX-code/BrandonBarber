@@ -56,7 +56,7 @@
 								   FontSize="16"
 								   FontAttributes="Bold"
 								   TextColor="Black"/>
-                                <Border Background="White" StrokeShape="10" StrokeThickness="0">
+                                <Border Background="White" StrokeShape="RoundRectangle 10" StrokeThickness="0">
                                     <Border.Shadow>
                                         <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.5" />
                                     </Border.Shadow>
@@ -116,7 +116,7 @@
                                 <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
                                     <VerticalStackLayout Grid.Column="0" Spacing="5">
                                         <Label Text="Hora inicio" TextColor="Black" FontSize="14"/>
-                                        <Border Background="White" StrokeShape="10" StrokeThickness="0">
+                                        <Border Background="White" StrokeShape="RoundRectangle 10" StrokeThickness="0">
                                             <Border.Shadow>
                                                 <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.5" />
                                             </Border.Shadow>
@@ -128,7 +128,7 @@
 
                                     <VerticalStackLayout Grid.Column="1" Spacing="5">
                                         <Label Text="Hora fin" TextColor="Black" FontSize="14"/>
-                                        <Border Background="White" StrokeShape="10" StrokeThickness="0">
+                                        <Border Background="White" StrokeShape="RoundRectangle 10" StrokeThickness="0">
                                             <Border.Shadow>
                                                 <Shadow Brush="Black" Offset="0,2" Radius="5" Opacity="0.5" />
                                             </Border.Shadow>

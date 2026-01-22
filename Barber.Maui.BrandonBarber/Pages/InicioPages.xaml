@@ -97,7 +97,7 @@
                                                 <TapGestureRecognizer Tapped="OnBarberoSelected" CommandParameter="{Binding .}"/>
                                             </Border.GestureRecognizers>
 
-                                            <Grid Clip="RoundRectangle 20">
+                                            <Grid>
                                                 <Image Source="fondoblancoborder.jpg" Aspect="AspectFill"/>
 
                                                 <Grid Padding="20" RowSpacing="10">

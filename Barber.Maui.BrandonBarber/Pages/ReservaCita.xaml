@@ -26,7 +26,7 @@
                             </LinearGradientBrush>
                         </Border.Background>
 
-                        <Grid Clip="RoundRectangle 16">
+                        <Grid>
                             <Image Source="fondoblancoborder.jpg" Aspect="Fill"/>
                             <VerticalStackLayout Spacing="0">
                                 <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
@@ -115,7 +115,7 @@
 
 
                     <Border x:Name="franjasBorder" StrokeThickness="0" StrokeShape="RoundRectangle 16" BackgroundColor="#90A4AE" Padding="0" Margin="0,0,0,10" Opacity="0" IsVisible="False">
-                        <Grid Clip="RoundRectangle 16">
+                        <Grid>
                             <Image Source="fondoblancoborder.jpg" Aspect="Fill"/>
                             <VerticalStackLayout Spacing="0">
                                 <Border BackgroundColor="#184557" Padding="10" StrokeThickness="0" StrokeShape="RoundRectangle 16,16,0,0">
