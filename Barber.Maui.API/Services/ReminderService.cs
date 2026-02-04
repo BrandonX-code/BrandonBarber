@@ -6,24 +6,37 @@ using Microsoft.EntityFrameworkCore;
 namespace Barber.Maui.API.Services
 {
     /// <summary>
-    /// VERSIÓN HÍBRIDA DEFINITIVA - Combina lo mejor de ambas versiones:
-    /// - Sistema inteligente de caché de próxima verificación
-    /// - Ventana de búsqueda reducida (35 minutos)
-    /// - Consultas ultra-optimizadas con AsNoTracking(), Select() y ExecuteUpdateAsync()
-    /// - Máxima eficiencia en consumo de recursos
+    /// VERSIÓN PRODUCTION-READY OPTIMIZADA - Máxima eficiencia y confiabilidad:
+    /// ✅ Sistema inteligente de caché de próxima verificación
+    /// ✅ Ventana de búsqueda reducida (35 minutos)
+    /// ✅ Consultas ultra-optimizadas con AsNoTracking(), Select() y ExecuteUpdateAsync()
+    /// ✅ Máxima eficiencia en consumo de recursos
+    /// ✅ Manejo robusto de errores y timeouts
+    /// ✅ Métricas y logging detallado para monitoreo
+    /// ✅ Protección contra race conditions
     /// </summary>
     public class ReminderService : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<ReminderService> _logger;
 
-        // ✅ SISTEMA DE CACHÉ INTELIGENTE (de tu versión)
+        // ✅ SISTEMA DE CACHÉ INTELIGENTE
         private DateTime? _proximaVerificacion = null;
+        private readonly object _cacheLock = new object(); // ✅ Proteger acceso a caché
+
+        // ✅ ESTADÍSTICAS PARA MONITOREO (production-ready)
+        private int _totalRecordatoriosEnviados = 0;
+        private int _totalErrores = 0;
+        private DateTime _inicioServicio = DateTime.UtcNow;
 
         // ✅ CONFIGURACIÓN OPTIMIZADA
         private const int MINUTOS_RECORDATORIO = 15;
         private const int RANGO_TOLERANCIA = 2;
-        private const int MARGEN_BUSQUEDA = 35; // Buscar solo próximos 35 minutos (MUY EFICIENTE)
+        private const int MARGEN_BUSQUEDA = 35; // Buscar solo próximos 35 minutos
+        private const int MINUTOS_SIN_CITAS_HOY = 60; // Sin citas: esperar 1 hora
+        private const int MINUTOS_SIN_CITAS_PROXIMAMENTE = 30; // Sin citas próximas: esperar 30 min
+        private const int TIMEOUT_SEGUNDOS = 30; // Timeout de seguridad
+        private const int MAX_REINTENTOS = 3; // Reintentos en caso de fallo
 
         public ReminderService(IServiceProvider serviceProvider, ILogger<ReminderService> logger)
         {
@@ -33,7 +46,7 @@ namespace Barber.Maui.API.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("🔔 Servicio de recordatorios HÍBRIDO OPTIMIZADO iniciado");
+            _logger.LogInformation("🔔 Servicio de recordatorios PRODUCTION-READY iniciado");
             await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
 
             while (!stoppingToken.IsCancellationRequested)
@@ -41,38 +54,88 @@ namespace Barber.Maui.API.Services
                 try
                 {
                     // ✅ SISTEMA INTELIGENTE: Calcular tiempo hasta próxima verificación
-                    var tiempoEspera = _proximaVerificacion.HasValue
-                        ? _proximaVerificacion.Value - DateTime.UtcNow
-                        : TimeSpan.FromSeconds(30);
+                    TimeSpan tiempoEspera;
+                    lock (_cacheLock)
+                    {
+                        tiempoEspera = _proximaVerificacion.HasValue
+                            ? _proximaVerificacion.Value - DateTime.UtcNow
+                            : TimeSpan.FromSeconds(30);
+                    }
 
                     if (tiempoEspera <= TimeSpan.Zero)
                     {
                         tiempoEspera = TimeSpan.FromSeconds(30);
                     }
 
-                    _logger.LogInformation($"⏱️ Próxima verificación en {tiempoEspera.TotalMinutes:F1} minutos ({_proximaVerificacion?.ToLocalTime():HH:mm:ss})");
+                    _logger.LogInformation($"⏱️ Próxima verificación en {tiempoEspera.TotalMinutes:F1} min");
 
                     // ✅ Esperar dinámicamente
                     await Task.Delay(tiempoEspera, stoppingToken);
 
                     // ✅ Ejecutar con timeout de seguridad
                     using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
-                    cts.CancelAfter(TimeSpan.FromSeconds(30));
+                    cts.CancelAfter(TimeSpan.FromSeconds(TIMEOUT_SEGUNDOS));
 
-                    await EnviarRecordatorios(cts.Token);
+                    await EjecutarConReintentos(cts.Token);
                 }
                 catch (OperationCanceledException)
                 {
-                    _logger.LogWarning("⏱️ ReminderService timeout - reintentando en 30s");
-                    _proximaVerificacion = DateTime.UtcNow.AddSeconds(30);
+                    _logger.LogWarning("⏱️ ReminderService timeout");
+                    lock (_cacheLock)
+                    {
+                        _proximaVerificacion = DateTime.UtcNow.AddSeconds(30);
+                    }
+                    _totalErrores++;
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError($"❌ Error en ReminderService: {ex.Message}");
-                    _proximaVerificacion = DateTime.UtcNow.AddMinutes(5);
+                    _logger.LogError($"❌ Error crítico en ReminderService: {ex.Message}");
+                    lock (_cacheLock)
+                    {
+                        _proximaVerificacion = DateTime.UtcNow.AddMinutes(5);
+                    }
+                    _totalErrores++;
                     await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
                 }
             }
+
+            _logger.LogInformation($"🛑 ReminderService detenido. Resumen: {_totalRecordatoriosEnviados} recordatorios, {_totalErrores} errores");
+        }
+
+        /// <summary>
+        /// Ejecuta EnviarRecordatorios con reintentos automáticos en caso de fallo
+        /// </summary>
+        private async Task EjecutarConReintentos(CancellationToken cancellationToken)
+        {
+            int intento = 0;
+            while (intento < MAX_REINTENTOS)
+            {
+                try
+                {
+                    await EnviarRecordatorios(cancellationToken);
+                    return; // ✅ Éxito
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    // ✅ Manejo específico para race conditions en BD
+                    intento++;
+                    if (intento < MAX_REINTENTOS)
+                    {
+                        _logger.LogWarning($"⚠️ Concurrency conflict en intento {intento}, reintentando...");
+                        await Task.Delay(TimeSpan.FromMilliseconds(100 * intento), cancellationToken);
+                    }
+                }
+                catch (Exception ex) when (intento < MAX_REINTENTOS && ex is TimeoutException or IOException)
+                {
+                    // ✅ Reintentar en errores transitorios
+                    intento++;
+                    _logger.LogWarning($"⚠️ Error transitorio ({ex.GetType().Name}) en intento {intento}, reintentando...");
+                    await Task.Delay(TimeSpan.FromMilliseconds(200 * intento), cancellationToken);
+                }
+            }
+
+            _logger.LogError($"❌ Se agotaron los {MAX_REINTENTOS} reintentos");
+            _totalErrores++;
         }
 
         private async Task EnviarRecordatorios(CancellationToken cancellationToken)
@@ -87,10 +150,27 @@ namespace Barber.Maui.API.Services
                 var ahoraColombia = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zonaColombia);
                 var ahora = DateTime.UtcNow;
 
-                // ✅✅ CONSULTA ULTRA-OPTIMIZADA:
-                // 1. Ventana pequeña de 35 minutos (de tu versión)
-                // 2. AsNoTracking() para no rastrear cambios (de mi versión)
-                // 3. Select() solo campos necesarios (de mi versión)
+                // ✅ OPTIMIZACIÓN 1: Verificar PRIMERO si hay citas hoy (consulta ultra-rápida)
+                var finDelDia = ahora.AddHours(24);
+                var hayCitasHoy = await context.Citas
+                    .Where(c =>
+                        (c.Estado == "Confirmada" || c.Estado == "Completada") &&
+                        c.Fecha >= ahora &&
+                        c.Fecha <= finDelDia)
+                    .AsNoTracking()
+                    .AnyAsync(cancellationToken);
+
+                if (!hayCitasHoy)
+                {
+                    _logger.LogInformation($"📭 Sin citas confirmadas para hoy");
+                    lock (_cacheLock)
+                    {
+                        _proximaVerificacion = DateTime.UtcNow.AddMinutes(MINUTOS_SIN_CITAS_HOY);
+                    }
+                    return; // ✅ SALIR TEMPRANO: No hacer más consultas
+                }
+
+                // ✅✅ CONSULTA ULTRA-OPTIMIZADA (SOLO si hay citas hoy)
                 var proximosMinutos = ahora.AddMinutes(MARGEN_BUSQUEDA);
 
                 var citasProximas = await context.Citas
@@ -99,16 +179,17 @@ namespace Barber.Maui.API.Services
                         c.Fecha >= ahora &&
                         c.Fecha <= proximosMinutos)
                     .OrderBy(c => c.Fecha)
-                    .AsNoTracking() // ✅ CRÍTICO: Reduce memoria 30-50%
+                    .AsNoTracking()
                     .ToListAsync(cancellationToken);
 
-                _logger.LogInformation($"🕐 Hora Colombia: {ahoraColombia:yyyy-MM-dd HH:mm:ss}");
-                _logger.LogInformation($"📊 Citas en próximos {MARGEN_BUSQUEDA} min: {citasProximas.Count}");
+                _logger.LogInformation($"🕐 Citas en próximos {MARGEN_BUSQUEDA} min: {citasProximas.Count}");
 
                 DateTime? proximaCitaParaVerificar = null;
 
                 foreach (var cita in citasProximas)
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     var fechaCitaLocal = TimeZoneInfo.ConvertTimeFromUtc(
                         DateTime.SpecifyKind(cita.Fecha, DateTimeKind.Utc),
                         zonaColombia);
@@ -125,29 +206,32 @@ namespace Barber.Maui.API.Services
                     if (minutosAntesDelaCita >= (MINUTOS_RECORDATORIO - RANGO_TOLERANCIA) &&
                         minutosAntesDelaCita <= (MINUTOS_RECORDATORIO + RANGO_TOLERANCIA))
                     {
-                        _logger.LogInformation($"⚡ Cita {cita.Id} en rango: {minutosAntesDelaCita:F1} min");
-
                         if (!await VerificarSiYaSeEnvioRecordatorio(context, cita.Cedula))
                         {
                             _logger.LogInformation($"📤 Enviando recordatorio: {cita.Nombre}");
-                            await EnviarRecordatorioCita(cita, fechaCitaLocal, notificationService, context);
-                        }
-                        else
-                        {
-                            _logger.LogDebug($"ℹ️ Recordatorio ya enviado: {cita.Nombre}");
+                            if (await EnviarRecordatorioCita(cita, fechaCitaLocal, notificationService, context))
+                            {
+                                _totalRecordatoriosEnviados++;
+                            }
                         }
                     }
                 }
 
-                // ✅✅ CÁLCULO INTELIGENTE DE PRÓXIMA VERIFICACIÓN (de tu versión mejorada)
-                _proximaVerificacion = CalcularProximaVerificacion(proximaCitaParaVerificar);
-
-                _logger.LogInformation($"✅ Próxima verificación: {_proximaVerificacion?.ToLocalTime():yyyy-MM-dd HH:mm:ss} ({(_proximaVerificacion.HasValue ? ((_proximaVerificacion.Value - DateTime.UtcNow).TotalMinutes).ToString("F1") : "N/A")} min)");
+                // ✅✅ CÁLCULO INTELIGENTE DE PRÓXIMA VERIFICACIÓN
+                lock (_cacheLock)
+                {
+                    _proximaVerificacion = CalcularProximaVerificacion(proximaCitaParaVerificar);
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError($"❌ Error en EnviarRecordatorios: {ex.Message}");
-                _proximaVerificacion = DateTime.UtcNow.AddMinutes(5);
+                lock (_cacheLock)
+                {
+                    _proximaVerificacion = DateTime.UtcNow.AddMinutes(MINUTOS_SIN_CITAS_PROXIMAMENTE);
+                }
+                _totalErrores++;
+                throw; // ✅ Relanzar para que EjecutarConReintentos lo maneje
             }
         }
 
@@ -159,22 +243,39 @@ namespace Barber.Maui.API.Services
         {
             if (proximaCita == null)
             {
-                // ✅ No hay citas próximas: verificar en 5 minutos
-                _logger.LogInformation("📭 Sin citas próximas");
-                return DateTime.UtcNow.AddMinutes(5);
+                // ✅ Sin citas próximas: esperar 30 min (reduce carga 6x)
+                return DateTime.UtcNow.AddMinutes(MINUTOS_SIN_CITAS_PROXIMAMENTE);
             }
 
             // ✅ Hay cita próxima: verificar 20 minutos antes del recordatorio
-            // (El recordatorio se envía 15 min antes, verificamos 35 min antes total)
             var tiempoVerificacion = proximaCita.Value.AddMinutes(-(MINUTOS_RECORDATORIO + 20));
 
-            // Asegurar que no sea en el pasado
             if (tiempoVerificacion <= DateTime.UtcNow)
             {
                 return DateTime.UtcNow.AddSeconds(30);
             }
 
             return tiempoVerificacion;
+        }
+
+        /// <summary>
+        /// Obtiene estadísticas del servicio para monitoreo y debugging
+        /// </summary>
+        public Dictionary<string, object> ObtenerEstadisticas()
+        {
+            lock (_cacheLock)
+            {
+                var tiempoEjecucion = DateTime.UtcNow - _inicioServicio;
+                return new Dictionary<string, object>
+                {
+                    { "estado", "activo" },
+                    { "tiempoEjecucion", $"{tiempoEjecucion.Days}d {tiempoEjecucion.Hours}h {tiempoEjecucion.Minutes}m" },
+                    { "recordatoriosEnviados", _totalRecordatoriosEnviados },
+                    { "totalErrores", _totalErrores },
+                    { "proximaVerificacion", _proximaVerificacion?.ToString("yyyy-MM-dd HH:mm:ss") ?? "N/A" },
+                    { "minutosAEsperar", (_proximaVerificacion.HasValue ? (_proximaVerificacion.Value - DateTime.UtcNow).TotalMinutes : 0).ToString("F1") }
+                };
+            }
         }
 
         private async Task<bool> VerificarSiYaSeEnvioRecordatorio(AppDbContext context, long cedula)
@@ -201,7 +302,7 @@ namespace Barber.Maui.API.Services
             }
         }
 
-        private async Task EnviarRecordatorioCita(
+        private async Task<bool> EnviarRecordatorioCita(
             Cita cita,
             DateTime fechaCitaLocal,
             INotificationService notificationService,
@@ -209,11 +310,11 @@ namespace Barber.Maui.API.Services
         {
             try
             {
-                // ✅✅ CONSULTA OPTIMIZADA (de mi versión): Select() solo el nombre
+                // ✅✅ CONSULTA OPTIMIZADA: Select() solo el nombre
                 var nombreBarbero = await context.UsuarioPerfiles
                     .Where(b => b.Cedula == cita.BarberoId)
-                    .Select(b => b.Nombre) // ✅ Solo traer el campo necesario
-                    .AsNoTracking() // ✅ Sin rastreo
+                    .Select(b => b.Nombre)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync() ?? "el barbero";
 
                 string titulo = "⏰ Recordatorio de Cita";
@@ -248,23 +349,25 @@ namespace Barber.Maui.API.Services
 
                 if (enviado)
                 {
-                    // ✅✅ ACTUALIZACIÓN OPTIMIZADA (de mi versión): ExecuteUpdateAsync
-                    // Actualiza DIRECTAMENTE en BD sin cargar entidades en memoria
+                    // ✅✅ ACTUALIZACIÓN OPTIMIZADA: ExecuteUpdateAsync
                     await context.FcmToken
                         .Where(t => t.UsuarioCedula == cita.Cedula)
                         .ExecuteUpdateAsync(setters =>
                             setters.SetProperty(t => t.UltimaActualizacion, DateTime.UtcNow));
 
                     _logger.LogInformation($"✅ Recordatorio enviado: {cita.Nombre}");
+                    return true;
                 }
                 else
                 {
                     _logger.LogWarning($"⚠️ No se pudo enviar recordatorio: {cita.Nombre}");
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError($"❌ Error enviando recordatorio {cita.Id}: {ex.Message}");
+                return false;
             }
         }
     }
