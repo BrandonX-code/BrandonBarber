@@ -426,7 +426,7 @@ namespace Barber.Maui.BrandonBarber
                 horariosFinales = disponibilidad.HorariosDict;
             }
 
-            // Generar franjas de 40 minutos usando los horarios finales
+            // Generar franjas de 1 hora usando los horarios finales
             _todasLasFranjas = disponibilidadService.GenerarFranjasHorarias(horariosFinales);
 
             // Obtener citas ya agendadas

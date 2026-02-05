@@ -46,60 +46,75 @@ namespace Barber.Maui.API.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("🔔 Servicio de recordatorios PRODUCTION-READY iniciado");
-            await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
-
-            while (!stoppingToken.IsCancellationRequested)
+            try
             {
-                try
+                _logger.LogInformation("🔔 Servicio de recordatorios PRODUCTION-READY iniciado");
+                _logger.LogInformation("⏳ Esperando inicialización de la base de datos (45 segundos)...");
+                await Task.Delay(TimeSpan.FromSeconds(45), stoppingToken);
+
+                while (!stoppingToken.IsCancellationRequested)
                 {
-                    // ✅ SISTEMA INTELIGENTE: Calcular tiempo hasta próxima verificación
-                    TimeSpan tiempoEspera;
-                    lock (_cacheLock)
+                    try
                     {
-                        tiempoEspera = _proximaVerificacion.HasValue
-                            ? _proximaVerificacion.Value - DateTime.UtcNow
-                            : TimeSpan.FromSeconds(30);
-                    }
+                        // ✅ SISTEMA INTELIGENTE: Calcular tiempo hasta próxima verificación
+                        TimeSpan tiempoEspera;
+                        lock (_cacheLock)
+                        {
+                            tiempoEspera = _proximaVerificacion.HasValue
+                                ? _proximaVerificacion.Value - DateTime.UtcNow
+                                : TimeSpan.FromSeconds(30);
+                        }
 
-                    if (tiempoEspera <= TimeSpan.Zero)
+                        if (tiempoEspera <= TimeSpan.Zero)
+                        {
+                            tiempoEspera = TimeSpan.FromSeconds(30);
+                        }
+
+                        _logger.LogInformation($"⏱️ Próxima verificación en {tiempoEspera.TotalMinutes:F1} min");
+
+                        // ✅ Esperar dinámicamente
+                        await Task.Delay(tiempoEspera, stoppingToken);
+
+                        // ✅ Ejecutar con timeout de seguridad
+                        using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
+                        cts.CancelAfter(TimeSpan.FromSeconds(TIMEOUT_SEGUNDOS));
+
+                        await EjecutarConReintentos(cts.Token);
+                    }
+                    catch (OperationCanceledException)
                     {
-                        tiempoEspera = TimeSpan.FromSeconds(30);
+                        _logger.LogWarning("⏱️ ReminderService timeout");
+                        lock (_cacheLock)
+                        {
+                            _proximaVerificacion = DateTime.UtcNow.AddSeconds(30);
+                        }
+                        _totalErrores++;
                     }
-
-                    _logger.LogInformation($"⏱️ Próxima verificación en {tiempoEspera.TotalMinutes:F1} min");
-
-                    // ✅ Esperar dinámicamente
-                    await Task.Delay(tiempoEspera, stoppingToken);
-
-                    // ✅ Ejecutar con timeout de seguridad
-                    using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
-                    cts.CancelAfter(TimeSpan.FromSeconds(TIMEOUT_SEGUNDOS));
-
-                    await EjecutarConReintentos(cts.Token);
-                }
-                catch (OperationCanceledException)
-                {
-                    _logger.LogWarning("⏱️ ReminderService timeout");
-                    lock (_cacheLock)
+                    catch (Exception ex)
                     {
-                        _proximaVerificacion = DateTime.UtcNow.AddSeconds(30);
+                        _logger.LogError($"❌ Error en ReminderService: {ex.Message}\n{ex.StackTrace}");
+                        lock (_cacheLock)
+                        {
+                            _proximaVerificacion = DateTime.UtcNow.AddMinutes(5);
+                        }
+                        _totalErrores++;
+                        await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
                     }
-                    _totalErrores++;
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError($"❌ Error crítico en ReminderService: {ex.Message}");
-                    lock (_cacheLock)
-                    {
-                        _proximaVerificacion = DateTime.UtcNow.AddMinutes(5);
-                    }
-                    _totalErrores++;
-                    await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
                 }
             }
-
-            _logger.LogInformation($"🛑 ReminderService detenido. Resumen: {_totalRecordatoriosEnviados} recordatorios, {_totalErrores} errores");
+            catch (OperationCanceledException)
+            {
+                _logger.LogInformation("🛑 ReminderService cancelado por sistema durante inicio");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Error crítico fatal en ReminderService: {ex.Message}\n{ex.StackTrace}");
+                _totalErrores++;
+            }
+            finally
+            {
+                _logger.LogInformation($"🛑 ReminderService detenido. Resumen: {_totalRecordatoriosEnviados} recordatorios, {_totalErrores} errores");
+            }
         }
 
         /// <summary>

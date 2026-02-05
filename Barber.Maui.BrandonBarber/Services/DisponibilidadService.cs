@@ -297,7 +297,7 @@ namespace Barber.Maui.BrandonBarber.Services
         {
             var horarios = new Dictionary<string, bool>();
             var horaActual = inicio;
-            var duracion = TimeSpan.FromMinutes(40);
+            var duracion = TimeSpan.FromMinutes(60);
             while (horaActual + duracion <= fin)
             {
                 var siguienteHora = horaActual + duracion;
@@ -317,7 +317,7 @@ namespace Barber.Maui.BrandonBarber.Services
         public List<FranjaHorariaModel> GenerarFranjasHorarias(Dictionary<string, bool> horariosDisponibles)
         {
             var franjas = new List<FranjaHorariaModel>();
-            var duracionFranja = TimeSpan.FromMinutes(40);
+            var duracionFranja = TimeSpan.FromMinutes(60);
             foreach (var horario in horariosDisponibles.Where(h => h.Value))
             {
                 var partes = horario.Key.Split('-');

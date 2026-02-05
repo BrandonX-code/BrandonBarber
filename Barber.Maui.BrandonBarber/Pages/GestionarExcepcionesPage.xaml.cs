@@ -279,7 +279,7 @@ namespace Barber.Maui.BrandonBarber.Pages
         private Dictionary<string, bool> GenerarHorariosModificados(TimeSpan inicio, TimeSpan fin)
         {
             var horarios = new Dictionary<string, bool>();
-            var duracion = TimeSpan.FromMinutes(40);
+            var duracion = TimeSpan.FromMinutes(60);
             var horaActual = inicio;
 
             while (horaActual + duracion <= fin)
