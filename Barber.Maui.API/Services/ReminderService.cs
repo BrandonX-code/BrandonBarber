@@ -322,12 +322,19 @@ namespace Barber.Maui.API.Services
                     ? $"\n• Servicio: {cita.ServicioNombre}"
                     : "";
 
+                // ✅ Convertir fecha a español
+                var cultureSpanish = new System.Globalization.CultureInfo("es-ES");
+                string fechaFormato = fechaCitaLocal.ToString("dddd, dd 'de' MMMM 'de' yyyy", cultureSpanish);
+                
+                // ✅ Formato de hora 12h con AM/PM en español
+                string horaFormato = fechaCitaLocal.ToString("h:mm tt", cultureSpanish);
+                
                 string mensaje = $"¡Hola {cita.Nombre}! 👋\n\n" +
                     $"Tu cita está a punto de comenzar:\n\n" +
                     $"👨‍💼 Barbero: {nombreBarbero}" +
                     servicioInfo +
-                    $"\n📅 Fecha: {fechaCitaLocal:dddd, dd 'de' MMMM 'de' yyyy}" +
-                    $"\n🕐 Hora: {fechaCitaLocal:hh:mm tt}" +
+                    $"\n📅 Fecha: {fechaFormato}" +
+                    $"\n🕐 Hora: {horaFormato}" +
                     $"\n\n⏱️ Te esperamos en 15 minutos ✂️";
 
                 var data = new Dictionary<string, string>
