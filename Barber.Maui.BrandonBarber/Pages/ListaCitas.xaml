@@ -125,14 +125,14 @@
                                                     <VerticalStackLayout Spacing="10">
                                                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="5">
                                                             <Image Grid.Column="0" Source="id.png" WidthRequest="20" HeightRequest="20" />
-                                                            <Label Grid.Column="1" Text="{Binding Nombre}" FontSize="Body" TextColor="Black" MaxLines="2" FontAttributes="Bold" LineBreakMode="WordWrap" VerticalOptions="Center" />
+                                                            <Label Grid.Column="1" Text="{Binding Nombre}" FontSize="Body" TextColor="Black" MaxLines="1" FontAttributes="Bold" LineBreakMode="WordWrap" VerticalOptions="Center" />
                                                         </Grid>
                                                         <HorizontalStackLayout IsVisible="{Binding MostrarBarberoInfo}">
                                                             <HorizontalStackLayout Spacing="5">
                                                                 <Image Source="agregarbarbero.png" WidthRequest="20" HeightRequest="20" />
                                                                 <Label Text="Barbero: " FontSize="Small" TextColor="Black" />
                                                             </HorizontalStackLayout>
-                                                            <Label Text="{Binding BarberoNombre}" FontSize="Small" TextColor="Black" FontAttributes="Bold"/>
+                                                            <Label Text="{Binding BarberoNombre}" FontSize="Small" TextColor="Black" FontAttributes="Bold" MaxLines="1"/>
                                                         </HorizontalStackLayout>
                                                         <HorizontalStackLayout Spacing="5">
                                                             <Image Source="calendario.png" WidthRequest="20" HeightRequest="20" />
