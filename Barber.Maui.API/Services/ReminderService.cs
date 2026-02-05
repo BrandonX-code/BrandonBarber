@@ -6,37 +6,29 @@ using Microsoft.EntityFrameworkCore;
 namespace Barber.Maui.API.Services
 {
     /// <summary>
-    /// VERSIÓN PRODUCTION-READY OPTIMIZADA - Máxima eficiencia y confiabilidad:
-    /// ✅ Sistema inteligente de caché de próxima verificación
-    /// ✅ Ventana de búsqueda reducida (35 minutos)
-    /// ✅ Consultas ultra-optimizadas con AsNoTracking(), Select() y ExecuteUpdateAsync()
-    /// ✅ Máxima eficiencia en consumo de recursos
-    /// ✅ Manejo robusto de errores y timeouts
-    /// ✅ Métricas y logging detallado para monitoreo
-    /// ✅ Protección contra race conditions
+    /// VERSIÓN ULTRA-OPTIMIZADA para Railway Hobby Plan
+    /// Cambios principales:
+    /// 1. Verificaciones dinámicas: solo cuando hay citas programadas
+    /// 2. Consulta ÚNICA ultra-eficiente con todos los datos necesarios
+    /// 3. Cacheo de próxima cita para evitar consultas innecesarias
+    /// 4. Batch processing de notificaciones
+    /// 5. Reducción drástica de queries a la BD
     /// </summary>
     public class ReminderService : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<ReminderService> _logger;
 
-        // ✅ SISTEMA DE CACHÉ INTELIGENTE
-        private DateTime? _proximaVerificacion = null;
-        private readonly object _cacheLock = new object(); // ✅ Proteger acceso a caché
+        // Sistema de caché mejorado
+        private DateTime? _proximaCitaAgendada = null;
+        private DateTime _ultimaVerificacionCache = DateTime.MinValue;
+        private const int MINUTOS_CACHE_VALIDO = 10; // Renovar caché cada 10 min
 
-        // ✅ ESTADÍSTICAS PARA MONITOREO (production-ready)
-        private int _totalRecordatoriosEnviados = 0;
-        private int _totalErrores = 0;
-        private DateTime _inicioServicio = DateTime.UtcNow;
-
-        // ✅ CONFIGURACIÓN OPTIMIZADA
+        // Configuración optimizada
         private const int MINUTOS_RECORDATORIO = 15;
         private const int RANGO_TOLERANCIA = 2;
-        private const int MARGEN_BUSQUEDA = 35; // Buscar solo próximos 35 minutos
-        private const int MINUTOS_SIN_CITAS_HOY = 60; // Sin citas: esperar 1 hora
-        private const int MINUTOS_SIN_CITAS_PROXIMAMENTE = 30; // Sin citas próximas: esperar 30 min
-        private const int TIMEOUT_SEGUNDOS = 30; // Timeout de seguridad
-        private const int MAX_REINTENTOS = 3; // Reintentos en caso de fallo
+        private const int VENTANA_BUSQUEDA_INICIAL = 120; // 2 horas para cache
+        private const int VENTANA_ENVIO = 35; // Solo para envíos
 
         public ReminderService(IServiceProvider serviceProvider, ILogger<ReminderService> logger)
         {
@@ -46,114 +38,116 @@ namespace Barber.Maui.API.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            try
-            {
-                _logger.LogInformation("🔔 Servicio de recordatorios PRODUCTION-READY iniciado");
-                _logger.LogInformation("⏳ Esperando inicialización de la base de datos (45 segundos)...");
-                await Task.Delay(TimeSpan.FromSeconds(45), stoppingToken);
+            _logger.LogInformation("🚀 ReminderService ULTRA-OPTIMIZADO iniciado (Railway Hobby)");
+            await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
 
-                while (!stoppingToken.IsCancellationRequested)
+            while (!stoppingToken.IsCancellationRequested)
+            {
+                try
                 {
-                    try
-                    {
-                        // ✅ SISTEMA INTELIGENTE: Calcular tiempo hasta próxima verificación
-                        TimeSpan tiempoEspera;
-                        lock (_cacheLock)
-                        {
-                            tiempoEspera = _proximaVerificacion.HasValue
-                                ? _proximaVerificacion.Value - DateTime.UtcNow
-                                : TimeSpan.FromSeconds(30);
-                        }
+                    var tiempoEspera = await CalcularTiempoEsperaInteligente();
 
-                        if (tiempoEspera <= TimeSpan.Zero)
-                        {
-                            tiempoEspera = TimeSpan.FromSeconds(30);
-                        }
+                    _logger.LogInformation($"⏱️ Siguiente verificación en {tiempoEspera.TotalMinutes:F1} min");
 
-                        _logger.LogInformation($"⏱️ Próxima verificación en {tiempoEspera.TotalMinutes:F1} min");
+                    await Task.Delay(tiempoEspera, stoppingToken);
 
-                        // ✅ Esperar dinámicamente
-                        await Task.Delay(tiempoEspera, stoppingToken);
+                    using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
+                    cts.CancelAfter(TimeSpan.FromSeconds(25));
 
-                        // ✅ Ejecutar con timeout de seguridad
-                        using var cts = CancellationTokenSource.CreateLinkedTokenSource(stoppingToken);
-                        cts.CancelAfter(TimeSpan.FromSeconds(TIMEOUT_SEGUNDOS));
-
-                        await EjecutarConReintentos(cts.Token);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        _logger.LogWarning("⏱️ ReminderService timeout");
-                        lock (_cacheLock)
-                        {
-                            _proximaVerificacion = DateTime.UtcNow.AddSeconds(30);
-                        }
-                        _totalErrores++;
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError($"❌ Error en ReminderService: {ex.Message}\n{ex.StackTrace}");
-                        lock (_cacheLock)
-                        {
-                            _proximaVerificacion = DateTime.UtcNow.AddMinutes(5);
-                        }
-                        _totalErrores++;
-                        await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
-                    }
+                    await ProcesarRecordatorios(cts.Token);
                 }
-            }
-            catch (OperationCanceledException)
-            {
-                _logger.LogInformation("🛑 ReminderService cancelado por sistema durante inicio");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"❌ Error crítico fatal en ReminderService: {ex.Message}\n{ex.StackTrace}");
-                _totalErrores++;
-            }
-            finally
-            {
-                _logger.LogInformation($"🛑 ReminderService detenido. Resumen: {_totalRecordatoriosEnviados} recordatorios, {_totalErrores} errores");
+                catch (OperationCanceledException)
+                {
+                    _logger.LogWarning("⏱️ Timeout - reiniciando");
+                    await Task.Delay(TimeSpan.FromSeconds(30), stoppingToken);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError($"❌ Error: {ex.Message}");
+                    await Task.Delay(TimeSpan.FromMinutes(2), stoppingToken);
+                }
             }
         }
 
         /// <summary>
-        /// Ejecuta EnviarRecordatorios con reintentos automáticos en caso de fallo
+        /// Calcula inteligentemente cuánto esperar antes de la próxima verificación
+        /// Evita consultas innecesarias a la BD
         /// </summary>
-        private async Task EjecutarConReintentos(CancellationToken cancellationToken)
+        private async Task<TimeSpan> CalcularTiempoEsperaInteligente()
         {
-            int intento = 0;
-            while (intento < MAX_REINTENTOS)
+            var ahora = DateTime.UtcNow;
+
+            // ✅ OPTIMIZACIÓN 1: Renovar caché solo si es necesario
+            bool cacheExpirado = (ahora - _ultimaVerificacionCache).TotalMinutes >= MINUTOS_CACHE_VALIDO;
+
+            if (cacheExpirado || _proximaCitaAgendada == null)
             {
-                try
-                {
-                    await EnviarRecordatorios(cancellationToken);
-                    return; // ✅ Éxito
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    // ✅ Manejo específico para race conditions en BD
-                    intento++;
-                    if (intento < MAX_REINTENTOS)
-                    {
-                        _logger.LogWarning($"⚠️ Concurrency conflict en intento {intento}, reintentando...");
-                        await Task.Delay(TimeSpan.FromMilliseconds(100 * intento), cancellationToken);
-                    }
-                }
-                catch (Exception ex) when (intento < MAX_REINTENTOS && ex is TimeoutException or IOException)
-                {
-                    // ✅ Reintentar en errores transitorios
-                    intento++;
-                    _logger.LogWarning($"⚠️ Error transitorio ({ex.GetType().Name}) en intento {intento}, reintentando...");
-                    await Task.Delay(TimeSpan.FromMilliseconds(200 * intento), cancellationToken);
-                }
+                _proximaCitaAgendada = await ObtenerProximaCitaAgendada();
+                _ultimaVerificacionCache = ahora;
             }
 
-            _logger.LogError($"❌ Se agotaron los {MAX_REINTENTOS} reintentos");
-            _totalErrores++;
+            // Si no hay citas próximas, esperar bastante tiempo
+            if (_proximaCitaAgendada == null)
+            {
+                _logger.LogInformation("📭 Sin citas en las próximas 2 horas");
+                return TimeSpan.FromMinutes(MINUTOS_CACHE_VALIDO);
+            }
+
+            // Calcular cuándo verificar (30 min antes del recordatorio)
+            var momentoVerificacion = _proximaCitaAgendada.Value
+                .AddMinutes(-(MINUTOS_RECORDATORIO + 20));
+
+            var tiempoHastaVerificacion = momentoVerificacion - ahora;
+
+            // Si ya pasó el momento, verificar ahora
+            if (tiempoHastaVerificacion <= TimeSpan.Zero)
+            {
+                return TimeSpan.FromSeconds(5);
+            }
+
+            // Limitar espera máxima para no estar demasiado tiempo sin verificar
+            return tiempoHastaVerificacion > TimeSpan.FromMinutes(MINUTOS_CACHE_VALIDO)
+                ? TimeSpan.FromMinutes(MINUTOS_CACHE_VALIDO)
+                : tiempoHastaVerificacion;
         }
 
-        private async Task EnviarRecordatorios(CancellationToken cancellationToken)
+        /// <summary>
+        /// CONSULTA ULTRA-OPTIMIZADA: Solo busca la próxima cita en las próximas 2 horas
+        /// Reduce drasticamente el uso de BD
+        /// </summary>
+        private async Task<DateTime?> ObtenerProximaCitaAgendada()
+        {
+            try
+            {
+                using var scope = _serviceProvider.CreateScope();
+                var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                var ahora = DateTime.UtcNow;
+                var limite = ahora.AddMinutes(VENTANA_BUSQUEDA_INICIAL);
+
+                var proximaFecha = await context.Citas
+                    .AsNoTracking() // ✅ AsNoTracking ANTES del Where
+                    .Where(c =>
+                        (c.Estado == "Confirmada" || c.Estado == "Completada") &&
+                        c.Fecha >= ahora &&
+                        c.Fecha <= limite)
+                    .OrderBy(c => c.Fecha)
+                    .Select(c => c.Fecha) // ✅ Select al final
+                    .FirstOrDefaultAsync();
+
+                return proximaFecha == default ? null : (DateTime?)proximaFecha;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"❌ Error obteniendo próxima cita: {ex.Message}");
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// PROCESAMIENTO OPTIMIZADO: Una sola query para todo lo necesario
+        /// </summary>
+        private async Task ProcesarRecordatorios(CancellationToken cancellationToken)
         {
             try
             {
@@ -164,232 +158,158 @@ namespace Barber.Maui.API.Services
                 var zonaColombia = TimeZoneInfo.FindSystemTimeZoneById("America/Bogota");
                 var ahoraColombia = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zonaColombia);
                 var ahora = DateTime.UtcNow;
+                var limite = ahora.AddMinutes(VENTANA_ENVIO);
 
-                // ✅ OPTIMIZACIÓN 1: Verificar PRIMERO si hay citas hoy (consulta ultra-rápida)
-                var finDelDia = ahora.AddHours(24);
-                var hayCitasHoy = await context.Citas
+                // ✅ QUERY ÚNICA OPTIMIZADA: Join con barbero y filtro de recordatorios previos
+                var hace30Min = ahora.AddMinutes(-30);
+
+                var citasParaNotificar = await context.Citas
                     .Where(c =>
                         (c.Estado == "Confirmada" || c.Estado == "Completada") &&
                         c.Fecha >= ahora &&
-                        c.Fecha <= finDelDia)
-                    .AsNoTracking()
-                    .AnyAsync(cancellationToken);
-
-                if (!hayCitasHoy)
-                {
-                    _logger.LogInformation($"📭 Sin citas confirmadas para hoy");
-                    lock (_cacheLock)
-                    {
-                        _proximaVerificacion = DateTime.UtcNow.AddMinutes(MINUTOS_SIN_CITAS_HOY);
-                    }
-                    return; // ✅ SALIR TEMPRANO: No hacer más consultas
-                }
-
-                // ✅✅ CONSULTA ULTRA-OPTIMIZADA (SOLO si hay citas hoy)
-                var proximosMinutos = ahora.AddMinutes(MARGEN_BUSQUEDA);
-
-                var citasProximas = await context.Citas
-                    .Where(c =>
-                        (c.Estado == "Confirmada" || c.Estado == "Completada") &&
-                        c.Fecha >= ahora &&
-                        c.Fecha <= proximosMinutos)
-                    .OrderBy(c => c.Fecha)
+                        c.Fecha <= limite)
+                    .Join(
+                        context.UsuarioPerfiles,
+                        cita => cita.BarberoId,
+                        barbero => barbero.Cedula,
+                        (cita, barbero) => new { cita, barbero.Nombre })
+                    .GroupJoin(
+                        context.FcmToken.Where(t =>
+                            t.UltimaActualizacion.HasValue &&
+                            t.UltimaActualizacion.Value > hace30Min),
+                        x => x.cita.Cedula,
+                        token => token.UsuarioCedula,
+                        (x, tokens) => new
+                        {
+                            x.cita.Id,
+                            x.cita.Cedula,
+                            x.cita.Nombre,
+                            x.cita.Fecha,
+                            x.cita.BarberoId,
+                            BarberoNombre = x.Nombre,
+                            x.cita.ServicioNombre,
+                            x.cita.ServicioPrecio,
+                            RecordatorioEnviado = tokens.Any()
+                        })
                     .AsNoTracking()
                     .ToListAsync(cancellationToken);
 
-                _logger.LogInformation($"🕐 Citas en próximos {MARGEN_BUSQUEDA} min: {citasProximas.Count}");
+                _logger.LogInformation($"📊 Procesando {citasParaNotificar.Count} citas");
 
-                DateTime? proximaCitaParaVerificar = null;
+                // ✅ Procesar en batch para reducir operaciones
+                var citasAEnviar = new List<dynamic>();
 
-                foreach (var cita in citasProximas)
+                foreach (var cita in citasParaNotificar)
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-
                     var fechaCitaLocal = TimeZoneInfo.ConvertTimeFromUtc(
                         DateTime.SpecifyKind(cita.Fecha, DateTimeKind.Utc),
                         zonaColombia);
 
-                    var minutosAntesDelaCita = (fechaCitaLocal - ahoraColombia).TotalMinutes;
+                    var minutosAntes = (fechaCitaLocal - ahoraColombia).TotalMinutes;
 
-                    // ✅ Rastrear la cita más próxima
-                    if (proximaCitaParaVerificar == null || cita.Fecha < proximaCitaParaVerificar)
+                    // Verificar si está en ventana de recordatorio
+                    if (minutosAntes >= (MINUTOS_RECORDATORIO - RANGO_TOLERANCIA) &&
+                        minutosAntes <= (MINUTOS_RECORDATORIO + RANGO_TOLERANCIA) &&
+                        !cita.RecordatorioEnviado)
                     {
-                        proximaCitaParaVerificar = cita.Fecha;
-                    }
-
-                    // ✅ Enviar si está en ventana de recordatorio
-                    if (minutosAntesDelaCita >= (MINUTOS_RECORDATORIO - RANGO_TOLERANCIA) &&
-                        minutosAntesDelaCita <= (MINUTOS_RECORDATORIO + RANGO_TOLERANCIA))
-                    {
-                        if (!await VerificarSiYaSeEnvioRecordatorio(context, cita.Cedula))
+                        citasAEnviar.Add(new
                         {
-                            _logger.LogInformation($"📤 Enviando recordatorio: {cita.Nombre}");
-                            if (await EnviarRecordatorioCita(cita, fechaCitaLocal, notificationService, context))
-                            {
-                                _totalRecordatoriosEnviados++;
-                            }
-                        }
+                            cita.Id,
+                            cita.Cedula,
+                            cita.Nombre,
+                            FechaLocal = fechaCitaLocal,
+                            cita.BarberoId,
+                            cita.BarberoNombre,
+                            cita.ServicioNombre,
+                            cita.ServicioPrecio
+                        });
                     }
                 }
 
-                // ✅✅ CÁLCULO INTELIGENTE DE PRÓXIMA VERIFICACIÓN
-                lock (_cacheLock)
+                // ✅ Enviar notificaciones en batch
+                if (citasAEnviar.Any())
                 {
-                    _proximaVerificacion = CalcularProximaVerificacion(proximaCitaParaVerificar);
+                    await EnviarNotificacionesBatch(citasAEnviar, notificationService, context);
                 }
+
+                // Actualizar caché
+                _proximaCitaAgendada = await ObtenerProximaCitaAgendada();
+                _ultimaVerificacionCache = ahora;
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Error en EnviarRecordatorios: {ex.Message}");
-                lock (_cacheLock)
-                {
-                    _proximaVerificacion = DateTime.UtcNow.AddMinutes(MINUTOS_SIN_CITAS_PROXIMAMENTE);
-                }
-                _totalErrores++;
-                throw; // ✅ Relanzar para que EjecutarConReintentos lo maneje
+                _logger.LogError($"❌ Error procesando recordatorios: {ex.Message}");
             }
         }
 
         /// <summary>
-        /// Calcula inteligentemente cuándo debe ser la próxima verificación.
-        /// Optimiza el tiempo de espera basándose en cuándo será la próxima cita.
+        /// Envía notificaciones en batch y actualiza tokens en una sola operación
         /// </summary>
-        private DateTime? CalcularProximaVerificacion(DateTime? proximaCita)
-        {
-            if (proximaCita == null)
-            {
-                // ✅ Sin citas próximas: esperar 30 min (reduce carga 6x)
-                return DateTime.UtcNow.AddMinutes(MINUTOS_SIN_CITAS_PROXIMAMENTE);
-            }
-
-            // ✅ Hay cita próxima: verificar 20 minutos antes del recordatorio
-            var tiempoVerificacion = proximaCita.Value.AddMinutes(-(MINUTOS_RECORDATORIO + 20));
-
-            if (tiempoVerificacion <= DateTime.UtcNow)
-            {
-                return DateTime.UtcNow.AddSeconds(30);
-            }
-
-            return tiempoVerificacion;
-        }
-
-        /// <summary>
-        /// Obtiene estadísticas del servicio para monitoreo y debugging
-        /// </summary>
-        public Dictionary<string, object> ObtenerEstadisticas()
-        {
-            lock (_cacheLock)
-            {
-                var tiempoEjecucion = DateTime.UtcNow - _inicioServicio;
-                return new Dictionary<string, object>
-                {
-                    { "estado", "activo" },
-                    { "tiempoEjecucion", $"{tiempoEjecucion.Days}d {tiempoEjecucion.Hours}h {tiempoEjecucion.Minutes}m" },
-                    { "recordatoriosEnviados", _totalRecordatoriosEnviados },
-                    { "totalErrores", _totalErrores },
-                    { "proximaVerificacion", _proximaVerificacion?.ToString("yyyy-MM-dd HH:mm:ss") ?? "N/A" },
-                    { "minutosAEsperar", (_proximaVerificacion.HasValue ? (_proximaVerificacion.Value - DateTime.UtcNow).TotalMinutes : 0).ToString("F1") }
-                };
-            }
-        }
-
-        private async Task<bool> VerificarSiYaSeEnvioRecordatorio(AppDbContext context, long cedula)
-        {
-            try
-            {
-                var hace30Minutos = DateTime.UtcNow.AddMinutes(-30);
-
-                // ✅✅ CONSULTA OPTIMIZADA (de mi versión)
-                var yaEnviado = await context.FcmToken
-                    .Where(t =>
-                        t.UsuarioCedula == cedula &&
-                        t.UltimaActualizacion.HasValue &&
-                        t.UltimaActualizacion.Value > hace30Minutos)
-                    .AsNoTracking() // ✅ Sin rastreo
-                    .AnyAsync();
-
-                return yaEnviado;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"❌ Error verificando recordatorio previo: {ex.Message}");
-                return false;
-            }
-        }
-
-        private async Task<bool> EnviarRecordatorioCita(
-            Cita cita,
-            DateTime fechaCitaLocal,
+        private async Task EnviarNotificacionesBatch(
+            List<dynamic> citas,
             INotificationService notificationService,
             AppDbContext context)
         {
-            try
+            var cedulas = new List<long>();
+
+            foreach (var cita in citas)
             {
-                // ✅✅ CONSULTA OPTIMIZADA: Select() solo el nombre
-                var nombreBarbero = await context.UsuarioPerfiles
-                    .Where(b => b.Cedula == cita.BarberoId)
-                    .Select(b => b.Nombre)
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync() ?? "el barbero";
-
-                string titulo = "⏰ Recordatorio de Cita";
-                string servicioInfo = !string.IsNullOrEmpty(cita.ServicioNombre)
-                    ? $"\n• Servicio: {cita.ServicioNombre}"
-                    : "";
-
-                // ✅ Convertir fecha a español
-                var cultureSpanish = new System.Globalization.CultureInfo("es-ES");
-                string fechaFormato = fechaCitaLocal.ToString("dddd, dd 'de' MMMM 'de' yyyy", cultureSpanish);
-                
-                // ✅ Formato de hora 12h con AM/PM en español
-                string horaFormato = fechaCitaLocal.ToString("h:mm tt", cultureSpanish);
-                
-                string mensaje = $"¡Hola {cita.Nombre}! 👋\n\n" +
-                    $"Tu cita está a punto de comenzar:\n\n" +
-                    $"👨‍💼 Barbero: {nombreBarbero}" +
-                    servicioInfo +
-                    $"\n📅 Fecha: {fechaFormato}" +
-                    $"\n🕐 Hora: {horaFormato}" +
-                    $"\n\n⏱️ Te esperamos en 15 minutos ✂️";
-
-                var data = new Dictionary<string, string>
+                try
                 {
-                    { "tipo", "recordatorio_cita" },
-                    { "citaId", cita.Id.ToString() },
-                    { "clienteNombre", cita.Nombre ?? "" },
-                    { "clienteCedula", cita.Cedula.ToString() },
-                    { "barberoId", cita.BarberoId.ToString() },
-                    { "barberoNombre", nombreBarbero },
-                    { "fecha", fechaCitaLocal.ToString("yyyy-MM-dd") },
-                    { "hora", fechaCitaLocal.ToString("HH:mm") },
-                    { "servicio", cita.ServicioNombre ?? "Sin especificar" },
-                    { "precio", (cita.ServicioPrecio ?? 0).ToString("F2") }
-                };
+                    string titulo = "⏰ Recordatorio de Cita";
+                    string servicioInfo = !string.IsNullOrEmpty(cita.ServicioNombre)
+                        ? $"\n• Servicio: {cita.ServicioNombre}"
+                        : "";
 
-                bool enviado = await notificationService.EnviarNotificacionAsync(
-                    cita.Cedula, titulo, mensaje, data);
+                    string mensaje = $"¡Hola {cita.Nombre}! 👋\n\n" +
+                        $"Tu cita está a punto de comenzar:\n\n" +
+                        $"👨‍💼 Barbero: {cita.BarberoNombre}" +
+                        servicioInfo +
+                        $"\n📅 {cita.FechaLocal:dddd, dd 'de' MMMM}" +
+                        $"\n🕐 {cita.FechaLocal:hh:mm tt}" +
+                        $"\n\n⏱️ Te esperamos en 15 minutos ✂️";
 
-                if (enviado)
+                    var data = new Dictionary<string, string>
+                    {
+                        { "tipo", "recordatorio_cita" },
+                        { "citaId", cita.Id.ToString() },
+                        { "clienteCedula", cita.Cedula.ToString() },
+                        { "barberoId", cita.BarberoId.ToString() },
+                        { "fecha", ((DateTime)cita.FechaLocal).ToString("yyyy-MM-dd") },
+                        { "hora", ((DateTime)cita.FechaLocal).ToString("HH:mm") }
+                    };
+
+                    bool enviado = await notificationService.EnviarNotificacionAsync(
+                        cita.Cedula, titulo, mensaje, data);
+
+                    if (enviado)
+                    {
+                        cedulas.Add(cita.Cedula);
+                        _logger.LogInformation($"✅ Enviado: {cita.Nombre}");
+                    }
+                }
+                catch (Exception ex)
                 {
-                    // ✅✅ ACTUALIZACIÓN OPTIMIZADA: ExecuteUpdateAsync
+                    _logger.LogError($"❌ Error enviando a {cita.Nombre}: {ex.Message}");
+                }
+            }
+
+            // ✅ ACTUALIZACIÓN EN BATCH: Una sola operación para todos los tokens
+            if (cedulas.Any())
+            {
+                try
+                {
                     await context.FcmToken
-                        .Where(t => t.UsuarioCedula == cita.Cedula)
+                        .Where(t => cedulas.Contains(t.UsuarioCedula))
                         .ExecuteUpdateAsync(setters =>
                             setters.SetProperty(t => t.UltimaActualizacion, DateTime.UtcNow));
 
-                    _logger.LogInformation($"✅ Recordatorio enviado: {cita.Nombre}");
-                    return true;
+                    _logger.LogInformation($"📝 Tokens actualizados: {cedulas.Count}");
                 }
-                else
+                catch (Exception ex)
                 {
-                    _logger.LogWarning($"⚠️ No se pudo enviar recordatorio: {cita.Nombre}");
-                    return false;
+                    _logger.LogError($"❌ Error actualizando tokens: {ex.Message}");
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"❌ Error enviando recordatorio {cita.Id}: {ex.Message}");
-                return false;
             }
         }
     }
