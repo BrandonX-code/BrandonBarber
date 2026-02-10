@@ -27,8 +27,8 @@
 		<ApplicationId>BarberGo.BarberGo</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationVersion>21</ApplicationVersion>
-		<ApplicationDisplayVersion>1.0.21</ApplicationDisplayVersion>
+		<ApplicationVersion>22</ApplicationVersion>
+		<ApplicationDisplayVersion>1.0.22</ApplicationDisplayVersion>
 
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
