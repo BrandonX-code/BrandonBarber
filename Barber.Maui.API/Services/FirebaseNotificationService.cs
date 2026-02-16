@@ -72,10 +72,19 @@ namespace Barber.Maui.API.Services
                     .Select(t => t.Token)
                     .ToListAsync();
 
+                Console.WriteLine($"🔍 Buscando tokens para usuario {usuarioCedula}: {tokens.Count} encontrados");
+
                 if (!tokens.Any())
                 {
-                    Console.WriteLine($"⚠️ No hay tokens para usuario {usuarioCedula}");
+                    Console.WriteLine($"⚠️ NO hay tokens registrados para usuario {usuarioCedula}");
+                    Console.WriteLine($"   💡 El cliente probablemente NO ha instalado la app o NO otorgó permisos de notificación");
                     return false;
+                }
+
+                // ✅ Mostrar tokens encontrados (primeros caracteres)
+                foreach (var token in tokens)
+                {
+                    Console.WriteLine($"   ✓ Token: {token.Substring(0, 30)}...");
                 }
 
                 // ✅ AGREGAR DATOS OBLIGATORIOS
@@ -143,19 +152,24 @@ namespace Barber.Maui.API.Services
                     }
                 };
 
-                Console.WriteLine($"📤 Enviando notificación a {tokens.Count} dispositivo(s)...");
-                var response = await FirebaseMessaging.DefaultInstance.SendEachForMulticastAsync(message);
-                Console.WriteLine($"✅ Notificación enviada: {response.SuccessCount}/{tokens.Count} exitosas");
+                Console.WriteLine($"📤 Enviando notificación a {tokens.Count} dispositivo(s)");
+                Console.WriteLine($"   Título: {titulo}");
+                Console.WriteLine($"   Mensaje: {mensaje.Substring(0, Math.Min(50, mensaje.Length))}...");
+                Console.WriteLine($"   Timestamp: {DateTime.Now:HH:mm:ss.fff}");
 
-                // ✅ LOG DE ERRORES
+                var response = await FirebaseMessaging.DefaultInstance.SendEachForMulticastAsync(message);
+                
+                Console.WriteLine($"✅ RESULTADO: {response.SuccessCount}/{tokens.Count} enviadas exitosamente");
+
+                // ✅ LOG DETALLADO DE ERRORES
                 if (response.FailureCount > 0)
                 {
-                    Console.WriteLine($"⚠️ {response.FailureCount} notificaciones fallaron");
+                    Console.WriteLine($"⚠️ {response.FailureCount} notificaciones fallaron:");
                     for (int i = 0; i < response.Responses.Count; i++)
                     {
                         if (!response.Responses[i].IsSuccess)
                         {
-                            Console.WriteLine($"  - Token {i}: {response.Responses[i].Exception?.Message}");
+                            Console.WriteLine($"   ❌ Token {i}: {response.Responses[i].Exception?.Message}");
                         }
                     }
                 }
@@ -165,6 +179,7 @@ namespace Barber.Maui.API.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"❌ Error enviando notificación: {ex.Message}");
+                Console.WriteLine($"❌ Stack Trace: {ex.StackTrace}");
                 return false;
             }
         }
@@ -172,13 +187,21 @@ namespace Barber.Maui.API.Services
         {
             try
             {
+                Console.WriteLine($"\n📝 === REGISTRANDO TOKEN FCM ===");
+                Console.WriteLine($"   Usuario: {usuarioCedula}");
+                Console.WriteLine($"   Token: {token.Substring(0, 30)}...");
+                Console.WriteLine($"   Timestamp: {DateTime.Now:HH:mm:ss.fff}");
+
                 // 1. Eliminar cualquier token igual asignado a otro usuario
                 var tokensDuplicados = await _context.FcmToken
                     .Where(t => t.Token == token && t.UsuarioCedula != usuarioCedula)
                     .ToListAsync();
 
                 if (tokensDuplicados.Any())
+                {
+                    Console.WriteLine($"   🗑️ Eliminando {tokensDuplicados.Count} tokens duplicados en otros usuarios");
                     _context.FcmToken.RemoveRange(tokensDuplicados);
+                }
 
                 // 2. Eliminar TODOS los tokens anteriores del usuario
                 var tokensUsuario = await _context.FcmToken
@@ -186,22 +209,34 @@ namespace Barber.Maui.API.Services
                     .ToListAsync();
 
                 if (tokensUsuario.Any())
+                {
+                    Console.WriteLine($"   🗑️ Eliminando {tokensUsuario.Count} tokens antiguos del usuario");
                     _context.FcmToken.RemoveRange(tokensUsuario);
+                }
 
                 // 3. Guardar SOLO el token nuevo
-                _context.FcmToken.Add(new FcmToken
+                var nuevoToken = new FcmToken
                 {
                     UsuarioCedula = usuarioCedula,
                     Token = token,
+                    FechaRegistro = DateTime.UtcNow,
                     UltimaActualizacion = DateTime.UtcNow
-                });
+                };
 
+                _context.FcmToken.Add(nuevoToken);
                 await _context.SaveChangesAsync();
+
+                Console.WriteLine($"   ✅ Token registrado exitosamente");
+                Console.WriteLine($"   ✓ Usuario: {usuarioCedula}");
+                Console.WriteLine($"   ✓ Registro: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}");
+                Console.WriteLine($"   ✓ Estado: ACTIVO Y LISTO PARA NOTIFICACIONES\n");
+
                 return true;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"❌ Error registrando token: {ex.Message}");
+                Console.WriteLine($"   ❌ Error registrando token: {ex.Message}");
+                Console.WriteLine($"   ❌ Stack: {ex.StackTrace}");
                 return false;
             }
         }

@@ -160,10 +160,11 @@ namespace Barber.Maui.API.Services
                 var ahora = DateTime.UtcNow;
                 var limite = ahora.AddMinutes(VENTANA_ENVIO);
 
-                // ✅ QUERY ÚNICA OPTIMIZADA: Join con barbero y filtro de recordatorios previos
-                var hace30Min = ahora.AddMinutes(-30);
+                _logger.LogDebug($"🔍 Buscando citas entre {ahora:HH:mm:ss} y {limite:HH:mm:ss} UTC");
+                _logger.LogDebug($"🔍 Hora Colombia: {ahoraColombia:HH:mm:ss}");
 
-                var citasParaNotificar = await context.Citas
+                // ✅ QUERY SIMPLIFICADA: Obtener solo citas en la ventana, con tokens activos
+                var citasConTokens = await context.Citas
                     .Where(c =>
                         (c.Estado == "Confirmada" || c.Estado == "Completada") &&
                         c.Fecha >= ahora &&
@@ -173,13 +174,11 @@ namespace Barber.Maui.API.Services
                         cita => cita.BarberoId,
                         barbero => barbero.Cedula,
                         (cita, barbero) => new { cita, barbero.Nombre })
-                    .GroupJoin(
-                        context.FcmToken.Where(t =>
-                            t.UltimaActualizacion.HasValue &&
-                            t.UltimaActualizacion.Value > hace30Min),
+                    .Join(
+                        context.FcmToken,  // ✅ CAMBIO: Inner join para garantizar que tiene token
                         x => x.cita.Cedula,
                         token => token.UsuarioCedula,
-                        (x, tokens) => new
+                        (x, token) => new
                         {
                             x.cita.Id,
                             x.cita.Cedula,
@@ -189,28 +188,36 @@ namespace Barber.Maui.API.Services
                             BarberoNombre = x.Nombre,
                             x.cita.ServicioNombre,
                             x.cita.ServicioPrecio,
-                            RecordatorioEnviado = tokens.Any()
+                            Token = token.Token,
+                            UltimaActualizacion = token.UltimaActualizacion
                         })
                     .AsNoTracking()
                     .ToListAsync(cancellationToken);
 
-                _logger.LogInformation($"📊 Procesando {citasParaNotificar.Count} citas");
+                _logger.LogInformation($"📊 Encontradas {citasConTokens.Count} citas con tokens activos");
 
-                // ✅ Procesar en batch para reducir operaciones
+                // ✅ Agrupar por cedula para procesar solo una vez por cliente
+                var citasAgrupadas = citasConTokens
+                    .GroupBy(c => c.Cedula)
+                    .ToList();
+
                 var citasAEnviar = new List<dynamic>();
 
-                foreach (var cita in citasParaNotificar)
+                foreach (var grupo in citasAgrupadas)
                 {
+                    var cita = grupo.First(); // Tomar la primera cita del cliente
+                    
                     var fechaCitaLocal = TimeZoneInfo.ConvertTimeFromUtc(
                         DateTime.SpecifyKind(cita.Fecha, DateTimeKind.Utc),
                         zonaColombia);
 
                     var minutosAntes = (fechaCitaLocal - ahoraColombia).TotalMinutes;
 
-                    // Verificar si está en ventana de recordatorio
+                    _logger.LogDebug($"📅 Cita de {cita.Nombre}: {fechaCitaLocal:HH:mm:ss}, faltan {minutosAntes:F1} minutos");
+
+                    // ✅ Verificar si está en ventana de recordatorio
                     if (minutosAntes >= (MINUTOS_RECORDATORIO - RANGO_TOLERANCIA) &&
-                        minutosAntes <= (MINUTOS_RECORDATORIO + RANGO_TOLERANCIA) &&
-                        !cita.RecordatorioEnviado)
+                        minutosAntes <= (MINUTOS_RECORDATORIO + RANGO_TOLERANCIA))
                     {
                         citasAEnviar.Add(new
                         {
@@ -229,7 +236,12 @@ namespace Barber.Maui.API.Services
                 // ✅ Enviar notificaciones en batch
                 if (citasAEnviar.Any())
                 {
+                    _logger.LogInformation($"📤 Enviando {citasAEnviar.Count} notificaciones de recordatorio");
                     await EnviarNotificacionesBatch(citasAEnviar, notificationService, context);
+                }
+                else
+                {
+                    _logger.LogInformation("⏸️ No hay citas en ventana de recordatorio");
                 }
 
                 // Actualizar caché
@@ -239,18 +251,20 @@ namespace Barber.Maui.API.Services
             catch (Exception ex)
             {
                 _logger.LogError($"❌ Error procesando recordatorios: {ex.Message}");
+                _logger.LogError($"❌ Stack: {ex.StackTrace}");
             }
         }
 
         /// <summary>
-        /// Envía notificaciones en batch y actualiza tokens en una sola operación
+        /// Envía notificaciones en batch
         /// </summary>
         private async Task EnviarNotificacionesBatch(
             List<dynamic> citas,
             INotificationService notificationService,
             AppDbContext context)
         {
-            var cedulas = new List<long>();
+            var exitosas = 0;
+            var fallidas = 0;
 
             foreach (var cita in citas)
             {
@@ -284,33 +298,23 @@ namespace Barber.Maui.API.Services
 
                     if (enviado)
                     {
-                        cedulas.Add(cita.Cedula);
-                        _logger.LogInformation($"✅ Enviado: {cita.Nombre}");
+                        exitosas++;
+                        _logger.LogInformation($"✅ Notificación enviada a {cita.Nombre} (ID: {cita.Cedula})");
+                    }
+                    else
+                    {
+                        fallidas++;
+                        _logger.LogWarning($"⚠️ Notificación no se envió para {cita.Nombre} (ID: {cita.Cedula})");
                     }
                 }
                 catch (Exception ex)
                 {
+                    fallidas++;
                     _logger.LogError($"❌ Error enviando a {cita.Nombre}: {ex.Message}");
                 }
             }
 
-            // ✅ ACTUALIZACIÓN EN BATCH: Una sola operación para todos los tokens
-            if (cedulas.Any())
-            {
-                try
-                {
-                    await context.FcmToken
-                        .Where(t => cedulas.Contains(t.UsuarioCedula))
-                        .ExecuteUpdateAsync(setters =>
-                            setters.SetProperty(t => t.UltimaActualizacion, DateTime.UtcNow));
-
-                    _logger.LogInformation($"📝 Tokens actualizados: {cedulas.Count}");
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError($"❌ Error actualizando tokens: {ex.Message}");
-                }
-            }
+            _logger.LogInformation($"📊 Resumen: {exitosas} exitosas, {fallidas} fallidas");
         }
     }
 }
