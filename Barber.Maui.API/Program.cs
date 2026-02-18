@@ -39,7 +39,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IEmailService, SendGridEmailService>();
-builder.Services.AddHostedService<ReminderService>();
+//builder.Services.AddHostedService<ReminderService>();
 
 var app = builder.Build();
 

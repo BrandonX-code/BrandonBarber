@@ -121,7 +121,7 @@ namespace Barber.Maui.BrandonBarber.Services
             {
                 var usuario = AuthService.CurrentUser;
                 if (usuario == null)
-                {
+                {toerio 
                     Console.WriteLine("⚠️ Usuario no autenticado, no se puede navegar");
                     return;
                 }
